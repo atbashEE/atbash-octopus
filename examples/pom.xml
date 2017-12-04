@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus</artifactId>
+            <artifactId>octopus-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
