@@ -1,0 +1,14 @@
+Octopus - Permission based declarative security for Java EE application
+Copyright by Rudy De Busscher  / atbash.be
+
+------------------------------------------------------------------------
+See the file LICENSE
+------------------------------------------------------------------------
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+Portions of this software were originally based on the following:
+* Apache Shiro
+  https://github.com/apache/shiro
+  under Apache License, v2.0
