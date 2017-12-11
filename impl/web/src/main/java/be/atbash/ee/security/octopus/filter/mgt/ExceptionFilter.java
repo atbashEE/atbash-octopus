@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.filter.mgt;
 
 import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
-import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class ExceptionFilter extends AdviceFilter {
             Logger logger = LoggerFactory.getLogger(ExceptionFilter.class);
             logger.error(exception.getCause().getMessage(), exception.getCause());
 
-            Boolean sessionCreationEnabled = (Boolean) request.getAttribute(DefaultSubjectContext.SESSION_CREATION_ENABLED);
+            Boolean sessionCreationEnabled = (Boolean) request.getAttribute(WebSubjectContext.SESSION_CREATION_ENABLED);
 
             if (sessionCreationEnabled != null && !sessionCreationEnabled) {
                 // We assume we are in a REST/JAX_RS call and thus return JSON

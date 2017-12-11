@@ -29,7 +29,7 @@ import be.atbash.ee.security.octopus.session.SessionContext;
 import be.atbash.ee.security.octopus.session.SessionKey;
 import be.atbash.ee.security.octopus.session.mgt.ServletContainerSessionManager;
 import be.atbash.ee.security.octopus.subject.*;
-import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.CollectionUtils;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -46,7 +46,6 @@ import java.util.List;
 
 /**
  * This interface represents a {@link SecurityManager} implementation that can used in web-enabled applications.
- *
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.mgt.WebSecurityManager"})
@@ -59,7 +58,6 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     @Inject
     protected SubjectFactory subjectFactory;
-
 
     @Inject
     private OctopusRealm octopusRealm;
@@ -168,9 +166,9 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @see #doCreateSubject(org.apache.shiro.subject.SubjectContext)
      * @see #save(org.apache.shiro.subject.Subject)
      */
-    public WebSubject createSubject(SubjectContext subjectContext) {
+    public WebSubject createSubject(WebSubjectContext subjectContext) {
         //create a copy so we don't modify the argument's backing map:
-        SubjectContext context = copy(subjectContext);
+        WebSubjectContext context = copy(subjectContext);
 
         //ensure that the context has a SecurityManager instance, and if not, add one:
         context = ensureSecurityManager(context);
@@ -206,7 +204,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * authenticated subject.
      */
     protected WebSubject createSubject(AuthenticationToken token, AuthenticationInfo info, WebSubject existing) {
-        SubjectContext context = new DefaultSubjectContext();
+        WebSubjectContext context = new WebSubjectContext();
         context.setAuthenticated(true);
         context.setAuthenticationToken(token);
         context.setAuthenticationInfo(info);
@@ -218,8 +216,8 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         return createSubject(context);
     }
 
-    protected SubjectContext copy(SubjectContext subjectContext) {
-        return new DefaultSubjectContext(subjectContext);
+    protected WebSubjectContext copy(WebSubjectContext subjectContext) {
+        return new WebSubjectContext(subjectContext);
     }
 
     /**
@@ -231,7 +229,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @return The SubjectContext to use to pass to a {@link SubjectFactory} for subject creation.
      */
     @SuppressWarnings({"unchecked"})
-    protected SubjectContext ensureSecurityManager(SubjectContext context) {
+    protected WebSubjectContext ensureSecurityManager(WebSubjectContext context) {
         if (context.resolveSecurityManager() != null) {
             log.trace("Context already contains a SecurityManager instance.  Returning.");
             return context;
@@ -254,7 +252,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @return The context to use to pass to a {@link SubjectFactory} for subject creation.
      */
     @SuppressWarnings({"unchecked"})
-    protected SubjectContext resolveSession(SubjectContext context) {
+    protected WebSubjectContext resolveSession(WebSubjectContext context) {
         if (context.resolveSession() != null) {
             log.debug("Context already contains a session.  Returning.");
             return context;
@@ -273,7 +271,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         return context;
     }
 
-    protected Session resolveContextSession(SubjectContext context) throws InvalidSessionException {
+    protected Session resolveContextSession(WebSubjectContext context) throws InvalidSessionException {
 
         SessionKey key = getSessionKey(context);
         if (key != null) {
@@ -283,7 +281,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     }
 
-    protected SessionKey getSessionKey(SubjectContext context) {
+    protected SessionKey getSessionKey(WebSubjectContext context) {
         Serializable sessionId = context.getSessionId();
         HttpServletRequest request = context.getServletRequest();
         HttpServletResponse response = context.getServletResponse();
@@ -306,7 +304,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @return The Subject context to use to pass to a {@link SubjectFactory} for subject creation.
      */
     @SuppressWarnings({"unchecked"})
-    protected SubjectContext resolvePrincipals(SubjectContext context) {
+    protected WebSubjectContext resolvePrincipals(WebSubjectContext context) {
 
         PrincipalCollection principals = context.resolvePrincipals();
 
@@ -347,7 +345,6 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
         return context;
     }
-
 
     protected PrincipalCollection getRememberedIdentity(SubjectContext subjectContext) {
         /* FIXME
@@ -392,11 +389,10 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @see #getSubjectFactory()
      * @see SubjectFactory#createSubject(org.apache.shiro.subject.SubjectContext)
      */
-    protected WebSubject doCreateSubject(SubjectContext context) {
+    protected WebSubject doCreateSubject(WebSubjectContext context) {
 
         return subjectFactory.createSubject(context);
     }
-
 
     public Session start(SessionContext context) throws AuthorizationException {
         return servletContainerSessionManager.createSession(context);
@@ -474,7 +470,6 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         rememberMeSuccessfulLogin(token, info, subject); // TODO Convert the rememberMe to AfterSuccessfulLoginHandler
 
     }
-
 
     protected void onFailedLogin(AuthenticationToken token, AuthenticationException ae, Subject subject) {
         rememberMeFailedLogin(token, ae, subject); // Do the default stuff (with the rememberme manager

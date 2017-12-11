@@ -34,16 +34,7 @@ public class OctopusWebConfiguration implements ModuleConfig {
     private String securedURLsFile;
 
     @Inject
-    @ConfigProperty(name = "hashAlgorithmName", defaultValue = "")
-    private String hashAlgorithmName;
-
-    @Inject
-    @ConfigProperty(name = "hashEncoding", defaultValue = "HEX")
-    private String hashEncoding;
-
-    @Inject
-    @ConfigProperty(name = "saltLength", defaultValue = "0")
-    private int saltLength;
+    private OctopusCoreConfiguration octopusCoreConfiguration;
 
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
@@ -52,22 +43,17 @@ public class OctopusWebConfiguration implements ModuleConfig {
 
     @ConfigEntry
     public String getHashAlgorithmName() {
-        return hashAlgorithmName;
+        return octopusCoreConfiguration.getHashAlgorithmName();
     }
 
     @ConfigEntry
     public HashEncoding getHashEncoding() {
-        HashEncoding result = HashEncoding.fromValue(hashEncoding);
-        if (result == null) {
-            throw new ConfigurationException(
-                    String.format("The 'hashEncoding' parameter value %s isn't valid. Use 'HEX' or 'BASE64'.", hashEncoding));
-        }
-        return result;
+        return octopusCoreConfiguration.getHashEncoding();
     }
 
     @ConfigEntry
     public int getSaltLength() {
-        return saltLength;  // FIXME Validation. Warn if less then 16.
+        return octopusCoreConfiguration.getSaltLength();
     }
 
 }

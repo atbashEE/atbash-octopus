@@ -19,7 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.WebSubject;
-import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +77,7 @@ import javax.inject.Inject;
  * @see DefaultSessionStorageEvaluator
  */
 @ApplicationScoped
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.mgt.DefaultSubjectDAO"} )
+@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.mgt.DefaultSubjectDAO"})
 public class DefaultSubjectDAO {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultSubjectDAO.class);
@@ -176,21 +176,21 @@ public class DefaultSubjectDAO {
         if (session == null) {
             if (!CollectionUtils.isEmpty(currentPrincipals)) {
                 session = subject.getSession();
-                session.setAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY, currentPrincipals);
+                session.setAttribute(WebSubjectContext.PRINCIPALS_SESSION_KEY, currentPrincipals);
             }
             //otherwise no session and no principals - nothing to save
         } else {
             PrincipalCollection existingPrincipals =
-                    (PrincipalCollection) session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+                    (PrincipalCollection) session.getAttribute(WebSubjectContext.PRINCIPALS_SESSION_KEY);
 
             if (CollectionUtils.isEmpty(currentPrincipals)) {
                 if (!CollectionUtils.isEmpty(existingPrincipals)) {
-                    session.removeAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+                    session.removeAttribute(WebSubjectContext.PRINCIPALS_SESSION_KEY);
                 }
                 //otherwise both are null or empty - no need to update the session
             } else {
                 if (!currentPrincipals.equals(existingPrincipals)) {
-                    session.setAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY, currentPrincipals);
+                    session.setAttribute(WebSubjectContext.PRINCIPALS_SESSION_KEY, currentPrincipals);
                 }
                 //otherwise they're the same - no need to update the session
             }
@@ -211,21 +211,21 @@ public class DefaultSubjectDAO {
         if (session == null) {
             if (subject.isAuthenticated()) {
                 session = subject.getSession();
-                session.setAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY, Boolean.TRUE);
+                session.setAttribute(WebSubjectContext.AUTHENTICATED_SESSION_KEY, Boolean.TRUE);
             }
             //otherwise no session and not authenticated - nothing to save
         } else {
-            Boolean existingAuthc = (Boolean) session.getAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY);
+            Boolean existingAuthc = (Boolean) session.getAttribute(WebSubjectContext.AUTHENTICATED_SESSION_KEY);
 
             if (subject.isAuthenticated()) {
                 if (existingAuthc == null || !existingAuthc) {
-                    session.setAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY, Boolean.TRUE);
+                    session.setAttribute(WebSubjectContext.AUTHENTICATED_SESSION_KEY, Boolean.TRUE);
                 }
                 //otherwise authc state matches - no need to update the session
             } else {
                 if (existingAuthc != null) {
                     //existing doesn't match the current state - remove it:
-                    session.removeAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY);
+                    session.removeAttribute(WebSubjectContext.AUTHENTICATED_SESSION_KEY);
                 }
                 //otherwise not in the session and not authenticated - no need to update the session
             }
@@ -241,8 +241,8 @@ public class DefaultSubjectDAO {
     protected void removeFromSession(WebSubject subject) {
         Session session = subject.getSession(false);
         if (session != null) {
-            session.removeAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY);
-            session.removeAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+            session.removeAttribute(WebSubjectContext.AUTHENTICATED_SESSION_KEY);
+            session.removeAttribute(WebSubjectContext.PRINCIPALS_SESSION_KEY);
         }
     }
 

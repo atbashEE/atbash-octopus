@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.util;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.util.reflection.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ import java.net.URL;
  *
  * @see #getInputStreamForPath(String)
  */
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.io.ResourceUtils"} )
+@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.io.ResourceUtils"})
 public class ResourceUtils {
 
     /**

@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.view;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
-import be.atbash.ee.security.octopus.context.OctopusSecurityContext;
+import be.atbash.ee.security.octopus.context.OctopusWebSecurityContext;
 import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
 import be.atbash.ee.security.octopus.logout.LogoutHandler;
 import be.atbash.ee.security.octopus.session.SessionUtil;
@@ -37,7 +37,7 @@ import java.io.IOException;
  *
  */
 @Specializes
-public class OctopusJSFSecurityContext extends OctopusSecurityContext {
+public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
 
     @Inject
     private SessionUtil sessionUtil;
@@ -79,7 +79,6 @@ public class OctopusJSFSecurityContext extends OctopusSecurityContext {
             */
         }
     }
-
 
     public void logout() {
         //super.logout();

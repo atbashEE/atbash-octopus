@@ -16,8 +16,8 @@
 package be.atbash.ee.security.octopus.provider;
 
 import be.atbash.ee.security.octopus.config.OctopusWebInternalConfiguration;
-import be.atbash.ee.security.octopus.util.ClassUtils;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
+import be.atbash.ee.security.octopus.util.reflection.ClassUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;

@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.subject;
 
-import be.atbash.ee.security.octopus.SecurityUtils;
+import be.atbash.ee.jsf.jerry.utils.CDIUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.Permission;
@@ -25,9 +25,9 @@ import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionContext;
 import be.atbash.ee.security.octopus.session.SessionException;
 import be.atbash.ee.security.octopus.session.mgt.DefaultSessionContext;
-import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
 import be.atbash.ee.security.octopus.subject.support.DisabledSessionException;
-import be.atbash.ee.security.octopus.subject.support.SubjectCallable;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectCallable;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.HostAuthenticationToken;
 import be.atbash.ee.security.octopus.util.CollectionUtils;
@@ -66,7 +66,6 @@ public class WebSubject implements RequestPairSource, Subject {
     private boolean sessionCreationEnabled;
 
     private transient WebSecurityManager securityManager;
-
 
     private HttpServletRequest servletRequest;
     private HttpServletResponse servletResponse;
@@ -267,7 +266,6 @@ public class WebSubject implements RequestPairSource, Subject {
         }
     }
 
-
     /**
      * Returns {@code true} if this Subject implies all of the specified permission strings, {@code false} otherwise.
      * <p/>
@@ -309,7 +307,6 @@ public class WebSubject implements RequestPairSource, Subject {
         }
     }
 
-
     /**
      * Ensures this Subject implies the specified permission String.
      * <p/>
@@ -340,7 +337,6 @@ public class WebSubject implements RequestPairSource, Subject {
         assertAuthzCheckPossible();
         securityManager.checkPermission(getPrincipals(), permission);
     }
-
 
     /**
      * Ensures this Subject
@@ -378,7 +374,6 @@ public class WebSubject implements RequestPairSource, Subject {
         assertAuthzCheckPossible();
         securityManager.checkPermissions(getPrincipals(), permissions);
     }
-
 
     /**
      * Returns {@code true} if this Subject has the specified role, {@code false} otherwise.
@@ -420,7 +415,6 @@ public class WebSubject implements RequestPairSource, Subject {
         return hasPrincipals() && securityManager.hasAllRoles(getPrincipals(), roleIdentifiers);
     }
 
-
     /**
      * Asserts this Subject has the specified role by returning quietly if they do or throwing an
      * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
@@ -432,7 +426,6 @@ public class WebSubject implements RequestPairSource, Subject {
         assertAuthzCheckPossible();
         securityManager.checkRole(getPrincipals(), role);
     }
-
 
     /**
      * Same as {@link #checkRoles(Collection < String > roleIdentifiers) checkRoles(Collection<String> roleIdentifiers)} but
@@ -448,7 +441,6 @@ public class WebSubject implements RequestPairSource, Subject {
         assertAuthzCheckPossible();
         securityManager.checkRoles(getPrincipals(), roleIdentifiers);
     }
-
 
     /**
      * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an
@@ -476,7 +468,6 @@ public class WebSubject implements RequestPairSource, Subject {
     public boolean isAuthenticated() {
         return authenticated;
     }
-
 
     /**
      * Returns {@code true} if this {@code Subject} has an identity (it is not anonymous) and the identity
@@ -550,7 +541,6 @@ public class WebSubject implements RequestPairSource, Subject {
     public Session getSession() {
         return getSession(true);
     }
-
 
     /**
      * Returns the application {@code Session} associated with this Subject.  Based on the boolean argument,
@@ -651,7 +641,6 @@ public class WebSubject implements RequestPairSource, Subject {
         session = null;
     }
 
-
     /**
      * Associates the specified {@code Callable} with this {@code Subject} instance and then executes it on the
      * currently running thread.  If you want to execute the {@code Callable} on a different thread, it is better to
@@ -670,7 +659,6 @@ public class WebSubject implements RequestPairSource, Subject {
             throw new ExecutionException(t);
         }
     }
-
 
     /**
      * Associates the specified {@code Runnable} with this {@code Subject} instance and then executes it on the
@@ -694,7 +682,7 @@ public class WebSubject implements RequestPairSource, Subject {
      * {@link java.util.concurrent.ExecutorService ExecutorService} to execute as this Subject.
      * <p/>
      * This will effectively ensure that any calls to
-     * {@code SecurityUtils}.{@link SecurityUtils#getSubject() getSubject()} and related functionality will continue
+     * {@code SecurityUtils}.{@link WebSecurityUtils#getSubject() getSubject()} and related functionality will continue
      * to function properly on any thread that executes the returned {@code Callable} instance.
      *
      * @param callable the callable to execute as this {@code Subject}
@@ -703,9 +691,8 @@ public class WebSubject implements RequestPairSource, Subject {
      */
     public <V> Callable<V> associateWith(Callable<V> callable) {
 
-        return new SubjectCallable<V>(this, callable);
+        return new WebSubjectCallable<>(this, callable);
     }
-
 
     /**
      * Returns a {@code Runnable} instance matching the given argument while additionally ensuring that it will
@@ -713,7 +700,7 @@ public class WebSubject implements RequestPairSource, Subject {
      * {@link java.util.concurrent.Executor Executor} or another thread to execute as this Subject.
      * <p/>
      * This will effectively ensure that any calls to
-     * {@code SecurityUtils}.{@link SecurityUtils#getSubject() getSubject()} and related functionality will continue
+     * {@code SecurityUtils}.{@link WebSecurityUtils#getSubject() getSubject()} and related functionality will continue
      * to function properly on any thread that executes the returned {@code Runnable} instance.
      * <p/>
      * *Note that if you need a return value to be returned as a result of the runnable's execution or if you need to
@@ -737,7 +724,6 @@ public class WebSubject implements RequestPairSource, Subject {
 
         //return new SubjectRunnable(this, runnable);
     }
-
 
     // ======================================
     // 'Run As' support implementations
@@ -786,7 +772,6 @@ public class WebSubject implements RequestPairSource, Subject {
         List<PrincipalCollection> stack = getRunAsPrincipalsStack();
         return !CollectionUtils.isEmpty(stack);
     }
-
 
     /**
      * Returns the previous 'pre run as' identity of this {@code Subject} before assuming the current
@@ -955,7 +940,7 @@ public class WebSubject implements RequestPairSource, Subject {
 
         /**
          * Constructs a new {@code Web.Builder} instance using the {@link SecurityManager SecurityManager} obtained by
-         * calling {@code SecurityUtils.}{@link SecurityUtils#getSecurityManager() getSecurityManager()}.  If you want
+         * calling {@code SecurityUtils.}{@link WebSecurityUtils#getSecurityManager() getSecurityManager()}.  If you want
          * to specify your own SecurityManager instance, use the
          * {@link #Builder(SecurityManager, ServletRequest, ServletResponse)} constructor instead.
          *
@@ -964,7 +949,7 @@ public class WebSubject implements RequestPairSource, Subject {
          *                 built {@code WebSubject} instance.
          */
         public Builder(HttpServletRequest request, HttpServletResponse response) {
-            this(SecurityUtils.getSecurityManager(), request, response);
+            this(CDIUtils.retrieveInstance(WebSecurityManager.class), request, response);
         }
 
         /**
@@ -994,7 +979,7 @@ public class WebSubject implements RequestPairSource, Subject {
          * Hold all contextual data via the Builder instance's method invocations to be sent to the
          * {@code SecurityManager} during the {@link #buildSubject} call.
          */
-        private final SubjectContext subjectContext;
+        private final WebSubjectContext subjectContext;
 
         /**
          * The SecurityManager to invoke during the {@link #buildSubject} call.
@@ -1007,7 +992,7 @@ public class WebSubject implements RequestPairSource, Subject {
          * to build the {@code Subject} instance.
          */
         public Builder() {
-            this(SecurityUtils.getSecurityManager());
+            this(CDIUtils.retrieveInstance(WebSecurityManager.class));
         }
 
         /**
@@ -1034,8 +1019,8 @@ public class WebSubject implements RequestPairSource, Subject {
          * additional request/response pair.
          */
 
-        protected SubjectContext newSubjectContextInstance() {
-            return new DefaultSubjectContext();
+        protected WebSubjectContext newSubjectContextInstance() {
+            return new WebSubjectContext();
         }
 
         /**
@@ -1090,7 +1075,6 @@ public class WebSubject implements RequestPairSource, Subject {
         public WebSubject buildWebSubject() {
             return securityManager.createSubject(subjectContext);
         }
-
 
         /**
          * Returns the backing context used to build the {@code Subject} instance, available to subclasses

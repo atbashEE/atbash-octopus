@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.web.servlet
 import be.atbash.ee.security.octopus.filter.FilterChainResolver
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager
 import be.atbash.ee.security.octopus.subject.WebSubject
-import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext
 import be.atbash.ee.security.octopus.web.url.SecuredURLReader
 import com.blogspot.toomuchcoding.spock.subjcollabs.Collaborator
 import com.blogspot.toomuchcoding.spock.subjcollabs.Subject
@@ -113,9 +113,9 @@ class OctopusFilterTest extends Specification {
             def parameter = arguments[0]
             assert parameter.size() == 3
             def keys = parameter.keySet() as List
-            assert [DefaultSubjectContext.SECURITY_MANAGER, DefaultSubjectContext.SERVLET_REQUEST, DefaultSubjectContext.SERVLET_RESPONSE] == keys
+            assert [WebSubjectContext.SERVLET_REQUEST, WebSubjectContext.SERVLET_RESPONSE, WebSubjectContext.SECURITY_MANAGER] == keys
             def values = parameter.values() as List
-            assert [securityManagerStub, servletRequestMock, servletResponseMock] == values
+            assert [servletRequestMock, servletResponseMock, securityManagerStub] == values
 
             return new WebSubject(securityManagerStub)
         }
@@ -130,7 +130,7 @@ class OctopusFilterTest extends Specification {
         FilterChain filterChainMock = Mock(FilterChain) // As it is a interface
 
         filterChainResolverStub.getChain(_, _, _) >> null
-        securityManagerStub.createSubject(_) >> {it ->
+        securityManagerStub.createSubject(_) >> { it ->
             throw new ExecutionException("Message", new NullPointerException())
         }
 
@@ -152,7 +152,7 @@ class OctopusFilterTest extends Specification {
         FilterChain filterChainMock = Mock(FilterChain) // As it is a interface
 
         filterChainResolverStub.getChain(_, _, _) >> null
-        securityManagerStub.createSubject(_) >> {it ->
+        securityManagerStub.createSubject(_) >> { it ->
             throw new IOException("Message")
         }
 
@@ -173,7 +173,7 @@ class OctopusFilterTest extends Specification {
         FilterChain filterChainMock = Mock(FilterChain) // As it is a interface
 
         filterChainResolverStub.getChain(_, _, _) >> null
-        securityManagerStub.createSubject(_) >> {it ->
+        securityManagerStub.createSubject(_) >> { it ->
             throw new ServletException("Servlet")
         }
 

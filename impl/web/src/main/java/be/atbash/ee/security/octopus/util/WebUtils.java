@@ -15,14 +15,13 @@
  */
 package be.atbash.ee.security.octopus.util;
 
-
 import be.atbash.ee.security.octopus.Reviewed;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.WebSubject;
-import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +39,6 @@ import java.util.Map;
  * <p/>
  * Some methods in this class were copied from the Spring Framework so we didn't have to re-invent the wheel,
  * and in these cases, we have retained all license, copyright and author information.
- *
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.util.WebUtils"})
 public class WebUtils {
@@ -225,7 +223,6 @@ public class WebUtils {
 
     }
 
-
     /**
      * Decode the supplied URI string and strips any extraneous portion after a ';'.
      *
@@ -384,7 +381,6 @@ public class WebUtils {
         return true; //by default
     }
 
-
     /**
      * Returns {@code true} if a session is allowed to be created for a subject-associated request, {@code false}
      * otherwise.
@@ -399,7 +395,7 @@ public class WebUtils {
     public static boolean _isSessionCreationEnabled(ServletRequest request) {
 
         if (request != null) {
-            Object val = request.getAttribute(DefaultSubjectContext.SESSION_CREATION_ENABLED);
+            Object val = request.getAttribute(WebSubjectContext.SESSION_CREATION_ENABLED);
             if (val != null && val instanceof Boolean) {
                 return (Boolean) val;
             }

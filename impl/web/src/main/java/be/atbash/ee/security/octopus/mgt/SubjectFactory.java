@@ -15,12 +15,12 @@
  */
 package be.atbash.ee.security.octopus.mgt;
 
-
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +33,6 @@ import java.util.Map;
  * {@code WebDelegatingSubject} instances are required if Request/Response objects are to be maintained across
  * threads when using the {@code Subject} {@link Subject#associateWith(java.util.concurrent.Callable) createCallable}
  * and {@link Subject#associateWith(Runnable) createRunnable} methods.
- *
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.mgt.DefaultWebSubjectFactory", "FIXME Others"})
@@ -53,7 +52,7 @@ public class SubjectFactory {
      * @return a {@code Subject} instance created based on the specified context.
      * @see SubjectContext
      */
-    public WebSubject createSubject(SubjectContext context) {
+    public WebSubject createSubject(WebSubjectContext context) {
 
         WebSecurityManager securityManager = context.resolveSecurityManager();
         Session session = context.resolveSession();
@@ -67,6 +66,5 @@ public class SubjectFactory {
         return new WebSubject(principals, authenticated, host, session, sessionEnabled,
                 request, response, securityManager);
     }
-
 
 }

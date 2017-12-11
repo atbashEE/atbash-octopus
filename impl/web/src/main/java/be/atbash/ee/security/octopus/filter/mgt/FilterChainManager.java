@@ -143,7 +143,6 @@ public class FilterChainManager {
         return filters;
     }
 
-
     /**
      * Returns the filter specified by the name within the parameter.
      *
@@ -342,7 +341,6 @@ public class FilterChainManager {
         }
     }
 
-
     /**
      * Adds (appends) a filter to the filter chain identified by the given {@code chainName}.  If there is no chain
      * with the given name, a new one is created and the filter will be the first in the chain.
@@ -486,7 +484,6 @@ public class FilterChainManager {
         }
         return configured.proxy(original);
     }
-
 
 }
 

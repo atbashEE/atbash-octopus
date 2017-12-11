@@ -8,10 +8,7 @@ The Atbash Octopus is a rewrite of the original [Octopus](https://bitbucket.org/
 * Integration of Apache Shiro because there were so many extensions / hacks already that it became inefficient.
 * Better design since the original Octopus was designed for a certain use-case and later on heavily extended (and thus the design could be improved)
 
-Original | Octopus 
---- | --- 
-Java 6 | Java 7  
-Java EE 6+ | Java EE 7+
+Other differences
 
 
 # Work in Progress

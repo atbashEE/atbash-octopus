@@ -22,13 +22,13 @@ import be.atbash.ee.security.octopus.codec.Base64;
 import be.atbash.ee.security.octopus.codec.CodecUtil;
 import be.atbash.ee.security.octopus.codec.Hex;
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
-import be.atbash.ee.security.octopus.context.OctopusSecurityContext;
+import be.atbash.ee.security.octopus.context.OctopusWebSecurityContext;
+import be.atbash.ee.security.octopus.context.WebThreadContext;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.util.ThreadContext;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -66,12 +66,12 @@ public class OctopusRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        ThreadContext.put(IN_AUTHORIZATION_FLAG, new InAuthorization());
+        WebThreadContext.put(IN_AUTHORIZATION_FLAG, new InAuthorization());
         AuthorizationInfo authorizationInfo;
         try {
             Object primaryPrincipal = principals.getPrimaryPrincipal();
 
-            if (OctopusSecurityContext.isSystemAccount(primaryPrincipal)) {
+            if (OctopusWebSecurityContext.isSystemAccount(primaryPrincipal)) {
                 // No permissions or roles, use @SystemAccount
                 authorizationInfo = new SimpleAuthorizationInfo();
             } else {
@@ -81,7 +81,7 @@ public class OctopusRealm extends AuthorizingRealm {
             authorizationInfo = null; // FIXME ?? Why it is called twice, also in case of SystemAccount?
         } finally {
 
-            ThreadContext.remove(IN_AUTHORIZATION_FLAG);
+            WebThreadContext.remove(IN_AUTHORIZATION_FLAG);
         }
         return authorizationInfo;
     }
@@ -95,7 +95,7 @@ public class OctopusRealm extends AuthorizingRealm {
             authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
         } else {
             if (!(token instanceof IncorrectDataToken)) {
-                ThreadContext.put(IN_AUTHENTICATION_FLAG, new InAuthentication());
+                WebThreadContext.put(IN_AUTHENTICATION_FLAG, new InAuthentication());
                 try {
                     authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
                     // TODO Document this action
@@ -106,7 +106,7 @@ public class OctopusRealm extends AuthorizingRealm {
                     verifyHashEncoding(authenticationInfo);
                 } finally {
                     // Even in the case of an exception (access not allowed) we need to reset this flag
-                    ThreadContext.remove(IN_AUTHENTICATION_FLAG);
+                    WebThreadContext.remove(IN_AUTHENTICATION_FLAG);
                 }
             }
         }
@@ -158,11 +158,11 @@ public class OctopusRealm extends AuthorizingRealm {
 
     @Override
     protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
-        ThreadContext.put(SYSTEM_ACCOUNT_AUTHENTICATION, new InSystemAccountAuthentication());
+        WebThreadContext.put(SYSTEM_ACCOUNT_AUTHENTICATION, new InSystemAccountAuthentication());
         try {
             super.assertCredentialsMatch(token, info);
         } finally {
-            ThreadContext.remove(SYSTEM_ACCOUNT_AUTHENTICATION);
+            WebThreadContext.remove(SYSTEM_ACCOUNT_AUTHENTICATION);
         }
     }
 

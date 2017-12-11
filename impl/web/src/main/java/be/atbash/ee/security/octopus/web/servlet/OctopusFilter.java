@@ -17,11 +17,11 @@ package be.atbash.ee.security.octopus.web.servlet;
 
 import be.atbash.ee.security.octopus.Reviewed;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.filter.FilterChainResolver;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.web.url.SecuredURLReader;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +62,7 @@ public class OctopusFilter extends OncePerRequestFilter {
     @Inject
     private FilterChainResolver filterChainResolver;
 
-    @ Inject
+    @Inject
     private SecuredURLReader securedURLReader;
 
     @Override
@@ -72,6 +72,7 @@ public class OctopusFilter extends OncePerRequestFilter {
 
     /**
      * Initialize the filter by loading the data of the chains for each URL pattern.
+     *
      * @param servletContext Context of the container.
      */
     private void initFilter(ServletContext servletContext) {
@@ -103,6 +104,7 @@ public class OctopusFilter extends OncePerRequestFilter {
 
         try {
             final WebSubject subject = new WebSubject.Builder(securityManager, servletRequest, servletResponse).buildWebSubject();
+            ThreadContext.bind(subject);
 
             //noinspection unchecked
             subject.execute(new Callable() {
