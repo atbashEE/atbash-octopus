@@ -16,10 +16,12 @@
 package be.atbash.ee.security.octopus.exception;
 
 import be.atbash.ee.security.octopus.OctopusException;
+import be.atbash.ee.security.octopus.Reviewed;
 
 /**
- *
+ * This is some kind of Developer exception when he has done something wrong.
  */
+@Reviewed
 public class OctopusIllegalActionException extends OctopusException {
 
     public OctopusIllegalActionException(String message) {

@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.realm;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;

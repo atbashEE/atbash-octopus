@@ -1,0 +1,12 @@
+=== OfflineToken
+
+With the help of the PBKDF2, the passphrase is turned into a byte array (using the Processor Id and the first disk UUID as salt)
+
+This is byte array can only be reconstructed with the same passphrase and the same machine information.
+
+This **local secret** is base64 encoded.
+
+The class **OfflineToken** is a JWT wich is signed using the _local secret_.
+
+The JWT is tamper proof, except the user can generate other offlineToken since all the code is available within Atbash Octopus.
+

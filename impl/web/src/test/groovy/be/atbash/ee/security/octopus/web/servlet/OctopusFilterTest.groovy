@@ -112,10 +112,11 @@ class OctopusFilterTest extends Specification {
         securityManagerStub.createSubject(*_) >> { arguments ->
             def parameter = arguments[0]
             assert parameter.size() == 3
-            def keys = parameter.keySet() as List
-            assert [WebSubjectContext.SERVLET_REQUEST, WebSubjectContext.SERVLET_RESPONSE, WebSubjectContext.SECURITY_MANAGER] == keys
-            def values = parameter.values() as List
-            assert [servletRequestMock, servletResponseMock, securityManagerStub] == values
+            def keys = parameter.keySet() as Set
+            assert [WebSubjectContext.SERVLET_REQUEST, WebSubjectContext.SERVLET_RESPONSE, WebSubjectContext.SECURITY_MANAGER] as Set == keys
+            def values = parameter.values() as Set
+            assert [servletRequestMock, servletResponseMock, securityManagerStub] as Set == values
+
 
             return new WebSubject(securityManagerStub)
         }

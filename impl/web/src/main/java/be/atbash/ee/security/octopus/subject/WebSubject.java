@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.subject;
 import be.atbash.ee.jsf.jerry.utils.CDIUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.session.Session;

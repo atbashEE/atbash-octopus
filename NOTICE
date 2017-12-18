@@ -12,3 +12,7 @@ Portions of this software were originally based on the following:
 * Apache Shiro
   https://github.com/apache/shiro
   under Apache License, v2.0
+
+* JSON Smart v2
+  https://github.com/netplex/json-smart-v2
+  under Apache License, v2.0

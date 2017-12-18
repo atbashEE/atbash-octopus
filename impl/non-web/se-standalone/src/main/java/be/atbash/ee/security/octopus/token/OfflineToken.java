@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.token;
 
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,6 +28,8 @@ import java.util.List;
  */
 
 public class OfflineToken implements AuthenticationToken, ValidatedAuthenticationToken {
+
+    public static String LOCAL_SECRET_KEY_ID = "local secret";
 
     private Serializable id;
 

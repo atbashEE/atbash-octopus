@@ -21,7 +21,7 @@ import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.Authorizer;
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.session.InvalidSessionException;
 import be.atbash.ee.security.octopus.session.Session;

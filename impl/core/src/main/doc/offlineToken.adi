@@ -1,0 +1,13 @@
+=== OfflineToken
+
+Offline token can be used for standalone Java SE programs.
+
+A token can be generated which will be only valid for a certain computer.
+
+Besides the Processor Id and the first disk UUID, also a pass phrase is required (when multiple users are using the program on the same laptop/desktop.)
+
+Steps  (example flow, final programs not created yet)
+
+. Program **LocalSecret** (_examples/local-secret_) generates the token which is user dependent for a certain machine( Standalone program run by the end-user)
+. Program **CreateOfflineTokenFile** (_examples/se-cli_) generates the offline token (here stored within the _<user_home>/octopus.offline.token_ file)
+. Program **SecuredCLI** uses the offline token to authenticate/authorize using Octopus.

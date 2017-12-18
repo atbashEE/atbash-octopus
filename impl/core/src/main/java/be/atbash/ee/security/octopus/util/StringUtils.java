@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.util;
 
+import be.atbash.ee.security.octopus.Reviewed;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 
 import java.text.ParseException;
@@ -23,13 +24,11 @@ import java.util.*;
 /**
  * <p>Simple utility class for String operations useful across the framework.
  * <p/>
- * <p>Some methods in this class were copied from the Spring Framework so we didn't have to re-invent the wheel,
- * and in these cases, we have retained all license, copyright and author information.
+ *
  */
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.util.StringUtils")
-public class StringUtils {
+public final class StringUtils {
 
-    // FIXME Not a correct Singleton
     //TODO - complete JavaDoc
 
     /**
@@ -46,6 +45,9 @@ public class StringUtils {
      * Constant representing the default quote character (double quote), equal to '&quot;'</code>
      */
     public static final char DEFAULT_QUOTE_CHAR = '"';
+
+    private StringUtils() {
+    }
 
     /**
      * Check whether the given String has actual text.
@@ -490,6 +492,27 @@ public class StringUtils {
             sb.append(remaining);
         }
         return sb.toString();
+    }
+
+    /**
+     * Count the number of occurrences of a char in the String. When null is passed to String to search, it returns 0.
+     *
+     * @param haystack The String we like to search
+     * @param needle the character to search for.
+     * @return The number of occurrences found.
+     */
+    @Reviewed
+    public static int countOccurrences(String haystack, char needle) {
+        int count = 0;
+        if (haystack == null) {
+            return count;
+        }
+        for (int i = 0; i < haystack.length(); i++) {
+            if (haystack.charAt(i) == needle) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }

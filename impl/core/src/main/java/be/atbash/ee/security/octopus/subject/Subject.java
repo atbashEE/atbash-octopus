@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
 import java.util.Collection;

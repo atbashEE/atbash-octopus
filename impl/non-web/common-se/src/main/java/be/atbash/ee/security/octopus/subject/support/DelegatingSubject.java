@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.subject.support;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
 import be.atbash.ee.security.octopus.subject.ExecutionException;

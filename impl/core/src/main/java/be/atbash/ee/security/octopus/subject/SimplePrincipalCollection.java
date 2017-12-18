@@ -247,7 +247,7 @@ public class SimplePrincipalCollection implements PrincipalCollection /*implemen
      * <p/>
      * NOTE: Don't forget to change the serialVersionUID constant at the top of this class
      * if you make any backwards-incompatible serializatoin changes!!!
-     * (use the JDK 'serialver' program for this)
+     * (use the JDK 'serialver' program for this) // FIXME Note from Shiro, is principalColleciton still stored?
      *
      * @param out output stream provided by Java serialization
      * @throws IOException if there is a stream error
@@ -266,8 +266,8 @@ public class SimplePrincipalCollection implements PrincipalCollection /*implemen
      * input stream.
      * <p/>
      * NOTE: Don't forget to change the serialVersionUID constant at the top of this class
-     * if you make any backwards-incompatible serializatoin changes!!!
-     * (use the JDK 'serialver' program for this)
+     * if you make any backwards-incompatible serialization changes!!!
+     * (use the JDK 'serialver' program for this) // FIXME Note from Shiro, is principalColleciton still stored?
      *
      * @param in input stream provided by
      * @throws IOException            if there is an input/output problem

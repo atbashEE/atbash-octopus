@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.Authorizer;
-import be.atbash.ee.security.octopus.authz.Permission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
 import be.atbash.ee.security.octopus.subject.DefaultSubjectFactory;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;

@@ -46,6 +46,12 @@
         </dependency>
 
         <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-token-generator</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>be.atbash.config</groupId>
             <artifactId>geronimo-config</artifactId>
             <version>0.9.1-SNAPSHOT</version>

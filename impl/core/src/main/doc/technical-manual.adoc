@@ -1,0 +1,7 @@
+= Octopus Framework - Technical
+Rudy De Busscher <rdebusscher@gmail.com>
+v0.2, ??/??/2017
+
+== Java SE
+
+include::tech-offlineToken.adi[]
