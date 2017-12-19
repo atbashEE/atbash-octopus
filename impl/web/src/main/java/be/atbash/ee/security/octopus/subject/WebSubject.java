@@ -837,7 +837,7 @@ public class WebSubject implements RequestPairSource, Subject {
         }
         List<PrincipalCollection> stack = getRunAsPrincipalsStack();
         if (stack == null) {
-            stack = new CopyOnWriteArrayList<PrincipalCollection>();
+            stack = new CopyOnWriteArrayList<>();
         }
         stack.add(0, principals);
         Session session = getSession();
@@ -1076,7 +1076,7 @@ public class WebSubject implements RequestPairSource, Subject {
             return securityManager.createSubject(subjectContext);
         }
 
-        /**
+        /*
          * Returns the backing context used to build the {@code Subject} instance, available to subclasses
          * since the {@code context} class attribute is marked as {@code private}.
          *

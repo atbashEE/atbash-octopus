@@ -15,8 +15,6 @@
  */
 package be.atbash.ee.security.octopus.context;
 
-import be.atbash.ee.security.octopus.ShiroEquivalent;
-
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -70,7 +68,7 @@ public class OctopusInvocationContext implements InvocationContext {
 
     @Override
     public Map<String, Object> getContextData() {
-        return new HashMap<String, Object>();
+        return new HashMap<>();
     }
 
     @Override

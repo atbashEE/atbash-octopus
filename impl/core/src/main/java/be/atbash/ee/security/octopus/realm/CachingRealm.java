@@ -76,18 +76,18 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
         return cacheManager;
     }
 
-/**
- * Sets the <tt>CacheManager</tt> to be used for data caching to reduce EIS round trips.
- * <p/>
- * This property is <tt>null</tt> by default, indicating that caching is turned off.
- *
- * @param cacheManager the <tt>CacheManager</tt> to use for data caching, or <tt>null</tt> to disable caching.
-
-public void setCacheManager(CacheManager cacheManager) {
-this.cacheManager = cacheManager;
-afterCacheManagerSet();
-}
- */
+    /*
+     * Sets the <tt>CacheManager</tt> to be used for data caching to reduce EIS round trips.
+     * <p/>
+     * This property is <tt>null</tt> by default, indicating that caching is turned off.
+     *
+     * @param cacheManager the <tt>CacheManager</tt> to use for data caching, or <tt>null</tt> to disable caching.
+    FIXME Not needed with CDI
+    public void setCacheManager(CacheManager cacheManager) {
+    this.cacheManager = cacheManager;
+    afterCacheManagerSet();
+    }
+     */
 
     /**
      * Returns {@code true} if caching should be used if a {@link CacheManager} has been

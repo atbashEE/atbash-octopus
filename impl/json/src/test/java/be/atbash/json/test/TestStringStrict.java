@@ -16,7 +16,6 @@
 package be.atbash.json.test;
 
 import be.atbash.json.parser.ParseException;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 public class TestStringStrict  {

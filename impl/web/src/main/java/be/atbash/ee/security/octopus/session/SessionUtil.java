@@ -52,7 +52,7 @@ public class SessionUtil {
         */
         HttpSession session = request.getSession();
 
-        HashMap<String, Object> content = new HashMap<String, Object>();
+        HashMap<String, Object> content = new HashMap<>();
         Enumeration keys = session.getAttributeNames();
 
         while (keys.hasMoreElements()) {

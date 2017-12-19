@@ -39,7 +39,7 @@ public interface Cache<K, V> {
      * @return the cached object or {@code null} if there is no entry for the specified {@code key}
      * @throws CacheException if there is a problem accessing the underlying cache system
      */
-    public V get(K key) throws CacheException;
+     V get(K key) throws CacheException;
 
     /**
      * Adds a Cache entry.
@@ -49,7 +49,7 @@ public interface Cache<K, V> {
      * @return the previous value associated with the given {@code key} or {@code null} if there was previous value
      * @throws CacheException if there is a problem accessing the underlying cache system
      */
-    public V put(K key, V value) throws CacheException;
+     V put(K key, V value) throws CacheException;
 
     /**
      * Remove the cache entry corresponding to the specified key.
@@ -58,33 +58,33 @@ public interface Cache<K, V> {
      * @return the previous value associated with the given {@code key} or {@code null} if there was previous value
      * @throws CacheException if there is a problem accessing the underlying cache system
      */
-    public V remove(K key) throws CacheException;
+     V remove(K key) throws CacheException;
 
     /**
      * Clear all entries from the cache.
      *
      * @throws CacheException if there is a problem accessing the underlying cache system
      */
-    public void clear() throws CacheException;
+     void clear() throws CacheException;
 
     /**
      * Returns the number of entries in the cache.
      *
      * @return the number of entries in the cache.
      */
-    public int size();
+     int size();
 
     /**
      * Returns a view of all the keys for entries contained in this cache.
      *
      * @return a view of all the keys for entries contained in this cache.
      */
-    public Set<K> keys();
+     Set<K> keys();
 
     /**
      * Returns a view of all of the values contained in this cache.
      *
      * @return a view of all of the values contained in this cache.
      */
-    public Collection<V> values();
+     Collection<V> values();
 }

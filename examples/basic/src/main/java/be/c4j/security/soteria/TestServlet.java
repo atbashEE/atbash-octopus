@@ -32,8 +32,6 @@ import java.io.IOException;
 @WebServlet("/servlet")
 public class TestServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-
     @Inject
     private UserPrincipal userPrincipal;
 

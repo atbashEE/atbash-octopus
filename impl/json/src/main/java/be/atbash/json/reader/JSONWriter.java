@@ -108,7 +108,7 @@ public class JSONWriter {
         public <E extends Map<String, ?>> void writeJSONString(E map, Appendable out) throws IOException {
             boolean first = true;
             JSONStyle.DEFAULT.objectStart(out);
-            /**
+            /*
              * do not use <String, Object> to handle non String key maps
              */
             for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -186,7 +186,7 @@ public class JSONWriter {
         registerWriter(toStringWriter, Integer.class, Long.class, Byte.class, Short.class, BigInteger.class, BigDecimal.class);
         registerWriter(toStringWriter, Boolean.class);
 
-        /**
+        /*
          * Array
          */
 

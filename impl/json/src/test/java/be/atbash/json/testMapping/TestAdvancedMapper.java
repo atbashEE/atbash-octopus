@@ -46,9 +46,7 @@ public class TestAdvancedMapper {
             if (text == null) {
                 return null;
             }
-            synchronized (sdf) {
-                return sdf.parse(text.toString());
-            }
+            return sdf.parse(text.toString());
         }
     }
 }

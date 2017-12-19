@@ -73,7 +73,7 @@ public class OctopusRealm extends AuthorizingRealm {
 
             if (OctopusWebSecurityContext.isSystemAccount(primaryPrincipal)) {
                 // No permissions or roles, use @SystemAccount
-                authorizationInfo = new SimpleAuthorizationInfo();
+                authorizationInfo = new SimpleAuthorizationInfo();  // TODO
             } else {
                 //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
             }

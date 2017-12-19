@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static be.atbash.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
-
 /**
  * JSONValue is the helper class In most of case you should use those static
  * methode to use JSON-smart

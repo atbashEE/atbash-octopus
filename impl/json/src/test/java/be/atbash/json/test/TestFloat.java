@@ -17,7 +17,6 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
-import be.atbash.json.style.JSONStyle;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

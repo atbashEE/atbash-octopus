@@ -96,10 +96,10 @@ public class SimpleAuthorizationInfo implements AuthorizationInfo {
      * @param roles the roles to add to those associated with the account.
      */
     public void addRoles(Collection<String> roles) {
-        if (roles == null) {
-            roles = new HashSet<>();
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
         }
-        roles.addAll(roles);
+        this.roles.addAll(roles);
     }
 
     public Set<String> getStringPermissions() {

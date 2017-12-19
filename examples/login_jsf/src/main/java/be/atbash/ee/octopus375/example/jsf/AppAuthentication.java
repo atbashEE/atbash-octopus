@@ -24,7 +24,6 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Typed;
 
 

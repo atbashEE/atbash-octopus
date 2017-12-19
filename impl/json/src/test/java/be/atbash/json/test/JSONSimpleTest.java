@@ -28,7 +28,7 @@ public class JSONSimpleTest {
         String s = "[1]";
         JSONParser p = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertEquals(Long.valueOf(1), (Long) array.get(0));
+        assertEquals(Long.valueOf(1), array.get(0));
         // FIXME, wrong test on the type
     }
 
@@ -37,7 +37,7 @@ public class JSONSimpleTest {
         String s = "[1]";
         JSONParser p = new JSONParser(JSONParser.MODE_PERMISSIVE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertEquals(Integer.valueOf(1), (Integer) array.get(0));
+        assertEquals(Integer.valueOf(1), array.get(0));
         // FIXME, wrong test on the type
     }
 }

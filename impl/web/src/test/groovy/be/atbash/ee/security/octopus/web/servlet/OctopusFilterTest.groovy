@@ -43,7 +43,7 @@ class OctopusFilterTest extends Specification {
     FilterChainResolver filterChainResolverStub = Stub(FilterChainResolver)
 
     @Collaborator
-    SecuredURLReader securedURLReaderMock = Mock(SecuredURLReader);
+    SecuredURLReader securedURLReaderMock = Mock(SecuredURLReader)
 
     @Subject
     OctopusFilter filter

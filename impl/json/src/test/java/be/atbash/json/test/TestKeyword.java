@@ -18,7 +18,6 @@ package be.atbash.json.test;
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNull;

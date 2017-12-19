@@ -89,10 +89,9 @@ public class MapCache<K, V> implements Cache<K, V> {
     }
 
     public String toString() {
-        return new StringBuilder("MapCache '")
-                .append(name).append("' (")
-                .append(map.size())
-                .append(" entries)")
-                .toString();
+        return "MapCache '" +
+                name + "' (" +
+                map.size() +
+                " entries)";
     }
 }

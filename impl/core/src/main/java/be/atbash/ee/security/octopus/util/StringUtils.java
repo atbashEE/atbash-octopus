@@ -362,7 +362,7 @@ public final class StringUtils {
             return null;
         }
 
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean inQuotes = false;
 

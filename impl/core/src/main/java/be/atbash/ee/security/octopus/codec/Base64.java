@@ -185,8 +185,8 @@ public class Base64 {
             // return false;
             return true;
         }
-        for (int i = 0; i < length; i++) {
-            if (!isBase64(arrayOctect[i])) {
+        for (byte anArrayOctect : arrayOctect) {
+            if (!isBase64(anArrayOctect)) {
                 return false;
             }
         }

@@ -64,7 +64,7 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
      * {@link AuthenticationListener AuthenticationListener} collection is a non-null {@code ArrayList}.
      */
     public AbstractAuthenticator() {
-        listeners = new ArrayList<AuthenticationListener>();
+        listeners = new ArrayList<>();
     }
 
     /*--------------------------------------------
@@ -185,7 +185,7 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
     public AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
 
         if (token == null) {
-            throw new IllegalArgumentException("Method argumet (authentication token) cannot be null.");
+            throw new IllegalArgumentException("Method argument (authentication token) cannot be null.");
         }
 
         log.trace("Authentication attempt received for token [{}]", token);

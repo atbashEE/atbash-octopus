@@ -112,7 +112,7 @@ public class HttpServletSession implements Session {
             Enumeration namesEnum = httpSession.getAttributeNames();
             Collection<Object> keys = null;
             if (namesEnum != null) {
-                keys = new ArrayList<Object>();
+                keys = new ArrayList<>();
                 while (namesEnum.hasMoreElements()) {
                     keys.add(namesEnum.nextElement());
                 }

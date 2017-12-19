@@ -92,7 +92,7 @@ public abstract class JsonReaderI<T> {
     /**
      * add a value in an array json object.
      */
-    public void addValue(Object current, Object value) throws IOException {
+    public void addValue(Object current, Object value) {
         throw new RuntimeException(ERR_MSG + " addValue(Object current, Object value) in " + this.getClass());
     }
 

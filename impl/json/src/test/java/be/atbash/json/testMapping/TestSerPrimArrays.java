@@ -16,27 +16,26 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestSerPrimArrays {
-    SimpleDateFormat sdf;
+    private SimpleDateFormat sdf;
 
-    String testDateString;
-    Date testDate;
+    private String testDateString;
+    private Date testDate;
 
-    public TestSerPrimArrays() {
-        try {
-            sdf = new SimpleDateFormat("dd/MM/yyyy");
-            testDateString = "12/01/2010";
-            testDate = sdf.parse(testDateString);
-        } catch (Exception e) {
-        }
-
+    @Before
+    public void setup() throws ParseException {
+        sdf = new SimpleDateFormat("dd/MM/yyyy");
+        testDateString = "12/01/2010";
+        testDate = sdf.parse(testDateString);
     }
 
     @Test

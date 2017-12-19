@@ -78,7 +78,7 @@ class HMACAlgorithmFactoryTest extends Specification {
     private byte[] defineSecret(int byteLength) {
         byte[] bytes = new byte[byteLength]
         SecureRandom secureRandom = new SecureRandom()
-        secureRandom.nextBytes(bytes);
+        secureRandom.nextBytes(bytes)
 
         return bytes
     }

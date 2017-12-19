@@ -33,7 +33,7 @@ public class TestBigValue {
      */
     @Test
     public void testBigDecimal() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         BigDecimal bigDec = new BigDecimal(bigStr + "." + bigStr);
         map.put("big", bigDec);
         String test = JSONValue.toJSONString(map);
@@ -49,7 +49,7 @@ public class TestBigValue {
      */
     @Test
     public void testBigInteger() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         BigInteger bigInt = new BigInteger(bigStr);
         map.put("big", bigInt);
         String test = JSONValue.toJSONString(map);

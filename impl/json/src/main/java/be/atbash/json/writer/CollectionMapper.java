@@ -235,8 +235,6 @@ public class CollectionMapper {
         }
     }
 
-    ;
-
     public static class ListClass<T> extends JsonReaderI<T> {
         final Class<?> type;
         final Class<?> instance;
@@ -277,5 +275,4 @@ public class CollectionMapper {
         }
     }
 
-    ;
 }

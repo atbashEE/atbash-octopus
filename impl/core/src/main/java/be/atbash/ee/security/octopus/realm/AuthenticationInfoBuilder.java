@@ -37,7 +37,7 @@ public class AuthenticationInfoBuilder {
     private String userName;
     private Object password;
     private ByteSource salt;
-    private Map<Serializable, Serializable> userInfo = new HashMap<Serializable, Serializable>();
+    private Map<Serializable, Serializable> userInfo = new HashMap<>();
     private boolean externalPasswordCheck = false;
 
     public AuthenticationInfoBuilder principalId(Serializable principalId) {

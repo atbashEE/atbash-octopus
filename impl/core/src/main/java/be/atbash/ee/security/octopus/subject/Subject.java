@@ -364,7 +364,7 @@ public interface Subject {
      */
     boolean isRemembered();
 
-    /**
+    /*
      * Returns the application {@code Session} associated with this Subject.  If no session exists when this
      * method is called, a new session will be created, associated with this Subject, and then returned.
      *
@@ -374,7 +374,7 @@ public interface Subject {
     // FIXME Usage??
     //Session getSession();
 
-    /**
+    /*
      * Returns the application {@code Session} associated with this Subject.  Based on the boolean argument,
      * this method functions as follows:
      * <ul>

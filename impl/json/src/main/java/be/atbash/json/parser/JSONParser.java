@@ -34,10 +34,6 @@ package be.atbash.json.parser;
 import be.atbash.json.JSONValue;
 import be.atbash.json.writer.JsonReaderI;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-
 /**
  * Stripped down version of the original JSONParser, only support for Strings.
  */

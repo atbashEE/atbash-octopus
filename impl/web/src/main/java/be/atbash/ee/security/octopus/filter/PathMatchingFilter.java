@@ -57,7 +57,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
      * <p>The values are filter-specific data that this Filter should use when processing the corresponding
      * key (path).  The values can be null if no Filter-specific config was specified for that url.
      */
-    protected Map<String, Object> appliedPaths = new LinkedHashMap<String, Object>();
+    protected Map<String, Object> appliedPaths = new LinkedHashMap<>();
 
     /**
      * Splits any comma-delmited values that might be found in the <code>config</code> argument and sets the resulting

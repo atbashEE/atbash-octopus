@@ -65,7 +65,7 @@ public interface ByteSource {
      * Utility class that can construct ByteSource instances.  This is slightly nicer than needing to know the
      * {@code ByteSource} implementation class to use.
      */
-    public static final class Util {
+      final class Util {
 
         /**
          * Returns a new {@code ByteSource} instance representing the specified byte array.

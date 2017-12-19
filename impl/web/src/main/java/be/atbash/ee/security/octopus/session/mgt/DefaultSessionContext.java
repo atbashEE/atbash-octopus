@@ -35,8 +35,6 @@ import java.util.Map;
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.session.mgt.DefaultSessionContext", "org.apache.shiro.web.session.mgt.DefaultWebSessionContext"})
 public class DefaultSessionContext extends MapContext implements SessionContext, RequestPairSource {
 
-    private static final long serialVersionUID = -1424160751361252966L;
-
     private static final String HOST = DefaultSessionContext.class.getName() + ".HOST";
     private static final String SESSION_ID = DefaultSessionContext.class.getName() + ".SESSION_ID";
     private static final String SERVLET_REQUEST = DefaultSessionContext.class.getName() + ".SERVLET_REQUEST";

@@ -255,7 +255,7 @@ public class DelegatingSubject implements Subject {
     }
 
     public <V> Callable<V> associateWith(Callable<V> callable) {
-        return new SubjectCallable<V>(this, callable);
+        return new SubjectCallable<>(this, callable);
     }
 
     public Runnable associateWith(Runnable runnable) {

@@ -49,7 +49,7 @@ public abstract class ThreadContext {
 
     public static final String SUBJECT_KEY = ThreadContext.class.getName() + "_SUBJECT_KEY";
 
-    private static final ThreadLocal<Map<Object, Object>> resources = new InheritableThreadLocalMap<Map<Object, Object>>();
+    private static final ThreadLocal<Map<Object, Object>> resources = new InheritableThreadLocalMap<>();
 
     /**
      * Default no-argument constructor.
@@ -64,7 +64,7 @@ public abstract class ThreadContext {
      * @return the map of bound resources
      */
     public static Map<Object, Object> getResources() {
-        return resources != null ? new HashMap<Object, Object>(resources.get()) : null;
+        return resources != null ? new HashMap<>(resources.get()) : null;
     }
 
     /**
@@ -236,7 +236,7 @@ public abstract class ThreadContext {
 
     private static final class InheritableThreadLocalMap<T extends Map<Object, Object>> extends InheritableThreadLocal<Map<Object, Object>> {
         protected Map<Object, Object> initialValue() {
-            return new HashMap<Object, Object>();
+            return new HashMap<>();
         }
 
         /**

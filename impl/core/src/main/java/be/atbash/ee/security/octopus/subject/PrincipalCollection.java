@@ -118,7 +118,7 @@ public interface PrincipalCollection extends Iterable, Serializable {
      */
     Set asSet();
 
-    /**
+    /*
      * Returns a single Subject's principals retrieved from the specified Realm <em>only</em> as a Collection, or an empty
      * Collection if there are not any principals from that realm.
      * <p/>

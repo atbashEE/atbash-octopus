@@ -81,9 +81,9 @@ public class JSONStyle {
     }
 
     /**
-     * Start the first Obeject element
+     * Start the first Object element
      */
-    public void objectFirstStart(Appendable out) throws IOException {
+    public void objectFirstStart(Appendable out) {
     }
 
     /**
@@ -96,7 +96,7 @@ public class JSONStyle {
     /**
      * End Of Object element
      */
-    public void objectElmStop(Appendable out) throws IOException {
+    public void objectElmStop(Appendable out) {
     }
 
     /**
@@ -123,7 +123,7 @@ public class JSONStyle {
     /**
      * Start the first Array element
      */
-    public void arrayfirstObject(Appendable out) throws IOException {
+    public void arrayfirstObject(Appendable out) {
     }
 
     /**
@@ -136,6 +136,6 @@ public class JSONStyle {
     /**
      * End of an Array element
      */
-    public void arrayObjectEnd(Appendable out) throws IOException {
+    public void arrayObjectEnd(Appendable out) {
     }
 }

@@ -45,20 +45,20 @@ public class TestInts {
     public void testIntResult() {
         String s = "{\"t\":1}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_RFC4627).parse(s);
-        assertEquals(o.get("t"), Integer.valueOf(1));
+        assertEquals(o.get("t"), 1);
 
         o = (JSONObject) new JSONParser(JSONParser.MODE_JSON_SIMPLE).parse(s);
-        assertEquals(o.get("t"), Long.valueOf(1));
+        assertEquals(o.get("t"), 1L);
 
         o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), Integer.valueOf(1));
+        assertEquals(o.get("t"), 1);
     }
 
     @Test
     public void testInt() {
         String s = "{t:90}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), Integer.valueOf(90));
+        assertEquals(o.get("t"), 90);
     }
 
     @Test

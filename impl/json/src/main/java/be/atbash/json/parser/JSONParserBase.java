@@ -263,7 +263,7 @@ abstract class JSONParserBase {
         return r;
     }
 
-    abstract protected void read() throws IOException;
+    abstract protected void read();
 
     protected <T> T readArray(JsonReaderI<T> mapper) throws IOException {
         Object current = mapper.createArray();
@@ -526,7 +526,7 @@ abstract class JSONParserBase {
         }
     }
 
-    abstract protected void readNoEnd() throws IOException;
+    abstract protected void readNoEnd();
 
     abstract protected void readNQString(boolean[] stop) throws IOException;
 
@@ -627,7 +627,7 @@ abstract class JSONParserBase {
     /**
      * store and read
      */
-    abstract void readS() throws IOException;
+    abstract void readS();
 
     abstract protected void readString() throws IOException;
 

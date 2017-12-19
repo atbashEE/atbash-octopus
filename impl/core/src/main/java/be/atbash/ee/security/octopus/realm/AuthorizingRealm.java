@@ -364,7 +364,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     protected abstract AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals);
 
     private Collection<Permission> getPermissions(AuthorizationInfo info) {
-        Set<Permission> permissions = new HashSet<Permission>();
+        Set<Permission> permissions = new HashSet<>();
 
         if (info != null) {
             Collection<Permission> perms = info.getObjectPermissions();

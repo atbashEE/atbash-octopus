@@ -24,15 +24,18 @@ import java.util.*;
  * Static helper class for use dealing with Collections.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.util.CollectionUtils"})
-public class CollectionUtils {
-    // FIXME Not a correct Singleton
+public final class CollectionUtils {
+
     //TODO - complete JavaDoc
+
+    private CollectionUtils() {
+    }
 
     public static <E> Set<E> asSet(E... elements) {
         if (elements == null || elements.length == 0) {
             return Collections.emptySet();
         }
-        LinkedHashSet<E> set = new LinkedHashSet<E>(elements.length * 4 / 3 + 1);
+        LinkedHashSet<E> set = new LinkedHashSet<>(elements.length * 4 / 3 + 1);
         Collections.addAll(set, elements);
         return set;
     }
@@ -99,7 +102,7 @@ public class CollectionUtils {
         }
         // Avoid integer overflow when a large array is passed in
         int capacity = computeListCapacity(elements.length);
-        ArrayList<E> list = new ArrayList<E>(capacity);
+        ArrayList<E> list = new ArrayList<>(capacity);
         Collections.addAll(list, elements);
         return list;
     }

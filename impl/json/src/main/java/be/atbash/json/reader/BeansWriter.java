@@ -26,29 +26,25 @@ import java.io.IOException;
 // This is the net.minidev.BeansWriterASM
 public class BeansWriter implements JsonWriterI<Object> {
     public <E> void writeJSONString(E value, Appendable out) throws IOException {
-        try {
-            Class<?> cls = value.getClass();
-            boolean needSep = false;
-            @SuppressWarnings("rawtypes")
-            BeansAccess fields = BeansAccess.get(cls, JSONUtil.JSON_SMART_FIELD_FILTER);
-            out.append('{');
-            for (Accessor field : fields.getAccessors()) {
-                @SuppressWarnings("unchecked")
-                Object v = fields.get(value, field.getIndex());
-                if (v == null && JSONStyle.DEFAULT.ignoreNull()) {
-                    continue;
-                }
-                if (needSep) {
-                    out.append(',');
-                } else {
-                    needSep = true;
-                }
-                String key = field.getName();
-                JSONObject.writeJSONKV(key, v, out);
+        Class<?> cls = value.getClass();
+        boolean needSep = false;
+        @SuppressWarnings("rawtypes")
+        BeansAccess fields = BeansAccess.get(cls, JSONUtil.JSON_SMART_FIELD_FILTER);
+        out.append('{');
+        for (Accessor field : fields.getAccessors()) {
+            @SuppressWarnings("unchecked")
+            Object v = fields.get(value, field.getIndex());
+            if (v == null && JSONStyle.DEFAULT.ignoreNull()) {
+                continue;
             }
-            out.append('}');
-        } catch (IOException e) {
-            throw e;
+            if (needSep) {
+                out.append(',');
+            } else {
+                needSep = true;
+            }
+            String key = field.getName();
+            JSONObject.writeJSONKV(key, v, out);
         }
+        out.append('}');
     }
 }

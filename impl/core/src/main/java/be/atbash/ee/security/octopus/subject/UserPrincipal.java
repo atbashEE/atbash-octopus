@@ -31,7 +31,7 @@ public class UserPrincipal implements Principal, Serializable {
     private String name;
     private boolean systemAccount = false;
 
-    private Map<Serializable, Serializable> userInfo = new HashMap<Serializable, Serializable>();
+    private Map<Serializable, Serializable> userInfo = new HashMap<>();
 
     // Weld needs this to make a proxy
     public UserPrincipal() {

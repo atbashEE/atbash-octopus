@@ -61,14 +61,14 @@ public class TestMisc {
     public void testFloat() {
         String s = "123.5";
         Object o = JSONValue.parse(s);
-        assertEquals(o, new Double(123.5));
+        assertEquals(o, 123.5);
     }
 
     @Test
     public void testFloat2() {
         String s = "123.5E1";
         Object o = JSONValue.parse(s);
-        assertEquals(o, new Double(1235));
+        assertEquals(o, 1235d);
     }
 
     @Test

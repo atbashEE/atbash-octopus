@@ -89,7 +89,7 @@ public class TestMapBeans  {
 		}
 	}
 
-	public static enum ColorEnum {
+	public enum ColorEnum {
 		bleu, green, red, yellow
 	}
 

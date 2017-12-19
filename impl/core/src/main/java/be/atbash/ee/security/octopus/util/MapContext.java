@@ -30,8 +30,6 @@ import java.util.*;
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.util.MapContext"})
 public class MapContext implements Map<String, Object>, Serializable {
 
-    private static final long serialVersionUID = 5373399119017820322L;
-
     private final Map<String, Object> backingMap;
 
     public MapContext() {

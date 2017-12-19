@@ -86,7 +86,6 @@ public abstract class AbstractCacheManager implements CacheManager {
      * Cleanup method that first {@link LifecycleUtils#destroy destroys} all of it's managed caches and then
      * {@link java.util.Map#clear clears} out the internally referenced cache map.
      *
-     * @throws Exception if any of the managed caches can't destroy properly.
      */
     @PreDestroy
     public void destroy() {

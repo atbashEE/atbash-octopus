@@ -15,8 +15,6 @@
  */
 package be.atbash.json.reader;
 
-import be.atbash.json.style.JSONStyle;
-
 import java.io.IOException;
 
 public interface JsonWriterI<T> {

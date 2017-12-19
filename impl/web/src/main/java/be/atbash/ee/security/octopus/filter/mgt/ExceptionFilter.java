@@ -63,7 +63,7 @@ public class ExceptionFilter extends AdviceFilter {
 
                 servletResponse.getWriter().print(info.toJSON());
                 */
-                exception = null;
+                exception = null;  // TODO
             } else {
                 // Since we are in a finally block, this exception takes over and thus erasing all information we have about stacktraces
                 // OWASP A6
