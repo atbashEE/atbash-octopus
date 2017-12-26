@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.util;
 
-import be.atbash.ee.security.octopus.Reviewed;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.util.Reviewed;
 
 /**
  * Interface implemented by components that can be named, such as via configuration, and wish to have that name

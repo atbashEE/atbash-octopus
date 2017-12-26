@@ -43,8 +43,8 @@ import java.util.Map;
 
 public class CollectionMapper {
 
-    public static class MapType<T> extends JsonReaderI<T> {
-		final ParameterizedType type;
+    public static class MapType<T> extends Mapper<T> {
+        final ParameterizedType type;
         final Class<?> rawClass;
         final Class<?> instance;
         final BeansAccess<?> ba;
@@ -55,31 +55,31 @@ public class CollectionMapper {
         final Class<?> keyClass;
         final Class<?> valueClass;
 
-        JsonReaderI<?> subMapper;
+        Mapper<?> subMapper;
 
         public MapType(JSONReader base, ParameterizedType type) {
             super(base);
             this.type = type;
             this.rawClass = (Class<?>) type.getRawType();
-			if (rawClass.isInterface()) {
-				instance = JSONObject.class;
-			} else {
-				instance = rawClass;
-			}
+            if (rawClass.isInterface()) {
+                instance = JSONObject.class;
+            } else {
+                instance = rawClass;
+            }
             ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
 
             keyType = type.getActualTypeArguments()[0];
             valueType = type.getActualTypeArguments()[1];
-			if (keyType instanceof Class) {
-				keyClass = (Class<?>) keyType;
-			} else {
-				keyClass = (Class<?>) ((ParameterizedType) keyType).getRawType();
-			}
-			if (valueType instanceof Class) {
-				valueClass = (Class<?>) valueType;
-			} else {
-				valueClass = (Class<?>) ((ParameterizedType) valueType).getRawType();
-			}
+            if (keyType instanceof Class) {
+                keyClass = (Class<?>) keyType;
+            } else {
+                keyClass = (Class<?>) ((ParameterizedType) keyType).getRawType();
+            }
+            if (valueType instanceof Class) {
+                valueClass = (Class<?>) valueType;
+            } else {
+                valueClass = (Class<?>) ((ParameterizedType) valueType).getRawType();
+            }
         }
 
         @Override
@@ -93,18 +93,18 @@ public class CollectionMapper {
         }
 
         @Override
-        public JsonReaderI<?> startArray(String key) {
-			if (subMapper == null) {
-				subMapper = base.getMapper(valueType);
-			}
+        public Mapper<?> startArray(String key) {
+            if (subMapper == null) {
+                subMapper = base.getMapper(valueType);
+            }
             return subMapper;
         }
 
         @Override
-        public JsonReaderI<?> startObject(String key) {
-			if (subMapper == null) {
-				subMapper = base.getMapper(valueType);
-			}
+        public Mapper<?> startObject(String key) {
+            if (subMapper == null) {
+                subMapper = base.getMapper(valueType);
+            }
             return subMapper;
         }
 
@@ -127,21 +127,21 @@ public class CollectionMapper {
         }
     }
 
-    public static class MapClass<T> extends JsonReaderI<T> {
+    public static class MapClass<T> extends Mapper<T> {
         final Class<?> type;
         final Class<?> instance;
         final BeansAccess<?> ba;
 
-        JsonReaderI<?> subMapper;
+        Mapper<?> subMapper;
 
         public MapClass(JSONReader base, Class<?> type) {
             super(base);
             this.type = type;
-			if (type.isInterface()) {
-				this.instance = JSONObject.class;
-			} else {
-				this.instance = type;
-			}
+            if (type.isInterface()) {
+                this.instance = JSONObject.class;
+            } else {
+                this.instance = type;
+            }
             this.ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
         }
 
@@ -151,12 +151,12 @@ public class CollectionMapper {
         }
 
         @Override
-        public JsonReaderI<?> startArray(String key) {
+        public Mapper<?> startArray(String key) {
             return base.DEFAULT; // _ARRAY
         }
 
         @Override
-        public JsonReaderI<?> startObject(String key) {
+        public Mapper<?> startObject(String key) {
             return base.DEFAULT; // _MAP
         }
 
@@ -178,7 +178,7 @@ public class CollectionMapper {
         }
     }
 
-    public static class ListType<T> extends JsonReaderI<T> {
+    public static class ListType<T> extends Mapper<T> {
         final ParameterizedType type;
         final Class<?> rawClass;
         final Class<?> instance;
@@ -187,24 +187,24 @@ public class CollectionMapper {
         final Type valueType;
         final Class<?> valueClass;
 
-        JsonReaderI<?> subMapper;
+        Mapper<?> subMapper;
 
         public ListType(JSONReader base, ParameterizedType type) {
             super(base);
             this.type = type;
             this.rawClass = (Class<?>) type.getRawType();
-			if (rawClass.isInterface()) {
-				instance = JSONArray.class;
-			} else {
-				instance = rawClass;
-			}
+            if (rawClass.isInterface()) {
+                instance = JSONArray.class;
+            } else {
+                instance = rawClass;
+            }
             ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER); // NEW
             valueType = type.getActualTypeArguments()[0];
-			if (valueType instanceof Class) {
-				valueClass = (Class<?>) valueType;
-			} else {
-				valueClass = (Class<?>) ((ParameterizedType) valueType).getRawType();
-			}
+            if (valueType instanceof Class) {
+                valueClass = (Class<?>) valueType;
+            } else {
+                valueClass = (Class<?>) ((ParameterizedType) valueType).getRawType();
+            }
         }
 
         @Override
@@ -213,18 +213,18 @@ public class CollectionMapper {
         }
 
         @Override
-        public JsonReaderI<?> startArray(String key) {
-			if (subMapper == null) {
-				subMapper = base.getMapper(type.getActualTypeArguments()[0]);
-			}
+        public Mapper<?> startArray(String key) {
+            if (subMapper == null) {
+                subMapper = base.getMapper(type.getActualTypeArguments()[0]);
+            }
             return subMapper;
         }
 
         @Override
-        public JsonReaderI<?> startObject(String key) {
-			if (subMapper == null) {
-				subMapper = base.getMapper(type.getActualTypeArguments()[0]);
-			}
+        public Mapper<?> startObject(String key) {
+            if (subMapper == null) {
+                subMapper = base.getMapper(type.getActualTypeArguments()[0]);
+            }
             return subMapper;
         }
 
@@ -235,21 +235,21 @@ public class CollectionMapper {
         }
     }
 
-    public static class ListClass<T> extends JsonReaderI<T> {
+    public static class ListClass<T> extends Mapper<T> {
         final Class<?> type;
         final Class<?> instance;
         final BeansAccess<?> ba;
 
-        JsonReaderI<?> subMapper;
+        Mapper<?> subMapper;
 
         public ListClass(JSONReader base, Class<?> clazz) {
             super(base);
             this.type = clazz;
-			if (clazz.isInterface()) {
-				instance = JSONArray.class;
-			} else {
-				instance = clazz;
-			}
+            if (clazz.isInterface()) {
+                instance = JSONArray.class;
+            } else {
+                instance = clazz;
+            }
             ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
         }
 
@@ -259,12 +259,12 @@ public class CollectionMapper {
         }
 
         @Override
-        public JsonReaderI<?> startArray(String key) {
+        public Mapper<?> startArray(String key) {
             return base.DEFAULT;// _ARRAY;
         }
 
         @Override
-        public JsonReaderI<?> startObject(String key) {
+        public Mapper<?> startObject(String key) {
             return base.DEFAULT;// _MAP;
         }
 

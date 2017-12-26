@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.jwt.parameter
 
-import be.atbash.ee.security.octopus.config.ConfigurationException
 import be.atbash.ee.security.octopus.jwt.JWTEncoding
 import be.atbash.ee.security.octopus.jwt.keys.HMACSecret
 import be.atbash.ee.security.octopus.jwt.keys.SecretKeyType

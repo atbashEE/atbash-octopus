@@ -1,8 +1,10 @@
 === 0.2
 
 . Split into different modules (Core, JSON, Non-Web [Java SE, ...], Web [JSF, JAX-RS])
+. Octopus-jwt-support for handling JSON supporting plain, JWS and JWE.
 . Octopus-json is optimized smart-json code
-. OfflineToken for standalone Java SE
+. MicroProfile JWT Auth for Rest (POC)
+. OfflineToken for standalone Java SE (POC)
 
 === 0.1
 

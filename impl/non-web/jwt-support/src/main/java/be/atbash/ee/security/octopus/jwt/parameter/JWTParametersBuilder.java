@@ -15,10 +15,10 @@
  */
 package be.atbash.ee.security.octopus.jwt.parameter;
 
-import be.atbash.ee.security.octopus.Reviewed;
-import be.atbash.ee.security.octopus.config.ConfigurationException;
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
 import be.atbash.ee.security.octopus.jwt.keys.SecretKeyType;
+import be.atbash.util.Reviewed;
+import be.atbash.util.exception.AtbashIllegalActionException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.KeyType;
 import org.slf4j.Logger;
@@ -137,7 +137,7 @@ public final class JWTParametersBuilder {
 
     private void validateJWEParameters() {
         if (secretKeyEncryption == null) {
-            throw new ConfigurationException("JWE encoding requires a JWK secret for the encryption");
+            throw new AtbashIllegalActionException("JWE encoding requires a JWK secret for the encryption");
         }
 
     }
@@ -145,7 +145,7 @@ public final class JWTParametersBuilder {
     private void validateJWSParameters() {
 
         if (secretKeySigning == null) {
-            throw new ConfigurationException("JWS encoding requires a JWK secret for the signing");
+            throw new AtbashIllegalActionException("JWS encoding requires a JWK secret for the signing");
         }
 
     }

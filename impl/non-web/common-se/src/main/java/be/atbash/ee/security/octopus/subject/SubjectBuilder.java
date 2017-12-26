@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 
 /**
  *
@@ -124,7 +124,7 @@ public class SubjectBuilder {
      * @return this {@code Builder} instance for method chaining.
      */
     public SubjectBuilder principals(PrincipalCollection principals) {
-        if (!CollectionUtils.isEmpty(principals)) {
+        if (!OctopusCollectionUtils.isEmpty(principals)) {
             this.subjectContext.setPrincipals(principals);
         }
         return this;

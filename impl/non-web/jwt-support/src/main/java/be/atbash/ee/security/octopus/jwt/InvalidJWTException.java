@@ -15,13 +15,13 @@
  */
 package be.atbash.ee.security.octopus.jwt;
 
-import be.atbash.ee.security.octopus.OctopusException;
+import be.atbash.util.exception.AtbashException;
 
 /**
  *
  */
 
-public class InvalidJWTException extends OctopusException{
+public class InvalidJWTException extends AtbashException {
 
     public InvalidJWTException(String message) {
         super(message);

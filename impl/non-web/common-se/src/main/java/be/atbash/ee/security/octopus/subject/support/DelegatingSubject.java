@@ -18,15 +18,16 @@ package be.atbash.ee.security.octopus.subject.support;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
-import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
 import be.atbash.ee.security.octopus.subject.ExecutionException;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.SubjectBuilder;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
+import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,11 +84,11 @@ public class DelegatingSubject implements Subject {
     }
 
     protected boolean hasPrincipals() {
-        return !CollectionUtils.isEmpty(getPrincipals());
+        return !OctopusCollectionUtils.isEmpty(getPrincipals());
     }
 
     private Object getPrimaryPrincipal(PrincipalCollection principals) {
-        if (!CollectionUtils.isEmpty(principals)) {
+        if (!OctopusCollectionUtils.isEmpty(principals)) {
             return principals.getPrimaryPrincipal();
         }
         return null;

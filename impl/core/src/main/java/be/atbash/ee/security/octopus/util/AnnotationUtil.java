@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.util;
 
-import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -60,7 +60,7 @@ public final class AnnotationUtil {
                     }
 
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new OctopusUnexpectedException(e);
+                    throw new AtbashUnexpectedException(e);
                 }
             }
         }
@@ -78,7 +78,7 @@ public final class AnnotationUtil {
 
                     result = Boolean.valueOf(value.toString());
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new OctopusUnexpectedException(e);
+                    throw new AtbashUnexpectedException(e);
                 }
             }
         }

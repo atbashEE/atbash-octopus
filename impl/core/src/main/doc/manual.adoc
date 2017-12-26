@@ -6,6 +6,18 @@ v0.2, ??/??/2017
 
 include::release.adi[]
 
+== Modules
+
+include::modules.adi[]
+
+== Java EE
+
+=== JAX-RS
+
+include::jaxrs.adi[]
+
+include::mpauth.adi[]
+
 == Java SE
 
 include::offlineToken.adi[]

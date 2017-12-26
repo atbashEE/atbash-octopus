@@ -15,9 +15,10 @@
  */
 package be.atbash.ee.security.octopus.config;
 
+import be.atbash.config.AbstractConfiguration;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
-import be.atbash.ee.security.octopus.util.StringUtils;
-import be.atbash.ee.security.octopus.util.reflection.ClassUtils;
+import be.atbash.util.StringUtils;
+import be.atbash.util.reflection.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.List;

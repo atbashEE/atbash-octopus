@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.context;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -49,7 +49,7 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-web</artifactId>
+            <artifactId>octopus-common-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

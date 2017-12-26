@@ -38,7 +38,7 @@ import be.atbash.json.reader.JsonWriterI;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.json.writer.FakeMapper;
 import be.atbash.json.writer.JSONReader;
-import be.atbash.json.writer.JsonReaderI;
+import be.atbash.json.writer.Mapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -113,7 +113,7 @@ public class JSONValue {
     /**
      * register a deserializer for a class.
      */
-    public static <T> void registerReader(Class<T> type, JsonReaderI<T> mapper) {
+    public static <T> void registerReader(Class<T> type, Mapper<T> mapper) {
         defaultReader.registerReader(type, mapper);
     }
 

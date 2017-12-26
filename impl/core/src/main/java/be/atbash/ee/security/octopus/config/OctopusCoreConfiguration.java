@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.config;
 
+import be.atbash.config.AbstractConfiguration;
+import be.atbash.config.exception.ConfigurationException;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;

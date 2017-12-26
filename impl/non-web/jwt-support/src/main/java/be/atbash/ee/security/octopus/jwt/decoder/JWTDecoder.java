@@ -15,13 +15,13 @@
  */
 package be.atbash.ee.security.octopus.jwt.decoder;
 
-import be.atbash.ee.security.octopus.exception.OctopusIllegalActionException;
-import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
 import be.atbash.ee.security.octopus.jwt.InvalidJWTException;
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
 import be.atbash.ee.security.octopus.jwt.keys.KeySelector;
-import be.atbash.ee.security.octopus.util.StringUtils;
 import be.atbash.json.JSONValue;
+import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashIllegalActionException;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.factories.DefaultJWSVerifierFactory;
@@ -58,7 +58,7 @@ public class JWTDecoder {
                     break;
                 case JWS:
                     if (keySelector == null) {
-                        throw new OctopusIllegalActionException("keySelector required for decoding a JWT encoded value");
+                        throw new AtbashIllegalActionException("(OCT-DEV-101) keySelector required for decoding a JWT encoded value");
                     }
                     result = readSignedJWT(data, keySelector, classType, verifier);
                     break;
@@ -71,7 +71,7 @@ public class JWTDecoder {
         } catch (ParseException e) {
             throw new InvalidJWTException("Invalid JWT structure");
         } catch (JOSEException e) {
-            throw new OctopusUnexpectedException(e);
+            throw new AtbashUnexpectedException(e);
         }
         return result;
     }

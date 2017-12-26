@@ -24,7 +24,6 @@ import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
@@ -97,12 +96,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
                 try {
 
                     authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
-                    // TODO Document this action
-                    if (authenticationInfo != null) {
-                        UserPrincipal user = (UserPrincipal) authenticationInfo.getPrincipals().getPrimaryPrincipal();
-                        user.addUserInfo("token", token);  // TODO Create constants!!
-                    }
-
                     verifyHashEncoding(authenticationInfo);
                 } finally {
                     // Even in the case of an exception (access not allowed) we need to reset this flag

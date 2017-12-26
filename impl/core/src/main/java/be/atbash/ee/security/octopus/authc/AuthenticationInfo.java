@@ -32,10 +32,11 @@ import java.io.Serializable;
  * <code>AuthenticationInfo</code>).
  * <p/>
  * Because the act of authentication (log-in) is orthogonal to authorization (access control), this interface is
- * intended to represent only the account data needed by Shiro during an authentication attempt.  Shiro also
- * has a parallel {@link org.apache.shiro.authz.AuthorizationInfo AuthorizationInfo} interface for use during the
+ * intended to represent only the account data needed by Octopus during an authentication attempt.  Octopus also
+ * has a parallel {@link be.atbash.ee.security.octopus.authz.AuthorizationInfo AuthorizationInfo} interface for use during the
  * authorization process that references access control data such as roles and permissions.
  * <p/>
+ * TODO
  * But because many if not most {@link org.apache.shiro.realm.Realm Realm}s store both sets of data for a Subject, it might be
  * convenient for a <code>Realm</code> implementation to utilize an implementation of the {@link Account Account}
  * interface instead, which is a convenience interface that combines both <code>AuthenticationInfo</code> and
@@ -43,13 +44,12 @@ import java.io.Serializable;
  * <code>Account</code> interface for a given <code>Realm</code> is entirely based on your application's needs or your
  * preferences.
  * <p/>
- * <p><b>Pleae note:</b>  Since Shiro sometimes logs authentication operations, please ensure your AuthenticationInfo's
+ * <p><b>Pleae note:</b>  Since Octopus sometimes logs authentication operations, please ensure your AuthenticationInfo's
  * <code>toString()</code> implementation does <em>not</em> print out account credentials (password, etc), as these might be viewable to
  * someone reading your logs.  This is good practice anyway, and account credentials should rarely (if ever) be printed
- * out for any reason.  If you're using Shiro's default implementations of this interface, they only ever print the
- * account {@link #getPrincipals() principals}, so you do not need to do anything additional.</p>
+ * out for any reason.</p>
  *
- * @see org.apache.shiro.authz.AuthorizationInfo AuthorizationInfo
+ * @see be.atbash.ee.security.octopus.authz.AuthorizationInfo AuthorizationInfo
  * @see Account
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.AuthenticationInfo"})
@@ -76,5 +76,13 @@ public interface AuthenticationInfo extends Serializable {
      * @return the credentials associated with the corresponding Subject.
      */
     Object getCredentials();
+
+    /**
+     * Various authentication methods (like MPToken) are only presented once and the principal id (for MPToken the jti is taken) is unique for each logon.
+     * So there is no need to cache anything related to this token.
+     *
+     * @return when true, authentication and authorization will never be cached
+     */
+    boolean isOneTimeAuthentication();
 
 }

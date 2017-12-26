@@ -16,8 +16,8 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
-import be.atbash.ee.security.octopus.util.StringUtils;
+import be.atbash.util.CollectionUtils;
+import be.atbash.util.StringUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

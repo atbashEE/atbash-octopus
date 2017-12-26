@@ -35,7 +35,7 @@ public class LocalSecret {
 
         String passPhrase = "Rudy";
 
-        // PBKDF2WithHmacSHA1 availbale on Java 7 and Java 8. Must match value used on LocalSecretFactory.
+        // PBKDF2WithHmacSHA1 available on Java 7 and Java 8. Must match value used on LocalSecretFactory.
         // TODO possible usage scenario. using theis local secret, the end user can create the OfflineToken with a Web application (where he needs to authenticate himself
         // in order to create a correct OfflineToken instance for the user.
         byte[] secret = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1").generateSecret(

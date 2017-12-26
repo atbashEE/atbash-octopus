@@ -20,8 +20,8 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
 import be.atbash.ee.security.octopus.util.MapContext;
+import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +70,7 @@ public class DefaultSubjectContext extends MapContext implements SubjectContext 
     }
 
     public void setPrincipals(PrincipalCollection principals) {
-        if (!CollectionUtils.isEmpty(principals)) {
+        if (!OctopusCollectionUtils.isEmpty(principals)) {
             put(PRINCIPALS, principals);
         }
     }
@@ -78,7 +78,7 @@ public class DefaultSubjectContext extends MapContext implements SubjectContext 
     public PrincipalCollection resolvePrincipals() {
         PrincipalCollection principals = getPrincipals();
 
-        if (CollectionUtils.isEmpty(principals)) {
+        if (OctopusCollectionUtils.isEmpty(principals)) {
             //check to see if they were just authenticated:
             AuthenticationInfo info = getAuthenticationInfo();
             if (info != null) {
@@ -86,7 +86,7 @@ public class DefaultSubjectContext extends MapContext implements SubjectContext 
             }
         }
 
-        if (CollectionUtils.isEmpty(principals)) {
+        if (OctopusCollectionUtils.isEmpty(principals)) {
             Subject subject = getSubject();
             if (subject != null) {
                 principals = subject.getPrincipals();

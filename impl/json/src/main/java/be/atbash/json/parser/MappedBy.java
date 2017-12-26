@@ -15,6 +15,8 @@
  */
 package be.atbash.json.parser;
 
+import be.atbash.json.writer.CustomMapper;
+
 import java.lang.annotation.*;
 
 /**
@@ -25,5 +27,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MappedBy {
 
-    Class<? extends  JSONEncoder> encoder();
+    Class<? extends JSONEncoder> encoder() default JSONEncoder.NOPJSONEncoder.class;
+
+    Class<? extends CustomMapper> mapper() default CustomMapper.NOPCustomMapper.class;
 }

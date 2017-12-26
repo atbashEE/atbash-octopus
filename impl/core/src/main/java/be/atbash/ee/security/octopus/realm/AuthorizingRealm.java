@@ -18,12 +18,12 @@ package be.atbash.ee.security.octopus.realm;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
-import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

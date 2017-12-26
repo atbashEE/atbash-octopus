@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.util;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.*;

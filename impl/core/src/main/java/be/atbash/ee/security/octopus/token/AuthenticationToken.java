@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.token;
 
-import be.atbash.ee.security.octopus.PublicAPI;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.util.PublicAPI;
 
 import java.io.Serializable;
 

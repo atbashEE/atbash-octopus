@@ -18,7 +18,12 @@ package be.atbash.ee.security.octopus.authc;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.codec.ByteSource;
+
+import java.io.Serializable;
+
+import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
 
 /**
  * Simple implementation of the {@link org.apache.shiro.authc.MergableAuthenticationInfo} interface that holds the principals and
@@ -44,6 +49,8 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      */
     protected ByteSource credentialsSalt;
 
+    protected boolean oneTimeTokenBased;
+
     /**
      * Default no-argument constructor.
      */
@@ -63,6 +70,26 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
     public SimpleAuthenticationInfo(Object principal, Object credentials) {
         principals = new SimplePrincipalCollection(principal);
         this.credentials = credentials;
+    }
+
+    /**
+     * Constructor that takes in a single 'primary' principal of the account and the token used during authentication
+     * (MP token, OAUth2 token, etc ...
+     * <p/>
+     * The token is also defined as user info with key -token
+     *
+     * @param principal the 'primary' principal associated with the specified realm.
+     * @param token     the token that verify the given principal.
+     */
+    public SimpleAuthenticationInfo(Object principal, Serializable token, boolean oneTimeTokenBased) {
+        principals = new SimplePrincipalCollection(principal);
+        this.credentials = token;
+        this.oneTimeTokenBased = oneTimeTokenBased;
+        if (principal instanceof UserPrincipal) {
+            UserPrincipal user = (UserPrincipal) principal;
+            user.addUserInfo(INFO_KEY_TOKEN, token);
+
+        }
     }
 
     /**
@@ -111,6 +138,7 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
         this.credentialsSalt = credentialsSalt;
     }
 
+    @Override
     public PrincipalCollection getPrincipals() {
         return principals;
     }
@@ -124,6 +152,7 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
         this.principals = principals;
     }
 
+    @Override
     public Object getCredentials() {
         return credentials;
     }
@@ -135,6 +164,20 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      */
     public void setCredentials(Object credentials) {
         this.credentials = credentials;
+    }
+
+    @Override
+    public boolean isOneTimeAuthentication() {
+        return oneTimeTokenBased;
+    }
+
+    /**
+     * Define that the token used to generate this AuthenticationInfo was a one Time token (like MP token)
+     *
+     * @param oneTimeTokenBased
+     */
+    public void setOneTimeTokenBased(boolean oneTimeTokenBased) {
+        this.oneTimeTokenBased = oneTimeTokenBased;
     }
 
     /**

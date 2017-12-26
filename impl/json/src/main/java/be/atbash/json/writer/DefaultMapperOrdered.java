@@ -37,18 +37,18 @@ import be.atbash.json.JSONAware;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DefaultMapperOrdered extends JsonReaderI<JSONAware> {
+public class DefaultMapperOrdered extends Mapper<JSONAware> {
     protected DefaultMapperOrdered(JSONReader base) {
         super(base);
     }
 
     @Override
-    public JsonReaderI<JSONAware> startObject(String key) {
+    public Mapper<JSONAware> startObject(String key) {
         return base.DEFAULT_ORDERED;
     }
 
     @Override
-    public JsonReaderI<JSONAware> startArray(String key) {
+    public Mapper<JSONAware> startArray(String key) {
         return base.DEFAULT_ORDERED;
     }
 

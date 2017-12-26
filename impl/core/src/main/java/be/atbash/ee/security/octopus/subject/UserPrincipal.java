@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.subject;
 
-import be.atbash.ee.security.octopus.exception.OctopusIllegalActionException;
+import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
@@ -74,7 +74,7 @@ public class UserPrincipal implements Principal, Serializable {
 
     public void setName(String name) {
         if (this.name != null) {
-            throw new OctopusIllegalActionException("Setting the name of the Principal isn't allowed since there is already a name specified");
+            throw new AtbashIllegalActionException("(OCT-DEV-001) Setting the name of the Principal isn't allowed since there is already a name specified");
         }
         this.name = name;
     }

@@ -1,0 +1,6 @@
+==== MP Auth token
+
+Creation of the token can be done be using the **be.atbash.ee.security.octopus.token.MPJWTTokenBuilder** class.
+
+Maven artefact be.atbash.ee.security:octopus-mp contains the _mpUser_ filter.
+

@@ -34,6 +34,13 @@
     <packaging>jar</packaging>
 
     <dependencies>
+
+        <dependency>
+            <groupId>be.atbash</groupId>
+            <artifactId>octopus-utils</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>accessors-smart</artifactId>

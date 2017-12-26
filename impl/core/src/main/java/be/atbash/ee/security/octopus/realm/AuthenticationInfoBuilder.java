@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.codec.ByteSource;
 import be.atbash.ee.security.octopus.util.codec.SimpleByteSource;
+import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
@@ -30,15 +31,18 @@ import java.util.Map;
  *
  */
 @Typed
+//@PublicAPI But need to review the usage of External password verification and the Object hierarchy of AuthenticationInfo
 public class AuthenticationInfoBuilder {
 
     private Serializable principalId;
     private String name;
     private String userName;
     private Object password;
+    private Serializable token;
     private ByteSource salt;
     private Map<Serializable, Serializable> userInfo = new HashMap<>();
     private boolean externalPasswordCheck = false;
+    private boolean tokenBased = false;
 
     public AuthenticationInfoBuilder principalId(Serializable principalId) {
         this.principalId = principalId;
@@ -56,6 +60,10 @@ public class AuthenticationInfoBuilder {
     }
 
     public AuthenticationInfoBuilder password(Object password) {
+        if (token != null) {
+            throw new AtbashIllegalActionException("(OCT-DEV-003) Defining a token is not allowed when a password value is already specified.");
+        }
+
         this.password = password;
         return this;
 
@@ -73,6 +81,15 @@ public class AuthenticationInfoBuilder {
 
     public AuthenticationInfoBuilder externalPasswordCheck() {
         externalPasswordCheck = true;
+        return this;
+    }
+
+    public AuthenticationInfoBuilder token(Serializable token) {
+        if (password != null) {
+            throw new AtbashIllegalActionException("(OCT-DEV-002) Defining a token is not allowed when a password value is already specified.");
+        }
+        this.token = token;
+        tokenBased = true;
         return this;
     }
 
@@ -96,7 +113,11 @@ public class AuthenticationInfoBuilder {
                 //result = new ExternalPasswordAuthenticationInfo(principal);
                 result = null; // FIXME
             } else {
-                result = new SimpleAuthenticationInfo(principal, password);
+                if (tokenBased) {
+                    result = new SimpleAuthenticationInfo(principal, token, true);
+                } else {
+                    result = new SimpleAuthenticationInfo(principal, password);
+                }
             }
         } else {
             result = new SimpleAuthenticationInfo(principal, password, salt);

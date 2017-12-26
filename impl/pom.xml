@@ -28,11 +28,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <name>Declarative Permission based security for Java EE / Java SE</name>
+
     <artifactId>octopus</artifactId>
     <version>0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
+        <module>utils</module>
         <module>json</module>
         <module>core</module>
         <module>non-web</module>

@@ -19,8 +19,8 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
 import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
 import be.atbash.ee.security.octopus.util.ThreadState;
+import be.atbash.util.CollectionUtils;
 
 import java.util.Map;
 

@@ -21,8 +21,9 @@ import be.atbash.ee.security.octopus.authc.LogoutAware;
 import be.atbash.ee.security.octopus.authz.AuthorizerDataProvider;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
 import be.atbash.ee.security.octopus.util.Nameable;
+import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
+import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,7 +146,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      * @param principals the principals of the account for which to clear any cached data.
      */
     protected void clearCache(PrincipalCollection principals) {
-        if (!CollectionUtils.isEmpty(principals)) {
+        if (!OctopusCollectionUtils.isEmpty(principals)) {
             doClearCache(principals);
             log.trace("Cleared cache entries for account with principals [{}]", principals);
         }
@@ -178,7 +179,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      */
     protected Object getAvailablePrincipal(PrincipalCollection principals) {
         Object primary = null;
-        if (!CollectionUtils.isEmpty(principals)) {
+        if (!OctopusCollectionUtils.isEmpty(principals)) {
             Collection thisPrincipals = principals.asList();
             if (!CollectionUtils.isEmpty(thisPrincipals)) {
                 primary = thisPrincipals.iterator().next();

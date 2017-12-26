@@ -15,9 +15,10 @@
  */
 package be.atbash.ee.security.octopus.jwt.encoder;
 
-import be.atbash.ee.security.octopus.OctopusException;
 import be.atbash.ee.security.octopus.jwt.keys.HMACSecret;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersSigning;
+import be.atbash.util.exception.AtbashIllegalActionException;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSSigner;
@@ -47,12 +48,12 @@ public class JWTSignerFactory {
             case HMAC:
                 try {
                     if (!(parametersSigning.getJWK() instanceof HMACSecret)) {
-                        throw new OctopusException("Secret is expected to be an instance of be.atbash.ee.security.octopus.jwt.keys.HMACSecret");
+                        throw new AtbashIllegalActionException("Secret is expected to be an instance of be.atbash.ee.security.octopus.jwt.keys.HMACSecret");
                     }
                     result = new MACSigner(((HMACSecret) parametersSigning.getJWK()).toSecretKey());
                 } catch (KeyLengthException e) {
 
-                    throw new OctopusException(e);
+                    throw new AtbashUnexpectedException(e);
                     // TODO
                     //This should be already covered by HMACAlgorithmFactory.
                     // What when developers are using this directly?
@@ -60,22 +61,22 @@ public class JWTSignerFactory {
                 break;
             case RSA:
                 if (!(parametersSigning.getJWK() instanceof RSAKey)) {
-                    throw new OctopusException("Secret is expected to be an instance of com.nimbusds.jose.jwk.RSAKey");
+                    throw new AtbashIllegalActionException("Secret is expected to be an instance of com.nimbusds.jose.jwk.RSAKey");
                 }
                 try {
                     result = new RSASSASigner((RSAKey) parametersSigning.getJWK());
                 } catch (JOSEException e) {
-                    throw new OctopusException(e);
+                    throw new AtbashUnexpectedException(e);
                 }
                 break;
             case EC:
                 if (!(parametersSigning.getJWK() instanceof ECKey)) {
-                    throw new OctopusException("Secret is expected to be an instance of com.nimbusds.jose.jwk.ECKey");
+                    throw new AtbashIllegalActionException("Secret is expected to be an instance of com.nimbusds.jose.jwk.ECKey");
                 }
                 try {
                     result = new ECDSASigner((ECKey) parametersSigning.getJWK());
                 } catch (JOSEException e) {
-                    throw new OctopusException(e);
+                    throw new AtbashUnexpectedException(e);
                 }
                 break;
             default:
@@ -87,15 +88,17 @@ public class JWTSignerFactory {
     public JWSAlgorithm defineJWSAlgorithm(JWTParametersSigning parametersSigning) {
         checkDependencies();
 
-        JWSAlgorithm result = null;
+        JWSAlgorithm result;
 
         switch (parametersSigning.getSecretKeyType()) {
             case HMAC:
                 result = hmacAlgorithmFactory.determineOptimalAlgorithm(((HMACSecret) parametersSigning.getJWK()).toSecretKey().getEncoded());
                 break;
             case RSA:
+                result = JWSAlgorithm.RS256; // FIXME Is this always (what about 384 and 512
                 break;
             case EC:
+                result = JWSAlgorithm.ES256; // FIXME Is this always (what about 384 and 512
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported value for SecretKeyType : %s", parametersSigning.getSecretKeyType()));

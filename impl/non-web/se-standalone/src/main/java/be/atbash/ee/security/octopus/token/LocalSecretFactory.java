@@ -15,9 +15,9 @@
  */
 package be.atbash.ee.security.octopus.token;
 
-import be.atbash.ee.security.octopus.Reviewed;
-import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
-import be.atbash.ee.security.octopus.util.Base64Codec;
+import be.atbash.util.Reviewed;
+import be.atbash.util.base64.Base64Codec;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import oshi.SystemInfo;
 
 import javax.crypto.SecretKeyFactory;
@@ -28,7 +28,6 @@ import java.security.spec.InvalidKeySpecException;
 /**
  * Generates a secret (byte array) usable as HMAC signing of a JWT which is linked to some Hardware identification of the machine and a passPhrase from the user.
  * This makes it possible to generate a JWT where the signing is linked to the machine and thus only verifiable on the same machine.
- *
  */
 @Reviewed
 public final class LocalSecretFactory {
@@ -38,6 +37,7 @@ public final class LocalSecretFactory {
 
     /**
      * Base64 encoded byte array generated using PBKDF key derivation with passPhrase as key and the hardware info as salt.
+     *
      * @param passPhrase
      * @return
      */
@@ -50,7 +50,7 @@ public final class LocalSecretFactory {
             secret = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1").generateSecret(
                     new PBEKeySpec(passPhrase.toCharArray(), salt.getBytes(), 1024, 256)).getEncoded();
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new OctopusUnexpectedException(e);
+            throw new AtbashUnexpectedException(e);
         }
 
         return Base64Codec.encodeToString(secret, true);

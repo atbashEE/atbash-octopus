@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.cache;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.util.StringUtils;
+import be.atbash.util.StringUtils;
 
 import javax.annotation.PreDestroy;
 import java.util.Collection;
@@ -85,7 +85,6 @@ public abstract class AbstractCacheManager implements CacheManager {
     /**
      * Cleanup method that first {@link LifecycleUtils#destroy destroys} all of it's managed caches and then
      * {@link java.util.Map#clear clears} out the internally referenced cache map.
-     *
      */
     @PreDestroy
     public void destroy() {

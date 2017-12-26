@@ -34,6 +34,8 @@ package be.atbash.json.writer;
 import be.atbash.json.JSONArray;
 import be.atbash.json.JSONAware;
 import be.atbash.json.JSONObject;
+import be.atbash.json.parser.MappedBy;
+import be.atbash.util.reflection.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -43,10 +45,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JSONReader {
-	private final ConcurrentHashMap<Type, JsonReaderI<?>> cache;
+    private final ConcurrentHashMap<Type, Mapper<?>> cache;
 
-    public JsonReaderI<JSONAware> DEFAULT;
-    public JsonReaderI<JSONAware> DEFAULT_ORDERED;
+    public Mapper<JSONAware> DEFAULT;
+    public Mapper<JSONAware> DEFAULT_ORDERED;
 
     public JSONReader() {
         cache = new ConcurrentHashMap<>(100);
@@ -85,31 +87,15 @@ public class JSONReader {
         cache.put(JSONObject.class, this.DEFAULT);
     }
 
-    /**
-     * remap field name in custom classes
-     *
-     * @param fromJson field name in json
-     * @param toJava   field name in Java
-     * @since 2.1.1
-     */
-    public <T> void remapField(Class<T> type, String fromJson, String toJava) {
-        JsonReaderI<T> map = this.getMapper(type);
-        if (!(map instanceof MapperRemapped)) {
-            map = new MapperRemapped<>(map);
-            registerReader(type, map);
-        }
-        ((MapperRemapped<T>) map).renameField(fromJson, toJava);
-    }
-
-    public <T> void registerReader(Class<T> type, JsonReaderI<T> mapper) {
+    public <T> void registerReader(Class<T> type, Mapper<T> mapper) {
         cache.put(type, mapper);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> JsonReaderI<T> getMapper(Type type) {
-		if (type instanceof ParameterizedType) {
-			return getMapper((ParameterizedType) type);
-		}
+    public <T> Mapper<T> getMapper(Type type) {
+        if (type instanceof ParameterizedType) {
+            return getMapper((ParameterizedType) type);
+        }
         return getMapper((Class<T>) type);
     }
 
@@ -118,55 +104,64 @@ public class JSONReader {
      *
      * @param type to be map
      */
-    public <T> JsonReaderI<T> getMapper(Class<T> type) {
+    public <T> Mapper<T> getMapper(Class<T> type) {
         // look for cached Mapper
         @SuppressWarnings("unchecked")
-        JsonReaderI<T> map = (JsonReaderI<T>) cache.get(type);
-		if (map != null) {
-			return map;
-		}
-		/*
-		 * Special handle
+        Mapper<T> map = (Mapper<T>) cache.get(type);
+        if (map != null) {
+            return map;
+        }
+        /*
+         * Special handle
 		 */
         if (type instanceof Class) {
-			if (Map.class.isAssignableFrom(type)) {
-				map = new DefaultMapperCollection<>(this, type);
-			} else if (List.class.isAssignableFrom(type)) {
-				map = new DefaultMapperCollection<>(this, type);
-			}
+            if (Map.class.isAssignableFrom(type)) {
+                map = new DefaultMapperCollection<>(this, type);
+            } else if (List.class.isAssignableFrom(type)) {
+                map = new DefaultMapperCollection<>(this, type);
+            }
             if (map != null) {
                 cache.put(type, map);
                 return map;
             }
         }
 
-		if (type.isArray()) {
-			map = new ArraysMapper.GenericMapper<>(this, type);
-		} else if (List.class.isAssignableFrom(type)) {
-			map = new CollectionMapper.ListClass<>(this, type);
-		} else if (Map.class.isAssignableFrom(type)) {
-			map = new CollectionMapper.MapClass<>(this, type);
-		} else
-		// use bean class
-		{
-			map = new BeansMapper.Bean<>(this, type);
-		}
+        if (type.isArray()) {
+            map = new ArraysMapper.GenericMapper<>(this, type);
+        } else if (List.class.isAssignableFrom(type)) {
+            map = new CollectionMapper.ListClass<>(this, type);
+        } else if (Map.class.isAssignableFrom(type)) {
+            map = new CollectionMapper.MapClass<>(this, type);
+        } else
+        // use bean class
+        {
+
+            MappedBy mappedBy = type.getAnnotation(MappedBy.class);
+            if (mappedBy != null) {
+                if (!(mappedBy.mapper().equals(CustomMapper.NOPCustomMapper.class))) {
+                    map = (Mapper<T>) ClassUtils.newInstance(mappedBy.mapper(), this);
+                }
+            }
+            if (map == null) {
+                map = new BeansMapper.Bean<>(this, type);
+            }
+        }
         cache.putIfAbsent(type, map);
         return map;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> JsonReaderI<T> getMapper(ParameterizedType type) {
-        JsonReaderI<T> map = (JsonReaderI<T>) cache.get(type);
-		if (map != null) {
-			return map;
-		}
+    public <T> Mapper<T> getMapper(ParameterizedType type) {
+        Mapper<T> map = (Mapper<T>) cache.get(type);
+        if (map != null) {
+            return map;
+        }
         Class<T> clz = (Class<T>) type.getRawType();
-		if (List.class.isAssignableFrom(clz)) {
-			map = new CollectionMapper.ListType<>(this, type);
-		} else if (Map.class.isAssignableFrom(clz)) {
-			map = new CollectionMapper.MapType<>(this, type);
-		}
+        if (List.class.isAssignableFrom(clz)) {
+            map = new CollectionMapper.ListType<>(this, type);
+        } else if (Map.class.isAssignableFrom(clz)) {
+            map = new CollectionMapper.MapType<>(this, type);
+        }
         cache.putIfAbsent(type, map);
         return map;
     }

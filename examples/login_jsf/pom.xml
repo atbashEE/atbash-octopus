@@ -56,7 +56,7 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-web</artifactId>
+            <artifactId>octopus-jsf7</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -70,7 +70,6 @@
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
             <version>1.8.0</version>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>

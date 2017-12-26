@@ -28,7 +28,7 @@ import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -248,7 +248,7 @@ public class DefaultSecurityManager implements Authorizer {
 
         PrincipalCollection principals = context.resolvePrincipals();
 
-        if (CollectionUtils.isEmpty(principals)) {
+        if (OctopusCollectionUtils.isEmpty(principals)) {
             log.trace("No identity (PrincipalCollection) found in the context.  Looking for a remembered identity.");
 
         }

@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.jwt.keys;
 
-import be.atbash.ee.security.octopus.util.Base64Codec;
-import be.atbash.ee.security.octopus.util.StringUtils;
+import be.atbash.util.StringUtils;
+import be.atbash.util.base64.Base64Codec;
 import com.nimbusds.jose.Algorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.KeyType;

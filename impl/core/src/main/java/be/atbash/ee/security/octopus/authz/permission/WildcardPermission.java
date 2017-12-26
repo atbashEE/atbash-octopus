@@ -16,9 +16,9 @@
 package be.atbash.ee.security.octopus.authz.permission;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
-import be.atbash.ee.security.octopus.util.StringUtils;
 import be.atbash.json.JSONValue;
+import be.atbash.util.CollectionUtils;
+import be.atbash.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

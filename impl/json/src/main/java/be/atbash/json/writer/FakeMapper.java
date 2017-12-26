@@ -32,20 +32,20 @@ package be.atbash.json.writer;
  * limitations under the License.
  */
 
-public class FakeMapper extends JsonReaderI<Object> {
+public class FakeMapper extends Mapper<Object> {
     private FakeMapper() {
         super(null);
     }
 
-    public static JsonReaderI<Object> DEFAULT = new FakeMapper();
+    public static Mapper<Object> DEFAULT = new FakeMapper();
 
     @Override
-    public JsonReaderI<?> startObject(String key) {
+    public Mapper<?> startObject(String key) {
         return this;
     }
 
     @Override
-    public JsonReaderI<?> startArray(String key) {
+    public Mapper<?> startArray(String key) {
         return this;
     }
 

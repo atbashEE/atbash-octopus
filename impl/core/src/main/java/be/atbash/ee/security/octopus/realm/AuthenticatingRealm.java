@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -288,7 +288,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * subclass implementations for each authentication attempt.</li>
      * </ol>
      * <p/>
-     * This method finishes by calling {@link #onInit()} is to allow subclasses to perform any init behavior desired.
+     * This method finishes by calling {@link #onInit()} is to allow subclasses to perform any readInfo behavior desired.
      */
     @PostConstruct
     public void init() {
@@ -461,7 +461,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
             //otherwise not cached, perform the lookup:
             info = doGetAuthenticationInfo(token);
             log.debug("Looked up AuthenticationInfo [{}] from doGetAuthenticationInfo", info);
-            if (token != null && info != null) {
+            if (token != null && info != null && !info.isOneTimeAuthentication()) {
                 cacheAuthenticationInfoIfPossible(token, info);
             }
         } else {
@@ -566,7 +566,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * @see #clearCache(org.apache.shiro.subject.PrincipalCollection)
      */
     protected void clearCachedAuthenticationInfo(PrincipalCollection principals) {
-        if (!CollectionUtils.isEmpty(principals)) {
+        if (!OctopusCollectionUtils.isEmpty(principals)) {
             Cache<Object, AuthenticationInfo> cache = getAvailableAuthenticationCache();
             //cache instance will be non-null if caching is enabled:
             if (cache != null) {

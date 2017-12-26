@@ -38,6 +38,8 @@
         <module>se-cli</module>
         <module>basic</module>
         <module>login_jsf</module>
+        <module>rest-main</module>
+        <module>rest-mp</module>
     </modules>
 
     <dependencies>

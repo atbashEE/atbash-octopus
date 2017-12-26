@@ -43,6 +43,7 @@
         <nimbus-jose-jwt.version>4.36.1</nimbus-jose-jwt.version>
         <slf4j.version>1.7.25</slf4j.version>
 
+        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +84,7 @@
     <modules>
         <module>impl</module>
         <module>examples</module>
+        <module>utilities</module>
     </modules>
 
     <build>
@@ -132,6 +134,8 @@
                     </properties>
                     <excludes>
                         <exclude>**/*.adoc</exclude>
+                        <exclude>**/*.adi</exclude>
+                        <exclude>**/*.jwk</exclude>
                         <exclude>**/README</exclude>
                         <exclude>**/LICENSE.txt</exclude>
                         <exclude>**/NOTICE.txt</exclude>

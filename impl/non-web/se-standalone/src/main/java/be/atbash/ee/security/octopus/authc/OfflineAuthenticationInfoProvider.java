@@ -35,7 +35,7 @@ public class OfflineAuthenticationInfoProvider implements AuthenticationInfoProv
 
             AuthenticationInfoBuilder builder = new AuthenticationInfoBuilder();
             builder.principalId(offlineToken.getId()).name(offlineToken.getSubject());
-
+            builder.token(offlineToken);
             return builder.build();
 
         }

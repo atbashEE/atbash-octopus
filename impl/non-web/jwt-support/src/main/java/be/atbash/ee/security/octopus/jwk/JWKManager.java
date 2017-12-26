@@ -15,14 +15,17 @@
  */
 package be.atbash.ee.security.octopus.jwk;
 
-import be.atbash.ee.security.octopus.config.ConfigurationException;
-import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
-import be.atbash.ee.security.octopus.util.StringUtils;
+import be.atbash.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.jwk.config.JwtSupportConfiguration;
+import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +41,9 @@ public class JWKManager {
 
     private JWKSet jwkSet;
 
+    @Inject
+    private JwtSupportConfiguration JwtSupportConfiguration;
+
     @PostConstruct
     public void init() {
         jwkSet = readJWKSet();
@@ -45,7 +51,7 @@ public class JWKManager {
 
     private JWKSet readJWKSet() {
         JWKSet result;
-        String jwkFile = ""; // scsConfig.getJWKFile();
+        String jwkFile = JwtSupportConfiguration.getJWKFile();
         if (!StringUtils.hasText(jwkFile)) {
             throw new ConfigurationException("A value for the parameter jwk.file is required");
         }
@@ -66,7 +72,7 @@ public class JWKManager {
         try {
             inputStream.close();
         } catch (IOException e) {
-            throw new OctopusUnexpectedException(e);
+            throw new AtbashUnexpectedException(e);
         }
 
         return result;
@@ -78,6 +84,27 @@ public class JWKManager {
 
     public JWK getJWKForApiKey(String apiKey) {
         return jwkSet.getKeyByKeyId(apiKey);
+    }
+
+    public JWK getJWKSigningKey() {
+        boolean multiple = false;
+        JWK result = null;
+        for (JWK jwk : jwkSet.getKeys()) {
+            if (jwk.isPrivate() && jwk.getKeyUse() == KeyUse.SIGNATURE) {
+                if (result == null) {
+                    result = jwk;
+                } else {
+                    multiple = true;
+                }
+            }
+        }
+        if (multiple) {
+            throw new ConfigurationException("FIXME Multiple signing keys");
+        }
+        if (result == null) {
+            throw new ConfigurationException("FIXME No signing key found");
+        }
+        return result;
     }
 
 }

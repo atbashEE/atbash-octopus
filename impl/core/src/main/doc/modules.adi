@@ -1,0 +1,19 @@
+List of Maven modules
+
+[width="100%",frame="topbot",options="header",cols="2,1,3"]
+|======================
+|Artefact |SE, CDI, EE | info
+|be.atbash:octopus-utils |SE | Needs to be moved externally (Use by Config, Jerry, ...)
+|be.atbash.json:octopus-json-smart |SE | Very light-weight JSON reader/writer (based on json-smart). Can be externalized if needed.
+|be.atbash.ee.security:octopus-jwt-support |SE, CDI | Java Beans to/from JSON/JWS/JWE. Can be externalized if needed. octopus-keys can be extracted from it.
+|be.atbash.ee.security:octopus-core |SE, CDI | All Octopus classes usable in Java SE and Java EE environment.
+|be.atbash.ee.security:octopus-common-se |SE, CDI | All Octopus classes Specific for Java SE
+|be.atbash.ee.security:octopus-se-standalone |SE, CDI | Specific for Java SE CLI programs
+|be.atbash.ee.security:octopus-token-generator |SE, CDI | Contains class to generate the Offline Token (for SE usage).
+|be.atbash.ee.security:octopus-common-web |EE (Web) | All Octopus classes Specific for Java EE (Web - Servlets)
+|be.atbash.ee.security:octopus-rest |EE (JAX-RS) | Specific for JAX-RS
+|be.atbash.ee.security:octopus-jsf7 |EE (JSF) | Specific for JSF
+|be.atbash.ee.security:octopus-mp |EE (JAX-RS) | Support for MP JWT Auth tokens
+|======================
+
+octopus-utilities contains for the moment the JavaFX app to maintain JWK files.

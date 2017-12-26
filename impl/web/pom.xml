@@ -30,9 +30,7 @@
 
     <artifactId>octopus-web</artifactId>
     <version>0.2-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>Declarative Permission based security for Java EE</name>
+    <packaging>pom</packaging>
 
     <licenses>
         <license>
@@ -43,136 +41,11 @@
         </license>
     </licenses>
 
-    <properties>
-        <deltaspike.version>1.0.0</deltaspike.version>
-    </properties>
-    <dependencies>
+    <modules>
+        <module>common-web</module>
+        <module>mp</module>
+        <module>jsf7</module>
+        <module>rest</module>
+    </modules>
 
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>be.atbash.ee.jsf</groupId>
-            <artifactId>jerry</artifactId>
-            <version>0.9.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>be.atbash.config</groupId>
-            <artifactId>geronimo-config</artifactId>
-            <version>0.9.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
-            <artifactId>deltaspike-core-api</artifactId>
-            <version>${deltaspike.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
-            <artifactId>deltaspike-security-module-api</artifactId>
-            <version>${deltaspike.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-    </dependencies>
-
-    <repositories>
-
-    </repositories>
-    <build>
-        <plugins>
-
-            <!--plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <header>header_template.tpl</header>
-                    <properties>
-                        <owner>Rudy De Busscher</owner>
-                        <site>www.c4j.be</site>
-                        <year>2017</year>
-                        <aggregate>true</aggregate>
-                    </properties>
-                    <excludes>
-                        <exclude>**/README</exclude>
-                        <exclude>**/LICENSE.txt</exclude>
-                        <exclude>**/NOTICE.txt</exclude>
-                        <exclude>**/NOTICE</exclude>
-                        <exclude>**/asciidoctor.css</exclude>
-                        <exclude>**/QRCode.js</exclude>
-                        <exclude>**/HOTPProvider.java</exclude>
-                        <exclude>**/Base32.java</exclude>
-                        <exclude>**/reflect/**</exclude>
-                    </excludes>
-                    <mapping>
-                        <java>SLASHSTAR_STYLE</java>
-                        <css>SLASHSTAR_STYLE</css>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin-->
-
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!--goal>generateStubs</goal>
-                            <goal>compile</goal>
-                            <goal>testGenerateStubs</goal-->
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>2.4.4</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- Optional -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.16</version>
-                <configuration>
-                    <parallel>methods</parallel>
-                    <threadCount>5</threadCount>
-                    <includes>
-                        <include>**/*Test.*</include>
-                        <include>**/*Spec.*</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/Abstract*.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
 </project>

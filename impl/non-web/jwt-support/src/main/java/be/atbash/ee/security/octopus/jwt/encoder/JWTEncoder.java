@@ -15,11 +15,11 @@
  */
 package be.atbash.ee.security.octopus.jwt.encoder;
 
-import be.atbash.ee.security.octopus.exception.OctopusUnexpectedException;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersEncryption;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersSigning;
 import be.atbash.json.JSONValue;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.*;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -54,7 +54,7 @@ public class JWTEncoder {
                     throw new IllegalArgumentException(String.format("JWTEncoding not supported %s", parameters.getEncoding()));
             }
         } catch (JOSEException e) {
-            throw new OctopusUnexpectedException(e);
+            throw new AtbashUnexpectedException(e);
         }
         return result;
 

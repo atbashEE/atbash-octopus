@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.jwt.encoder;
 
-import be.atbash.ee.security.octopus.config.ConfigurationException;
+import be.atbash.config.exception.ConfigurationException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.util.ByteUtils;

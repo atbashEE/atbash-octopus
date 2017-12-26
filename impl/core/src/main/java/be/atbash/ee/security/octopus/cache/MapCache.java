@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.cache;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.util.CollectionUtils;
+import be.atbash.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Collections;

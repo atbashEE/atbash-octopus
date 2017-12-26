@@ -41,18 +41,18 @@ import be.atbash.json.JSONObject;
  * @param <T>
  * @author uriel
  */
-public class DefaultMapper<T> extends JsonReaderI<T> {
+public class DefaultMapper<T> extends Mapper<T> {
     protected DefaultMapper(JSONReader base) {
         super(base);
     }
 
     @Override
-    public JsonReaderI<JSONAware> startObject(String key) {
+    public Mapper<JSONAware> startObject(String key) {
         return base.DEFAULT;
     }
 
     @Override
-    public JsonReaderI<JSONAware> startArray(String key) {
+    public Mapper<JSONAware> startArray(String key) {
         return base.DEFAULT;
     }
 

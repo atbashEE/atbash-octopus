@@ -21,8 +21,8 @@ import be.atbash.ee.security.octopus.codec.CodecException;
 import be.atbash.ee.security.octopus.codec.CodecSupport;
 import be.atbash.ee.security.octopus.codec.Hex;
 import be.atbash.ee.security.octopus.crypto.UnknownAlgorithmException;
-import be.atbash.ee.security.octopus.util.StringUtils;
 import be.atbash.ee.security.octopus.util.codec.ByteSource;
+import be.atbash.util.StringUtils;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
