@@ -47,6 +47,11 @@ When the password method from the _AuthenticationInfoBuilder_ instance is called
 
 _Password_ s and _token_ s can't be combined.
 
+* OCT-DEV-051
+
+The subject parameter specified for the _be.atbash.ee.security.octopus.mgt.DefaultSecurityManager.logout()_ is null.
+
+The logout should be performed by calling the _logout()_ method on _Subject_.
 
 * OCT-DEV-101
 
@@ -58,3 +63,45 @@ JWTDecoder.decode(data, classType);
 
 Will throw this exception when the value specified for the _data_ parameters turns out to be a JWT.
 
+* OCT-DEV-102
+
+When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **HMAC** is specified by the secretKeySigning is NOT of type _be.atbash.ee.security.octopus.jwt.keys.HMACSecret_
+
+ 
+```
+JWTParametersSigning(Map<String, Object> headerValues, SecretKeyType secretKeyType, JWK secretKeySigning)
+```
+
+* OCT-DEV-103
+
+When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **RSA** is specified by the secretKeySigning is NOT of type _com.nimbusds.jose.jwk.RSAKey_
+
+ 
+```
+JWTParametersSigning(Map<String, Object> headerValues, SecretKeyType secretKeyType, JWK secretKeySigning)
+```
+
+* OCT-DEV-104
+
+When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **EC** is specified by the secretKeySigning is NOT of type _com.nimbusds.jose.jwk.ECKey_
+
+ 
+```
+JWTParametersSigning(Map<String, Object> headerValues, SecretKeyType secretKeyType, JWK secretKeySigning)
+```
+
+* OCT-DEV-105
+
+When you are creating a JWT with signing (a JWS or JWE) it is required to specify the information about the secret for the signature in the parameters. This can be done by calling _withSecretKeyForSigning()_method.
+
+```
+JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS).withSecretKeyForSigning().build();
+```
+
+* OCT-DEV-106
+
+When you are creating a JWT with encryption (a JWE) it is required to specify the information about the secret for the encryption in the parameters. This can be done by calling _withSecretKeyForEncryption()_method.
+
+```
+JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS).withSecretKeyForSigning().withSecretKeyForEncryption().build();
+```

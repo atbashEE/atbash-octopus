@@ -48,7 +48,7 @@ public class JWTSignerFactory {
             case HMAC:
                 try {
                     if (!(parametersSigning.getJWK() instanceof HMACSecret)) {
-                        throw new AtbashIllegalActionException("Secret is expected to be an instance of be.atbash.ee.security.octopus.jwt.keys.HMACSecret");
+                        throw new AtbashIllegalActionException("(OCT-DEV-102) Secret is expected to be an instance of be.atbash.ee.security.octopus.jwt.keys.HMACSecret");
                     }
                     result = new MACSigner(((HMACSecret) parametersSigning.getJWK()).toSecretKey());
                 } catch (KeyLengthException e) {
@@ -61,7 +61,7 @@ public class JWTSignerFactory {
                 break;
             case RSA:
                 if (!(parametersSigning.getJWK() instanceof RSAKey)) {
-                    throw new AtbashIllegalActionException("Secret is expected to be an instance of com.nimbusds.jose.jwk.RSAKey");
+                    throw new AtbashIllegalActionException("(OCT-DEV-103) Secret is expected to be an instance of com.nimbusds.jose.jwk.RSAKey");
                 }
                 try {
                     result = new RSASSASigner((RSAKey) parametersSigning.getJWK());
@@ -71,7 +71,7 @@ public class JWTSignerFactory {
                 break;
             case EC:
                 if (!(parametersSigning.getJWK() instanceof ECKey)) {
-                    throw new AtbashIllegalActionException("Secret is expected to be an instance of com.nimbusds.jose.jwk.ECKey");
+                    throw new AtbashIllegalActionException("(OCT-DEV-104) Secret is expected to be an instance of com.nimbusds.jose.jwk.ECKey");
                 }
                 try {
                     result = new ECDSASigner((ECKey) parametersSigning.getJWK());

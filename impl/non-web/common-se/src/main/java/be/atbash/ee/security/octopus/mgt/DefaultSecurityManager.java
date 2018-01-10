@@ -29,6 +29,7 @@ import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
+import be.atbash.util.exception.AtbashIllegalActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -259,7 +260,7 @@ public class DefaultSecurityManager implements Authorizer {
     public void logout(Subject subject) {
 
         if (subject == null) {
-            throw new IllegalArgumentException("Subject method argument cannot be null.");
+            throw new AtbashIllegalActionException("(OCT-DEV-051) Subject method argument cannot be null.");
         }
 
         //beforeLogout(subject); only for RememberMe
