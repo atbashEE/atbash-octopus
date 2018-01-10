@@ -23,7 +23,7 @@
 
     <groupId>be.atbash.ee.security</groupId>
     <artifactId>octopus-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
 
     <inceptionYear>2014</inceptionYear>

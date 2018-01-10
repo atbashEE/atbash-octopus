@@ -1,6 +1,6 @@
 = Octopus Framework - Technical
 Rudy De Busscher <rdebusscher@gmail.com>
-v0.2, ??/??/2017
+v0.2, 10/01/2018
 
 == Java SE
 
