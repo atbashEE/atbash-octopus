@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.config;
 import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
+import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.util.duration.PeriodUtil;
 import be.atbash.util.StringUtils;
 
@@ -27,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @ApplicationScoped
+@ModuleConfigName("Octopus MicroProfile Configuration")
 public class MPConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     @ConfigEntry

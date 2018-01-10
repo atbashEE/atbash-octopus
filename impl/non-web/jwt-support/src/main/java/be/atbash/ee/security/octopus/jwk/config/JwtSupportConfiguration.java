@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.jwk.config;
 
 import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.logging.ModuleConfig;
+import be.atbash.config.logging.ModuleConfigName;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -24,6 +25,7 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @ApplicationScoped
+@ModuleConfigName("Octopus JWT Support Configuration")
 public class JwtSupportConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     public String getJWKFile() {

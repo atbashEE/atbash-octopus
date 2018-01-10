@@ -19,6 +19,7 @@ import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.exception.ConfigurationException;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
+import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -27,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @ApplicationScoped
+@ModuleConfigName("Octopus Core Configuration")
 public class OctopusCoreConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     @ConfigEntry

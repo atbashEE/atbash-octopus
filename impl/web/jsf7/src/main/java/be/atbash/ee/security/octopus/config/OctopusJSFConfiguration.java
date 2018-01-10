@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
+import be.atbash.config.logging.ModuleConfigName;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
  *
  */
 @ApplicationScoped
+@ModuleConfigName("Octopus JSF Configuration")
 public class OctopusJSFConfiguration implements ModuleConfig {
 
     @Inject

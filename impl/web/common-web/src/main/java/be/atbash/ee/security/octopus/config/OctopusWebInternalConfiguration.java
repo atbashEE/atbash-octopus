@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
+import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.util.pattern.AntPathMatcher;
 import org.eclipse.microprofile.config.Config;
 
@@ -27,6 +28,7 @@ import javax.inject.Inject;
  *
  */
 @ApplicationScoped
+@ModuleConfigName("Octopus Internal Web Configuration")
 public class OctopusWebInternalConfiguration implements ModuleConfig {
 
     @Inject

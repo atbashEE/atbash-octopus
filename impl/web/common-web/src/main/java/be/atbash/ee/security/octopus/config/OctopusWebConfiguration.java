@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
+import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -27,6 +28,7 @@ import javax.inject.Inject;
  * TODO Remove the Name Web later on? when this has moved to his own artifact.
  */
 @ApplicationScoped
+@ModuleConfigName("Octopus Web Configuration")
 public class OctopusWebConfiguration implements ModuleConfig {
 
     @Inject
