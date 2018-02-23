@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,12 @@ import be.atbash.config.exception.ConfigurationException;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
+import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
+import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.lang.annotation.Annotation;
 
 /**
  *
@@ -31,6 +34,17 @@ import javax.enterprise.context.ApplicationScoped;
 @ModuleConfigName("Octopus Core Configuration")
 public class OctopusCoreConfiguration extends AbstractConfiguration implements ModuleConfig {
 
+    private Class<? extends Annotation> namedPermissionCheckClass;
+
+    private Class<? extends NamedPermission> namedPermissionClass;
+
+    private Class<? extends Annotation> namedRoleCheckClass;
+
+    private Class<? extends NamedRole> namedRoleClass;
+
+    private Class<? extends Annotation> customCheckClass;
+
+    // Hashing
     @ConfigEntry
     public String getHashAlgorithmName() {
         return getOptionalValue("hashAlgorithmName", "", String.class);
@@ -52,6 +66,118 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
     public int getSaltLength() {
         // FIXME Validation. Warn if less then 16 (other then 0 of course).
         return getOptionalValue("saltLength", 0, Integer.class);
+    }
+
+    // CDI bean suffixes
+    @ConfigEntry
+    public String getPermissionVoterSuffix() {
+        return getOptionalValue("voter.suffix.permission", "PermissionVoter", String.class);
+    }
+
+    @ConfigEntry
+    public String getRoleVoterSuffix() {
+        return getOptionalValue("voter.suffix.role", "RoleVoter", String.class);
+    }
+
+    @ConfigEntry
+    public String getCustomCheckSuffix() {
+        return getOptionalValue("voter.suffix.check", "AccessDecisionVoter", String.class);
+    }
+
+    // dynamic permissions and roles
+    @ConfigEntry
+    public Boolean isDynamicAuthorization() {
+        return getOptionalValue("authorization.dynamic", Boolean.FALSE, Boolean.class);
+    }
+
+    // Named permissions, roles, ...
+    @ConfigEntry
+    public String getNamedPermission() {
+        return getOptionalValue("namedPermission.class", "", String.class);
+    }
+
+    @ConfigEntry
+    public String getNamedPermissionCheck() {
+        return getOptionalValue("namedPermissionCheck.class", "", String.class);
+    }
+
+    @ConfigEntry
+    public String getCustomCheck() {
+        return getOptionalValue("customCheck.class", "", String.class);
+    }
+
+    @ConfigEntry
+    public String getNamedRole() {
+        return getOptionalValue("namedRole.class", "", String.class);
+    }
+
+    @ConfigEntry
+    public String getNamedRoleCheck() {
+        return getOptionalValue("namedRoleCheck.class", "", String.class);
+    }
+
+    public Class<? extends Annotation> getNamedPermissionCheckClass() {
+        if (namedPermissionCheckClass == null && getNamedPermissionCheck().length() != 0) {
+
+            try {
+                namedPermissionCheckClass = (Class<? extends Annotation>) Class.forName(getNamedPermissionCheck());
+            } catch (ClassNotFoundException e) {
+                logger.error("Class defined in configuration property namedPermissionCheck is not found", e);
+            }
+        }
+        return namedPermissionCheckClass;
+    }
+
+    public Class<? extends Annotation> getCustomCheckClass() {
+        if (customCheckClass == null && getCustomCheck().length() != 0) {
+
+            try {
+                customCheckClass = (Class<? extends Annotation>) Class.forName(getCustomCheck());
+            } catch (ClassNotFoundException e) {
+                logger.error("Class defined in configuration property customCheck is not found", e);
+            }
+        }
+        return customCheckClass;
+    }
+
+    public Class<? extends NamedPermission> getNamedPermissionClass() {
+        if (namedPermissionClass == null) {
+
+            if (getNamedPermission().length() != 0) {
+                try {
+                    namedPermissionClass = (Class<? extends NamedPermission>) Class.forName(getNamedPermission());
+                } catch (ClassNotFoundException e) {
+                    logger.error("Class defined in configuration property 'namedPermission' is not found", e);
+                }
+            }
+        }
+        return namedPermissionClass;
+    }
+
+    public Class<? extends Annotation> getNamedRoleCheckClass() {
+        if (namedRoleCheckClass == null && getNamedRoleCheck().length() != 0) {
+
+            try {
+                namedRoleCheckClass = (Class<? extends Annotation>) Class.forName(getNamedRoleCheck());
+            } catch (ClassNotFoundException e) {
+                logger.error("Class defined in configuration property namedPermissionCheck is not found", e);
+            }
+        }
+        return namedRoleCheckClass;
+    }
+
+    public Class<? extends NamedRole> getNamedRoleClass() {
+        if (namedRoleClass == null) {
+
+            if (getNamedRole().length() != 0) {
+                try {
+                    namedRoleClass = (Class<? extends NamedRole>) Class.forName(getNamedRole());
+                } catch (ClassNotFoundException e) {
+                    logger.error("Class defined in configuration property 'namedRole' is not found", e);
+                }
+            }
+        }
+        return namedRoleClass;
     }
 
 }

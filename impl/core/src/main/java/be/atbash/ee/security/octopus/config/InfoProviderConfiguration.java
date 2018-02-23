@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.AbstractConfiguration;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
+import be.atbash.ee.security.octopus.authz.AuthorizationInfoProvider;
 import be.atbash.util.StringUtils;
 import be.atbash.util.reflection.ClassUtils;
 
@@ -26,10 +27,10 @@ import java.util.List;
 /**
  *
  */
-
 public class InfoProviderConfiguration extends AbstractConfiguration {
 
     public List<AuthenticationInfoProvider> getAuthenticationInfoProviders() {
+        // FIXME Documentation for Java SE to define the authenticationInfoProvider
         String providerClasses = getOptionalValue("authenticationInfoProvider.class", "", String.class);
 
         if (!StringUtils.hasText(providerClasses)) {
@@ -42,6 +43,25 @@ public class InfoProviderConfiguration extends AbstractConfiguration {
         String[] classes = StringUtils.tokenizeToStringArray(StringUtils.clean(providerClasses), ",");
         for (String aClass : classes) {
             result.add((AuthenticationInfoProvider) ClassUtils.newInstance(aClass));
+        }
+
+        return result;
+    }
+
+    public List<AuthorizationInfoProvider> getAuthorizationInfoProviders() {
+        // FIXME Documentation for Java SE to define the authorizationInfoProvider
+        String providerClasses = getOptionalValue("authorizationInfoProvider.class", "", String.class);
+
+        if (!StringUtils.hasText(providerClasses)) {
+            // It can be empty as it also loaded by the ServiceLoader mechanism
+            return new ArrayList<>();
+        }
+
+        List<AuthorizationInfoProvider> result = new ArrayList<>();
+
+        String[] classes = StringUtils.tokenizeToStringArray(StringUtils.clean(providerClasses), ",");
+        for (String aClass : classes) {
+            result.add((AuthorizationInfoProvider) ClassUtils.newInstance(aClass));
         }
 
         return result;

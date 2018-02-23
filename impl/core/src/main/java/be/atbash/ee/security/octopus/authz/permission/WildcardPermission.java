@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,30 +98,16 @@ import java.util.Set;
  * There is no limit to the number of tokens that can be used, so it is up to your imagination in terms of ways that
  * this could be used in your application.  However, the Shiro team likes to standardize some common usages shown
  * above to help people get started and provide consistency in the Shiro community.
- *
- * @since 0.9
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authz.permission.WildcardPermission"})
 public class WildcardPermission implements Permission, Serializable {
 
-    //TODO - JavaDoc methods
-
-    /*--------------------------------------------
-    |             C O N S T A N T S             |
-    ============================================*/
     protected static final String WILDCARD_TOKEN = "*";
     protected static final String PART_DIVIDER_TOKEN = ":";
     protected static final String SUBPART_DIVIDER_TOKEN = ",";
-    protected static final boolean DEFAULT_CASE_SENSITIVE = false;
+    protected static final boolean DEFAULT_CASE_SENSITIVE = false;  // TODO remove Case sensitive option as we will support only casesensitivity.
 
-    /*--------------------------------------------
-    |    I N S T A N C E   V A R I A B L E S    |
-    ============================================*/
     private List<Set<String>> parts;
-
-    /*--------------------------------------------
-    |         C O N S T R U C T O R S           |
-    ============================================*/
 
     /**
      * Default no-arg constructor for subclasses only - end-user developers instantiating Permission instances must
@@ -130,34 +116,47 @@ public class WildcardPermission implements Permission, Serializable {
      * Note that the WildcardPermission class is very robust and typically subclasses are not necessary unless you
      * wish to create type-safe Permission objects that would be used in your application, such as perhaps a
      * {@code UserPermission}, {@code SystemPermission}, {@code PrinterPermission}, etc.  If you want such type-safe
-     * permission usage, consider subclassing the {@link DomainPermission DomainPermission} class for your needs.
+     * permission usage, consider subclassing the {@link NamedDomainPermission NamedDomainPermission} class for your needs.
      */
     protected WildcardPermission() {
     }
 
+    /**
+     * Creates an instance with the wildcard defined in the parameter.
+     *
+     * @param wildcardString
+     */
     public WildcardPermission(String wildcardString) {
         this(wildcardString, DEFAULT_CASE_SENSITIVE);
     }
 
+    // TODO Remove the option to have case sensitive permission part values
     public WildcardPermission(String wildcardString, boolean caseSensitive) {
         setParts(wildcardString, caseSensitive);
     }
 
+    /**
+     * For subclasses only to specify the wildcard string.
+     *
+     * @param wildcardString
+     */
     protected void setParts(String wildcardString) {
         setParts(wildcardString, DEFAULT_CASE_SENSITIVE);
     }
 
+    //TODO Remove the option to have case sensitive permission part values
     protected void setParts(String wildcardString, boolean caseSensitive) {
-        wildcardString = StringUtils.clean(wildcardString);
-
-        if (wildcardString == null || wildcardString.isEmpty()) {
+        if (StringUtils.isEmpty(wildcardString)) {
+            // TODO AtbashIllegalAction
             throw new IllegalArgumentException("Wildcard string cannot be null or empty. Make sure permission strings are properly formatted.");
         }
 
+        // TODO Remove this
         if (!caseSensitive) {
-            wildcardString = wildcardString.toLowerCase();
+            wildcardString = wildcardString.toLowerCase().replaceAll(" ", "");
         }
 
+        // Split in the different groups
         List<String> parts = CollectionUtils.asList(wildcardString.split(PART_DIVIDER_TOKEN));
 
         this.parts = new ArrayList<>();
@@ -165,19 +164,18 @@ public class WildcardPermission implements Permission, Serializable {
             Set<String> subparts = CollectionUtils.asSet(part.split(SUBPART_DIVIDER_TOKEN));
 
             if (subparts.isEmpty()) {
+                // TODO AtbashIllegalAction
                 throw new IllegalArgumentException("Wildcard string cannot contain parts with only dividers. Make sure permission strings are properly formatted.");
             }
             this.parts.add(subparts);
         }
 
         if (this.parts.isEmpty()) {
+            // TODO AtbashIllegalAction
             throw new IllegalArgumentException("Wildcard string cannot contain only dividers. Make sure permission strings are properly formatted.");
         }
     }
 
-    /*--------------------------------------------
-    |  A C C E S S O R S / M O D I F I E R S    |
-    ============================================*/
     protected List<Set<String>> getParts() {
         return this.parts;
     }
@@ -186,15 +184,10 @@ public class WildcardPermission implements Permission, Serializable {
      * Sets the pre-split String parts of this <code>WildcardPermission</code>.
      *
      * @param parts pre-split String parts.
-     * @since 1.3.0
      */
     protected void setParts(List<Set<String>> parts) {
         this.parts = parts;
     }
-
-    /*--------------------------------------------
-    |               M E T H O D S               |
-    ============================================*/
 
     public boolean implies(Permission p) {
         // By default only supports comparisons with other WildcardPermissions
@@ -249,6 +242,7 @@ public class WildcardPermission implements Permission, Serializable {
         return buffer.toString();
     }
 
+    // Can't be final as it is overridden. TODO Verify equals/hashcode contract
     public boolean equals(Object o) {
         if (o instanceof WildcardPermission) {
             WildcardPermission wp = (WildcardPermission) o;
@@ -257,6 +251,7 @@ public class WildcardPermission implements Permission, Serializable {
         return false;
     }
 
+    // Can't be final as it is overridden. TODO Verify equals/hashcode contract
     public int hashCode() {
         return parts.hashCode();
     }

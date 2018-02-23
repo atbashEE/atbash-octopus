@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,6 @@ import javax.servlet.ServletResponse;
  * </ol>
  * Finally, calls to <code>subject.getSession(false)</code> (i.e. a {@code false} boolean value) will be unaffected
  * and may be called without repercussion in all cases.
- *
- * @since 1.2
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.session.NoSessionCreationFilter"})

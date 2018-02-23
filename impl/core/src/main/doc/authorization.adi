@@ -1,0 +1,118 @@
+
+// FIXME Basic documentation, more detail/explanation needed
+=== Interceptors
+
+    @RequiresPermissions
+
+Can be used to protect the execution of an EJB method. User (subject) must have the permission before method is executed.
+
+// TODO Verify if it is also usable for CDI methods.
+
+    String[] value()
+
+Supply the permission(s) wildcard or named permission. See Permission chapter.
+
+    Class<? extends NamedPermission>[] permission()
+
+Supply the permission to check as class instance.
+
+    Combined combined() default Combined.OR
+
+When multiple permissions are supplied, must they all be satisfied or only one (the default)
+
+    @RequiresRoles
+
+Can be used to protect the execution of an EJB method. User (subject) must have the role before method is executed.
+
+    String[] value()
+
+Supply the role name(s). See Permission chapter.
+
+=== Voters
+
+Voters for a certain permission or role can be created.
+
+    @Inject
+    @RequiresPermissions("order:read:*")
+    private GenericPermissionVoter orderReadVoter;
+
+
+or for a role
+
+    @Inject
+    @RequiresRoles("admin")
+    private GenericRoleVoter adminRoleVoter;
+
+Things you can do with a voter
+
+
+    voter.checkPermission(AccessDecisionVoterContext, Set<SecurityViolation>);
+
+Verifies the permission and add violations to the  Set<SecurityViolation> parameter. AccessDecisionVoterContext supplies context
+
+
+    voter.verifyPermission();
+
+returns true if the current user /subject has the required permission checked by the voter.
+
+
+These voters can be created programmatically in those environments where no CDI inject is available.
+
+    GenericPermissionVoter.createInstance(String);
+
+or
+
+    GenericRoleVoter.createInstance(ApplicationRole)
+
+
+=== Custom voters
+
+When the default checks on permissions or not enough. It can be that more complex logic is required or that multiple checks must be combined.
+
+    @ApplicationScoped
+    @Named
+    public class CustomVoter extends AbstractGenericVoter {
+    }
+
+Typically the injection of voters is performed within these custom voters.
+
+=== Custom tags
+
+Custom tags are created to perform declarative authorization on JSF components. These are defined in the namespace
+
+    xmlns:sec="http://www.atbash.be/secure/octopus"
+
+
+<sec:securedComponent>
+
+Defines if a certain JSF component can be viewed (is rendered) for the user/subject.
+
+When defined within another JSF tag (without the for attribute) it controles the parent. With the for attribute one can define the JSF component on which it operates.
+
+    permission
+
+Supply the permission(s) wildcard or named permission. See Permission chapter.
+
+    role
+
+Supply the role name(s). See Permission chapter.
+
+    voter
+
+Supply the names of the custom voter(s)
+
+Combination of the 3 above attributes is allowed
+
+    not
+
+Inverts the result of the check
+
+
+    combined (true/false)
+
+Do all checks need to be pass on the user/subject or is only 1 enough.
+
+    for
+
+Specifies the id of one (or more) JSF components for which the authorization check is performed.
+

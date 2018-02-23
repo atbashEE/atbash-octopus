@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import java.util.Set;
  * @see #getRealmNames()
  */
 // TODO I think we shouldn't have multiple Principals but 2Step authc uses them!
+// No that we can rewrite Shiro code, see if we can do 2step without multiple Principals
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.subject.PrincipalCollection", "org.apache.shiro.subject.SimplePrincipalCollection"})
 public interface PrincipalCollection extends Iterable, Serializable {
 
@@ -137,6 +138,7 @@ public interface PrincipalCollection extends Iterable, Serializable {
 
     Set<String> getRealmNames();
      */
+
     /**
      * Returns {@code true} if this collection is empty, {@code false} otherwise.
      *

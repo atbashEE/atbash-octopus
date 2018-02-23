@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,9 @@ public class AuthenticationInfoBuilder {
     private boolean tokenBased = false;
 
     public AuthenticationInfoBuilder principalId(Serializable principalId) {
+        if (principalId == null) {
+            throw new AtbashIllegalActionException("(OCT-DEV-004) principalId cannot be null");
+        }
         this.principalId = principalId;
         return this;
     }
@@ -60,6 +63,9 @@ public class AuthenticationInfoBuilder {
     }
 
     public AuthenticationInfoBuilder password(Object password) {
+        if (password == null) {
+            return this;
+        }
         if (token != null) {
             throw new AtbashIllegalActionException("(OCT-DEV-003) Defining a token is not allowed when a password value is already specified.");
         }
@@ -85,6 +91,9 @@ public class AuthenticationInfoBuilder {
     }
 
     public AuthenticationInfoBuilder token(Serializable token) {
+        if (token == null) {
+            return this;
+        }
         if (password != null) {
             throw new AtbashIllegalActionException("(OCT-DEV-002) Defining a token is not allowed when a password value is already specified.");
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,15 @@
 package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
-import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.ee.security.octopus.authz.AuthorizationInfoProvider;
+import be.atbash.util.PublicAPI;
+import be.atbash.util.Reviewed;
 
-public interface SecurityDataProvider extends AuthenticationInfoProvider {
+/**
+ * Backwards compatibility convenience interface. Combines the supply of AuthenticationInfo and AuthorizationInfo.
+ */
+@PublicAPI
+@Reviewed
+public interface SecurityDataProvider extends AuthenticationInfoProvider, AuthorizationInfoProvider {
 
-    AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals);
 }

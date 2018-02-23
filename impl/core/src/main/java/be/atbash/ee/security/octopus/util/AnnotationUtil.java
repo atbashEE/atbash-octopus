@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package be.atbash.ee.security.octopus.util;
 
+import be.atbash.ee.security.octopus.authz.Combined;
+import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
+import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.annotation.Annotation;
@@ -23,29 +26,26 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Set;
 
+// TODO JavaDoc
 public final class AnnotationUtil {
 
     private AnnotationUtil() {
     }
 
-    /*
     public static <T extends NamedPermission> T[] getPermissionValues(Annotation someCustomNamedCheck) {
         T[] result = null;
         for (Method method : someCustomNamedCheck.getClass().getDeclaredMethods()) {
             if ("value".equals(method.getName())) {
                 try {
                     result = (T[]) method.invoke(someCustomNamedCheck, null);
-                } catch (IllegalAccessException e) {
-                    throw new OctopusUnexpectedException(e);
-                } catch (InvocationTargetException e) {
-                    throw new OctopusUnexpectedException(e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new AtbashUnexpectedException(e);
                 }
             }
         }
 
         return result;
     }
-    */
 
     public static String[] getStringValues(Annotation someCustomNamedCheck) {
         String[] result = null;
@@ -68,6 +68,7 @@ public final class AnnotationUtil {
         return result;
     }
 
+    // FIXME Required for the advanced custom annotation feature.
     public static boolean hasAdvancedFlag(Annotation someAnnotation) {
         boolean result = false;
 
@@ -86,7 +87,6 @@ public final class AnnotationUtil {
         return result;
     }
 
-    /*
     public static <T extends NamedRole> T[] getRoleValues(Annotation someCustomRoleCheck) {
         T[] result = null;
         for (Method method : someCustomRoleCheck.getClass().getDeclaredMethods()) {
@@ -94,10 +94,8 @@ public final class AnnotationUtil {
                 try {
                     result = (T[]) method.invoke(someCustomRoleCheck, null);
 
-                } catch (IllegalAccessException e) {
-                    throw new OctopusUnexpectedException(e);
-                } catch (InvocationTargetException e) {
-                    throw new OctopusUnexpectedException(e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new AtbashUnexpectedException(e);
                 }
             }
         }
@@ -113,27 +111,23 @@ public final class AnnotationUtil {
                 try {
                     value = method.invoke(customAnnotation, null).toString();
 
-                } catch (IllegalAccessException e) {
-                    throw new OctopusUnexpectedException(e);
-                } catch (InvocationTargetException e) {
-                    throw new OctopusUnexpectedException(e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new AtbashUnexpectedException(e);
                 }
             }
-            // But the securedComponent used combined attribute. So that is why octopusPermissions and OctopusRoles also uses combined.
+            // But the securedComponent used combined attribute. So that is why requiresPermissions and RequiresRoles also uses combined.
             if ("combined".equals(method.getName())) {
                 try {
                     value = method.invoke(customAnnotation, null).toString();
 
-                } catch (IllegalAccessException e) {
-                    throw new OctopusUnexpectedException(e);
-                } catch (InvocationTargetException e) {
-                    throw new OctopusUnexpectedException(e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new AtbashUnexpectedException(e);
                 }
             }
         }
         return Combined.findFor(value);
     }
-
+/*
 
     // Retrieve the supported annotation enforcing authorization for the method
     public static AnnotationInfo getAllAnnotations(OctopusConfig config, Class<?> someClassType, Method someMethod) {

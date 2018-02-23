@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -218,12 +218,13 @@ public class FilterChainManager {
             throw new NullPointerException("chainDefinition cannot be null or empty.");
         }
 
+        String realChainName = processChainName(chainName);
         if (log.isDebugEnabled()) {
-            log.debug("Creating chain [" + chainName + "] from String definition [" + chainDefinition + "]");
+            log.debug("Creating chain [" + realChainName + "] from String definition [" + chainDefinition + "]");
         }
 
         // Add the ExceptionFilter as first filter in the chain. Always!!
-        addToChain(chainName, EXCEPTION_FILTER_NAME, null);
+        addToChain(realChainName, EXCEPTION_FILTER_NAME, null);
 
         //parse the value by tokenizing it to get the resulting filter-specific config entries
         //
@@ -243,8 +244,16 @@ public class FilterChainManager {
             String[] nameConfigPair = toNameConfigPair(token);
 
             //now we have the filter name, path and (possibly null) path-specific config.  Let's apply them:
-            addToChain(chainName, nameConfigPair[0], nameConfigPair[1]);
+            addToChain(realChainName, nameConfigPair[0], nameConfigPair[1]);
         }
+    }
+
+    private String processChainName(String url) {
+        String result = url;
+        if (!url.startsWith("/")) {
+            result = '/' + url;
+        }
+        return result;
     }
 
     /**

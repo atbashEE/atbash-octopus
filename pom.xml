@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -40,6 +40,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <atbash-utils.version>0.9.1-SNAPSHOT</atbash-utils.version>
+        <atbash-config.version>0.9.1</atbash-config.version>
         <nimbus-jose-jwt.version>4.36.1</nimbus-jose-jwt.version>
         <slf4j.version>1.7.25</slf4j.version>
 
@@ -69,6 +71,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -146,6 +155,13 @@
                         <java>SLASHSTAR_STYLE</java>
                     </mapping>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin-git</artifactId>
+                        <version>3.0</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <goals>

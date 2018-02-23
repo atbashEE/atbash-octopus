@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
+import be.atbash.util.CDIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -463,7 +463,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
     }
 
     protected void onSuccessfulLogin(AuthenticationToken token, AuthenticationInfo info, WebSubject subject) {
-        List<AfterSuccessfulLoginHandler> handlers = BeanProvider.getContextualReferences(AfterSuccessfulLoginHandler.class, true);
+        List<AfterSuccessfulLoginHandler> handlers = CDIUtils.retrieveInstances(AfterSuccessfulLoginHandler.class);
         for (AfterSuccessfulLoginHandler handler : handlers) {
             handler.onSuccessfulLogin(token, info, subject);
         }

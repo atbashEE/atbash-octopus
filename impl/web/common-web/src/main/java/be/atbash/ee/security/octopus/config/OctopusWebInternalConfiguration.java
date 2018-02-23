@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,24 @@
  */
 package be.atbash.ee.security.octopus.config;
 
+import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.util.pattern.AntPathMatcher;
-import org.eclipse.microprofile.config.Config;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 /**
  *
  */
 @ApplicationScoped
 @ModuleConfigName("Octopus Internal Web Configuration")
-public class OctopusWebInternalConfiguration implements ModuleConfig {
-
-    @Inject
-    private Config config;
+public class OctopusWebInternalConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     @ConfigEntry
     public String getPatternMatcherClass() {
-        String patternMatcherClass = config.getOptionalValue("PatternMatcher.class", String.class);
+        String patternMatcherClass = getOptionalValue("PatternMatcher.class", String.class);
         return patternMatcherClass == null ? AntPathMatcher.class.getName() : patternMatcherClass;
     }
 

@@ -1,0 +1,93 @@
+<!--
+
+    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:sec="http://www.atbash.be/secure/octopus"
+>
+
+<h:head>
+    <title>Secured Component - Main page</title>
+
+</h:head>
+
+<h:body>
+
+    authenticated user : #{loggedInUser} <br/>
+    <h:outputText value="Only visible with 'demo-read' permission, checks on demo:read:* permission">
+        <sec:securedComponent permission="demo:read:*"/>
+    </h:outputText> <br/>
+    <h:outputText value="This one checks on demo:*.*">
+        <sec:securedComponent permission="demo:*:*"/>
+    </h:outputText> <br/>
+    <h:outputText value="This one checks on demo">
+        <sec:securedComponent permission="demo"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on demo:write:*">
+        <sec:securedComponent permission="demo:write:*"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on not demo:write:*">
+        <sec:securedComponent permission="demo:write:*" not="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on demo:read:* OR special:action:*">
+        <sec:securedComponent permission="demo:read:*, special:action:*"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on demo:read:* AND special:action:*">
+        <sec:securedComponent permission="demo:read:*, special:action:*" combined="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on demo:read:* AND non:existing:*">
+        <sec:securedComponent permission="demo:read:*, non:existing:*" combined="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="This one checks role employee">
+        <sec:securedComponent role="employee"/>
+    </h:outputText> <br/>
+    <h:outputText value="This one checks role manager">
+        <sec:securedComponent role="manager"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks NOT role manager">
+        <sec:securedComponent role="manager" not="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks role employee OR manager">
+        <sec:securedComponent role="employee, manager"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks role employee AND manager">
+        <sec:securedComponent role="employee, manager" combined="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="This one checks voter customVoter">
+        <sec:securedComponent voter="customVoter"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks NOT voter customVoter">
+        <sec:securedComponent voter="customVoter" not="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on demo:*.* OR role employee">
+        <sec:securedComponent permission="demo:*:*" role="employee"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on demo:*.* AND role employee">
+        <sec:securedComponent permission="demo:*:*" role="employee" combined="true"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on role manager OR voter customVoter">
+        <sec:securedComponent voter="customVoter" role="manager"/>
+    </h:outputText> <br/>
+    <h:outputText value="Checks on role manager AND voter customVoter">
+        <sec:securedComponent voter="customVoter" role="manager" combined="true"/>
+    </h:outputText> <br/>
+
+</h:body>
+
+</html>

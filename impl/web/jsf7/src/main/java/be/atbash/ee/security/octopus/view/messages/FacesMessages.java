@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.view.messages;
 
+import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.core.api.message.MessageContext;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.StringUtils;
 
 import javax.enterprise.context.Dependent;
@@ -161,6 +161,6 @@ public class FacesMessages implements Serializable {
     }
 
     public static FacesMessages getInstance() {
-        return BeanProvider.getContextualReference(FacesMessages.class);
+        return CDIUtils.retrieveInstance(FacesMessages.class);
     }
 }

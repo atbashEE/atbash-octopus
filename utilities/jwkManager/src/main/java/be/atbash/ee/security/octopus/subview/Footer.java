@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,7 @@ public class Footer extends SubView {
     @Override
     public void initialize() {
 
-        VersionReader versionReader = new VersionReader();
-        versionReader.readInfo("jwk-util");
+        VersionReader versionReader = new VersionReader("jwk-util");
         Text version = new Text(String.format("Version %s (%s)", versionReader.getReleaseVersion(), versionReader.getBuildTime()));
 
         version.setFont(versionFont);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.logout;
 
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
+import be.atbash.util.CDIUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -38,7 +38,7 @@ public class LogoutHandler {
 
     @PostConstruct
     public void init() {
-        logoutURLProcessors = BeanProvider.getContextualReferences(LogoutURLProcessor.class, true);
+        logoutURLProcessors = CDIUtils.retrieveInstances(LogoutURLProcessor.class);
     }
 
     /* We can create overloaded methods with other types ike ServletRequest to find out at which URL we are running */

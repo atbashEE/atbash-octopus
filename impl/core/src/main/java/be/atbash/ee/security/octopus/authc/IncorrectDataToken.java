@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
 /**
  * AuthenticationToken which can be used when insufficient/incorrect data was available on the requestHeader. Used in the OAuth2 and JWT authentication filters.
+ * FIXME Verify correct usage
  */
 public class IncorrectDataToken implements AuthenticationToken {
 

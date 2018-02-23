@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,20 @@ import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
+import be.atbash.ee.security.octopus.authz.permission.PermissionAdapter;
+import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
+import be.atbash.ee.security.octopus.authz.permission.role.RolePermissionResolver;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -75,11 +82,14 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     private Cache<Object, AuthorizationInfo> authorizationCache;
     private String authorizationCacheName;
 
-    // FIXME Do we need then here?
-    //@Inject
-    //private PermissionResolver permissionResolver;
+    @Inject
+    private OctopusCoreConfiguration configuration;
 
-    //private RolePermissionResolver permissionRoleResolver;
+    @Inject
+    private PermissionResolver permissionResolver;
+
+    private RolePermissionResolver rolePermissionResolver;
+    private PermissionAdapter permissionAdapter;
 
     /*-------------------------------------------
     |         C O N S T R U C T O R S           |
@@ -94,6 +104,12 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
         if (instanceNumber > 0) {
             authorizationCacheName = authorizationCacheName + "." + instanceNumber;
         }
+    }
+
+    @PostConstruct
+    public void init() {
+        rolePermissionResolver = CDIUtils.retrieveOptionalInstance(RolePermissionResolver.class);
+        permissionAdapter = CDIUtils.retrieveOptionalInstance(PermissionAdapter.class);
     }
 
     /*-------------------------------------------
@@ -363,7 +379,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
      */
     protected abstract AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals);
 
-    private Collection<Permission> getPermissions(AuthorizationInfo info) {
+    private Collection<Permission> getPermissions(AuthorizationInfo info, PrincipalCollection principals) {
         Set<Permission> permissions = new HashSet<>();
 
         if (info != null) {
@@ -382,6 +398,9 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
             }
         }
 
+        if (configuration.isDynamicAuthorization()) {
+            permissions = permissionAdapter.adjustPermissions(permissions, principals);
+        }
         if (permissions.isEmpty()) {
             return Collections.emptySet();
         } else {
@@ -390,38 +409,39 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     }
 
     private Collection<Permission> resolvePermissions(Collection<String> stringPerms) {
+        // FIXME, There should never be some String permissions left. They are converted already by the AuthorizationInfoBuilder
         Collection<Permission> perms = Collections.emptySet();
-        throw new UnsupportedOperationException("not implemented be.atbash.ee.security.octopus.realm.AuthorizingRealm.resolvePermissions");
-        /*
-        PermissionResolver resolver = getPermissionResolver();
-        if (resolver != null && !CollectionUtils.isEmpty(stringPerms)) {
-            perms = new LinkedHashSet<Permission>(stringPerms.size());
+
+        if (!CollectionUtils.isEmpty(stringPerms)) {
+            perms = new LinkedHashSet<>(stringPerms.size());
             for (String strPermission : stringPerms) {
-                Permission permission = getPermissionResolver().resolvePermission(strPermission);
+                Permission permission = permissionResolver.resolvePermission(strPermission);
                 perms.add(permission);
             }
         }
 
         return perms;
-        */
+
     }
 
     private Collection<Permission> resolveRolePermissions(Collection<String> roleNames) {
         Collection<Permission> perms = Collections.emptySet();
-        throw new UnsupportedOperationException("not implemented be.atbash.ee.security.octopus.realm.AuthorizingRealm.resolveRolePermissions");
-        /*
-        RolePermissionResolver resolver = getRolePermissionResolver();
-        if (resolver != null && !CollectionUtils.isEmpty(roleNames)) {
-            perms = new LinkedHashSet<Permission>(roleNames.size());
+
+        if (!configuration.isDynamicAuthorization()) {
+            // If the permissions/roles are handled static, the AuthorizationInfoBuilder has already made the conversion.
+            return perms;
+        }
+        // FIXME This is also done in AuthenticationInfoBuilder?!
+        if (rolePermissionResolver != null && !CollectionUtils.isEmpty(roleNames)) {
+            perms = new LinkedHashSet<>(roleNames.size());
             for (String roleName : roleNames) {
-                Collection<Permission> resolved = resolver.resolvePermissionsInRole(roleName);
+                Collection<Permission> resolved = rolePermissionResolver.resolvePermissionsInRole(roleName);
                 if (!CollectionUtils.isEmpty(resolved)) {
                     perms.addAll(resolved);
                 }
             }
         }
         return perms;
-        */
     }
 
     public boolean isPermitted(PrincipalCollection principals, String permission) {
@@ -434,11 +454,11 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
 
     public boolean isPermitted(PrincipalCollection principals, Permission permission) {
         AuthorizationInfo info = getAuthorizationInfo(principals);
-        return isPermitted(permission, info);
+        return isPermitted(permission, info, principals);
     }
 
-    private boolean isPermitted(Permission permission, AuthorizationInfo info) {
-        Collection<Permission> perms = getPermissions(info);
+    private boolean isPermitted(Permission permission, AuthorizationInfo info, PrincipalCollection principals) {
+        Collection<Permission> perms = getPermissions(info, principals);
         if (perms != null && !perms.isEmpty()) {
             for (Permission perm : perms) {
                 if (perm.implies(permission)) {
@@ -462,17 +482,18 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
 
     public boolean[] isPermitted(PrincipalCollection principals, List<Permission> permissions) {
         AuthorizationInfo info = getAuthorizationInfo(principals);
-        return isPermitted(permissions, info);
+        return isPermitted(permissions, info, principals);
     }
 
-    protected boolean[] isPermitted(List<Permission> permissions, AuthorizationInfo info) {
+    protected boolean[] isPermitted(List<Permission> permissions, AuthorizationInfo info, PrincipalCollection principals) {
+        // FIXME Is this really used
         boolean[] result;
         if (permissions != null && !permissions.isEmpty()) {
             int size = permissions.size();
             result = new boolean[size];
             int i = 0;
             for (Permission p : permissions) {
-                result[i++] = isPermitted(p, info);
+                result[i++] = isPermitted(p, info, principals);
             }
         } else {
             result = new boolean[0];
@@ -494,15 +515,16 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
         */
     }
 
-    public boolean isPermittedAll(PrincipalCollection principal, Collection<Permission> permissions) {
-        AuthorizationInfo info = getAuthorizationInfo(principal);
-        return info != null && isPermittedAll(permissions, info);
+    public boolean isPermittedAll(PrincipalCollection principals, Collection<Permission> permissions) {
+        // FIXME is this really used??
+        AuthorizationInfo info = getAuthorizationInfo(principals);
+        return info != null && isPermittedAll(permissions, info, principals);
     }
 
-    protected boolean isPermittedAll(Collection<Permission> permissions, AuthorizationInfo info) {
+    protected boolean isPermittedAll(Collection<Permission> permissions, AuthorizationInfo info, PrincipalCollection principals) {
         if (permissions != null && !permissions.isEmpty()) {
             for (Permission p : permissions) {
-                if (!isPermitted(p, info)) {
+                if (!isPermitted(p, info, principals)) {
                     return false;
                 }
             }
@@ -518,13 +540,13 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
         */
     }
 
-    public void checkPermission(PrincipalCollection principal, Permission permission) throws AuthorizationException {
-        AuthorizationInfo info = getAuthorizationInfo(principal);
-        checkPermission(permission, info);
+    public void checkPermission(PrincipalCollection principals, Permission permission) throws AuthorizationException {
+        AuthorizationInfo info = getAuthorizationInfo(principals);
+        checkPermission(permission, info, principals);
     }
 
-    protected void checkPermission(Permission permission, AuthorizationInfo info) {
-        if (!isPermitted(permission, info)) {
+    protected void checkPermission(Permission permission, AuthorizationInfo info, PrincipalCollection principals) {
+        if (!isPermitted(permission, info, principals)) {
             String msg = "User is not permitted [" + permission + "]";
             throw new UnauthorizedException(msg);
         }
@@ -538,15 +560,15 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
         }
     }
 
-    public void checkPermissions(PrincipalCollection principal, Collection<Permission> permissions) throws AuthorizationException {
-        AuthorizationInfo info = getAuthorizationInfo(principal);
-        checkPermissions(permissions, info);
+    public void checkPermissions(PrincipalCollection principals, Collection<Permission> permissions) throws AuthorizationException {
+        AuthorizationInfo info = getAuthorizationInfo(principals);
+        checkPermissions(permissions, info, principals);
     }
 
-    protected void checkPermissions(Collection<Permission> permissions, AuthorizationInfo info) {
+    protected void checkPermissions(Collection<Permission> permissions, AuthorizationInfo info, PrincipalCollection principals) {
         if (permissions != null && !permissions.isEmpty()) {
             for (Permission p : permissions) {
-                checkPermission(p, info);
+                checkPermission(p, info, principals);
             }
         }
     }

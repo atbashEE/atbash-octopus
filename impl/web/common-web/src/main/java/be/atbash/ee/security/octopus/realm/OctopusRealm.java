@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authc.*;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
+import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
 import be.atbash.ee.security.octopus.codec.Base64;
 import be.atbash.ee.security.octopus.codec.CodecUtil;
@@ -51,6 +52,9 @@ public class OctopusRealm extends AuthorizingRealm {
     private AuthenticationInfoProviderHandler authenticationInfoProviderHandler;
 
     @Inject
+    private AuthorizationInfoProviderHandler authorizationInfoProviderHandler;
+
+    @Inject
     private OctopusWebConfiguration config;
 
     @Inject
@@ -74,10 +78,9 @@ public class OctopusRealm extends AuthorizingRealm {
                 // No permissions or roles, use @SystemAccount
                 authorizationInfo = new SimpleAuthorizationInfo();  // TODO
             } else {
-                //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
+                // FIXME OctopusDefinedAuthorizationInfo usage !!
+                authorizationInfo = authorizationInfoProviderHandler.retrieveAuthorizationInfo(principals);
             }
-            //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
-            authorizationInfo = null; // FIXME ?? Why it is called twice, also in case of SystemAccount?
         } finally {
 
             WebThreadContext.remove(IN_AUTHORIZATION_FLAG);

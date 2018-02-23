@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Should never be created by the developer directly, only reading the information
+ */
 @Typed
 public class UserPrincipal implements Principal, Serializable {
 
@@ -46,7 +49,7 @@ public class UserPrincipal implements Principal, Serializable {
      */
     public UserPrincipal(Serializable id, String userName, String name) {
         if (id == null) {
-            throw new IllegalArgumentException("id cannot be null");
+            throw new AtbashIllegalActionException("(OCT-DEV-004) principalId cannot be null");
         }
         this.id = id;
         this.userName = userName;

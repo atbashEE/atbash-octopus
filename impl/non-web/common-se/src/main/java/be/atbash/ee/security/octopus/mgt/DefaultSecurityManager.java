@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,7 +173,6 @@ public class DefaultSecurityManager implements Authorizer {
      * @see #resolvePrincipals(org.apache.shiro.subject.SubjectContext)
      * @see #doCreateSubject(org.apache.shiro.subject.SubjectContext)
      * @see #save(org.apache.shiro.subject.Subject)
-     * @since 1.0
      */
     public Subject createSubject(SubjectContext subjectContext) {
         //create a copy so we don't modify the argument's backing map:
@@ -200,7 +199,6 @@ public class DefaultSecurityManager implements Authorizer {
      * @return a {@code Subject} instance reflecting the data in the specified {@code SubjectContext} data map.
      * @see #getSubjectFactory()
      * @see SubjectFactory#createSubject(org.apache.shiro.subject.SubjectContext)
-     * @since 1.2
      */
     protected Subject doCreateSubject(SubjectContext context) {
         return subjectFactory.createSubject(context);
@@ -213,7 +211,6 @@ public class DefaultSecurityManager implements Authorizer {
      *
      * @param context the subject context data that may contain a SecurityManager instance.
      * @return The SubjectContext to use to pass to a {@link SubjectFactory} for subject creation.
-     * @since 1.0
      */
     @SuppressWarnings({"unchecked"})
     protected SubjectContext ensureSecurityManager(SubjectContext context) {
@@ -242,7 +239,6 @@ public class DefaultSecurityManager implements Authorizer {
      * @param context the subject context data that may provide (directly or indirectly through one of its values) a
      *                {@link PrincipalCollection} identity.
      * @return The Subject context to use to pass to a {@link SubjectFactory} for subject creation.
-     * @since 1.0
      */
     @SuppressWarnings({"unchecked"})
     protected SubjectContext resolvePrincipals(SubjectContext context) {

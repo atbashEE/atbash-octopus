@@ -1,6 +1,6 @@
 = Octopus Framework
 Rudy De Busscher <rdebusscher@gmail.com>
-v0.2, 10/01/2018
+v0.3, ??/??/2018
 
 == Release notes
 
@@ -9,6 +9,10 @@ include::release.adi[]
 == Modules
 
 include::modules.adi[]
+
+== Authorization
+
+include::authorization.adi[]
 
 == Java EE
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.subject;
 
-import be.atbash.ee.jsf.jerry.utils.CDIUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
@@ -32,6 +31,7 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.HostAuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.ee.security.octopus.util.RequestPairSource;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
 import be.atbash.util.StringUtils;
 import org.slf4j.Logger;

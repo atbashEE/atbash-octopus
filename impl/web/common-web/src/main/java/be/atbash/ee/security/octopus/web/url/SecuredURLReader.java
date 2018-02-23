@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package be.atbash.ee.security.octopus.web.url;
 
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.util.ResourceUtils;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -58,7 +58,7 @@ public class SecuredURLReader {
     private Map<String, String> readPatternsFromCode() {
         Map<String, String> result = new HashMap<>();
 
-        List<ProgrammaticURLProtectionProvider> urlProtectionProviders = BeanProvider.getContextualReferences(ProgrammaticURLProtectionProvider.class, true);
+        List<ProgrammaticURLProtectionProvider> urlProtectionProviders = CDIUtils.retrieveInstances(ProgrammaticURLProtectionProvider.class);
 
         for (ProgrammaticURLProtectionProvider urlProtectionProvider : urlProtectionProviders) {
             result.putAll(urlProtectionProvider.getURLEntriesToAdd());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.config;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -55,6 +56,16 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigEntry
     public boolean getPostIsAllowedSavedRequest() {
         return allowPostAsSavedRequest;
+    }
+
+    @ConfigEntry
+    public String getUnauthorizedExceptionPage() {
+        return ConfigResolver.getPropertyValue("unauthorizedExceptionPage", "/unauthorized.xhtml");
+    }
+
+    @ConfigEntry
+    public String getExcludePrimeFacesMobile() {
+        return ConfigResolver.getPropertyValue("primefaces.mobile.exclusion", "false");
     }
 
 }
