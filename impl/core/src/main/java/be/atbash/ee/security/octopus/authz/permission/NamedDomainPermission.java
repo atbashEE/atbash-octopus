@@ -66,9 +66,9 @@ public class NamedDomainPermission extends DomainPermission implements NamedPerm
         StringBuilder result = new StringBuilder();
         result.append(getDomain());
         if (!CollectionUtils.isEmpty(getActions())) {
-            result.append(PART_DIVIDER_TOKEN).append(StringUtils.join(getActions().iterator(), SUBPART_DIVIDER_TOKEN));
+            result.append(PART_DIVIDER_TOKEN).append(StringUtils.toDelimitedString(SUBPART_DIVIDER_TOKEN, getActions().iterator()));
             if (!CollectionUtils.isEmpty(getTargets())) {
-                result.append(PART_DIVIDER_TOKEN).append(StringUtils.join(getTargets().iterator(), SUBPART_DIVIDER_TOKEN));
+                result.append(PART_DIVIDER_TOKEN).append(StringUtils.toDelimitedString(SUBPART_DIVIDER_TOKEN, getTargets().iterator()));
             }
         }
         return result.toString();

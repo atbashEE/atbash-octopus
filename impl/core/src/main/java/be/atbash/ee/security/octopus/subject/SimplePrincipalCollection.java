@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ public class SimplePrincipalCollection implements PrincipalCollection /*implemen
         if (cachedToString == null) {
             Set<Object> principals = asSet();
             if (!CollectionUtils.isEmpty(principals)) {
-                cachedToString = StringUtils.toString(principals.toArray());
+                cachedToString = StringUtils.toDelimitedString(principals.toArray());
             } else {
                 cachedToString = "empty";
             }

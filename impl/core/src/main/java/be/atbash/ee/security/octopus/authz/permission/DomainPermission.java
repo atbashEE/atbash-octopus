@@ -91,8 +91,8 @@ public class DomainPermission extends WildcardPermission {
     }
 
     protected void setParts(String domain, Set<String> actions, Set<String> targets) {
-        String actionsString = StringUtils.toDelimitedString(actions, SUBPART_DIVIDER_TOKEN);
-        String targetsString = StringUtils.toDelimitedString(targets, SUBPART_DIVIDER_TOKEN);
+        String actionsString = StringUtils.toDelimitedString(SUBPART_DIVIDER_TOKEN, actions);
+        String targetsString = StringUtils.toDelimitedString(SUBPART_DIVIDER_TOKEN, targets);
         encodeParts(domain, actionsString, targetsString);
     }
 

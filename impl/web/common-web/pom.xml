@@ -52,12 +52,6 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.config</groupId>
-            <artifactId>geronimo-config</artifactId>
-            <version>${atbash-config.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
             <version>${deltaspike.version}</version>
