@@ -153,3 +153,32 @@ Do all checks need to be pass on the user/subject or is only 1 enough.
     for
 
 Specifies the id of one (or more) JSF components for which the authorization check is performed.
+
+<sec:securePage>
+
+This is an alternative for the usage of the filter definition with the securedURLs.ini file. We can specify the authorization checks (using permission, role and voter) in order that the page is visible for the end user. If (s)he has no permission, the unauthorized page will be shown.
+
+This tag can be placed anywhere on the page, but for optimal performance, it should be in the beginning of the page and within the <h:body> parent.
+
+    permission
+
+Supply the permission(s) wildcard or named permission. See Permission chapter.
+
+    role
+
+Supply the role name(s). See Permission chapter.
+
+    voter
+
+Supply the names of the custom voter(s)
+
+Combination of the 3 above attributes is allowed
+
+    not
+
+Inverts the result of the check
+
+
+    combined (true/false)
+
+Do all checks need to be pass on the user/subject or is only 1 enough.
