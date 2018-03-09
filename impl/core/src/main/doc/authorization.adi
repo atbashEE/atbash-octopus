@@ -116,3 +116,40 @@ Do all checks need to be pass on the user/subject or is only 1 enough.
 
 Specifies the id of one (or more) JSF components for which the authorization check is performed.
 
+<sec:securedListener>
+
+Defines the possibility to execute a method when the authorization checks ofr te user are positive based on the supplied permission, role and/or voter.
+The Java method can update the component to allow correct styling based on the permissions of the users.
+
+When defined within another JSF tag (without the for attribute) it controles the parent. With the for attribute one can define the JSF component on which it operates.
+
+    listener
+
+Defines the EL expression of the method which needs to be executed. The EL expression must point to a Java method with a parameter of type UIComponent and has no return (void)
+
+    permission
+
+Supply the permission(s) wildcard or named permission. See Permission chapter.
+
+    role
+
+Supply the role name(s). See Permission chapter.
+
+    voter
+
+Supply the names of the custom voter(s)
+
+Combination of the 3 above attributes is allowed
+
+    not
+
+Inverts the result of the check
+
+
+    combined (true/false)
+
+Do all checks need to be pass on the user/subject or is only 1 enough.
+
+    for
+
+Specifies the id of one (or more) JSF components for which the authorization check is performed.
