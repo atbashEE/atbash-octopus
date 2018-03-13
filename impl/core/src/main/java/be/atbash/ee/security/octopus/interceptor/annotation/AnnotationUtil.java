@@ -23,11 +23,13 @@ import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
+import be.atbash.util.reflection.ClassUtils;
 
 import javax.annotation.security.PermitAll;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -135,56 +137,63 @@ public final class AnnotationUtil {
     }
 
     // Retrieve the supported annotation enforcing authorization for the method
-    public static AnnotationInfo getAllAnnotations(OctopusCoreConfiguration config, Class<?> someClassType, Method someMethod) {
+    public static AnnotationInfo getAllAnnotations(OctopusCoreConfiguration config, Class<?> classType, Method method) {
 
-        List<AnnotationsToFind> annotationsToFindList = CDIUtils.retrieveInstances(AnnotationsToFind.class);
         AnnotationInfo result = new AnnotationInfo();
 
-        result.addMethodAnnotation(someMethod.getAnnotation(PermitAll.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(RequiresAuthentication.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(RequiresGuest.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(RequiresUser.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(RequiresRoles.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(RequiresPermissions.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(CustomVoterCheck.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(SystemAccount.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(OnlyDuringAuthorization.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(OnlyDuringAuthentication.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(OnlyDuringAuthenticationEvent.class));
+        result.addMethodAnnotation(method.getAnnotation(PermitAll.class));
+        result.addMethodAnnotation(method.getAnnotation(RequiresAuthentication.class));
+        result.addMethodAnnotation(method.getAnnotation(RequiresGuest.class));
+        result.addMethodAnnotation(method.getAnnotation(RequiresUser.class));
+        result.addMethodAnnotation(method.getAnnotation(RequiresRoles.class));
+        result.addMethodAnnotation(method.getAnnotation(RequiresPermissions.class));
+        result.addMethodAnnotation(method.getAnnotation(CustomVoterCheck.class));
+        result.addMethodAnnotation(method.getAnnotation(SystemAccount.class));
+        result.addMethodAnnotation(method.getAnnotation(OnlyDuringAuthorization.class));
+        result.addMethodAnnotation(method.getAnnotation(OnlyDuringAuthentication.class));
+        result.addMethodAnnotation(method.getAnnotation(OnlyDuringAuthenticationEvent.class));
         if (config.getNamedPermissionCheckClass() != null) {
-            result.addMethodAnnotation(someMethod.getAnnotation(config.getNamedPermissionCheckClass()));
+            result.addMethodAnnotation(method.getAnnotation(config.getNamedPermissionCheckClass()));
         }
         if (config.getNamedRoleCheckClass() != null) {
-            result.addMethodAnnotation(someMethod.getAnnotation(config.getNamedRoleCheckClass()));
+            result.addMethodAnnotation(method.getAnnotation(config.getNamedRoleCheckClass()));
         }
         if (config.getCustomCheckClass() != null) {
-            result.addMethodAnnotation(someMethod.getAnnotation(config.getCustomCheckClass()));
+            result.addMethodAnnotation(method.getAnnotation(config.getCustomCheckClass()));
         }
+
+        List<AnnotationsToFind> annotationsToFindList = new ArrayList<>();
+        if (ClassUtils.isAvailable("javax.enterprise.inject.UnsatisfiedResolutionException")) {
+            annotationsToFindList = CDIUtils.retrieveInstances(AnnotationsToFind.class);
+        }
+        // Else, We don't have CDI so don't retrieve the AnnotationsToFind classes.
+        // TODO is it OK that we don't use this in Java SE. Or should we use ServiceLoader?
+
         for (AnnotationsToFind annotationsToFind : annotationsToFindList) {
             for (Class<? extends Annotation> annotationClass : annotationsToFind.getList()) {
-                result.addMethodAnnotation(someMethod.getAnnotation(annotationClass));
+                result.addMethodAnnotation(method.getAnnotation(annotationClass));
             }
         }
-        result.addClassAnnotation(getAnnotation(someClassType, PermitAll.class));
-        result.addClassAnnotation(getAnnotation(someClassType, RequiresAuthentication.class));
-        result.addClassAnnotation(getAnnotation(someClassType, RequiresGuest.class));
-        result.addClassAnnotation(getAnnotation(someClassType, RequiresUser.class));
-        result.addClassAnnotation(getAnnotation(someClassType, RequiresRoles.class));
-        result.addClassAnnotation(getAnnotation(someClassType, RequiresPermissions.class));
-        result.addClassAnnotation(getAnnotation(someClassType, CustomVoterCheck.class));
-        result.addClassAnnotation(getAnnotation(someClassType, SystemAccount.class));
+        result.addClassAnnotation(getAnnotation(classType, PermitAll.class));
+        result.addClassAnnotation(getAnnotation(classType, RequiresAuthentication.class));
+        result.addClassAnnotation(getAnnotation(classType, RequiresGuest.class));
+        result.addClassAnnotation(getAnnotation(classType, RequiresUser.class));
+        result.addClassAnnotation(getAnnotation(classType, RequiresRoles.class));
+        result.addClassAnnotation(getAnnotation(classType, RequiresPermissions.class));
+        result.addClassAnnotation(getAnnotation(classType, CustomVoterCheck.class));
+        result.addClassAnnotation(getAnnotation(classType, SystemAccount.class));
         if (config.getNamedPermissionCheckClass() != null) {
-            result.addClassAnnotation(getAnnotation(someClassType, config.getNamedPermissionCheckClass()));
+            result.addClassAnnotation(getAnnotation(classType, config.getNamedPermissionCheckClass()));
         }
         if (config.getNamedRoleCheckClass() != null) {
-            result.addClassAnnotation(getAnnotation(someClassType, config.getNamedRoleCheckClass()));
+            result.addClassAnnotation(getAnnotation(classType, config.getNamedRoleCheckClass()));
         }
         if (config.getCustomCheckClass() != null) {
-            result.addClassAnnotation(getAnnotation(someClassType, config.getCustomCheckClass()));
+            result.addClassAnnotation(getAnnotation(classType, config.getCustomCheckClass()));
         }
         for (AnnotationsToFind annotationsToFind : annotationsToFindList) {
             for (Class<? extends Annotation> annotationClass : annotationsToFind.getList()) {
-                result.addClassAnnotation(getAnnotation(someClassType, annotationClass));
+                result.addClassAnnotation(getAnnotation(classType, annotationClass));
             }
         }
 

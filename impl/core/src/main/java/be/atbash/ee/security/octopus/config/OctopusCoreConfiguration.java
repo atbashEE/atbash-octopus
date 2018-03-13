@@ -23,6 +23,8 @@ import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
 import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
+import be.atbash.util.reflection.ClassUtils;
+import be.atbash.util.reflection.UnknownClassException;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.annotation.Annotation;
@@ -120,8 +122,8 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         if (namedPermissionCheckClass == null && getNamedPermissionCheck().length() != 0) {
 
             try {
-                namedPermissionCheckClass = (Class<? extends Annotation>) Class.forName(getNamedPermissionCheck());
-            } catch (ClassNotFoundException e) {
+                namedPermissionCheckClass = (Class<? extends Annotation>) ClassUtils.forName(getNamedPermissionCheck());
+            } catch (UnknownClassException e) {
                 logger.error("Class defined in configuration property namedPermissionCheck is not found", e);
             }
         }
@@ -132,8 +134,8 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         if (customCheckClass == null && getCustomCheck().length() != 0) {
 
             try {
-                customCheckClass = (Class<? extends Annotation>) Class.forName(getCustomCheck());
-            } catch (ClassNotFoundException e) {
+                customCheckClass = (Class<? extends Annotation>) ClassUtils.forName(getCustomCheck());
+            } catch (UnknownClassException e) {
                 logger.error("Class defined in configuration property customCheck is not found", e);
             }
         }
@@ -145,8 +147,8 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
 
             if (getNamedPermission().length() != 0) {
                 try {
-                    namedPermissionClass = (Class<? extends NamedPermission>) Class.forName(getNamedPermission());
-                } catch (ClassNotFoundException e) {
+                    namedPermissionClass = (Class<? extends NamedPermission>) ClassUtils.forName(getNamedPermission());
+                } catch (UnknownClassException e) {
                     logger.error("Class defined in configuration property 'namedPermission' is not found", e);
                 }
             }
@@ -158,8 +160,8 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         if (namedRoleCheckClass == null && getNamedRoleCheck().length() != 0) {
 
             try {
-                namedRoleCheckClass = (Class<? extends Annotation>) Class.forName(getNamedRoleCheck());
-            } catch (ClassNotFoundException e) {
+                namedRoleCheckClass = (Class<? extends Annotation>) ClassUtils.forName(getNamedRoleCheck());
+            } catch (UnknownClassException e) {
                 logger.error("Class defined in configuration property namedPermissionCheck is not found", e);
             }
         }
@@ -180,4 +182,19 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         return namedRoleClass;
     }
 
+    // Java SE Support
+    private static OctopusCoreConfiguration INSTANCE;
+
+    private static final Object LOCK = new Object();
+
+    public static OctopusCoreConfiguration getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
+                if (INSTANCE == null) {
+                    INSTANCE = new OctopusCoreConfiguration();
+                }
+            }
+        }
+        return INSTANCE;
+    }
 }
