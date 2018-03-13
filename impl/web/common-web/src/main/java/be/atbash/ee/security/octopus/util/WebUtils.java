@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,14 +48,14 @@ public class WebUtils {
 
     private static final Logger log = LoggerFactory.getLogger(WebUtils.class);
 
-    public static final String SERVLET_REQUEST_KEY = ServletRequest.class.getName() + "_SHIRO_THREAD_CONTEXT_KEY";
-    public static final String SERVLET_RESPONSE_KEY = ServletResponse.class.getName() + "_SHIRO_THREAD_CONTEXT_KEY";
+    //public static final String SERVLET_REQUEST_KEY = ServletRequest.class.getName() + "_SHIRO_THREAD_CONTEXT_KEY";
+    //public static final String SERVLET_RESPONSE_KEY = ServletResponse.class.getName() + "_SHIRO_THREAD_CONTEXT_KEY";
 
     /**
      * {@link org.apache.shiro.session.Session Session} key used to save a request and later restore it, for example when redirecting to a
      * requested page after login, equal to {@code shiroSavedRequest}.
      */
-    public static final String SAVED_REQUEST_KEY = "shiroSavedRequest";
+    public static final String SAVED_REQUEST_KEY = "octopusSavedRequest";
 
     /**
      * Standard Servlet 2.3+ spec request attributes for include URI and paths.
@@ -397,7 +397,7 @@ public class WebUtils {
 
         if (request != null) {
             Object val = request.getAttribute(WebSubjectContext.SESSION_CREATION_ENABLED);
-            if (val != null && val instanceof Boolean) {
+            if (val instanceof Boolean) {
                 return (Boolean) val;
             }
         }

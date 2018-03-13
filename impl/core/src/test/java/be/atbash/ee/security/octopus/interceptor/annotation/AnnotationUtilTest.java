@@ -13,26 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.util;
+package be.atbash.ee.security.octopus.interceptor.annotation;
 
+import be.atbash.ee.security.octopus.authz.annotation.*;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.interceptor.testclasses.TestPermissionCheck;
+import be.atbash.ee.security.octopus.interceptor.testclasses.*;
+import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
 import be.atbash.util.BeanManagerFake;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import javax.annotation.security.PermitAll;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
  *
  */
 
-//@RunWith(MockitoJUnitRunner.class)
-@Ignore
+@RunWith(MockitoJUnitRunner.class)
 public class AnnotationUtilTest {
 
     @Mock
@@ -45,7 +56,7 @@ public class AnnotationUtilTest {
         // Define the Named permission check class
         when(octopusConfigMock.getNamedPermissionCheckClass()).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 return TestPermissionCheck.class;
             }
         });
@@ -58,8 +69,6 @@ public class AnnotationUtilTest {
         beanManagerFake.deregistration();
     }
 
-    /*
-    FIXME
     @Test
     public void getAllAnnotations_ClassLevelCustomPermission() throws NoSuchMethodException {
         beanManagerFake.endRegistration();
@@ -124,7 +133,7 @@ public class AnnotationUtilTest {
 
         assertThat(annotation).isInstanceOf(RequiresPermissions.class);
 
-        assertThat(((RequiresPermissions) annotation).value()).containsOnly("shiro1:*:*");
+        assertThat(((RequiresPermissions) annotation).value()).containsOnly("octopus1:*:*");
 
     }
 
@@ -285,7 +294,7 @@ public class AnnotationUtilTest {
 
         assertThat(annotation).isInstanceOf(RequiresPermissions.class);
 
-        assertThat(((RequiresPermissions) annotation).value()).containsOnly("shiro2:*:*");
+        assertThat(((RequiresPermissions) annotation).value()).containsOnly("octopus2:*:*");
     }
 
     @Test
@@ -317,33 +326,16 @@ public class AnnotationUtilTest {
 
         Annotation annotation = annotations.getMethodAnnotations().iterator().next();
 
-        assertThat(annotation).isInstanceOf(OctopusPermissions.class);
+        assertThat(annotation).isInstanceOf(RequiresPermissions.class);
 
-        assertThat(((OctopusPermissions) annotation).value()).containsOnly("permissionName");
-    }
-
-    @Test
-    public void getAllAnnotations_MethodLevelOctopusPermissions_2() throws NoSuchMethodException {
-        beanManagerFake.endRegistration();
-        Object target = new MethodLevel();
-        Method method = target.getClass().getMethod("octopusPermission2");
-
-        AnnotationInfo annotations = AnnotationUtil.getAllAnnotations(octopusConfigMock, MethodLevel.class, method);
-        assertThat(annotations.getClassAnnotations()).isEmpty();
-        assertThat(annotations.getMethodAnnotations()).hasSize(1);
-
-        Annotation annotation = annotations.getMethodAnnotations().iterator().next();
-
-        assertThat(annotation).isInstanceOf(OctopusPermissions.class);
-
-        assertThat(((OctopusPermissions) annotation).value()).containsOnly("octopus:action:*");
+        assertThat(((RequiresPermissions) annotation).value()).containsOnly("permissionName");
     }
 
     @Test
     public void getAllAnnotations_MethodLevelCustomCheck() throws NoSuchMethodException {
         when(octopusConfigMock.getCustomCheckClass()).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 return MyCheck.class;
             }
         });
@@ -382,7 +374,7 @@ public class AnnotationUtilTest {
         beanManagerFake.registerBean(mock, AnnotationsToFind.class);
         beanManagerFake.endRegistration();
 
-        List<Class<? extends Annotation>> extraAnnotations = new ArrayList<Class<? extends Annotation>>();
+        List<Class<? extends Annotation>> extraAnnotations = new ArrayList<>();
         extraAnnotations.add(AdditionalAnnotation.class);
         when(mock.getList()).thenReturn(extraAnnotations);
         Object target = new MethodLevel();
@@ -400,7 +392,7 @@ public class AnnotationUtilTest {
         beanManagerFake.registerBean(mock, AnnotationsToFind.class);
         beanManagerFake.endRegistration();
 
-        List<Class<? extends Annotation>> extraAnnotations = new ArrayList<Class<? extends Annotation>>();
+        List<Class<? extends Annotation>> extraAnnotations = new ArrayList<>();
         extraAnnotations.add(AdditionalAnnotation.class);
         when(mock.getList()).thenReturn(extraAnnotations);
         Object target = new ClassLevelAdditionalAnnotation();
@@ -414,38 +406,10 @@ public class AnnotationUtilTest {
     }
 
     @Test
-    public void getStringValues_singleValue_arrayBased() throws NoSuchMethodException {
-        beanManagerFake.endRegistration();
-        Object target = new MethodLevel();
-        Method method = target.getClass().getMethod("getStringValue1");
-
-        AnnotationInfo annotations = AnnotationUtil.getAllAnnotations(octopusConfigMock, MethodLevel.class, method);
-        assertThat(annotations.getClassAnnotations()).isEmpty();
-        assertThat(annotations.getMethodAnnotations()).hasSize(1);
-
-        String[] values = AnnotationUtil.getStringValues(annotations.getMethodAnnotations().iterator().next());
-        assertThat(values).containsOnly("value1");
-    }
-
-    @Test
-    public void getStringValues_multipleValue() throws NoSuchMethodException {
-        beanManagerFake.endRegistration();
-        Object target = new MethodLevel();
-        Method method = target.getClass().getMethod("getStringValue2");
-
-        AnnotationInfo annotations = AnnotationUtil.getAllAnnotations(octopusConfigMock, MethodLevel.class, method);
-        assertThat(annotations.getClassAnnotations()).isEmpty();
-        assertThat(annotations.getMethodAnnotations()).hasSize(1);
-
-        String[] values = AnnotationUtil.getStringValues(annotations.getMethodAnnotations().iterator().next());
-        assertThat(values).containsOnly("value2", "value3");
-    }
-
-    @Test
     public void getStringValues_singleValue_NoArrayBased() throws NoSuchMethodException {
         when(octopusConfigMock.getCustomCheckClass()).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 return MyCheck.class;
             }
         });
@@ -466,7 +430,7 @@ public class AnnotationUtilTest {
     public void getAdvancedFlag_notPresent() throws NoSuchMethodException {
         when(octopusConfigMock.getCustomCheckClass()).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 return MyCheck.class;
             }
         });
@@ -487,14 +451,14 @@ public class AnnotationUtilTest {
     public void getAdvancedFlag_WithFlag() throws NoSuchMethodException {
         when(octopusConfigMock.getCustomCheckClass()).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 return MyAdvancedCheck.class;
             }
         });
 
         beanManagerFake.endRegistration();
         Object target = new MethodLevel();
-        Method method = target.getClass().getMethod("getDataWithAdvacedChecks");
+        Method method = target.getClass().getMethod("getDataWithAdvancedChecks");
 
         AnnotationInfo annotations = AnnotationUtil.getAllAnnotations(octopusConfigMock, MethodLevel.class, method);
         assertThat(annotations.getClassAnnotations()).isEmpty();
@@ -503,5 +467,5 @@ public class AnnotationUtilTest {
         boolean advanced = AnnotationUtil.hasAdvancedFlag(annotations.getMethodAnnotations().iterator().next());
         assertThat(advanced).isTrue();
     }
-    */
+
 }

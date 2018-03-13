@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.util;
+package be.atbash.ee.security.octopus.interceptor.annotation;
 
 import be.atbash.ee.security.octopus.authz.Combined;
+import be.atbash.ee.security.octopus.authz.annotation.*;
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
 import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
+import javax.annotation.security.PermitAll;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 // TODO JavaDoc
@@ -127,12 +133,11 @@ public final class AnnotationUtil {
         }
         return Combined.findFor(value);
     }
-/*
 
     // Retrieve the supported annotation enforcing authorization for the method
-    public static AnnotationInfo getAllAnnotations(OctopusConfig config, Class<?> someClassType, Method someMethod) {
+    public static AnnotationInfo getAllAnnotations(OctopusCoreConfiguration config, Class<?> someClassType, Method someMethod) {
 
-        List<AnnotationsToFind> annotationsToFindList = BeanProvider.getContextualReferences(AnnotationsToFind.class, true);
+        List<AnnotationsToFind> annotationsToFindList = CDIUtils.retrieveInstances(AnnotationsToFind.class);
         AnnotationInfo result = new AnnotationInfo();
 
         result.addMethodAnnotation(someMethod.getAnnotation(PermitAll.class));
@@ -141,8 +146,6 @@ public final class AnnotationUtil {
         result.addMethodAnnotation(someMethod.getAnnotation(RequiresUser.class));
         result.addMethodAnnotation(someMethod.getAnnotation(RequiresRoles.class));
         result.addMethodAnnotation(someMethod.getAnnotation(RequiresPermissions.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(OctopusPermissions.class));
-        result.addMethodAnnotation(someMethod.getAnnotation(OctopusRoles.class));
         result.addMethodAnnotation(someMethod.getAnnotation(CustomVoterCheck.class));
         result.addMethodAnnotation(someMethod.getAnnotation(SystemAccount.class));
         result.addMethodAnnotation(someMethod.getAnnotation(OnlyDuringAuthorization.class));
@@ -168,8 +171,6 @@ public final class AnnotationUtil {
         result.addClassAnnotation(getAnnotation(someClassType, RequiresUser.class));
         result.addClassAnnotation(getAnnotation(someClassType, RequiresRoles.class));
         result.addClassAnnotation(getAnnotation(someClassType, RequiresPermissions.class));
-        result.addClassAnnotation(getAnnotation(someClassType, OctopusPermissions.class));
-        result.addClassAnnotation(getAnnotation(someClassType, OctopusRoles.class));
         result.addClassAnnotation(getAnnotation(someClassType, CustomVoterCheck.class));
         result.addClassAnnotation(getAnnotation(someClassType, SystemAccount.class));
         if (config.getNamedPermissionCheckClass() != null) {
@@ -187,10 +188,8 @@ public final class AnnotationUtil {
             }
         }
 
-
         return result;
     }
-    */
 
     public static <A extends Annotation> A getAnnotation(Class<?> someClass, Class<A> someAnnotation) {
         A result = null;

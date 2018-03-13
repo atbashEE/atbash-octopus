@@ -22,7 +22,7 @@ import be.atbash.ee.security.octopus.authz.permission.role.voter.GenericRoleVote
 import be.atbash.ee.security.octopus.authz.permission.typesafe.RoleLookup;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
-import be.atbash.ee.security.octopus.util.AnnotationUtil;
+import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.util.CDIUtils;
 
 import javax.annotation.PostConstruct;

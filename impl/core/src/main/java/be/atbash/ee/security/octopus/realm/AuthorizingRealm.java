@@ -27,6 +27,7 @@ import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
@@ -333,6 +334,22 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
         return info;
     }
 
+    public Collection<Permission> getMatchingPermissions(Subject subject, Permission permission) {
+        // TODO Need some cache !!!
+        Collection<Permission> result = new ArrayList<>();
+
+        PrincipalCollection principals = subject.getPrincipals();
+        AuthorizationInfo info = getAuthorizationInfo(principals);
+        Collection<Permission> permissions = getPermissions(info, principals);
+
+        for (Permission currentPermission : permissions) {
+            if (currentPermission.implies(permission)) {
+                result.add(currentPermission);
+            }
+        }
+        return result;
+    }
+
     protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
         return principals;
     }
@@ -533,11 +550,8 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     }
 
     public void checkPermission(PrincipalCollection subjectIdentifier, String permission) throws AuthorizationException {
-        throw new UnsupportedOperationException("Not implemented yet be.atbash.ee.security.octopus.realm.AuthorizingRealm.checkPermission(be.atbash.ee.security.octopus.subject.PrincipalCollection, java.lang.String)");
-        /*
-        Permission p = getPermissionResolver().resolvePermission(permission);
+        Permission p = permissionResolver.resolvePermission(permission);
         checkPermission(subjectIdentifier, p);
-        */
     }
 
     public void checkPermission(PrincipalCollection principals, Permission permission) throws AuthorizationException {

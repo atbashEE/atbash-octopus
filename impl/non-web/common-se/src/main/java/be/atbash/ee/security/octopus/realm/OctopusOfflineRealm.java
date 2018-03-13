@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ import be.atbash.ee.security.octopus.codec.Base64;
 import be.atbash.ee.security.octopus.codec.CodecUtil;
 import be.atbash.ee.security.octopus.codec.Hex;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -34,10 +34,6 @@ import javax.inject.Inject;
  *
  */
 public class OctopusOfflineRealm extends AuthorizingRealm {
-
-    public static final String IN_AUTHENTICATION_FLAG = "InAuthentication";
-    public static final String IN_AUTHORIZATION_FLAG = "InAuthorization";
-    public static final String SYSTEM_ACCOUNT_AUTHENTICATION = "SystemAccountAuthentication";
 
     private boolean listenerConfigured = false;  // FIXME Needed ?
 
@@ -59,7 +55,9 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        ThreadContext.put(IN_AUTHORIZATION_FLAG, new InAuthorization());
+        class Guard {
+        }
+        TemporaryAuthorizationContextManager.startInAuthorization(Guard.class);
         AuthorizationInfo authorizationInfo;
         try {
             Object primaryPrincipal = principals.getPrimaryPrincipal();
@@ -75,8 +73,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
             //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
             authorizationInfo = null; // FIXME ?? Why it is called twice, also in case of SystemAccount?
         } finally {
-
-            ThreadContext.remove(IN_AUTHORIZATION_FLAG);
+            TemporaryAuthorizationContextManager.stopInAuthorization();
         }
         return authorizationInfo;
     }
@@ -92,14 +89,16 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
             authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
         } else {
             if (!(token instanceof IncorrectDataToken)) {
-                ThreadContext.put(IN_AUTHENTICATION_FLAG, new InAuthentication());
+                class Guard {
+                }
+                TemporaryAuthorizationContextManager.startInAuthentication(Guard.class);
                 try {
 
                     authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
                     verifyHashEncoding(authenticationInfo);
                 } finally {
                     // Even in the case of an exception (access not allowed) we need to reset this flag
-                    ThreadContext.remove(IN_AUTHENTICATION_FLAG);
+                    TemporaryAuthorizationContextManager.stopInAuthentication();
                 }
             }
         }
@@ -160,11 +159,13 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     @Override
     protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
-        ThreadContext.put(SYSTEM_ACCOUNT_AUTHENTICATION, new InSystemAccountAuthentication());
+        class Guard {
+        }
+        TemporaryAuthorizationContextManager.startInSystemAccount(Guard.class);
         try {
             super.assertCredentialsMatch(token, info);
         } finally {
-            ThreadContext.remove(SYSTEM_ACCOUNT_AUTHENTICATION);
+            TemporaryAuthorizationContextManager.stopInSystemAccount();
         }
     }
 
@@ -192,24 +193,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         getAuthenticationListeners().add(listener);
 */
         listenerConfigured = true;
-    }
-
-    public static class InAuthentication {
-
-        private InAuthentication() {
-        }
-    }
-
-    public static class InAuthorization {
-
-        private InAuthorization() {
-        }
-    }
-
-    public static final class InSystemAccountAuthentication {
-        // So that we only can create this class from this class.
-        private InSystemAccountAuthentication() {
-        }
     }
 
 }

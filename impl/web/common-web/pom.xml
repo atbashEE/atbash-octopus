@@ -65,6 +65,31 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- tests -->
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-cdi</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-core</artifactId>
+            <version>0.3-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <repositories>
@@ -139,8 +164,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.16</version>
                 <configuration>
-                    <parallel>methods</parallel>
-                    <threadCount>5</threadCount>
+                    <!-- No parallel execution possible as we rely on thread locals -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
                     <includes>
                         <include>**/*Test.*</include>
                         <include>**/*Spec.*</include>

@@ -23,7 +23,7 @@ import be.atbash.ee.security.octopus.authz.permission.typesafe.PermissionLookup;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
-import be.atbash.ee.security.octopus.util.AnnotationUtil;
+import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashIllegalActionException;
@@ -85,7 +85,7 @@ public class NamedPermissionProducer extends AbstractProducer {
             if (annotation != null) {
 
                 RequiresPermissions requiresPermissions = (RequiresPermissions) annotation;
-                String[] stringPermissions =  requiresPermissions.value();
+                String[] stringPermissions = requiresPermissions.value();
                 if (stringPermissions.length > 1) {
                     throw new AmbiguousResolutionException(String.format("Only one named permission can be specified at %s", defineInjectionPointInfo(injectionPoint)));
                 }
@@ -143,7 +143,7 @@ public class NamedPermissionProducer extends AbstractProducer {
             if (annotation != null) {
 
                 RequiresPermissions requiresPermissions = (RequiresPermissions) annotation;
-                String[] stringPermissions =  requiresPermissions.value();
+                String[] stringPermissions = requiresPermissions.value();
                 if (stringPermissions.length > 1) {
                     throw new AmbiguousResolutionException(String.format("Only one named permission can be specified at %s", defineInjectionPointInfo(injectionPoint)));
                 }
