@@ -29,8 +29,8 @@ import java.util.Collection;
  * In some cases a {@link be.atbash.ee.security.octopus.authz.AuthorizationInfoProvider} may only be given  a list of roles.
  * This component allows to resolve the roles into permissions.
  * <p>
- * An implementation as CDI bean is not required. The the roles supplied to AuthorizationInfoProvider as role and there
- * is no conversion to permissions.
+ * ??An implementation as CDI bean is not required. The the roles supplied to AuthorizationInfoProvider as role and there
+ * is no conversion to permissions.??
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authz.permission.RolePermissionResolver"})
 @PublicAPI
@@ -41,7 +41,7 @@ public interface RolePermissionResolver {
      * Resolves a Collection of Permissions based on the given String representation.
      *
      * @param roleString the String representation of a role name to resolve.
-     * @return a Collection of Permissions based on the given String representation.
+     * @return a Collection of Permissions based on the given String representation or empty Collection if no mapping to permission is needed.
      */
     Collection<Permission> resolvePermissionsInRole(String roleString);
 

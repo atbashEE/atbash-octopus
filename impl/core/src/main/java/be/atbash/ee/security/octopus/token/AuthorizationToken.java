@@ -15,10 +15,14 @@
  */
 package be.atbash.ee.security.octopus.token;
 
+import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
+
 /**
- * This is a marker interface. When applied to the AuthenticationToken, no CredentialMatcher is required.
- * Token implementing this interface are always interpreted as valid because they are created following a valid
- * authentication like OAuth2, JWT, ...
+ * Used when a token (like MPToken or OpenIdConnect token) contains also the authorization information.
+ * It must then specify the 'Provider' who is able to extract that information.
  */
-public interface ValidatedAuthenticationToken {
+
+public interface AuthorizationToken {
+
+    Class<? extends TokenBasedAuthorizationInfoProvider> authorizationProviderClass();
 }

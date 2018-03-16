@@ -55,6 +55,14 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- tests -->
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-cdi</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

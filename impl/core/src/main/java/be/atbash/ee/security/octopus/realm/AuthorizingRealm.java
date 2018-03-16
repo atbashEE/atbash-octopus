@@ -321,17 +321,22 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
         if (info == null) {
             // Call template method if the info was not found in a cache
             info = doGetAuthorizationInfo(principals);
-            // If the info is not null and the cache has been created, then cache the authorization info.
-            if (info != null && cache != null) {
-                if (log.isTraceEnabled()) {
-                    log.trace("Caching authorization info for principals: [" + principals + "].");
-                }
-                Object key = getAuthorizationCacheKey(principals);
-                cache.put(key, info);
-            }
+            cacheAuthorizationInfo(principals, info);
         }
 
         return info;
+    }
+
+    protected void cacheAuthorizationInfo(PrincipalCollection principals, AuthorizationInfo info) {
+        // If the info is not null and the cache has been created, then cache the authorization info.
+        Cache<Object, AuthorizationInfo> cache = getAvailableAuthorizationCache();
+        if (info != null && cache != null) {
+            if (log.isTraceEnabled()) {
+                log.trace("Caching authorization info for principals: [" + principals + "].");
+            }
+            Object key = getAuthorizationCacheKey(principals);
+            cache.put(key, info);
+        }
     }
 
     public Collection<Permission> getMatchingPermissions(Subject subject, Permission permission) {

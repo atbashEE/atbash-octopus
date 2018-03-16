@@ -45,7 +45,7 @@ public class AuthorizationInfoBuilder {
     private RolePermissionResolver rolePermissionResolver;
     private OctopusCoreConfiguration config;
 
-    private Set<Permission> permissionsAndRoles = new HashSet<>();
+    private Set<Permission> permissions = new HashSet<>();
     private Set<String> stringPermissions = new HashSet<>();
     private Set<String> stringRoles = new HashSet<>();
 
@@ -57,7 +57,7 @@ public class AuthorizationInfoBuilder {
 
     public AuthorizationInfoBuilder addPermission(NamedPermission namedPermission) {
         if (namedPermission instanceof NamedDomainPermission) {
-            permissionsAndRoles.add((NamedDomainPermission) namedPermission);
+            permissions.add((NamedDomainPermission) namedPermission);
         } else {
             addPermission(namedPermission.name());
         }
@@ -69,7 +69,7 @@ public class AuthorizationInfoBuilder {
         return this;
     }
 
-    public AuthorizationInfoBuilder addPermissions(Collection<? extends NamedPermission> namedPermissions) {
+    public AuthorizationInfoBuilder addNamedPermissions(Collection<? extends NamedPermission> namedPermissions) {
         for (NamedPermission namedPermission : namedPermissions) {
             addPermission(namedPermission);
         }
@@ -81,8 +81,8 @@ public class AuthorizationInfoBuilder {
         return this;
     }
 
-    public AuthorizationInfoBuilder addPermissionAndRoles(Collection<? extends Permission> permissions) {
-        permissionsAndRoles.addAll(permissions);
+    public AuthorizationInfoBuilder addPermissions(Collection<? extends Permission> permissions) {
+        this.permissions.addAll(permissions);
         return this;
     }
 
@@ -113,7 +113,7 @@ public class AuthorizationInfoBuilder {
         if (rolePermissionResolver != null) {
             Collection<Permission> permissions = rolePermissionResolver.resolvePermissionsInRole(namedRole.name());
             if (permissions != null && !permissions.isEmpty()) {
-                permissionsAndRoles.addAll(permissions);
+                this.permissions.addAll(permissions);
                 resolved = true;
             }
         }
@@ -121,9 +121,9 @@ public class AuthorizationInfoBuilder {
         if (!resolved) {
             if (roleLookup == null) {
                 // No roleLookup specified, use the default logic.
-                permissionsAndRoles.add(new RolePermission(namedRole.name()));
+                permissions.add(new RolePermission(namedRole.name()));
             } else {
-                permissionsAndRoles.add(roleLookup.getRole(namedRole.name()));
+                permissions.add(roleLookup.getRole(namedRole.name()));
             }
         }
     }
@@ -144,7 +144,7 @@ public class AuthorizationInfoBuilder {
 
     public AuthorizationInfo build() {
         SimpleAuthorizationInfo result = new SimpleAuthorizationInfo();
-        result.addObjectPermissions(permissionsAndRoles);
+        result.addObjectPermissions(permissions);
         result.addStringPermissions(stringPermissions);
         result.addRoles(stringRoles);
         return result;

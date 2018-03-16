@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.token;
+package be.atbash.ee.security.octopus.authz;
+
+import be.atbash.ee.security.octopus.token.AuthorizationToken;
 
 /**
- * This is a marker interface. When applied to the AuthenticationToken, no CredentialMatcher is required.
- * Token implementing this interface are always interpreted as valid because they are created following a valid
- * authentication like OAuth2, JWT, ...
+ * Provider who extract {@link AuthorizationInfo} from a token (
  */
-public interface ValidatedAuthenticationToken {
+
+public interface TokenBasedAuthorizationInfoProvider {
+
+    AuthorizationInfo getAuthorizationInfo(AuthorizationToken token);
 }

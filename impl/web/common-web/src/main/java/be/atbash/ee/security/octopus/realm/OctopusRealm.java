@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.authc.*;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
+import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
 import be.atbash.ee.security.octopus.codec.Base64;
 import be.atbash.ee.security.octopus.codec.CodecUtil;
 import be.atbash.ee.security.octopus.codec.Hex;
@@ -28,7 +29,9 @@ import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.AuthorizationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
+import be.atbash.util.CDIUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -91,6 +94,7 @@ public class OctopusRealm extends AuthorizingRealm {
         AuthenticationInfo authenticationInfo = null;
 
         if (token instanceof SystemAccountAuthenticationToken) {
+            // FIXME Use the other systems and don't treat SystemAccount differently!
             // TODO Check about the realm names
             authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
         } else {
@@ -177,12 +181,23 @@ public class OctopusRealm extends AuthorizingRealm {
         //assertRealmsConfigured();  TODO Needed ??
         //Collection<Realm> realms = getRealms();
 
-        return getAuthenticationInfo(authenticationToken);
+        AuthenticationInfo authenticationInfo = getAuthenticationInfo(authenticationToken);
+
+        if (authenticationInfo != null && authenticationToken instanceof AuthorizationToken) {
+            AuthorizationToken authorizationToken = (AuthorizationToken) authenticationToken;
+
+            // FIXME Check if the authorizationToken.authorizationProviderClass() is defined as CDI bean
+            TokenBasedAuthorizationInfoProvider authorizationInfoProvider = CDIUtils.retrieveInstance(authorizationToken.authorizationProviderClass());
+            AuthorizationInfo authorizationInfo = authorizationInfoProvider.getAuthorizationInfo(authorizationToken);
+
+            cacheAuthorizationInfo(authenticationInfo.getPrincipals(), authorizationInfo);
+        }
+        return authenticationInfo;
 
     }
 
     private void checkAuthorizationInfoMarkers() {
-        // FIXME
+        // FIXME But can't be realm general anymore, needs to be based for the token.
         //authorizationInfoRequired = !BeanProvider.getContextualReferences(PrincipalAuthorizationInfoAvailibility.class, true).isEmpty();
     }
 

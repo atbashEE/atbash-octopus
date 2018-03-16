@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package be.atbash.ee.security.octopus.token;
 
+import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
 import be.atbash.util.StringUtils;
 
 /**
  *
  */
 
-public class MPToken implements AuthenticationToken, ValidatedAuthenticationToken {
+public class MPToken implements AuthenticationToken, ValidatedAuthenticationToken, AuthorizationToken {
 
     private MPJWTToken mpjwtToken;
     private String principal;
@@ -51,7 +52,16 @@ public class MPToken implements AuthenticationToken, ValidatedAuthenticationToke
         return mpjwtToken;
     }
 
+    @Override
+    public Class<? extends TokenBasedAuthorizationInfoProvider> authorizationProviderClass() {
+        return MPTokenAuthorizationProvider.class;
+    }
+
     public String getId() {
         return mpjwtToken.getJti();
+    }
+
+    public MPJWTToken getJWT() {
+        return mpjwtToken;
     }
 }

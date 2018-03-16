@@ -200,7 +200,7 @@ public class AuthorizationInfoBuilderTest {
         List<NamedPermission> permissions = new ArrayList<>();
         permissions.add(new SimplePermission("JUnit"));
         permissions.add(new SimplePermission("anotherPermission"));
-        AuthorizationInfo info = builder.addPermissions(permissions).build();
+        AuthorizationInfo info = builder.addNamedPermissions(permissions).build();
         assertThat(info).isNotNull();
         assertThat(info.getStringPermissions()).hasSize(2);
         assertThat(info.getStringPermissions()).contains("JUnit", "anotherPermission");
@@ -231,7 +231,7 @@ public class AuthorizationInfoBuilderTest {
         List<NamedPermission> permissions = new ArrayList<>();
         permissions.add(new SimplePermission("JUnit"));
         permissions.add(new SimplePermission("JUnit"));
-        AuthorizationInfo info = builder.addPermissions(permissions).build();
+        AuthorizationInfo info = builder.addNamedPermissions(permissions).build();
         assertThat(info).isNotNull();
         assertThat(info.getStringPermissions()).hasSize(1);
         assertThat(info.getStringPermissions()).contains("JUnit");
