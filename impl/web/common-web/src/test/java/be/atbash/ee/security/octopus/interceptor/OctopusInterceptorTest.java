@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.interceptor;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProviderHandler;
+import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
@@ -38,6 +39,8 @@ import be.atbash.ee.security.octopus.interceptor.testclasses.TestPermissionCheck
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestRoleCheck;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountPrincipal;
+import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
@@ -372,7 +375,7 @@ public class OctopusInterceptorTest {
                     }
                     throw new RuntimeException(e);
                 }
-                return null;
+                return new SimpleAuthenticationInfo();
 
             }
 
@@ -402,4 +405,16 @@ public class OctopusInterceptorTest {
         };
     }
 
+    static class SpecialValidatedToken implements AuthenticationToken, ValidatedAuthenticationToken {
+
+        @Override
+        public Object getPrincipal() {
+            return null;
+        }
+
+        @Override
+        public Object getCredentials() {
+            return null;
+        }
+    }
 }

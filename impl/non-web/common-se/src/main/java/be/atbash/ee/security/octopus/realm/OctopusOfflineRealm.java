@@ -89,7 +89,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
                     authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
                     if (authenticationInfo == null) {
-                        String msg = String.format( "Realm was unable to find account data for the " +
+                        String msg = String.format("Realm was unable to find account data for the " +
                                 "submitted AuthenticationToken [%s].", token);
                         throw new UnknownAccountException(msg);
 

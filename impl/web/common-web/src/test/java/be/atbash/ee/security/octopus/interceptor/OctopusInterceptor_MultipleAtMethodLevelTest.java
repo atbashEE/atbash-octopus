@@ -21,6 +21,7 @@ import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVot
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.MultipleAtMethodLevel;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
+import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -81,14 +83,14 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
         Method method = target.getClass().getMethod("multiple");
         InvocationContext context = new TestInvocationContext(target, method);
 
-        when(authenticationInfoProviderHandlerMock.retrieveAuthenticationInfo(null)).thenAnswer(
+        when(authenticationInfoProviderHandlerMock.retrieveAuthenticationInfo(any(AuthenticationToken.class))).thenAnswer(
                 callInterceptorSimulatingAuthentication(context)
         );
 
         finishCDISetup();
 
         try {
-            octopusRealm.getAuthenticationInfo(null);
+            octopusRealm.getAuthenticationInfo(new SpecialValidatedToken());
 
             if (PERMISSION1.equals(permission)) {
                 assertThat(authenticated).isTrue();

@@ -25,6 +25,7 @@ import be.atbash.ee.security.octopus.interceptor.testclasses.MethodLevel;
 import be.atbash.ee.security.octopus.interceptor.testclasses.MethodLevelOverride;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
+import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -124,7 +126,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         Method method = target.getClass().getMethod("inAuthentication");
         InvocationContext context = new TestInvocationContext(target, method);
 
-        when(authenticationInfoProviderHandlerMock.retrieveAuthenticationInfo(null)).thenAnswer(
+        when(authenticationInfoProviderHandlerMock.retrieveAuthenticationInfo(any(AuthenticationToken.class))).thenAnswer(
                 callInterceptorSimulatingAuthentication(context)
         );
 
@@ -134,7 +136,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         finishCDISetup();
 
         try {
-            octopusRealm.getAuthenticationInfo(null);
+            octopusRealm.getAuthenticationInfo(new SpecialValidatedToken());
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
