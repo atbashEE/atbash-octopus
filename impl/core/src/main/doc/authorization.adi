@@ -182,3 +182,16 @@ Inverts the result of the check
     combined (true/false)
 
 Do all checks need to be pass on the user/subject or is only 1 enough.
+
+=== Java SE
+
+Methods can be annotated with authorization checks, like @RequiresPermission, and authorization checks are performed by calling the method
+
+----
+    @RequiresPermissions("demo:offline:*")
+    public String checkPermission() {
+        MethodAuthorizationChecker.checkAuthorization();
+----
+
+Since we are running in plain Java SE, we have no interceptors available to perform these checks automatically.
+

@@ -19,12 +19,12 @@ import be.atbash.util.CDIUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * FIXME, We need a version for programmatic usage
- * AnnotationCheckFactory.getCheck(xxx).performCheck()
+ * Factory which returns the SecurityCheck for a certain Annotation.
  */
 @ApplicationScoped
 public class AnnotationCheckFactory {
@@ -46,5 +46,16 @@ public class AnnotationCheckFactory {
             }
         }
         return result;
+    }
+
+    /**
+     * This is an internal helper method when running in plain Java SE.
+     */
+    public void initChecks() {
+        securityChecks = new ArrayList<>();
+
+        SecurityCheckRequiresPermissions requiresPermissions = new SecurityCheckRequiresPermissions();
+        requiresPermissions.initDependencies();
+        securityChecks.add(requiresPermissions);
     }
 }

@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.context.internal;
+package be.atbash.ee.security.octopus.interceptor;
 
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionState;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVoterContext;
 
-import javax.interceptor.InvocationContext;
 import java.security.InvalidParameterException;
 import java.util.*;
 
 /**
- * Implementation of {@link EditableAccessDecisionVoterContext} with the {@link InvocationContext} interface or for a specific method.
+ * Implementation of {@link EditableAccessDecisionVoterContext} with the {@link OctopusInvocationContext} interface or for a specific method.
  */
-// TODO Move to Core for Octopus Interceptor?
-public class CustomAccessDecissionVoterContext implements EditableAccessDecisionVoterContext {
-    private AccessDecisionState state = AccessDecisionState.INITIAL;
+public class CustomAccessDecisionVoterContext implements EditableAccessDecisionVoterContext {
+    private AccessDecisionState state = AccessDecisionState.INITIAL; // FIXME Update this state depending on the stage
     private List<SecurityViolation> securityViolations;
     private Map<String, Object> metaData = new HashMap<>();
-    private InvocationContext context;
+    private OctopusInvocationContext context;
 
-    public CustomAccessDecissionVoterContext(Object someTarget, Object[] parameters) {
-        context = new OctopusInvocationContext(someTarget, parameters);
-    }
-
-    public CustomAccessDecissionVoterContext(InvocationContext context) {
+    public CustomAccessDecisionVoterContext(OctopusInvocationContext context) {
         this.context = context;
     }
 
@@ -73,10 +68,10 @@ public class CustomAccessDecissionVoterContext implements EditableAccessDecision
      */
     @Override
     public void setSource(Object source) {
-        if (!(source instanceof InvocationContext)) {
-            throw new InvalidParameterException("Only InvocationContext supported");
+        if (!(source instanceof OctopusInvocationContext)) {
+            throw new InvalidParameterException("Only OctopusInvocationContext supported");
         }
-        this.context = (InvocationContext) source;
+        this.context = (OctopusInvocationContext) source;
     }
 
     /**

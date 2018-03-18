@@ -24,11 +24,12 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.WildcardPermission;
 import be.atbash.ee.security.octopus.authz.permission.voter.AbstractGenericVoter;
 import be.atbash.ee.security.octopus.authz.violation.BasicAuthorizationViolation;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationInfo;
 import be.atbash.ee.security.octopus.interceptor.testclasses.MethodLevel;
 import be.atbash.ee.security.octopus.interceptor.testclasses.MyCheck;
@@ -56,7 +57,6 @@ import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -151,14 +151,14 @@ public class OctopusInterceptor_CustomCheck {
         verify(abstractGenericVoterMock).checkPermission(accessDecisionVoterCaptor.capture());
 
         AccessDecisionVoterContext voterContext = accessDecisionVoterCaptor.getValue();
-        InvocationContext invocationContext = voterContext.getSource();
+        OctopusInvocationContext invocationContext = voterContext.getSource();
         // Test to make sure the AnnotationInfo is passed into the contextData
         assertThat(invocationContext.getContextData()).hasSize(1);
         assertThat(invocationContext.getContextData()).containsOnlyKeys(AnnotationInfo.class.getName());
 
     }
 
-    @Test(expected = SecurityViolationException.class)
+    @Test(expected = SecurityAuthorizationViolationException.class)
     public void testAuthenticated_NotValidCheck() throws Exception {
 
         Object target = new MethodLevel();
@@ -184,7 +184,7 @@ public class OctopusInterceptor_CustomCheck {
 
     }
 
-    @Test(expected = SecurityViolationException.class)
+    @Test(expected = SecurityAuthorizationViolationException.class)
     public void testNotAuthenticated() throws Exception {
 
         Object target = new MethodLevel();

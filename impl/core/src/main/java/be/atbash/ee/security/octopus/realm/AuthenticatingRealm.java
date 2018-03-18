@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,21 @@ package be.atbash.ee.security.octopus.realm;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.authc.CredentialsException;
 import be.atbash.ee.security.octopus.authc.IncorrectCredentialsException;
 import be.atbash.ee.security.octopus.authc.credential.CredentialsMatcherHandler;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
+import be.atbash.ee.security.octopus.codec.Base64;
+import be.atbash.ee.security.octopus.codec.CodecUtil;
+import be.atbash.ee.security.octopus.codec.Hex;
+import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -124,6 +128,9 @@ public abstract class AuthenticatingRealm extends CachingRealm {
     @Inject
     private CredentialsMatcherHandler credentialsMatcher;
 
+    @Inject
+    protected CodecUtil codecUtil;
+
     private Cache<Object, AuthenticationInfo> authenticationCache;
 
     private boolean authenticationCachingEnabled;
@@ -144,23 +151,6 @@ public abstract class AuthenticatingRealm extends CachingRealm {
     ============================================*/
 
     /**
-     * Sets an explicit {@link Cache} instance to use for authentication caching.  If not set and authentication
-     * caching is {@link #isAuthenticationCachingEnabled() enabled}, any available
-     * {@link #getCacheManager() cacheManager} will be used to acquire the cache instance if available.
-     * <p/>
-     * <b>WARNING:</b> Only set this property if safe caching conditions apply, as documented at the top
-     * of this page in the class-level JavaDoc.
-     *
-     * @param authenticationCache an explicit {@link Cache} instance to use for authentication caching or
-     *                            {@code null} if the cache should possibly be obtained another way.
-     * @see #isAuthenticationCachingEnabled()
-     */
-    public void setAuthenticationCache(Cache<Object, AuthenticationInfo> authenticationCache) {
-        // FIXME How to use?
-        this.authenticationCache = authenticationCache;
-    }
-
-    /**
      * Returns a {@link Cache} instance to use for authentication caching, or {@code null} if no cache has been
      * set.
      *
@@ -170,7 +160,6 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * @see #isAuthenticationCachingEnabled()
      */
     public Cache<Object, AuthenticationInfo> getAuthenticationCache() {
-        // FIXME How to use?
         return authenticationCache;
     }
 
@@ -205,6 +194,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * @see #isAuthenticationCachingEnabled()
      */
     public void setAuthenticationCacheName(String authenticationCacheName) {
+        // FIXME Use config parameter for this
         this.authenticationCacheName = authenticationCacheName;
     }
 
@@ -255,21 +245,6 @@ public abstract class AuthenticatingRealm extends CachingRealm {
     ============================================*/
 
     /**
-     * Convenience implementation that returns
-     * <tt>getAuthenticationTokenClass().isAssignableFrom( token.getClass() );</tt>.  Can be overridden
-     * by subclasses for more complex token checking.
-     * <p>Most configurations will only need to set a different class via
-     * {@link #setAuthenticationTokenClass}, as opposed to overriding this method.
-     *
-     * @param token the token being submitted for authentication.
-     * @return true if this authentication realm can process the submitted token instance of the class, false otherwise.
-     */
-    public boolean supports(AuthenticationToken token) {
-        throw new UnsupportedOperationException("TODO be.rubus.jsr375.octopus.realm.AuthenticatingRealm.supports");
-        //return token != null && getAuthenticationTokenClass().isAssignableFrom(token.getClass());
-    }
-
-    /**
      * Initializes this realm and potentially enables an authentication cache, depending on configuration.  Based on
      * the availability of an authentication cache, this class functions as follows:
      * <ol>
@@ -290,8 +265,14 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * <p/>
      * This method finishes by calling {@link #onInit()} is to allow subclasses to perform any readInfo behavior desired.
      */
-    @PostConstruct
+
     public void init() {
+        super.init();
+
+        if (codecUtil == null) {
+            codecUtil = new CodecUtil(); // FIXME check if we have a use-case in Java SE. / Hashing PW check in Java SE
+        }
+        // FIXME From config retrieve if cache is enabled or not.
         //trigger obtaining the authorization cache if possible
         getAvailableAuthenticationCache();
         onInit();
@@ -497,6 +478,37 @@ public abstract class AuthenticatingRealm extends CachingRealm {
 
     private void prepareCredentialsMatcherHandler() {
         credentialsMatcher = new CredentialsMatcherHandler();
+    }
+
+    protected void verifyHashEncoding(AuthenticationInfo info) {
+        if (!configuration.getHashAlgorithmName().isEmpty()) {
+            Object credentials = info.getCredentials();
+
+            if (credentials instanceof String || credentials instanceof char[]) {
+
+                byte[] storedBytes = codecUtil.toBytes(credentials);
+                HashEncoding hashEncoding = configuration.getHashEncoding();
+
+                try {
+                    // Lets try to decode, if we have an issue the supplied hash password is invalid.
+                    switch (hashEncoding) {
+
+                        case HEX:
+                            Hex.decode(storedBytes);
+                            break;
+                        case BASE64:
+                            Base64.decode(storedBytes);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("hashEncoding " + hashEncoding + " not supported");
+
+                    }
+                } catch (IllegalArgumentException e) {
+                    throw new CredentialsException("Supplied hashed password can't be decoded. Is the 'hashEncoding' correctly set?");
+                }
+            }
+
+        }
     }
 
     /**

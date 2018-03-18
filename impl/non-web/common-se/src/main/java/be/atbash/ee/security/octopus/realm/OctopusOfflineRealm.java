@@ -17,18 +17,16 @@ package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authc.*;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
-import be.atbash.ee.security.octopus.codec.Base64;
-import be.atbash.ee.security.octopus.codec.CodecUtil;
-import be.atbash.ee.security.octopus.codec.Hex;
-import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
+import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
+import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
+import be.atbash.ee.security.octopus.mgt.authz.LookupProviderLoader;
+import be.atbash.ee.security.octopus.realm.mgmt.LookupProvider;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.AuthorizationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import be.atbash.util.reflection.ClassUtils;
 
 /**
  *
@@ -39,18 +37,13 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     private boolean authorizationInfoRequired = false;
 
-    private OctopusCoreConfiguration config;
-
     private AuthenticationInfoProviderHandler authenticationInfoProviderHandler;
 
-    @Inject
-    private CodecUtil codecUtil;
+    private AuthorizationInfoProviderHandler authorizationInfoProviderHandler;
 
-    @PostConstruct
-    public void init() {
-        // FIXME Is this not the default?
-        setCachingEnabled(true);
-
+    public void initDependencies() {
+        LookupProvider<? extends Enum> lookupProvider = new LookupProviderLoader().loadLookupProvider();
+        initDependencies(lookupProvider);
     }
 
     @Override
@@ -60,9 +53,8 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         TemporaryAuthorizationContextManager.startInAuthorization(Guard.class);
         AuthorizationInfo authorizationInfo;
         try {
-            Object primaryPrincipal = principals.getPrimaryPrincipal();
-
             /*
+            FIXME OctopusWebSecurityContext.isSystemAccount needs to work through the AuthorizationInfoProvider
             if (OctopusWebSecurityContext.isSystemAccount(primaryPrincipal)) {
                 // No permissions or roles, use @SystemAccount
                 authorizationInfo = new SimpleAuthorizationInfo();
@@ -70,8 +62,9 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
                 //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
             }
             */
-            //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
-            authorizationInfo = null; // FIXME ?? Why it is called twice, also in case of SystemAccount?
+            // FIXME Do we need this doGetAuthorizationInfo for offlineRealm. Isn't it always the case
+            // that AuthorizationToken concept is used.
+            authorizationInfo = null;
         } finally {
             TemporaryAuthorizationContextManager.stopInAuthorization();
         }
@@ -85,7 +78,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         AuthenticationInfo authenticationInfo = null;
 
         if (token instanceof SystemAccountAuthenticationToken) {
-            // TODO Check about the realm names
+            // TODO Use the authenticationInfoProvider for this.
             authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
         } else {
             if (!(token instanceof IncorrectDataToken)) {
@@ -102,6 +95,16 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
                 }
             }
         }
+
+        if (authenticationInfo != null && token instanceof AuthorizationToken) {
+            AuthorizationToken authorizationToken = (AuthorizationToken) token;
+
+            TokenBasedAuthorizationInfoProvider authorizationInfoProvider = ClassUtils.newInstance(authorizationToken.authorizationProviderClass());
+            AuthorizationInfo authorizationInfo = authorizationInfoProvider.getAuthorizationInfo(authorizationToken);
+
+            cacheAuthorizationInfo(authenticationInfo.getPrincipals(), authorizationInfo);
+        }
+
         return authenticationInfo;
     }
 
@@ -109,38 +112,14 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         if (authenticationInfoProviderHandler == null) {
             authenticationInfoProviderHandler = new AuthenticationInfoProviderHandler();
 
-            config = new OctopusCoreConfiguration();
         }
 
     }
 
-    private void verifyHashEncoding(AuthenticationInfo info) {
-        if (!config.getHashAlgorithmName().isEmpty()) {
-            Object credentials = info.getCredentials();
-
-            if (credentials instanceof String || credentials instanceof char[]) {
-
-                byte[] storedBytes = codecUtil.toBytes(credentials);
-                HashEncoding hashEncoding = config.getHashEncoding();
-
-                try {
-                    // Lets try to decode, if we have an issue the supplied hash password is invalid.
-                    switch (hashEncoding) {
-
-                        case HEX:
-                            Hex.decode(storedBytes);
-                            break;
-                        case BASE64:
-                            Base64.decode(storedBytes);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("hashEncoding " + hashEncoding + " not supported");
-
-                    }
-                } catch (IllegalArgumentException e) {
-                    throw new CredentialsException("Supplied hashed password can't be decoded. Is the 'hashEncoding' correctly set?");
-                }
-            }
+    private void prepareAuthorizationInfoProviderHandler() {
+        // FIXME Not used but should!!
+        if (authorizationInfoProviderHandler == null) {
+            authorizationInfoProviderHandler = new AuthorizationInfoProviderHandler();
 
         }
     }

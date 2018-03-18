@@ -1,6 +1,8 @@
 === 0.3
 
 . Authorization parts implementation (tags like securedComponent, interceptors for EJB/CDI, filters for URLs)
+. AuthorizationToken to be able to extract AuthorizationInfo from token (MicroProfile, Offline, ...)
+. Basic support for authorization annotation in Java SE (with _MethodAuthorizationChecker.checkAuthorization();_ )
 
 === 0.2
 

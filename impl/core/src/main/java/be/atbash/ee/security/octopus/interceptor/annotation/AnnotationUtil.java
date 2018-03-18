@@ -23,7 +23,7 @@ import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import be.atbash.util.reflection.ClassUtils;
+import be.atbash.util.reflection.CDICheck;
 
 import javax.annotation.security.PermitAll;
 import java.lang.annotation.Annotation;
@@ -163,7 +163,8 @@ public final class AnnotationUtil {
         }
 
         List<AnnotationsToFind> annotationsToFindList = new ArrayList<>();
-        if (ClassUtils.isAvailable("javax.enterprise.inject.UnsatisfiedResolutionException")) {
+
+        if (CDICheck.withinContainer()) {
             annotationsToFindList = CDIUtils.retrieveInstances(AnnotationsToFind.class);
         }
         // Else, We don't have CDI so don't retrieve the AnnotationsToFind classes.

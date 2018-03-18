@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.annotation.CustomVoterCheck;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
@@ -47,7 +47,7 @@ public class SecurityCheckCustomVoterCheck implements SecurityCheck {
         if (!securityViolations.isEmpty()) {
 
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException(securityViolations)
+                    new SecurityAuthorizationViolationException(securityViolations)
             );
         } else {
             result = SecurityCheckInfo.allowAccess();

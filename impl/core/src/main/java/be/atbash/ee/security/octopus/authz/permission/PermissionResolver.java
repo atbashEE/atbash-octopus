@@ -57,6 +57,23 @@ public class PermissionResolver {
 
     private StringPermissionLookup stringLookup;
 
+    /**
+     * Used in the CDI case in combination with init method PostConstruct.
+     */
+    public PermissionResolver() {
+    }
+
+    /**
+     * Used in plain Java SE environment.
+     *
+     * @param permissionLookup
+     * @param stringLookup
+     */
+    public PermissionResolver(PermissionLookup permissionLookup, StringPermissionLookup stringLookup) {
+        this.permissionLookup = permissionLookup;
+        this.stringLookup = stringLookup;
+    }
+
     @PostConstruct
     public void init() {
         permissionLookup = CDIUtils.retrieveOptionalInstance(PermissionLookup.class);

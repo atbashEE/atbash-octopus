@@ -38,8 +38,8 @@ public class CustomVoter extends AbstractGenericVoter {
     private GenericPermissionVoter demoPermissionVoter;
 
     @Inject
-    //@RequiresPermissions("nonExisting:*:*")
-    @RequiresPermissions()
+    @RequiresPermissions("nonExisting:*:*")
+    //@RequiresPermissions()
     private GenericPermissionVoter nonExistingPermissionVoter;
 
     @Override

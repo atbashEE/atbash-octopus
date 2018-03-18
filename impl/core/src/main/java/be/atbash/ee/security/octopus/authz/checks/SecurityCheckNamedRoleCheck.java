@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
@@ -54,14 +54,14 @@ public class SecurityCheckNamedRoleCheck implements SecurityCheck {
 
         if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("User required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
             Set<SecurityViolation> securityViolations = performNamedRoleChecks(securityAnnotation, accessContext);
             if (!securityViolations.isEmpty()) {
 
                 result = SecurityCheckInfo.withException(
-                        new SecurityViolationException(securityViolations));
+                        new SecurityAuthorizationViolationException(securityViolations));
             } else {
                 result = SecurityCheckInfo.allowAccess();
             }

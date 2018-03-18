@@ -1,0 +1,90 @@
+=== Core
+
+==== hashAlgorithmName
+
+default : **(none)**
+
+Name of the MessageDigest algorithm when you use hashed passwords.
+examples are Md5 and Sha512.
+
+==== saltLength
+
+default : **0**
+
+Number of bytes used when creating a salt for the hashing of passwords.
+0 means that no salt is used.
+
+==== hashEncoding
+
+default : **HEX**
+
+Defines how the hashed passwords are encoded (HEX or BASE64) before they
+are compared to the supplied value which should be identically before
+access is granted. The value specified in the configuration file is case
+insensitive compared with the allowed values.
+
+==== cacheManager.class
+
+default : **be.atbash.ee.security.octopus.cache.MemoryConstrainedCacheManager**
+
+The class responsible for holding/managing the cache of the
+authentication and authorization data. The developer can supply a custom
+implementation of be.atbash.ee.security.octopus.cache.AbstractCacheManager when the
+cache needs different logic.
+
+When the class has the javax.enterprise.context.ApplicationScoped annotation, it is instantiated as a CDI bean, otherwise a classic new is performed.
+
+==== voter.suffix.permission
+
+default : *PermissionVoter*
+
+The suffix used to determine the CDI named bean which are created dynamically for each Named Permission. See VoterNameFactory.
+
+==== voter.suffix.role
+
+default : *RoleVoter*
+
+The suffix used to determine the CDI named bean which are created dynamically for each Named Role. See VoterNameFactory.
+
+==== voter.suffix.check
+
+default : *AccessDecisionVoter*
+
+The suffix used to determine the CDI named bean for the Custom check functionality. See VoterNameFactory and Custom check feature description.
+
+==== authorization.dynamic
+
+default : false
+
+???
+
+==== namedPermission.class
+
+default : *(none)*
+
+Defines the Enum class which enumerates all permissions. Within the demo example it is the class *be.c4j.demo.security.permission.DemoPermission*.
+
+==== namedPermissionCheck.class
+
+default : *(none)*
+
+Defines the annotation which can be used on method and class level to define the security requirements.
+
+==== customCheck.class
+
+default : *(none)*
+
+Defines the annotation class which can be used to use custom declared Permissions, mostly useful in the case where you want to extend the named permission with some additional information.
+
+==== namedRole.class
+
+default : *(none)*
+
+Defines the Enum class which enumerates all named roles. It is the role counterpart of the namedPermission.class configuration option.
+
+==== namedRoleCheck.class
+
+default : *(none)*
+
+Defines the annotations which can be used on method and class level to define the security requirements.
+

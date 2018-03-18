@@ -25,7 +25,7 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermissionResolver;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
-import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.realm.mgmt.LookupProvider;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
@@ -84,9 +84,6 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     private String authorizationCacheName;
 
     @Inject
-    private OctopusCoreConfiguration configuration;
-
-    @Inject
     private PermissionResolver permissionResolver;
 
     private RolePermissionResolver rolePermissionResolver;
@@ -97,8 +94,9 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     ============================================*/
 
     public AuthorizingRealm() {
-        // FIXME Use PostConstruct? Check also other classes.
-        authorizationCachingEnabled = true;
+        // Keep this initialization here (and not within PostConstruct) as it is also used in Java SE)
+        // But this is then executed multiple times when OctopusRealm is created (just as expected with CDI)
+        authorizationCachingEnabled = true; // FIXME Fom config retrieve if cache is enabled or not.
 
         int instanceNumber = INSTANCE_COUNT.getAndIncrement();
         authorizationCacheName = getClass().getName() + DEFAULT_AUTHORIZATION_CACHE_SUFFIX;
@@ -109,8 +107,25 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
 
     @PostConstruct
     public void init() {
+        super.init();
         rolePermissionResolver = CDIUtils.retrieveOptionalInstance(RolePermissionResolver.class);
         permissionAdapter = CDIUtils.retrieveOptionalInstance(PermissionAdapter.class);
+    }
+
+    /**
+     * Used in the Java SE case.
+     *
+     * @param lookupProvider
+     * @param <T>
+     */
+    <T extends Enum<T>> void initDependencies(LookupProvider<T> lookupProvider) {
+        permissionResolver = new PermissionResolver(lookupProvider.getPermissionLookup(), lookupProvider.getStringPermissionLookup());
+
+        // FIXME
+        //rolePermissionResolver =
+        //permissionAdapter =
+
+        super.init();
     }
 
     /*-------------------------------------------
@@ -125,11 +140,6 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
             //based on the application-unique Realm name:
             authorizationCacheName = name + DEFAULT_AUTHORIZATION_CACHE_SUFFIX;
         }
-    }
-
-    public void setAuthorizationCache(Cache<Object, AuthorizationInfo> authorizationCache) {
-        // FIXME Usage?
-        this.authorizationCache = authorizationCache;
     }
 
     public Cache<Object, AuthorizationInfo> getAuthorizationCache() {

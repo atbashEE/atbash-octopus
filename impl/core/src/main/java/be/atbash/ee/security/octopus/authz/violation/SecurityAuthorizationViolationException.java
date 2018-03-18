@@ -23,20 +23,19 @@ import javax.security.auth.login.AccountException;
 import java.util.Set;
 
 /**
- * TODO JavaDoc
+ * Thrown after detection of an Authorization violation (Authorization check failed, like @RequiresPermission) or <sec:securedComponent />
  */
-
-public class SecurityViolationException extends UnauthorizedException {
+public class SecurityAuthorizationViolationException extends UnauthorizedException {
 
     private String message;
     private String exceptionPointInfo;
 
-    public SecurityViolationException(String violation, String exceptionPointInfo) {
+    public SecurityAuthorizationViolationException(String violation, String exceptionPointInfo) {
         message = violation;
         this.exceptionPointInfo = exceptionPointInfo;
     }
 
-    public SecurityViolationException(Set<SecurityViolation> securityViolations) {
+    public SecurityAuthorizationViolationException(Set<SecurityViolation> securityViolations) {
         StringBuilder violations = new StringBuilder();
         violations.append("Violation of ");
         boolean first = true;

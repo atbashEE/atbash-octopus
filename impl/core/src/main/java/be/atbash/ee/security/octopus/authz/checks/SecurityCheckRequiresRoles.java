@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.annotation.RequiresRoles;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -46,7 +46,7 @@ public class SecurityCheckRequiresRoles implements SecurityCheck {
             result = SecurityCheckInfo.allowAccess();
         } catch (AuthorizationException ae) {
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("Shiro Roles required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("Shiro Roles required", infoProducer.getViolationInfo(accessContext))
             );
         }
         return result;

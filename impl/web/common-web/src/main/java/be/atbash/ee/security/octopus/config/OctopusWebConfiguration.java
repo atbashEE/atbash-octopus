@@ -18,7 +18,6 @@ package be.atbash.ee.security.octopus.config;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
-import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,28 +34,9 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "securedURLs.file", defaultValue = "/WEB-INF/securedURLs.ini")
     private String securedURLsFile;
 
-    @Inject
-    private OctopusCoreConfiguration octopusCoreConfiguration;
-
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
         return securedURLsFile;
-    }
-
-    // TODO Move this to JSF Config
-    @ConfigEntry
-    public String getHashAlgorithmName() {
-        return octopusCoreConfiguration.getHashAlgorithmName();
-    }
-
-    @ConfigEntry
-    public HashEncoding getHashEncoding() {
-        return octopusCoreConfiguration.getHashEncoding();
-    }
-
-    @ConfigEntry
-    public int getSaltLength() {
-        return octopusCoreConfiguration.getSaltLength();
     }
 
 }

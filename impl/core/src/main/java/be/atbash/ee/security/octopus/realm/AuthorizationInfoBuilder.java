@@ -25,9 +25,12 @@ import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.typesafe.RoleLookup;
+import be.atbash.ee.security.octopus.config.LookupConfiguration;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.CollectionUtils;
 import be.atbash.util.PublicAPI;
+import be.atbash.util.reflection.CDICheck;
 
 import javax.enterprise.inject.Typed;
 import java.util.Collection;
@@ -50,9 +53,20 @@ public class AuthorizationInfoBuilder {
     private Set<String> stringRoles = new HashSet<>();
 
     public AuthorizationInfoBuilder() {
-        roleLookup = CDIUtils.retrieveOptionalInstance(RoleLookup.class);
-        rolePermissionResolver = CDIUtils.retrieveOptionalInstance(RolePermissionResolver.class);
-        config = CDIUtils.retrieveInstance(OctopusCoreConfiguration.class);
+
+        if (CDICheck.withinContainer()) {
+            roleLookup = CDIUtils.retrieveOptionalInstance(RoleLookup.class);
+            rolePermissionResolver = CDIUtils.retrieveOptionalInstance(RolePermissionResolver.class);
+            config = CDIUtils.retrieveInstance(OctopusCoreConfiguration.class);
+        }
+
+        if (config == null) {
+            config = OctopusCoreConfiguration.getInstance();
+        }
+        LookupConfiguration lookupConfiguration = new LookupConfiguration();
+        if (roleLookup == null) {
+            roleLookup = lookupConfiguration.getRoleLookup();
+        }
     }
 
     public AuthorizationInfoBuilder addPermission(NamedPermission namedPermission) {
@@ -136,6 +150,9 @@ public class AuthorizationInfoBuilder {
     }
 
     public AuthorizationInfoBuilder addRolesByName(Collection<String> rolesNames) {
+        if (CollectionUtils.isEmpty(rolesNames)) {
+            return this;
+        }
         for (String roleName : rolesNames) {
             addRole(new ApplicationRole(roleName));
         }

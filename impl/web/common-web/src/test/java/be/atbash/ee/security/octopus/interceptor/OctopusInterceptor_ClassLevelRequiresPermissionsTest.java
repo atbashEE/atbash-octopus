@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.interceptor;
 
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.ClassLevelRequiresPermissions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +73,7 @@ public class OctopusInterceptor_ClassLevelRequiresPermissionsTest extends Octopu
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(ClassLevelRequiresPermissions.CLASS_LEVEL_REQUIRES_PERMISSIONS);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             if (permission != null) {
                 assertThat(permission).isEqualTo(PERMISSION1);
             }

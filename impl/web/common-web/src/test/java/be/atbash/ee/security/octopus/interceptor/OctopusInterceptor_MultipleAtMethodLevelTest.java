@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.interceptor;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.typesafe.PermissionLookupFixture;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.MultipleAtMethodLevel;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.util.TestReflectionUtils;
@@ -66,8 +66,7 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
 
         OctopusRealm octopusRealm = new OctopusRealm();
 
-        when(octopusWebConfigurationMock.getHashAlgorithmName()).thenReturn("");
-
+        when(octopusConfigMock.getHashAlgorithmName()).thenReturn("");
 
         /*
         TwoStepConfig twoStepConfigMock = Mockito.mock(TwoStepConfig.class);
@@ -75,7 +74,7 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
         FIXME
         */
 
-        TestReflectionUtils.injectDependencies(octopusRealm, authenticationInfoProviderHandlerMock, octopusWebConfigurationMock/*, twoStepConfigMock*/);
+        TestReflectionUtils.injectDependencies(octopusRealm, authenticationInfoProviderHandlerMock, octopusConfigMock/*, twoStepConfigMock*/);
         registerPermissionVoter();
 
         Object target = new MultipleAtMethodLevel();
@@ -98,7 +97,7 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MultipleAtMethodLevel.MULTIPLE_CHECKS);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             assertThat(authenticated).isTrue();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -126,7 +125,7 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MultipleAtMethodLevel.MULTIPLE_CHECKS);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();

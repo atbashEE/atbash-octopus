@@ -20,12 +20,7 @@ import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
-import be.atbash.ee.security.octopus.codec.Base64;
-import be.atbash.ee.security.octopus.codec.CodecUtil;
-import be.atbash.ee.security.octopus.codec.Hex;
-import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.context.OctopusWebSecurityContext;
-import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
@@ -33,7 +28,6 @@ import be.atbash.ee.security.octopus.token.AuthorizationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
 import be.atbash.util.CDIUtils;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -52,19 +46,6 @@ public class OctopusRealm extends AuthorizingRealm {
 
     @Inject
     private AuthorizationInfoProviderHandler authorizationInfoProviderHandler;
-
-    @Inject
-    private OctopusWebConfiguration config;
-
-    @Inject
-    private CodecUtil codecUtil;
-
-    @PostConstruct
-    public void init() {
-        // FIXME Is this not the default?
-        setCachingEnabled(true);
-
-    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -115,37 +96,6 @@ public class OctopusRealm extends AuthorizingRealm {
 
         // FIXME implement the be.c4j.ee.security.realm.OctopusRealmAuthenticator#doSingleRealmAuthentication() logic
         return authenticationInfo;
-    }
-
-    private void verifyHashEncoding(AuthenticationInfo info) {
-        if (!config.getHashAlgorithmName().isEmpty()) {
-            Object credentials = info.getCredentials();
-
-            if (credentials instanceof String || credentials instanceof char[]) {
-
-                byte[] storedBytes = codecUtil.toBytes(credentials);
-                HashEncoding hashEncoding = config.getHashEncoding();
-
-                try {
-                    // Lets try to decode, if we have an issue the supplied hash password is invalid.
-                    switch (hashEncoding) {
-
-                        case HEX:
-                            Hex.decode(storedBytes);
-                            break;
-                        case BASE64:
-                            Base64.decode(storedBytes);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("hashEncoding " + hashEncoding + " not supported");
-
-                    }
-                } catch (IllegalArgumentException e) {
-                    throw new CredentialsException("Supplied hashed password can't be decoded. Is the 'hashEncoding' correctly set?");
-                }
-            }
-
-        }
     }
 
     protected Object getAuthorizationCacheKey(PrincipalCollection principals) {

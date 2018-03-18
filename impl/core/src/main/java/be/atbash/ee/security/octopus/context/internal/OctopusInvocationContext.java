@@ -21,11 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * FIXME better name
+ *
  */
-public class OctopusInvocationContext implements InvocationContext {
+public class OctopusInvocationContext {
 
     private Object target;
+    private Method method;
     private Object[] parameters;
     private Map<String, Object> contextData = new HashMap<>();
 
@@ -34,44 +35,42 @@ public class OctopusInvocationContext implements InvocationContext {
         this.parameters = parameters;
     }
 
-    @Override
+    public OctopusInvocationContext(InvocationContext invocationContext) {
+        this.target = invocationContext.getTarget();
+        this.method = invocationContext.getMethod();
+        this.parameters = invocationContext.getParameters();
+    }
+
+    public OctopusInvocationContext(Object target, Method method, Object[] parameters) {
+        this.target = target;
+        this.method = method;
+        this.parameters = parameters;
+    }
+
     public Object getTarget() {
         return target;
     }
 
-    @Override
-    public Object getTimer() {
-        // It is ok here to return null
-        return null;
-    }
-
-    @Override
     public Method getMethod() {
-        return null;
+        return method;
     }
 
-    @Override
     public Object[] getParameters() {
         return parameters;
     }
 
-    @Override
+    /*
     public void setParameters(Object[] parameters) {
         this.parameters = parameters;
     }
+    */
 
-    @Override
+    // FIXME Usage in future to migrate code
     public Map<String, Object> getContextData() {
         return contextData;
     }
 
     public void addContextData(String key, Object metaData) {
         contextData.put(key, metaData);
-    }
-
-    @Override
-    public Object proceed() throws Exception {
-        // TODO error message is not correct
-        throw new UnsupportedOperationException("OctopusInvocationContext is no real InvocationContext but used for securing JSF Components");
     }
 }

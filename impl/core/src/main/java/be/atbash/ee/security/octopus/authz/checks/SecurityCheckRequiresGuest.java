@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.annotation.RequiresGuest;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -40,7 +40,7 @@ public class SecurityCheckRequiresGuest implements SecurityCheck {
 
         if (subject.getPrincipal() != null) {
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("Guest required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("Guest required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
             result = SecurityCheckInfo.allowAccess();

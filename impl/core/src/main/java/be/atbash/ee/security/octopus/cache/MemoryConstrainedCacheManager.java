@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package be.atbash.ee.security.octopus.cache;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.util.cache.SoftHashMap;
 
-import javax.enterprise.context.ApplicationScoped;
-
 /**
  * Simple memory-only based {@link CacheManager CacheManager} implementation usable in production
  * environments.  It will not cause memory leaks as it produces {@link Cache Cache}s backed by
@@ -31,7 +29,6 @@ import javax.enterprise.context.ApplicationScoped;
  * using a different {@code CacheManager} implementation backed by an enterprise-grade caching product (Hazelcast,
  * EhCache, TerraCotta, Coherence, GigaSpaces, etc, etc).
  */
-@ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.cache.MemoryConstrainedCacheManager"})
 public class MemoryConstrainedCacheManager extends AbstractCacheManager {
 

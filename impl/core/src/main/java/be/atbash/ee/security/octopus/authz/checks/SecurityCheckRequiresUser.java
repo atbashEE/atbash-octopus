@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -40,7 +40,7 @@ public class SecurityCheckRequiresUser implements SecurityCheck {
 
         if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("User required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
             result = SecurityCheckInfo.allowAccess();

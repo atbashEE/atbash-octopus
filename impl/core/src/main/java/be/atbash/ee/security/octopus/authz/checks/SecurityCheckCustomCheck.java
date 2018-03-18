@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.authz.checks;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.voter.AbstractGenericVoter;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
@@ -64,13 +64,13 @@ public class SecurityCheckCustomCheck implements SecurityCheck {
 
         if (!subject.isAuthenticated()) {
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("User required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
             // TODO Check on EditableAccessDecisionVoterContext (maybe check immediatly on OctopusAccessDecisionVoterContext ??)
             Set<SecurityViolation> securityViolations = performCustomCheck(subject, securityAnnotation, (EditableAccessDecisionVoterContext) accessContext);
             if (!securityViolations.isEmpty()) {
-                result = SecurityCheckInfo.withException(new SecurityViolationException(securityViolations));
+                result = SecurityCheckInfo.withException(new SecurityAuthorizationViolationException(securityViolations));
             } else {
                 result = SecurityCheckInfo.allowAccess();
             }

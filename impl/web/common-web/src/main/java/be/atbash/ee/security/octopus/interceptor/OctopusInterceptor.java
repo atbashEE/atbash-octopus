@@ -16,10 +16,9 @@
 package be.atbash.ee.security.octopus.interceptor;
 
 import be.atbash.ee.security.octopus.authz.checks.AnnotationAuthorizationChecker;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.context.internal.CustomAccessDecissionVoterContext;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationInfo;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.util.CDIUtils;
@@ -31,26 +30,16 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 @Interceptor
 @OctopusInterceptorBinding
-public class OctopusInterceptor implements Serializable {
+public class OctopusInterceptor extends AbstractOctopusInterceptor implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Inject
     private OctopusCoreConfiguration config;
-
-    @Inject
-    private SecurityViolationInfoProducer infoProducer;
-
-    @Inject
-    private AnnotationAuthorizationChecker annotationAuthorizationChecker;
 
     //@PostConstruct With Weld 2.X, there seems to be an issue
     public void init(InvocationContext context) {
@@ -72,46 +61,28 @@ public class OctopusInterceptor implements Serializable {
         supportForAsynchronousEJB(context, method);
 
         AnnotationInfo info = AnnotationUtil.getAllAnnotations(config, classType, method);
-        Map<String, Object> contextData = new HashMap<>();
-        contextData.put(AnnotationInfo.class.getName(), info);
-        InvocationContextWrapper wrapper = new InvocationContextWrapper(context, contextData);
 
-        AccessDecisionVoterContext accessContext = new CustomAccessDecissionVoterContext(wrapper);
+        OctopusInvocationContext invocationContext = new OctopusInvocationContext(context);
+        invocationContext.addContextData(AnnotationInfo.class.getName(), info);
+        AccessDecisionVoterContext accessContext = new CustomAccessDecisionVoterContext(invocationContext);
 
-        // We need to check at 2 levels, method and then if not present at class level
-        Set<Annotation> annotations = info.getMethodAnnotations();
-
-        // This method can throw already a OctopusUnauthorizedException
-        boolean accessAllowed = annotationAuthorizationChecker.checkAccess(annotations, accessContext);
-
-        if (!accessAllowed) {
-            // OK, at method level we didn't find any annotations.
-            annotations = info.getClassAnnotations();
-
-            // This method can throw already a OctopusUnauthorizedException
-            accessAllowed = annotationAuthorizationChecker.checkAccess(annotations, accessContext);
-
-        }
-        if (!accessAllowed) {
-            // Ok at classLevel also no info -> Exception
-            throw new SecurityViolationException("No Authorization requirements available", infoProducer.getViolationInfo(accessContext));
-        }
+        checkAuthorization(accessContext, info);
         return context.proceed();
     }
 
     private void supportForAsynchronousEJB(InvocationContext context, Method method) {
         Asynchronous asynchronous = method.getAnnotation(Asynchronous.class);
         if (asynchronous != null) {
+            throw new UnsupportedOperationException("FIXME Implement");
+                /*
             for (Object parameter : context.getParameters()) {
 
-                throw new UnsupportedOperationException("FIXME Implement");
-                /*
                 if (parameter != null && OctopusSecurityContext.class.isAssignableFrom(parameter.getClass())) {
                     Subject subject = ((OctopusSecurityContext) parameter).getSubject();
                     ThreadContext.bind(subject);
                 }
-                */
             }
+                */
         }
     }
 

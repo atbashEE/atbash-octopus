@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.interceptor;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.typesafe.PermissionLookupFixture;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.ClassLevelCustomPermission;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
@@ -85,7 +85,7 @@ public class OctopusInterceptor_ClassLevelCustomPermissionTest extends OctopusIn
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(ClassLevelCustomPermission.CLASS_LEVEL_CUSTOM_PERMISSION);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();

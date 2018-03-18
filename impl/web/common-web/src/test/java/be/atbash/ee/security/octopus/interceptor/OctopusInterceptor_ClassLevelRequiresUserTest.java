@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.interceptor;
 
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.ClassLevelRequiresUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +73,7 @@ public class OctopusInterceptor_ClassLevelRequiresUserTest extends OctopusInterc
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(ClassLevelRequiresUser.CLASS_LEVEL_REQUIRES_USER);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             assertThat(authenticated).isFalse();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();

@@ -25,3 +25,7 @@ include::mpauth.adi[]
 == Java SE
 
 include::offlineToken.adi[]
+
+== Configuration
+
+include::configuration.adi[]

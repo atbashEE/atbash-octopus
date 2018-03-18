@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.exception;
 
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.util.CDIUtils;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class AuthorizationExceptionHandler extends ExceptionHandlerWrapper {
             ExceptionQueuedEvent event = i.next();
             Throwable t = getThrowable(event);
 
-            Throwable unauthorized = SecurityViolationException.getUnauthorizedException(t);
+            Throwable unauthorized = SecurityAuthorizationViolationException.getUnauthorizedException(t);
             if (unauthorized != null) {
                 try {
                     handleAuthorizationException(unauthorized);
@@ -78,9 +78,10 @@ public class AuthorizationExceptionHandler extends ExceptionHandlerWrapper {
         facesContext.addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, unauthorized.getMessage(), unauthorized.getMessage()));
 
-        if (unauthorized instanceof SecurityViolationException) {
+        if (unauthorized instanceof SecurityAuthorizationViolationException) {
 
-            externalContext.getFlash().putNow("interceptionInfo", ((SecurityViolationException) unauthorized).getExceptionPointInfo());
+            String exceptionPointInfo = ((SecurityAuthorizationViolationException) unauthorized).getExceptionPointInfo();
+            externalContext.getFlash().putNow("interceptionInfo", exceptionPointInfo.replaceAll("\n", "<br/>"));
         }
         try {
             OctopusJSFConfiguration config = CDIUtils.retrieveInstance(OctopusJSFConfiguration.class);

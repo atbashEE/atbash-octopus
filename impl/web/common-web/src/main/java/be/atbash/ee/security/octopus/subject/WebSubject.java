@@ -54,6 +54,7 @@ import java.util.concurrent.ExecutionException;
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.subject.WebSubject", "org.apache.shiro.web.subject.support.WebDelegatingSubject"})
 // FIXME extract DelegatingSubject out of this again??
+// DelegatingSubject is used for the java SE.
 public class WebSubject implements RequestPairSource, Subject {
 
     private static final Logger log = LoggerFactory.getLogger(WebSubject.class);

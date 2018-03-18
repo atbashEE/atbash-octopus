@@ -34,10 +34,13 @@ import java.util.Set;
 @ApplicationScoped
 public class AnnotationAuthorizationChecker {
 
+    private static final Object LOCK = new Object();
+
     @Inject
     private AnnotationCheckFactory annotationCheckFactory;
 
     public boolean checkAccess(Set<Annotation> annotations, AccessDecisionVoterContext accessContext) {
+        checkDependencies();
         UnauthorizedException exception = null;
         boolean accessAllowed = false;
 
@@ -66,6 +69,18 @@ public class AnnotationAuthorizationChecker {
         }
 
         return accessAllowed;
+    }
+
+    private void checkDependencies() {
+        // Needed for the Java SE usage.
+        if (annotationCheckFactory == null) {
+            synchronized (LOCK) {
+                if (annotationCheckFactory == null) {
+                    annotationCheckFactory = new AnnotationCheckFactory();
+                    annotationCheckFactory.initChecks();
+                }
+            }
+        }
     }
 
 }

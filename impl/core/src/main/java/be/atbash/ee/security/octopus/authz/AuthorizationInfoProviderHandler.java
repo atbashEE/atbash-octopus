@@ -16,8 +16,8 @@
 package be.atbash.ee.security.octopus.authz;
 
 import be.atbash.ee.security.octopus.config.InfoProviderConfiguration;
-import be.atbash.ee.security.octopus.realm.RealmConfigurationException;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -32,6 +32,9 @@ import java.util.ServiceLoader;
  */
 @ApplicationScoped
 public class AuthorizationInfoProviderHandler {
+
+    @Inject
+    private Logger logger;
 
     @Inject
     private Instance<AuthorizationInfoProvider> authorizationInfoProvidersInstances;
@@ -52,7 +55,7 @@ public class AuthorizationInfoProviderHandler {
         }
 
         if (authorizationInfoProviders.isEmpty()) {
-            throw new RealmConfigurationException("Missing implementation as CDI bean of SecurityDataProvider or AuthenticationInfoProvider");
+            logger.warn("OCT-??? Missing implementation(s) as CDI bean of SecurityDataProvider or AuthorizationInfoProvider");
         }
     }
 

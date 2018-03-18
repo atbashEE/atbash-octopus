@@ -21,7 +21,8 @@ import be.atbash.ee.security.octopus.authz.permission.StringPermissionLookup;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
 import be.atbash.ee.security.octopus.authz.permission.role.voter.GenericRoleVoter;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
-import be.atbash.ee.security.octopus.context.internal.CustomAccessDecissionVoterContext;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
+import be.atbash.ee.security.octopus.interceptor.CustomAccessDecisionVoterContext;
 import be.atbash.ee.security.octopus.view.component.secured.SecuredComponentData;
 import be.atbash.ee.security.octopus.view.component.secured.SecuredComponentDataParameter;
 import be.atbash.util.CDIUtils;
@@ -72,8 +73,9 @@ public class ComponentAuthorizationService {
                 // TODO Have we any trace that bean is not found?
                 return false;
             }
-            AccessDecisionVoterContext context = new CustomAccessDecissionVoterContext(secureComponentData
-                    .getTargetComponent(), contextParameters);
+            OctopusInvocationContext invocationContext = new OctopusInvocationContext(secureComponentData.getTargetComponent(), contextParameters);
+            AccessDecisionVoterContext context = new CustomAccessDecisionVoterContext(invocationContext);
+
             Set<SecurityViolation> securityViolations = bean.checkPermission(context);
 
             // securityViolations empty -> access allowed
@@ -152,6 +154,7 @@ public class ComponentAuthorizationService {
     }
 
     private static Object evaluateExpression(String valueExpression) {
+        // FIXME Move to JSF Utils
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ValueExpression expression = facesContext.getApplication().getExpressionFactory()
                 .createValueExpression(facesContext

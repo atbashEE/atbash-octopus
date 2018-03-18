@@ -29,9 +29,11 @@
 <h:body>
     User page <br/>
     authenticated user : #{loggedInUser} <br/>
-    ame from UserPrincipal : #{userBean.name} <br/>
-    <a href="otherPage.xhtml">Other page</a>
-
+    name from UserPrincipal : #{userBean.name} <br/>
+    <a href="otherPage.xhtml">Other page</a> <br/>
+    <h:form>
+        <h:commandButton value="Test Authorization" actionListener="#{testBean.testAuthorization}"/>
+    </h:form>
 </h:body>
 
 </html>

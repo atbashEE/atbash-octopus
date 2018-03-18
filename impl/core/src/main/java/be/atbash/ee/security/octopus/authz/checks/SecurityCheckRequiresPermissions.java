@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -35,6 +35,10 @@ public class SecurityCheckRequiresPermissions implements SecurityCheck {
     @Inject
     private SecurityViolationInfoProducer infoProducer;
 
+    public void initDependencies() {
+        infoProducer = new SecurityViolationInfoProducer();
+    }
+
     @Override
     public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
         SecurityCheckInfo result;
@@ -46,7 +50,7 @@ public class SecurityCheckRequiresPermissions implements SecurityCheck {
             result = SecurityCheckInfo.allowAccess();
         } catch (AuthorizationException ae) {
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("Octopus permissions required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User has not required Permission", infoProducer.getViolationInfo(accessContext))
             );
         }
         return result;

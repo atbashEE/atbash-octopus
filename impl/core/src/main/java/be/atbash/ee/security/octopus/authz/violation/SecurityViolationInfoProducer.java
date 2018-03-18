@@ -24,7 +24,6 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.interceptor.InvocationContext;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,14 +35,14 @@ import java.util.List;
 public class SecurityViolationInfoProducer {
 
     public String getViolationInfo(AccessDecisionVoterContext accessContext) {
-        InvocationContext context = accessContext.getSource();
-        return getExceptionPointInfo(context);
+        OctopusInvocationContext invocationContext = accessContext.getSource();
+        return getExceptionPointInfo(invocationContext);
     }
 
     public String getViolationInfo(AccessDecisionVoterContext accessContext, SecurityViolation securityViolation) {
         AuthorizationViolation violation = defineCustomViolation(accessContext, securityViolation);
         if (violation == null) {
-            InvocationContext context = accessContext.getSource();
+            OctopusInvocationContext context = accessContext.getSource();
             violation = new BasicAuthorizationViolation(securityViolation.getReason(), getExceptionPointInfo(context));
         }
         return violation.toString();
@@ -52,13 +51,13 @@ public class SecurityViolationInfoProducer {
     public String getViolationInfo(AccessDecisionVoterContext accessDecisionVoterContext, Permission violatedPermission) {
         AuthorizationViolation violation = defineCustomViolation(accessDecisionVoterContext, violatedPermission);
         if (violation == null) {
-            InvocationContext invocationContext = accessDecisionVoterContext.getSource();
+            OctopusInvocationContext invocationContext = accessDecisionVoterContext.getSource();
             violation = defineViolation(invocationContext, violatedPermission);
         }
         return violation.toString();
     }
 
-    public AuthorizationViolation defineViolation(InvocationContext invocationContext, Permission violatedPermission) {
+    public AuthorizationViolation defineViolation(OctopusInvocationContext invocationContext, Permission violatedPermission) {
         String permissionInfo = null;
         if (violatedPermission instanceof NamedDomainPermission) {
             NamedDomainPermission namedPermission = (NamedDomainPermission) violatedPermission;
@@ -79,31 +78,37 @@ public class SecurityViolationInfoProducer {
         return null; // TODO Find out what the intention was. This doesn't seems very usefull
     }
 
-    protected String getExceptionPointInfo(InvocationContext invocationContext) {
-        // FIXME This is specific for JSF or other HTML based view since it contains <br/>
+    protected String getExceptionPointInfo(OctopusInvocationContext invocationContext) {
         StringBuilder result = new StringBuilder();
-        if (!(invocationContext instanceof OctopusInvocationContext)) {
+
+        if (invocationContext.getTarget() instanceof Class) {
+            result.append("Class ").append(((Class<?>) invocationContext.getTarget()).getName());
+        } else {
             result.append("Class ").append(invocationContext.getTarget().getClass().getName());
-            result.append("<br/>Method ").append(invocationContext.getMethod().getName());
-            result.append("<br/>Parameters ");
-            if (invocationContext.getParameters() != null) {
-                for (Object parameter : invocationContext.getParameters()) {
-                    if (parameter == null) {
-                        result.append("<br/>").append(" ? = null");
-                    } else {
-                        result.append("<br/>").append(parameter.getClass().getName()).append(" = ").append(parameter);
-                    }
+        }
+        result.append("\nMethod ");
+        if (invocationContext.getMethod() != null) {
+            result.append(invocationContext.getMethod().getName());
+        }
+        result.append("\nParameters ");
+        if (invocationContext.getParameters() != null) {
+            for (Object parameter : invocationContext.getParameters()) {
+                if (parameter == null) {
+                    result.append("\n").append(" ? = null");
+                } else {
+                    result.append("\n").append(parameter.getClass().getName()).append(" = ").append(parameter);
                 }
             }
         }
+
         return result.toString();
     }
 
-    public String getWrongMethodSignatureInfo(InvocationContext invocationContext, List<Class<?>> missingParameterTypes) {
+    public String getWrongMethodSignatureInfo(OctopusInvocationContext invocationContext, List<Class<?>> missingParameterTypes) {
         return new MethodParameterTypeViolation(getExceptionPointInfo(invocationContext), missingParameterTypes).toString();
     }
 
-    public String getWrongOverloadingMethodSignatureInfo(InvocationContext invocationContext, Class<?>... missingParameterTypes) {
+    public String getWrongOverloadingMethodSignatureInfo(OctopusInvocationContext invocationContext, Class<?>... missingParameterTypes) {
         return new OverloadingMethodParameterTypeViolation(getExceptionPointInfo(invocationContext), Arrays.asList(missingParameterTypes)).toString();
     }
 

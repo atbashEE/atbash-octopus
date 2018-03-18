@@ -26,12 +26,13 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.WildcardPermission;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
 import be.atbash.ee.security.octopus.authz.violation.BasicAuthorizationViolation;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestCustomVoter;
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestPermissionCheck;
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestRoleCheck;
@@ -256,7 +257,7 @@ public class OctopusInterceptorTest {
         beanManagerFake.registerBean(infoProducerMock, SecurityViolationInfoProducer.class);
         when(infoProducerMock.getViolationInfo(ArgumentMatchers.any(AccessDecisionVoterContext.class), ArgumentMatchers.any(NamedDomainPermission.class))).thenReturn("Violation Info");
         when(infoProducerMock.getViolationInfo(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn("Violation Info");
-        when(infoProducerMock.defineViolation(ArgumentMatchers.any(InvocationContext.class), ArgumentMatchers.any(Permission.class))).thenReturn(new BasicAuthorizationViolation("X", "Y"));
+        when(infoProducerMock.defineViolation(ArgumentMatchers.any(OctopusInvocationContext.class), ArgumentMatchers.any(Permission.class))).thenReturn(new BasicAuthorizationViolation("X", "Y"));
 
         // The custom voter bound to CDI
         TestCustomVoter customVoter = new TestCustomVoter();
@@ -366,7 +367,7 @@ public class OctopusInterceptorTest {
                 try {
                     octopusInterceptor.interceptForSecurity(context);
                 } catch (Exception e) {
-                    if (e instanceof SecurityViolationException) {
+                    if (e instanceof SecurityAuthorizationViolationException) {
                         throw e;
                     }
                     throw new RuntimeException(e);
@@ -387,7 +388,7 @@ public class OctopusInterceptorTest {
                 try {
                     octopusInterceptor.interceptForSecurity(context);
                 } catch (Exception e) {
-                    if (e instanceof SecurityViolationException) {
+                    if (e instanceof SecurityAuthorizationViolationException) {
                         throw e;
                     }
                     throw new RuntimeException(e);

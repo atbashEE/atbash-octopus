@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,10 @@ public class SecuredCLI {
         OctopusSecurityContext.getInstance().authenticate(token);
 
         System.out.println("Principal AFTER applying offline token : " + SecurityUtils.getSubject().getPrincipal());
+
+        ProtectedMethods protectedMethods = new ProtectedMethods();
+        System.out.println(protectedMethods.checkPermission());
+        System.out.println(protectedMethods.runOnlyAsSuperUser());
     }
 
 }

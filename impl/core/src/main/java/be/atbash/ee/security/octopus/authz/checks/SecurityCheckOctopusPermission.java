@@ -19,8 +19,9 @@ import be.atbash.ee.security.octopus.authz.Combined;
 import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.StringPermissionLookup;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
@@ -30,7 +31,6 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +41,7 @@ import java.util.Set;
  * SecurityCheck for the annotation @OctopusPermissions which takes String permission (named, wildcard or short version)
  */
 @ApplicationScoped
+// FIXME Rename SecurityCheckRequiresPermission
 public class SecurityCheckOctopusPermission implements SecurityCheck {
     // FIXME Duplicate, remove
     @Inject
@@ -65,13 +66,13 @@ public class SecurityCheckOctopusPermission implements SecurityCheck {
 
         if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("User required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
             Set<SecurityViolation> securityViolations = performPermissionChecks(securityAnnotation, subject, accessContext);
             if (!securityViolations.isEmpty()) {
                 result = SecurityCheckInfo.withException(
-                        new SecurityViolationException(securityViolations));
+                        new SecurityAuthorizationViolationException(securityViolations));
             } else {
                 result = SecurityCheckInfo.allowAccess();
             }
@@ -105,7 +106,7 @@ public class SecurityCheckOctopusPermission implements SecurityCheck {
             if (subject.isPermitted(permission)) {
                 onePermissionGranted = true;
             } else {
-                InvocationContext invocationContext = accessContext.getSource();
+                OctopusInvocationContext invocationContext = accessContext.getSource();
                 result.add(infoProducer.defineViolation(invocationContext, permission));
             }
         }

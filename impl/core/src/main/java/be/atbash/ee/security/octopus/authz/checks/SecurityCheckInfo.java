@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 
 /**
  *
@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
 public class SecurityCheckInfo {
 
     private boolean accessAllowed;
-    private SecurityViolationException exception;
+    private SecurityAuthorizationViolationException exception;
 
     private SecurityCheckInfo() {
     }
@@ -35,7 +35,7 @@ public class SecurityCheckInfo {
         return result;
     }
 
-    public static SecurityCheckInfo withException(SecurityViolationException exception) {
+    public static SecurityCheckInfo withException(SecurityAuthorizationViolationException exception) {
         SecurityCheckInfo result = new SecurityCheckInfo();
         result.accessAllowed = false;
         result.exception = exception;

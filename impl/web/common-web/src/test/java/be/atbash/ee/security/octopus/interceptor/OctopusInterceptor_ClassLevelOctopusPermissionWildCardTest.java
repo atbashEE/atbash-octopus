@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.interceptor;
 
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.ClassLevelOctopusPermissionWildCard;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +78,7 @@ public class OctopusInterceptor_ClassLevelOctopusPermissionWildCardTest extends 
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(ClassLevelOctopusPermissionWildCard.CLASS_LEVEL_OCTOPUS_PERMISSION);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,19 @@ import be.atbash.ee.security.octopus.authc.AbstractAuthenticator;
 import be.atbash.ee.security.octopus.authc.LogoutAware;
 import be.atbash.ee.security.octopus.authz.AuthorizerDataProvider;
 import be.atbash.ee.security.octopus.cache.CacheManager;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.util.Nameable;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
+import be.atbash.util.reflection.CDICheck;
+import be.atbash.util.reflection.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A very basic abstract extension point for the {@link Realm} interface that provides caching support for subclasses.
@@ -51,15 +54,14 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
 
     //TODO - complete JavaDoc
 
-    private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();
-
     /*--------------------------------------------
     |    I N S T A N C E   V A R I A B L E S    |
     ============================================*/
     private boolean cachingEnabled;
 
-    @Inject
     private CacheManager cacheManager;
+
+    protected OctopusCoreConfiguration configuration;
 
     /**
      * Default no-argument constructor that defaults
@@ -73,22 +75,24 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
         cachingEnabled = true;
     }
 
+    protected void init() {
+        configuration = OctopusCoreConfiguration.getInstance();
+
+        cacheManager = instantiateCacheManager();
+    }
+
+    private CacheManager instantiateCacheManager() {
+        Class<? extends CacheManager> cacheManagerClass = configuration.getCacheManagerClass();
+        if (CDICheck.withinContainer() && cacheManagerClass.getAnnotation(ApplicationScoped.class) != null) {
+            return CDIUtils.retrieveInstance(cacheManagerClass);
+        } else {
+            return ClassUtils.newInstance(cacheManagerClass);
+        }
+    }
+
     protected CacheManager getCacheManager() {
         return cacheManager;
     }
-
-    /*
-     * Sets the <tt>CacheManager</tt> to be used for data caching to reduce EIS round trips.
-     * <p/>
-     * This property is <tt>null</tt> by default, indicating that caching is turned off.
-     *
-     * @param cacheManager the <tt>CacheManager</tt> to use for data caching, or <tt>null</tt> to disable caching.
-    FIXME Not needed with CDI
-    public void setCacheManager(CacheManager cacheManager) {
-    this.cacheManager = cacheManager;
-    afterCacheManagerSet();
-    }
-     */
 
     /**
      * Returns {@code true} if caching should be used if a {@link CacheManager} has been

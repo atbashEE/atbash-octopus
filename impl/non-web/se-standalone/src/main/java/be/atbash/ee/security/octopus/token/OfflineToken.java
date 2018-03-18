@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.token;
 
+import be.atbash.ee.security.octopus.authz.OfflineTokenAuthorizationProvider;
+import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 
 import java.io.Serializable;
@@ -27,7 +29,7 @@ import java.util.List;
  * Applications are CLI applications like batch jobs, Swing, Java FX programs.
  */
 
-public class OfflineToken implements AuthenticationToken, ValidatedAuthenticationToken {
+public class OfflineToken implements AuthenticationToken, AuthorizationToken, ValidatedAuthenticationToken {
 
     public static String LOCAL_SECRET_KEY_ID = "local secret";
 
@@ -104,5 +106,10 @@ public class OfflineToken implements AuthenticationToken, ValidatedAuthenticatio
     @Override
     public Object getCredentials() {
         return null;
+    }
+
+    @Override
+    public Class<? extends TokenBasedAuthorizationInfoProvider> authorizationProviderClass() {
+        return OfflineTokenAuthorizationProvider.class;
     }
 }

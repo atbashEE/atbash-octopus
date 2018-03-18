@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
@@ -53,14 +53,14 @@ public class SecurityCheckSystemAccountCheck implements SecurityCheck {
                 if (identifiers.contains(systemAccountPrincipal.getIdentifier())) {
                     result = SecurityCheckInfo.allowAccess();
                 } else {
-                    result = SecurityCheckInfo.withException(new SecurityViolationException("System account '" + systemAccountPrincipal.getIdentifier() + "' not allowed",
+                    result = SecurityCheckInfo.withException(new SecurityAuthorizationViolationException("System account '" + systemAccountPrincipal.getIdentifier() + "' not allowed",
                             infoProducer.getViolationInfo(accessContext)));
                 }
             } else {
-                result = SecurityCheckInfo.withException(new SecurityViolationException("Authenticated System account required", infoProducer.getViolationInfo(accessContext)));
+                result = SecurityCheckInfo.withException(new SecurityAuthorizationViolationException("Authenticated System account required", infoProducer.getViolationInfo(accessContext)));
             }
         } else {
-            result = SecurityCheckInfo.withException(new SecurityViolationException("System account required", infoProducer.getViolationInfo(accessContext)));
+            result = SecurityCheckInfo.withException(new SecurityAuthorizationViolationException("System account required", infoProducer.getViolationInfo(accessContext)));
         }
         return result;
     }

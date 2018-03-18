@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.StringPermissionLookup;
 import be.atbash.ee.security.octopus.authz.permission.typesafe.PermissionLookupFixture;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.MethodLevel;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
@@ -82,7 +82,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
         assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_PERMIT_ALL);
     }
 
-    @Test(expected = SecurityViolationException.class)
+    @Test(expected = SecurityAuthorizationViolationException.class)
     public void testInterceptShiroSecurity_NoAnnotation() throws Exception {
 
         Object target = new MethodLevel();
@@ -116,7 +116,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_REQUIRES_USER);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             assertThat(authenticated).isFalse();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -131,7 +131,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
         OctopusRealm octopusRealm = new OctopusRealm();
 
-        when(octopusWebConfigurationMock.getHashAlgorithmName()).thenReturn("");
+        when(octopusConfigMock.getHashAlgorithmName()).thenReturn("");
 
         /*
         FIXME
@@ -147,7 +147,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
                 callInterceptorSimulatingAuthentication(context)
         );
 
-        TestReflectionUtils.injectDependencies(octopusRealm, authenticationInfoProviderHandlerMock, octopusWebConfigurationMock/*, twoStepConfigMock*/);
+        TestReflectionUtils.injectDependencies(octopusRealm, authenticationInfoProviderHandlerMock, octopusConfigMock/*, twoStepConfigMock*/);
         finishCDISetup();
 
         try {
@@ -157,7 +157,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_IN_AUTHENTICATION);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             assertThat(authenticated).isTrue();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -178,7 +178,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             fail("We shouldn't be able to call the inAuthentication method as we aren't in the process of such an authentication");
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -234,7 +234,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             fail("We shouldn't be able to call the inAuthorization method as we aren't in the process of such an authorization");
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -266,7 +266,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_PERMISSION1);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -299,7 +299,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_PERMISSION2);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -324,7 +324,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_CUSTOM_VOTER);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             assertThat(customAccess).isFalse();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
@@ -351,7 +351,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             assertThat(permission).isEqualTo(OCTOPUS1);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -371,7 +371,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             octopusInterceptor.interceptForSecurity(context);
 
             fail("In our test, subject has never octopus2 permission");
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -395,7 +395,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_SYSTEM_ACCOUNT1);
 
             assertThat(systemAccount).isEqualTo(ACCOUNT1);
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -415,7 +415,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             octopusInterceptor.interceptForSecurity(context);
 
             fail("In our test, subject has never systemAccount 2");
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
@@ -447,7 +447,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             assertThat(permission).isEqualTo(NAMED_OCTOPUS);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             // FIXME (and for all the other tests in this class) we need to check if the fail is ok.
             // We only test positive cases
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
@@ -474,7 +474,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             assertThat(permission).isIn(NAMED_OCTOPUS, OCTOPUS2);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
         }
@@ -500,7 +500,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             assertThat(permission).isEqualTo(OCTOPUS2);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
         }
@@ -525,7 +525,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
             assertThat(role).isEqualTo(ROLE1);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();

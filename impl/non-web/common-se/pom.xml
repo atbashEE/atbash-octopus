@@ -46,6 +46,15 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Deltaspike -->
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-security-module-api</artifactId>
+            <!--version>${deltaspike.version}</version-->
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

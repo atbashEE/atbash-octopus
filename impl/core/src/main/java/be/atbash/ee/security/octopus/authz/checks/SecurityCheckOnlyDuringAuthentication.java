@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.annotation.OnlyDuringAuthentication;
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
@@ -41,7 +41,7 @@ public class SecurityCheckOnlyDuringAuthentication implements SecurityCheck {
         // No longer perform the check on subject.getPrincipal() in case we wan't to log on when another user is already logged on (and no logout is done)
         if (!TemporaryAuthorizationContextManager.isInAuthentication()) {
             result = SecurityCheckInfo.withException(
-                    new SecurityViolationException("Execution of method only allowed during authentication process"
+                    new SecurityAuthorizationViolationException("Execution of method only allowed during authentication process"
                             , infoProducer.getViolationInfo(accessContext)));
         } else {
             result = SecurityCheckInfo.allowAccess();

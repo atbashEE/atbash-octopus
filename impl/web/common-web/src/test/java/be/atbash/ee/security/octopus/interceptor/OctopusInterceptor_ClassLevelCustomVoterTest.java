@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.interceptor;
 
-import be.atbash.ee.security.octopus.authz.violation.SecurityViolationException;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.interceptor.testclasses.ClassLevelCustomVoter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +73,7 @@ public class OctopusInterceptor_ClassLevelCustomVoterTest extends OctopusInterce
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(ClassLevelCustomVoter.CLASS_LEVEL_CUSTOM_VOTER);
 
-        } catch (SecurityViolationException e) {
+        } catch (SecurityAuthorizationViolationException e) {
 
             assertThat(customAccess).isFalse();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();

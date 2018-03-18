@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.util;
 
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.util.PublicAPI;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
@@ -35,7 +36,7 @@ public class MethodParameterCheckUtil {
     @Inject
     private SecurityViolationInfoProducer infoProducer;
 
-    public SecurityViolation checkMethodHasParameterTypes(final InvocationContext invocationContext, Class<?>... parameterTypes) {
+    public SecurityViolation checkMethodHasParameterTypes(InvocationContext invocationContext, Class<?>... parameterTypes) {
         final List<Class<?>> missingClasses = new ArrayList<>();
         for (Class<?> type : parameterTypes) {
             if (!hasAssignableParameter(invocationContext.getParameters(), type)) {
@@ -44,10 +45,11 @@ public class MethodParameterCheckUtil {
         }
         SecurityViolation result = null;
         if (!missingClasses.isEmpty()) {
+            final OctopusInvocationContext octopusInvocationContext = new OctopusInvocationContext(invocationContext);
             result = new SecurityViolation() {
                 @Override
                 public String getReason() {
-                    return infoProducer.getWrongMethodSignatureInfo(invocationContext, missingClasses);
+                    return infoProducer.getWrongMethodSignatureInfo(octopusInvocationContext, missingClasses);
                 }
             };
         }
