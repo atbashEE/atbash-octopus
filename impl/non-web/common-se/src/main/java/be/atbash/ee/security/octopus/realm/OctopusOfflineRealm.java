@@ -88,6 +88,12 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
                 try {
 
                     authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
+                    if (authenticationInfo == null) {
+                        String msg = String.format( "Realm was unable to find account data for the " +
+                                "submitted AuthenticationToken [%s].", token);
+                        throw new UnknownAccountException(msg);
+
+                    }
                     verifyHashEncoding(authenticationInfo);
                 } finally {
                     // Even in the case of an exception (access not allowed) we need to reset this flag
