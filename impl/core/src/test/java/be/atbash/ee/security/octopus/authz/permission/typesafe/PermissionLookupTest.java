@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.authz.permission.typesafe;
 
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
-import be.atbash.ee.security.octopus.interceptor.testclasses.TestPermission;
+import be.atbash.ee.security.octopus.authz.permission.testclasses.TestPermission;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -183,6 +183,73 @@ Inverts the result of the check
 
 Do all checks need to be pass on the user/subject or is only 1 enough.
 
+=== Filter (web based projects)
+
+==== anon
+
+Every one can access the page, no checks perfomed
+
+==== authcBasic
+
+type : Authenticating
+
+Requires BASIC authentication.
+
+==== user
+
+type : Authenticating
+
+Requires authenticated user (?? TODO real difference between authenticated and remembered)
+When no authenticated user is available, a redirect to the loginURL is performed.
+
+==== userRequired
+
+type : Authorization
+
+Requires authenticated user but no redirect to the login is performed but the unauthorized page is shown.
+
+==== namedPermission / np
+
+type : Authorization
+
+Subject must have all the named permissions defined in the config.
+
+==== namedPermission1 / np1
+
+type : Authorization
+
+Subject must have one of the named permissions defined in the config.
+
+==== namedRole / nr
+
+type : Authorization
+
+Subject must have all the named roles defined in the config.
+
+==== namedRole1 / nr1
+
+type : Authorization
+
+Subject must have one the named roles defined in the config.
+
+==== rate
+
+type :
+
+Limit the number of requests for a certain path.
+
+==== noSessionCreation (rest module)
+
+type :
+
+It makes sure that no session will be created by the framework
+
+==== mpUser (MicroProfile module)
+
+type : Authenticating
+
+Retrieves authentication information from the Bearer header formatted accordingly to the MP JWT Auth spec.
+
 === Java SE
 
 Methods can be annotated with authorization checks, like @RequiresPermission, and authorization checks are performed by calling the method

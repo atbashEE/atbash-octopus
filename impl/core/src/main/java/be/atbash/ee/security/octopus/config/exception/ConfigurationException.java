@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 
 /**
  * Exception indicating there was a problem parsing or processing the Octopus configuration.
- * Octopus way of using : Only to be used for 'logical' errors, wrong or missing config should be using the ConfigurationException from the Atabsh-config
+ * Octopus way of using : Only to be used for 'logical' errors, wrong or missing config should be using the ConfigurationException from the Atbash-config
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.config.ConfigurationException"})
 public class ConfigurationException extends OctopusException {

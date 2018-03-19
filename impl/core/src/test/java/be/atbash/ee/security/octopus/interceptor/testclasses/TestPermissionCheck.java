@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.interceptor.testclasses;
 
+import be.atbash.ee.security.octopus.authz.permission.testclasses.TestPermission;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

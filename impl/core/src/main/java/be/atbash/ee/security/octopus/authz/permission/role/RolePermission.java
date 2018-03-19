@@ -80,4 +80,9 @@ public class RolePermission implements Permission, NamedPermission {
     public final int hashCode() {
         return roleName != null ? roleName.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return ">" + roleName + "<";
+    }
 }

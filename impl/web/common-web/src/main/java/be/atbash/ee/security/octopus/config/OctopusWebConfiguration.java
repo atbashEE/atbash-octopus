@@ -34,9 +34,18 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "securedURLs.file", defaultValue = "/WEB-INF/securedURLs.ini")
     private String securedURLsFile;
 
+    @Inject
+    @ConfigProperty(name = "unauthorizedExceptionPage", defaultValue = "/unauthorized.xhtml")
+    private String unauthorizedExceptionPage;
+
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
         return securedURLsFile;
+    }
+
+    @ConfigEntry
+    public String getUnauthorizedExceptionPage() {
+        return unauthorizedExceptionPage;
     }
 
 }

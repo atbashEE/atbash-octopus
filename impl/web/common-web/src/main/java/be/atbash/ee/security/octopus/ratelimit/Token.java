@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.interceptor.testclasses;
-
-import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
+package be.atbash.ee.security.octopus.ratelimit;
 
 /**
- *
+ * Interface defining an extensible enumeration for return values from {@link FixedBucket#getToken(String)}
+ * <p>
+ * Modified from https://github.com/jabley/rate-limit created by James Abley (2009) Apache License, Version 2.0
  */
-public enum TestPermission implements NamedPermission {
-    PERMISSION1, PERMISSION2, PERMISSION3
+public interface Token {
+
+    /**
+     * Returns true if this Token means that the client should be safe to proceed, otherwise false.
+     *
+     * @return true if the client should proceed, otherwise false
+     */
+    boolean isUsable();
 }

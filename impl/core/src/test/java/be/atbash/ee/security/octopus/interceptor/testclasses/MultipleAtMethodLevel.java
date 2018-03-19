@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.interceptor.testclasses;
 
 import be.atbash.ee.security.octopus.authz.annotation.OnlyDuringAuthentication;
+import be.atbash.ee.security.octopus.authz.permission.testclasses.TestPermission;
 import be.atbash.ee.security.octopus.interceptor.CallFeedbackCollector;
 
 /**
