@@ -41,6 +41,9 @@
         <module>web</module>
     </modules>
 
+    <properties>
+        <deltaspike.version>1.0.0</deltaspike.version>
+    </properties>
     <dependencies>
 
         <dependency>

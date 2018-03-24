@@ -71,7 +71,7 @@ public class OctopusInterceptor_ClassLevelRequiresRoleTest extends OctopusInterc
 
         finishCDISetup();
 
-        securityCheckOctopusRole.init();
+        securityCheckRequiresRoles.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);

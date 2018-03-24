@@ -439,7 +439,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
         finishCDISetup();
 
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);
@@ -466,7 +466,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
         finishCDISetup();
 
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);
@@ -491,7 +491,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
 
         finishCDISetup();
 
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);
@@ -516,8 +516,8 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
         InvocationContext context = new TestInvocationContext(target, method);
 
         finishCDISetup();
-        securityCheckOctopusRole.init();
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresRoles.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);

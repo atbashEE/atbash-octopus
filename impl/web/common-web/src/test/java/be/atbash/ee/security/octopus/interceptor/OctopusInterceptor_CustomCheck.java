@@ -15,10 +15,7 @@
  */
 package be.atbash.ee.security.octopus.interceptor;
 
-import be.atbash.ee.security.octopus.authz.checks.AnnotationAuthorizationChecker;
-import be.atbash.ee.security.octopus.authz.checks.AnnotationCheckFactory;
-import be.atbash.ee.security.octopus.authz.checks.SecurityCheck;
-import be.atbash.ee.security.octopus.authz.checks.SecurityCheckCustomCheck;
+import be.atbash.ee.security.octopus.authz.checks.*;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.WildcardPermission;
@@ -224,7 +221,10 @@ public class OctopusInterceptor_CustomCheck {
         AnnotationCheckFactory checkFactory = new AnnotationCheckFactory();
         checkFactory.init();
 
-        TestReflectionUtils.injectDependencies(authorizationChecker, checkFactory);
+        SecurityCheckDataFactory securityCheckDataFactory = new SecurityCheckDataFactory();
+        TestReflectionUtils.injectDependencies(securityCheckDataFactory, octopusConfigMock);
+
+        TestReflectionUtils.injectDependencies(authorizationChecker, checkFactory, securityCheckDataFactory);
 
         TestReflectionUtils.injectDependencies(octopusInterceptor, authorizationChecker);
     }

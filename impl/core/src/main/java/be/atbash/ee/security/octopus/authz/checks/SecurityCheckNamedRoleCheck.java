@@ -19,9 +19,7 @@ import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
-import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
-import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -29,7 +27,6 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,13 +40,10 @@ public class SecurityCheckNamedRoleCheck implements SecurityCheck {
     private SecurityViolationInfoProducer infoProducer;
 
     @Inject
-    private OctopusCoreConfiguration config;
-
-    @Inject
     private VoterNameFactory nameFactory;
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
         if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
@@ -57,7 +51,7 @@ public class SecurityCheckNamedRoleCheck implements SecurityCheck {
                     new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
-            Set<SecurityViolation> securityViolations = performNamedRoleChecks(securityAnnotation, accessContext);
+            Set<SecurityViolation> securityViolations = performNamedRoleChecks(securityCheckData, accessContext);
             if (!securityViolations.isEmpty()) {
 
                 result = SecurityCheckInfo.withException(
@@ -70,11 +64,12 @@ public class SecurityCheckNamedRoleCheck implements SecurityCheck {
         return result;
     }
 
-    private Set<SecurityViolation> performNamedRoleChecks(Annotation customNamedCheck, AccessDecisionVoterContext context) {
+    private Set<SecurityViolation> performNamedRoleChecks(SecurityCheckData securityCheckData, AccessDecisionVoterContext context) {
         Set<SecurityViolation> result = new HashSet<>();
 
-        for (Object permissionConstant : AnnotationUtil.getRoleValues(customNamedCheck)) {
-            String beanName = nameFactory.generateRoleBeanName(((NamedRole) permissionConstant).name());
+        // FIXME Combine??
+        for (NamedRole permissionConstant : securityCheckData.getRoleValues()) {
+            String beanName = nameFactory.generateRoleBeanName(permissionConstant.name());
 
             GenericPermissionVoter voter = CDIUtils.retrieveInstanceByName(beanName, GenericPermissionVoter.class);
             result.addAll(voter.checkPermission(context));
@@ -84,7 +79,7 @@ public class SecurityCheckNamedRoleCheck implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return config.getNamedRoleCheckClass() != null && config.getNamedRoleCheckClass().isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.NAMED_ROLE;
     }
 }

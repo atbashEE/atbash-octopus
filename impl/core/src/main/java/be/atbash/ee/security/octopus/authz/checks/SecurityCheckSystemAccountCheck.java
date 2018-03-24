@@ -18,13 +18,11 @@ package be.atbash.ee.security.octopus.authz.checks;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountPrincipal;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,12 +36,10 @@ public class SecurityCheckSystemAccountCheck implements SecurityCheck {
     private SecurityViolationInfoProducer infoProducer;
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
-        SystemAccount systemAccount = (SystemAccount) securityAnnotation;
-
-        List<String> identifiers = Arrays.asList(systemAccount.value());
+        List<String> identifiers = Arrays.asList(securityCheckData.getValues());
 
         Object principal = subject.getPrincipal();
         if (principal instanceof SystemAccountPrincipal) {
@@ -66,7 +62,7 @@ public class SecurityCheckSystemAccountCheck implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return SystemAccount.class.isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.SYSTEM_ACCOUNT;
     }
 }

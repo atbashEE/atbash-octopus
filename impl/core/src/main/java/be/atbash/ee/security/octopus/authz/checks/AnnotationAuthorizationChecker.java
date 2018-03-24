@@ -39,6 +39,9 @@ public class AnnotationAuthorizationChecker {
     @Inject
     private AnnotationCheckFactory annotationCheckFactory;
 
+    @Inject
+    private SecurityCheckDataFactory securityCheckDataFactory;
+
     public boolean checkAccess(Set<Annotation> annotations, AccessDecisionVoterContext accessContext) {
         checkDependencies();
         UnauthorizedException exception = null;
@@ -53,7 +56,10 @@ public class AnnotationAuthorizationChecker {
 
                 while (!accessAllowed && annotationIterator.hasNext()) {
                     Annotation annotation = annotationIterator.next();
-                    SecurityCheckInfo checkInfo = annotationCheckFactory.getCheck(annotation).performCheck(subject, accessContext, annotation);
+
+                    SecurityCheckData securityCheckData = securityCheckDataFactory.determineDataFor(annotation);
+
+                    SecurityCheckInfo checkInfo = annotationCheckFactory.getCheck(securityCheckData).performCheck(subject, accessContext, securityCheckData);
                     if (checkInfo.isAccessAllowed()) {
                         accessAllowed = true;
                     }
@@ -78,6 +84,9 @@ public class AnnotationAuthorizationChecker {
                 if (annotationCheckFactory == null) {
                     annotationCheckFactory = new AnnotationCheckFactory();
                     annotationCheckFactory.initChecks();
+
+                    securityCheckDataFactory = new SecurityCheckDataFactory();
+                    securityCheckDataFactory.initDependencies();
                 }
             }
         }

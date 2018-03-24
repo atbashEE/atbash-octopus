@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.authz.annotation.OnlyDuringAuthorization;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
@@ -24,7 +23,6 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 
 /**
  *
@@ -36,7 +34,7 @@ public class SecurityCheckOnlyDuringAuthorization implements SecurityCheck {
     private SecurityViolationInfoProducer infoProducer;
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
         // No longer perform the check on subject.getPrincipal() in case we wan't to log on when another user is already logged on (and no logout is done)
         if (!TemporaryAuthorizationContextManager.isInAuthorization()) {
@@ -51,7 +49,7 @@ public class SecurityCheckOnlyDuringAuthorization implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return OnlyDuringAuthorization.class.isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.ONLY_DURING_AUTHORIZATION;
     }
 }

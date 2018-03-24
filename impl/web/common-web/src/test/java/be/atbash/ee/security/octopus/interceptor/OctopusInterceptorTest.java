@@ -30,7 +30,6 @@ import be.atbash.ee.security.octopus.authz.violation.BasicAuthorizationViolation
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
@@ -82,8 +81,8 @@ public class OctopusInterceptorTest {
     protected static final String ROLE1 = "role1";
     protected static final String ROLE2 = "role2";
 
-    protected SecurityCheckOctopusPermission securityCheckOctopusPermission;
-    protected SecurityCheckOctopusRole securityCheckOctopusRole;
+    protected SecurityCheckRequiresPermissions securityCheckRequiresPermissions;
+    protected SecurityCheckRequiresRoles securityCheckRequiresRoles;
 
     protected static final String AUTHORIZATION_PERMISSION = "Authorization:*:*";
 
@@ -104,9 +103,6 @@ public class OctopusInterceptorTest {
 
     @Mock
     protected AuthorizationInfoProviderHandler authorizationInfoProviderHandlerMock;
-
-    @Mock
-    protected OctopusWebConfiguration octopusWebConfigurationMock;
 
     @Mock
     protected PermissionResolver permissionResolverMock;
@@ -300,27 +296,24 @@ public class OctopusInterceptorTest {
         beanManagerFake.registerBean(securityCheckNamedRoleCheck, SecurityCheck.class);
 
         SecurityCheckCustomVoterCheck securityCheckCustomVoterCheck = new SecurityCheckCustomVoterCheck();
+        TestReflectionUtils.injectDependencies(securityCheckCustomVoterCheck, infoProducerMock);
         beanManagerFake.registerBean(securityCheckCustomVoterCheck, SecurityCheck.class);
-
-        SecurityCheckRequiresPermissions securityCheckRequiresPermissions = new SecurityCheckRequiresPermissions();
-        TestReflectionUtils.injectDependencies(securityCheckRequiresPermissions, infoProducerMock);
-
-        beanManagerFake.registerBean(securityCheckRequiresPermissions, SecurityCheck.class);
 
         SecurityCheckSystemAccountCheck securityCheckSystemAccountCheck = new SecurityCheckSystemAccountCheck();
         TestReflectionUtils.injectDependencies(securityCheckSystemAccountCheck, infoProducerMock);
 
         beanManagerFake.registerBean(securityCheckSystemAccountCheck, SecurityCheck.class);
 
-        securityCheckOctopusPermission = new SecurityCheckOctopusPermission();
-        TestReflectionUtils.injectDependencies(securityCheckOctopusPermission, infoProducerMock);
+        securityCheckRequiresPermissions = new SecurityCheckRequiresPermissions();
+        TestReflectionUtils.injectDependencies(securityCheckRequiresPermissions, infoProducerMock);
+        securityCheckRequiresPermissions.init();
 
-        beanManagerFake.registerBean(securityCheckOctopusPermission, SecurityCheck.class);
+        beanManagerFake.registerBean(securityCheckRequiresPermissions, SecurityCheck.class);
 
-        securityCheckOctopusRole = new SecurityCheckOctopusRole();
-        TestReflectionUtils.injectDependencies(securityCheckOctopusRole, infoProducerMock);
+        securityCheckRequiresRoles = new SecurityCheckRequiresRoles();
+        TestReflectionUtils.injectDependencies(securityCheckRequiresRoles, infoProducerMock);
 
-        beanManagerFake.registerBean(securityCheckOctopusRole, SecurityCheck.class);
+        beanManagerFake.registerBean(securityCheckRequiresRoles, SecurityCheck.class);
     }
 
     @After
@@ -338,7 +331,10 @@ public class OctopusInterceptorTest {
         AnnotationCheckFactory checkFactory = new AnnotationCheckFactory();
         checkFactory.init();
 
-        TestReflectionUtils.injectDependencies(authorizationChecker, checkFactory);
+        SecurityCheckDataFactory securityCheckDataFactory = new SecurityCheckDataFactory();
+        TestReflectionUtils.injectDependencies(securityCheckDataFactory, octopusConfigMock);
+
+        TestReflectionUtils.injectDependencies(authorizationChecker, checkFactory, securityCheckDataFactory);
 
         TestReflectionUtils.injectDependencies(octopusInterceptor, authorizationChecker);
     }

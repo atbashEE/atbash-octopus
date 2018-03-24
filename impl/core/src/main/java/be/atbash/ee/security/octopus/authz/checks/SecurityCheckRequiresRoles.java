@@ -15,16 +15,24 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.authz.AuthorizationException;
-import be.atbash.ee.security.octopus.authz.annotation.RequiresRoles;
+import be.atbash.ee.security.octopus.authz.Combined;
+import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
+import be.atbash.ee.security.octopus.authz.permission.typesafe.RoleLookup;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
+import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -35,25 +43,73 @@ public class SecurityCheckRequiresRoles implements SecurityCheck {
     @Inject
     private SecurityViolationInfoProducer infoProducer;
 
+    private RoleLookup roleLookup;
+
+    private Map<String, RolePermission> permissionCache;
+
+    @PostConstruct
+    public void init() {
+        // StringPermissionProvider is optional.
+        // TODO Check of the getOptionalBean
+        roleLookup = CDIUtils.retrieveOptionalInstance(RoleLookup.class);
+
+        permissionCache = new HashMap<>();
+    }
+
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
-        RequiresRoles requiresRoles = (RequiresRoles) securityAnnotation;
-        String[] roles = requiresRoles.value();
-        try {
-            subject.checkRoles(roles);
-            result = SecurityCheckInfo.allowAccess();
-        } catch (AuthorizationException ae) {
+        if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
             result = SecurityCheckInfo.withException(
-                    new SecurityAuthorizationViolationException("Shiro Roles required", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
+        } else {
+            Set<SecurityViolation> securityViolations = performRoleChecks(securityCheckData, subject, accessContext);
+            if (!securityViolations.isEmpty()) {
+                result = SecurityCheckInfo.withException(
+                        new SecurityAuthorizationViolationException(securityViolations));
+            } else {
+                result = SecurityCheckInfo.allowAccess();
+            }
+        }
+
+        return result;
+    }
+
+    private Set<SecurityViolation> performRoleChecks(SecurityCheckData securityCheckData, Subject subject, AccessDecisionVoterContext accessContext) {
+        Set<SecurityViolation> result = new HashSet<>();
+        Combined permissionCombination = securityCheckData.getPermissionCombination();
+        boolean onePermissionGranted = false;
+        for (String roleName : securityCheckData.getValues()) {
+            RolePermission namedRole = null;
+            if (roleLookup != null) {
+                namedRole = roleLookup.getRole(roleName);
+            }
+            if (namedRole == null) {
+                namedRole = permissionCache.get(roleName);
+                if (namedRole == null) {
+                    namedRole = new RolePermission(roleName);
+                    permissionCache.put(roleName, namedRole);
+                }
+            }
+            if (subject.isPermitted(namedRole)) {
+                onePermissionGranted = true;
+            } else {
+                OctopusInvocationContext invocationContext = accessContext.getSource();
+                result.add(infoProducer.defineViolation(invocationContext, namedRole));
+            }
+        }
+        // When we have specified OR and there is one permissions which didn't result in some violations
+        // Remove all the collected violations since access is granted.
+        if (permissionCombination == Combined.OR && onePermissionGranted) {
+            result.clear();
         }
         return result;
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return RequiresRoles.class.isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.REQUIRES_ROLES;
     }
 }

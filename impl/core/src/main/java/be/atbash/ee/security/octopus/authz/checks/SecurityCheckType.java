@@ -15,15 +15,10 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.subject.Subject;
-import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
-
 /**
  *
  */
-public interface SecurityCheck {
 
-    SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData);
-
-    SecurityCheckType getSecurityCheckType();
+public enum SecurityCheckType {
+    CUSTOM, CUSTOM_VOTER, NAMED_PERMISSION, NAMED_ROLE, ONLY_DURING_AUTHENTICATION, ONLY_DURING_AUTHENTICATION_EVENT, ONLY_DURING_AUTHORIZATION, REQUIRES_AUTHENTICATION, REQUIRES_GUEST, REQUIRES_PERMISSIONS, REQUIRES_ROLES, REQUIRES_USER, SYSTEM_ACCOUNT
 }

@@ -32,9 +32,6 @@
     <version>0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <properties>
-        <deltaspike.version>1.0.0</deltaspike.version>
-    </properties>
     <dependencies>
 
         <dependency>

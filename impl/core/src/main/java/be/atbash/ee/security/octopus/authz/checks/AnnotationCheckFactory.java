@@ -36,12 +36,12 @@ public class AnnotationCheckFactory {
         securityChecks = CDIUtils.retrieveInstances(SecurityCheck.class);
     }
 
-    public SecurityCheck getCheck(Object annotation) {
+    public SecurityCheck getCheck(SecurityCheckData securityCheckData) {
         SecurityCheck result = null;
         Iterator<SecurityCheck> iterator = securityChecks.iterator();
         while (result == null && iterator.hasNext()) {
             SecurityCheck securityCheck = iterator.next();
-            if (securityCheck.hasSupportFor(annotation)) {
+            if (securityCheckData.getSecurityCheckType() == securityCheck.getSecurityCheckType()) {
                 result = securityCheck;
             }
         }
@@ -54,6 +54,7 @@ public class AnnotationCheckFactory {
     public void initChecks() {
         securityChecks = new ArrayList<>();
 
+        // FIXME Additional supported annotations for Java SE
         SecurityCheckRequiresPermissions requiresPermissions = new SecurityCheckRequiresPermissions();
         requiresPermissions.initDependencies();
         securityChecks.add(requiresPermissions);

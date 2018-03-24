@@ -20,10 +20,8 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.voter.AbstractGenericVoter;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
-import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
-import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
@@ -33,7 +31,6 @@ import org.apache.deltaspike.security.spi.authorization.EditableAccessDecisionVo
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,11 +40,10 @@ import java.util.Set;
 @ApplicationScoped
 public class SecurityCheckCustomCheck implements SecurityCheck {
 
-    @Inject
-    private SecurityViolationInfoProducer infoProducer;
+    public static final String ADVANCED_FLAG = "advancedFlag";
 
     @Inject
-    private OctopusCoreConfiguration config;
+    private SecurityViolationInfoProducer infoProducer;
 
     @Inject
     private VoterNameFactory nameFactory;
@@ -59,7 +55,7 @@ public class SecurityCheckCustomCheck implements SecurityCheck {
     private AuthorizingRealm realm;
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
         if (!subject.isAuthenticated()) {
@@ -68,7 +64,7 @@ public class SecurityCheckCustomCheck implements SecurityCheck {
             );
         } else {
             // TODO Check on EditableAccessDecisionVoterContext (maybe check immediatly on OctopusAccessDecisionVoterContext ??)
-            Set<SecurityViolation> securityViolations = performCustomCheck(subject, securityAnnotation, (EditableAccessDecisionVoterContext) accessContext);
+            Set<SecurityViolation> securityViolations = performCustomCheck(subject, securityCheckData, (EditableAccessDecisionVoterContext) accessContext);
             if (!securityViolations.isEmpty()) {
                 result = SecurityCheckInfo.withException(new SecurityAuthorizationViolationException(securityViolations));
             } else {
@@ -79,20 +75,20 @@ public class SecurityCheckCustomCheck implements SecurityCheck {
         return result;
     }
 
-    private Set<SecurityViolation> performCustomCheck(Subject subject, Annotation customCheck, EditableAccessDecisionVoterContext context) {
+    private Set<SecurityViolation> performCustomCheck(Subject subject, SecurityCheckData securityCheckData, EditableAccessDecisionVoterContext context) {
 
-        String beanName = nameFactory.generateCustomCheckBeanName(customCheck.annotationType().getSimpleName());
+        String beanName = nameFactory.generateCustomCheckBeanName(securityCheckData.getClassValue().getSimpleName());
 
         AbstractGenericVoter voter = CDIUtils.retrieveInstanceByName(beanName, AbstractGenericVoter.class);
         if (voter == null) {
             throw new ConfigurationException(String.format("An AbstractGenericVoter CDI bean with name %s cannot be found. Custom check annotation feature requirement", beanName));
         }
 
-        if (!AnnotationUtil.hasAdvancedFlag(customCheck)) {
+        if (!securityCheckData.getParameter(ADVANCED_FLAG, Boolean.FALSE)) {
 
-            String[] permissionStringValue = AnnotationUtil.getStringValues(customCheck);
+            String[] permissionStringValue = securityCheckData.getValues();
             if (permissionStringValue == null || permissionStringValue.length != 1) {
-                throw new IllegalArgumentException(String.format("value member of %s annotation can only have a single String value", customCheck.annotationType().getName()));
+                throw new IllegalArgumentException(String.format("value member of %s annotation can only have a single String value", securityCheckData.getClassValue().getName()));
             }
             Permission permission = permissionResolver.resolvePermission(permissionStringValue[0]);
             context.addMetaData(Permission.class.getName(), realm.getMatchingPermissions(subject, permission));
@@ -104,7 +100,7 @@ public class SecurityCheckCustomCheck implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return config.getCustomCheckClass() != null && config.getCustomCheckClass().isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.CUSTOM;
     }
 }

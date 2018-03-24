@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.authz.annotation.RequiresAuthentication;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
@@ -23,7 +22,6 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 
 /**
  *
@@ -35,7 +33,7 @@ public class SecurityCheckRequiresAuthentication implements SecurityCheck {
     private SecurityViolationInfoProducer infoProducer;
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
         if (!subject.isAuthenticated()) {
@@ -50,7 +48,7 @@ public class SecurityCheckRequiresAuthentication implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return RequiresAuthentication.class.isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.REQUIRES_AUTHENTICATION;
     }
 }

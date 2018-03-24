@@ -400,7 +400,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
 
         finishCDISetup();
 
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);
@@ -425,8 +425,8 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         InvocationContext context = new TestInvocationContext(target, method);
 
         finishCDISetup();
-        securityCheckOctopusRole.init();
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresRoles.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);

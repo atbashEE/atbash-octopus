@@ -15,16 +15,24 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.authz.AuthorizationException;
-import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
+import be.atbash.ee.security.octopus.authz.Combined;
+import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
+import be.atbash.ee.security.octopus.authz.permission.StringPermissionLookup;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
+import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -35,29 +43,82 @@ public class SecurityCheckRequiresPermissions implements SecurityCheck {
     @Inject
     private SecurityViolationInfoProducer infoProducer;
 
+    private StringPermissionLookup stringPermissionLookup;
+
+    private Map<String, NamedDomainPermission> permissionCache = new HashMap<>();
+
+    @PostConstruct
+    public void init() {
+        // StringPermissionProvider is optional, created by a Producer.
+        // FIXME Verify if this is now covered (There was in previous version a specific handling for producers of optional instances.
+        stringPermissionLookup = CDIUtils.retrieveOptionalInstance(StringPermissionLookup.class);
+    }
+
     public void initDependencies() {
         infoProducer = new SecurityViolationInfoProducer();
+        // FIXME StringPermissionLookup in Java SE ?
     }
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
-        RequiresPermissions requiresPermissions = (RequiresPermissions) securityAnnotation;
-        String[] permissions = requiresPermissions.value();
-        try {
-            subject.checkPermissions(permissions);
-            result = SecurityCheckInfo.allowAccess();
-        } catch (AuthorizationException ae) {
+        if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
             result = SecurityCheckInfo.withException(
-                    new SecurityAuthorizationViolationException("User has not required Permission", infoProducer.getViolationInfo(accessContext))
+                    new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
+        } else {
+            Set<SecurityViolation> securityViolations = performPermissionChecks(securityCheckData, subject, accessContext);
+            if (!securityViolations.isEmpty()) {
+                result = SecurityCheckInfo.withException(
+                        new SecurityAuthorizationViolationException(securityViolations));
+            } else {
+                result = SecurityCheckInfo.allowAccess();
+            }
+        }
+
+        return result;
+    }
+
+    private Set<SecurityViolation> performPermissionChecks(SecurityCheckData securityCheckData, Subject subject, AccessDecisionVoterContext accessContext) {
+        Set<SecurityViolation> result = new HashSet<>();
+
+        Combined permissionCombination = securityCheckData.getPermissionCombination();
+        boolean onePermissionGranted = false;
+        NamedDomainPermission permission;
+        for (String permissionString : securityCheckData.getValues()) {
+            if (stringPermissionLookup != null) {
+                permission = stringPermissionLookup.getPermission(permissionString);
+                // TODO What if we specify a String value which isn't defined in the lookup?
+            } else {
+                permission = permissionCache.get(permissionString);
+                if (permission == null) {
+                    if (!permissionString.contains(":")) {
+                        permissionString += ":*:*";
+                    }
+                    permission = new NamedDomainPermission(StringPermissionLookup.createNameForPermission(permissionString), permissionString);
+                    permissionCache.put(permissionString, permission);
+                }
+
+            }
+
+            if (subject.isPermitted(permission)) {
+                onePermissionGranted = true;
+            } else {
+                OctopusInvocationContext invocationContext = accessContext.getSource();
+                result.add(infoProducer.defineViolation(invocationContext, permission));
+            }
+        }
+        // When we have specified OR and there is one permissions which didn't result in some violations
+        // Remove all the collected violations since access is granted.
+        if (permissionCombination == Combined.OR && onePermissionGranted) {
+            result.clear();
         }
         return result;
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return RequiresPermissions.class.isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.REQUIRES_PERMISSIONS;
     }
 }

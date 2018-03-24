@@ -68,7 +68,7 @@ public class OctopusInterceptor_ClassLevelOctopusPermissionWildCardTest extends 
 
         finishCDISetup();
 
-        securityCheckOctopusPermission.init();
+        securityCheckRequiresPermissions.init();
 
         try {
             octopusInterceptor.interceptForSecurity(context);

@@ -22,7 +22,6 @@ import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolat
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
-import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
@@ -30,7 +29,6 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +48,7 @@ public class SecurityCheckNamedPermissionCheck implements SecurityCheck {
     private VoterNameFactory nameFactory;
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
         if (!subject.isAuthenticated() && !subject.isRemembered()) {  // When login from remember me, the isAuthenticated return false
@@ -58,7 +56,7 @@ public class SecurityCheckNamedPermissionCheck implements SecurityCheck {
                     new SecurityAuthorizationViolationException("User required", infoProducer.getViolationInfo(accessContext))
             );
         } else {
-            Set<SecurityViolation> securityViolations = performNamedPermissionChecks(securityAnnotation, accessContext);
+            Set<SecurityViolation> securityViolations = performNamedPermissionChecks(securityCheckData, accessContext);
             if (!securityViolations.isEmpty()) {
                 result = SecurityCheckInfo.withException(
                         new SecurityAuthorizationViolationException(securityViolations));
@@ -70,13 +68,13 @@ public class SecurityCheckNamedPermissionCheck implements SecurityCheck {
         return result;
     }
 
-    private Set<SecurityViolation> performNamedPermissionChecks(Annotation customNamedCheck, AccessDecisionVoterContext context) {
+    private Set<SecurityViolation> performNamedPermissionChecks(SecurityCheckData securityCheckData, AccessDecisionVoterContext context) {
         Set<SecurityViolation> result = new HashSet<>();
 
-        Combined permissionCombination = AnnotationUtil.getPermissionCombination(customNamedCheck);
+        Combined permissionCombination = securityCheckData.getPermissionCombination();
         boolean onePermissionGranted = false;
-        for (Object permissionConstant : AnnotationUtil.getPermissionValues(customNamedCheck)) {
-            String beanName = nameFactory.generatePermissionBeanName(((NamedPermission) permissionConstant).name());
+        for (NamedPermission permissionConstant : securityCheckData.getPermissionValues()) {
+            String beanName = nameFactory.generatePermissionBeanName(permissionConstant.name());
 
             GenericPermissionVoter voter = CDIUtils.retrieveInstanceByName(beanName, GenericPermissionVoter.class);
             Set<SecurityViolation> violations = voter.checkPermission(context);
@@ -95,7 +93,7 @@ public class SecurityCheckNamedPermissionCheck implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return config.getNamedPermissionCheckClass() != null && config.getNamedPermissionCheckClass().isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.NAMED_PERMISSION;
     }
 }

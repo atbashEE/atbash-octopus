@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.authz.checks;
 
-import be.atbash.ee.security.octopus.authz.annotation.CustomVoterCheck;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
@@ -26,7 +25,6 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,13 +35,13 @@ import java.util.Set;
 public class SecurityCheckCustomVoterCheck implements SecurityCheck {
 
     @Inject
-    private SecurityViolationInfoProducer infoProducer;
+    private SecurityViolationInfoProducer infoProducer;  // FIXME Why is this not used
 
     @Override
-    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, Annotation securityAnnotation) {
+    public SecurityCheckInfo performCheck(Subject subject, AccessDecisionVoterContext accessContext, SecurityCheckData securityCheckData) {
         SecurityCheckInfo result;
 
-        Set<SecurityViolation> securityViolations = performCustomChecks((CustomVoterCheck) securityAnnotation, accessContext);
+        Set<SecurityViolation> securityViolations = performCustomChecks(securityCheckData, accessContext);
         if (!securityViolations.isEmpty()) {
 
             result = SecurityCheckInfo.withException(
@@ -56,10 +54,11 @@ public class SecurityCheckCustomVoterCheck implements SecurityCheck {
         return result;
     }
 
-    private Set<SecurityViolation> performCustomChecks(CustomVoterCheck customCheck, AccessDecisionVoterContext context) {
+    private Set<SecurityViolation> performCustomChecks(SecurityCheckData securityCheckData, AccessDecisionVoterContext context) {
         Set<SecurityViolation> result = new HashSet<>();
-        for (Class<? extends AbstractAccessDecisionVoter> clsName : customCheck.value()) {
-            AbstractAccessDecisionVoter voter = CDIUtils.retrieveInstance(clsName);
+        for (Class<?> clsName : securityCheckData.getClassValues()) {
+            // We are sure that this are all AbstractAccessDecisionVoter classes since they come from be.atbash.ee.security.octopus.authz.annotation.CustomVoterCheck.value
+            AbstractAccessDecisionVoter voter = (AbstractAccessDecisionVoter) CDIUtils.retrieveInstance(clsName);
             result.addAll(voter.checkPermission(context));
         }
 
@@ -67,7 +66,7 @@ public class SecurityCheckCustomVoterCheck implements SecurityCheck {
     }
 
     @Override
-    public boolean hasSupportFor(Object annotation) {
-        return CustomVoterCheck.class.isAssignableFrom(annotation.getClass());
+    public SecurityCheckType getSecurityCheckType() {
+        return SecurityCheckType.CUSTOM_VOTER;
     }
 }
