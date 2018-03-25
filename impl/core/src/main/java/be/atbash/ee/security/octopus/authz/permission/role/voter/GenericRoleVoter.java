@@ -70,16 +70,25 @@ public class GenericRoleVoter extends AbstractAccessDecisionVoter {
      *
      * @param namedRole The role to verify/check
      */
-
     public void setNamedRole(ApplicationRole namedRole) {
         if (namedRole == null) {
             throw new AtbashIllegalActionException("(OCT-DEV-008) namedRole can't be null");  // FIXME See how this can be null (used from Extension)
         }
-        if (this.permission != null) {
+        if (permission != null) {
             throw new AtbashIllegalActionException("(OCT-DEV-009) SimpleNamedRole already set and not allowed to change it.");
         }
 
-        this.permission = new RolePermission(namedRole.name());
+        permission = new RolePermission(namedRole.name());
+    }
+
+    public void setNamedRole(RolePermission namedRole) {
+        if (namedRole == null) {
+            throw new AtbashIllegalActionException("(OCT-DEV-008) namedRole can't be null");  // FIXME See how this can be null (used from Extension)
+        }
+        if (permission != null) {
+            throw new AtbashIllegalActionException("(OCT-DEV-009) SimpleNamedRole already set and not allowed to change it.");
+        }
+        permission = namedRole;
     }
 
     @Override

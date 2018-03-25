@@ -26,12 +26,12 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>login-jsf</artifactId>
+    <artifactId>authz</artifactId>
     <version>0.3-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <build>
-        <finalName>login_jsf</finalName>
+        <finalName>authz</finalName>
     </build>
 
     <properties>

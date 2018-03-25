@@ -15,4 +15,5 @@
 #
 #####################################################################################
 
-be.atbash.ee.security.octopus.subject.SubjectResolverWeb
+be.atbash.ee.security.octopus.OctopusExtension
+

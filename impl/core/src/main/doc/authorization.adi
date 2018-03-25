@@ -76,6 +76,46 @@ When the default checks on permissions or not enough. It can be that more comple
 
 Typically the injection of voters is performed within these custom voters.
 
+=== NamedPermissions
+
+Using type safe enums for permissions names can be handy for small to medium sized applications. For large scale or Self-Contained Systems, it is probably no the best way.
+
+The idea is that you specify the name of the permission using an Enum, something like.
+
+----
+public enum DemoPermission implements NamedPermission {
+    BASIC_PERMISSION, ADVANCED_PERMISSION
+}
+----
+
+These names (like _BASIC_PERMISSION_ can be used within JSF custom tags or the _namedFilter_ filter.
+
+For EJB, you have the possibility to create a special annotation which allow you to define the authorization requirements.
+
+----
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DemoPermissionCheck {
+    DemoPermission[] value();
+}
+----
+
+In order make this work, you need to provide Octopus with the information of these custom constructs by specifying the following configuration values within the _octopusConfig.properties_ file.
+
+----
+namedPermission.class=be.atbash.ee.security.octopus.jsf.security.DemoPermission
+namedPermissionCheck.class=be.atbash.ee.security.octopus.jsf.security.DemoPermissionCheck
+----
+
+Now, EJB methods can be secured (authorized) by using
+
+----
+    @DemoPermissionCheck(DemoPermission.BASIC_PERMISSION)
+    public String doBasicAction() {
+        return "Basic Action Method called";
+    }
+----
+
 === Custom tags
 
 Custom tags are created to perform declarative authorization on JSF components. These are defined in the namespace

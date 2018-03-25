@@ -39,13 +39,14 @@
         <module>basic</module>
         <module>login_jsf</module>
         <module>secure-tags</module>
+        <module>authz</module>
         <module>rest-main</module>
         <module>rest-mp</module>
     </modules>
 
-    <dependencies>
-
-    </dependencies>
+    <properties>
+        <deltaspike.example.version>1.8.1</deltaspike.example.version>
+    </properties>
     <build>
         <plugins>
 
