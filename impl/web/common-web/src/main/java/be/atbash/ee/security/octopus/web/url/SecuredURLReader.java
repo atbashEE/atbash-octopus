@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.web.url;
 
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
+import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.util.ResourceUtils;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
@@ -26,10 +27,7 @@ import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Responsible for reading the secured URL info.
@@ -50,13 +48,14 @@ public class SecuredURLReader {
             // already loaded.
             return;
         }
-        urlPatterns = new HashMap<>();
-        urlPatterns.putAll(readPatternsFromFile(servletContext));
+        urlPatterns = new LinkedHashMap<>();
+        // Patterns from code should become first so that we can always enforce some protection defined within modules
         urlPatterns.putAll(readPatternsFromCode());
+        urlPatterns.putAll(readPatternsFromFile(servletContext));
     }
 
     private Map<String, String> readPatternsFromCode() {
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new LinkedHashMap<>();
 
         List<ProgrammaticURLProtectionProvider> urlProtectionProviders = CDIUtils.retrieveInstances(ProgrammaticURLProtectionProvider.class);
 
@@ -68,19 +67,38 @@ public class SecuredURLReader {
     }
 
     private Map<String, String> readPatternsFromFile(ServletContext servletContext) {
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new LinkedHashMap<>();
         try {
+
             InputStream inStream = ResourceUtils.getInputStream(servletContext, octopusWebConfiguration.getLocationSecuredURLProperties());
             if (inStream != null) {
-                Properties properties = new Properties();
-                properties.load(inStream);
-                for (String pattern : properties.stringPropertyNames()) {
-                    result.put(pattern, properties.getProperty(pattern));
+                List<String> lines = readFile(inStream);
+
+                for (String line : lines) {
+                    String trimmedLine = line.trim();
+                    if (!trimmedLine.isEmpty() && !trimmedLine.startsWith("#")) {
+                        String[] parts = trimmedLine.split("=", 2);
+                        if (parts.length == 2) {
+                            result.put(parts[0].trim(), parts[1].trim());
+                        } else {
+                            throw new ConfigurationException(String.format("Wrong line within %s file -> %s", octopusWebConfiguration.getLocationSecuredURLProperties(), trimmedLine));
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
             throw new AtbashUnexpectedException(e);
         }
+        return result;
+    }
+
+    private List<String> readFile(InputStream inStream) {
+        List<String> result = new ArrayList<>();
+        Scanner scanner = new Scanner(inStream);
+        while (scanner.hasNextLine()) {
+            result.add(scanner.nextLine());
+        }
+        scanner.close();
         return result;
     }
 

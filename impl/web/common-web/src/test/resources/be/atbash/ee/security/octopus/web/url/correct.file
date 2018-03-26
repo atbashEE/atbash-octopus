@@ -1,0 +1,8 @@
+#Comment
+url1=value1
+
+ url2 = value2
+
+ # This comment is also ok.
+
+url3 = value with = is supported
