@@ -48,6 +48,8 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        prepareAuthorizationInfoProviderHandler();
+
         class Guard {
         }
         TemporaryAuthorizationContextManager.startInAuthorization(Guard.class);
@@ -62,9 +64,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
                 //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
             }
             */
-            // FIXME Do we need this doGetAuthorizationInfo for offlineRealm. Isn't it always the case
-            // that AuthorizationToken concept is used.
-            authorizationInfo = null;
+            authorizationInfo = authorizationInfoProviderHandler.retrieveAuthorizationInfo(principals);
         } finally {
             TemporaryAuthorizationContextManager.stopInAuthorization();
         }
@@ -123,10 +123,8 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
     }
 
     private void prepareAuthorizationInfoProviderHandler() {
-        // FIXME Not used but should!!
         if (authorizationInfoProviderHandler == null) {
             authorizationInfoProviderHandler = new AuthorizationInfoProviderHandler();
-
         }
     }
 
