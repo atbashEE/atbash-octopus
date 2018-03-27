@@ -81,7 +81,10 @@ public class AuthorizationExceptionHandler extends ExceptionHandlerWrapper {
         if (unauthorized instanceof SecurityAuthorizationViolationException) {
 
             String exceptionPointInfo = ((SecurityAuthorizationViolationException) unauthorized).getExceptionPointInfo();
-            externalContext.getFlash().putNow("interceptionInfo", exceptionPointInfo.replaceAll("\n", "<br/>"));
+            if (exceptionPointInfo != null) {
+                exceptionPointInfo = exceptionPointInfo.replaceAll("\n", "<br/>");
+            }
+            externalContext.getFlash().putNow("interceptionInfo", exceptionPointInfo);
         }
         try {
             OctopusJSFConfiguration config = CDIUtils.retrieveInstance(OctopusJSFConfiguration.class);
