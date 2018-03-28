@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?scenebuilder-stylesheet vista.css?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox prefHeight="200.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="be.atbash.ee.security.octopus.javafx.view.MainPresenter">
+    <children>
+        <StackPane fx:id="vistaHolder" VBox.vgrow="ALWAYS"/>
+    </children>
+</VBox>

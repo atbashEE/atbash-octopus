@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import be.atbash.ee.security.octopus.javafx.authz.tag.RequiresPermissions?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane id="AnchorPane" minHeight="180.0" prefHeight="289.0" prefWidth="525.0" styleClass="airpad"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="be.atbash.ee.security.octopus.javafx.UserPagePresenter">
+    <children>
+        <VBox>
+            <Label text="Octopus Demo" style="-fx-font-weight: bold"/>
+            <HBox>
+                <Button fx:id="everyone" mnemonicParsing="false" onAction="#everyone" text="Everyone"/>
+                <Button mnemonicParsing="false" onAction="#permission" text="Only admin permission">
+                    <userData>
+                        <RequiresPermissions value="admin"/>
+                    </userData>
+                </Button>
+                <Button text="Logout" onAction="#logout"/>
+
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>
