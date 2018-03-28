@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -373,7 +373,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
             return null;
         }
         String[] authTokens = authorizationHeader.split(" ");
-        if (authTokens == null || authTokens.length < 2) {
+        if (authTokens.length < 2) {
             return null;
         }
         return getPrincipalsAndCredentials(authTokens[0], authTokens[1]);

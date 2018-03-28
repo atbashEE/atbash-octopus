@@ -123,11 +123,10 @@ public class UsernamePasswordToken implements AuthenticationToken {
      * the password.
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getName());
-        sb.append(" - ");
-        sb.append(username);
-        return sb.toString();
+        String sb = getClass().getName() +
+                " - " +
+                username;
+        return sb;
     }
 
 }

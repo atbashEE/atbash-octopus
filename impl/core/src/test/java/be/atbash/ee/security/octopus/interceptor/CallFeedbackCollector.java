@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public final class CallFeedbackCollector {
 
-    private static Set<String> calledMethods = new HashSet<String>();
+    private static Set<String> calledMethods = new HashSet<>();
 
     private CallFeedbackCollector() {
     }
@@ -39,6 +39,6 @@ public final class CallFeedbackCollector {
     }
 
     public static List<String> getCallFeedback() {
-        return new ArrayList<String>(calledMethods);
+        return new ArrayList<>(calledMethods);
     }
 }

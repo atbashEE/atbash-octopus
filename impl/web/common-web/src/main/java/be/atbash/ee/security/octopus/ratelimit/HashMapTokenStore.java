@@ -47,7 +47,7 @@ public class HashMapTokenStore implements TokenStore {
      * Creates a new {@link HashMapTokenStore}.
      */
     public HashMapTokenStore() {
-        this.cache = new ConcurrentHashMap<String, StoreEntry>();
+        this.cache = new ConcurrentHashMap<>();
         ReadWriteLock lock = new ReentrantReadWriteLock();
         this.r = lock.readLock();
         this.w = lock.writeLock();

@@ -28,7 +28,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
                             </rowConstraints>
                         </GridPane>
-                        <StackPane prefHeight="-1.0" prefWidth="-1.0">
+                        <StackPane>
                             <children>
                                 <Button fx:id="loginButton" alignment="CENTER" defaultButton="true"
                                         mnemonicParsing="false" text="Login" StackPane.alignment="CENTER_RIGHT"/>

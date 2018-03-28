@@ -190,7 +190,7 @@ public class OctopusExtension implements Extension {
     }
 
     private <T> T getUnmanagedInstance(BeanManager beanManager, Class<T> beanClass) {
-        Unmanaged<T> unmanagedConfig = new Unmanaged<T>(beanManager, beanClass);
+        Unmanaged<T> unmanagedConfig = new Unmanaged<>(beanManager, beanClass);
         Unmanaged.UnmanagedInstance<? extends T> configInstance = unmanagedConfig.newInstance();
         return configInstance.produce().inject().postConstruct().get();
     }

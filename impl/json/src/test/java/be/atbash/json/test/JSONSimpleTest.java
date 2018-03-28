@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class JSONSimpleTest {
         String s = "[1]";
         JSONParser p = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertEquals(Long.valueOf(1), array.get(0));
+        assertEquals(1L, array.get(0));
         // FIXME, wrong test on the type
     }
 
@@ -37,7 +37,7 @@ public class JSONSimpleTest {
         String s = "[1]";
         JSONParser p = new JSONParser(JSONParser.MODE_PERMISSIVE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertEquals(Integer.valueOf(1), array.get(0));
+        assertEquals(1, array.get(0));
         // FIXME, wrong test on the type
     }
 }

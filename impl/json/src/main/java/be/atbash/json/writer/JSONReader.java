@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ public class JSONReader {
         }
         /*
          * Special handle
-		 */
+         */
         if (type instanceof Class) {
             if (Map.class.isAssignableFrom(type)) {
                 map = new DefaultMapperCollection<>(this, type);
@@ -139,7 +139,7 @@ public class JSONReader {
             MappedBy mappedBy = type.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
                 if (!(mappedBy.mapper().equals(CustomMapper.NOPCustomMapper.class))) {
-                    map = (Mapper<T>) ClassUtils.newInstance(mappedBy.mapper(), this);
+                    map = ClassUtils.newInstance(mappedBy.mapper(), this);
                 }
             }
             if (map == null) {
