@@ -15,21 +15,24 @@
  */
 package be.atbash.ee.security.octopus.jsf.view;
 
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
+import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 
-import javax.enterprise.inject.Model;
-import javax.inject.Inject;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  */
-@Model
-public class UserBean {
+@ApplicationScoped
+public class InterceptedBean {
 
-    @Inject
-    private UserPrincipal userPrincipal;
+    @RequiresUser
+    public void executeWithRequiredUser() {
+        System.out.println("executeWithRequiredUser");
+    }
 
-    public String getName() {
-        return userPrincipal.getName();
+    @RequiresPermissions("unknown")
+    public void executeWithPermission() {
+        System.out.println("executeWithPermission");
     }
 }

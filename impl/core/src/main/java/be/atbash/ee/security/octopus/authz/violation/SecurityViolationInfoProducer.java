@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
 import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
+import be.atbash.util.ProxyUtils;
 import be.atbash.util.PublicAPI;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
@@ -82,9 +83,9 @@ public class SecurityViolationInfoProducer {
         StringBuilder result = new StringBuilder();
 
         if (invocationContext.getTarget() instanceof Class) {
-            result.append("Class ").append(((Class<?>) invocationContext.getTarget()).getName());
+            result.append("Class ").append(ProxyUtils.getClassName((Class<?>) invocationContext.getTarget()));
         } else {
-            result.append("Class ").append(invocationContext.getTarget().getClass().getName());
+            result.append("Class ").append(ProxyUtils.getClassName(invocationContext.getTarget().getClass()));
         }
         result.append("\nMethod ");
         if (invocationContext.getMethod() != null) {

@@ -24,7 +24,6 @@ import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 
-import javax.ejb.Asynchronous;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -71,6 +70,8 @@ public class OctopusInterceptor extends AbstractOctopusInterceptor implements Se
     }
 
     private void supportForAsynchronousEJB(InvocationContext context, Method method) {
+        // FIXME How can we support this as the interceptor must be useable in plain CDI
+        /*
         Asynchronous asynchronous = method.getAnnotation(Asynchronous.class);
         if (asynchronous != null) {
             throw new UnsupportedOperationException("FIXME Implement");
@@ -82,8 +83,8 @@ public class OctopusInterceptor extends AbstractOctopusInterceptor implements Se
                     ThreadContext.bind(subject);
                 }
             }
-                */
-        }
+
+        }*/
     }
 
 }

@@ -6,8 +6,6 @@
 
 Can be used to protect the execution of an EJB method. User (subject) must have the permission before method is executed.
 
-// TODO Verify if it is also usable for CDI methods.
-
     String[] value()
 
 Supply the permission(s) wildcard or named permission. See Permission chapter.
@@ -27,6 +25,50 @@ Can be used to protect the execution of an EJB method. User (subject) must have 
     String[] value()
 
 Supply the role name(s). See Permission chapter.
+
+==== within EJB
+
+Create a ejb-jar.xml with the following content to protect all methods within all EJB beans
+
+----
+    <interceptors>
+        <interceptor>
+            <interceptor-class>be.atbash.ee.security.octopus.interceptor.OctopusInterceptor</interceptor-class>
+        </interceptor>
+    </interceptors>
+    <assembly-descriptor>
+        <interceptor-binding>
+            <ejb-name>*</ejb-name>
+            <interceptor-class>be.atbash.ee.security.octopus.interceptor.OctopusInterceptor</interceptor-class>
+        </interceptor-binding>
+    </assembly-descriptor>
+----
+
+The interceptor can also be added manually to the beans by putting the _@OctopusInterceptorBinding_ annotation.
+
+==== within CDI
+
+Activate the CDI interceptor to add interceptor to CDI beans by defining the config parameter
+
+----
+cdi.interceptor.enabled=true
+----
+
+Define the regex of _ApplicationScoped_ CDI beans which needs to have the _OctopusInterceptor_ within the file _/resources/octopusInterceptor.config_ or the file defined by the parameter _cdi.interceptor.configfile_
+
+----
+be.atbash.ee.security.octopus.jsf.*
+----
+
+Activate the Octopus interceptor within the _beans.xml file
+
+----
+    <interceptors>
+        <class>be.atbash.ee.security.octopus.interceptor.OctopusInterceptor</class>
+    </interceptors>
+----
+
+Another option is adding the _@OctopusInterceptorBinding_ annotation to those beans which needs to be verified. Beware that the activation of the interceptor within _beans.xml_ is also required in this case.
 
 === Voters
 

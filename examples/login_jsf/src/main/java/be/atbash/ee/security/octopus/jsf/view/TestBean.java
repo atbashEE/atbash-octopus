@@ -29,7 +29,12 @@ public class TestBean {
     @Inject
     private TestBoundary testBoundary;
 
+    @Inject
+    private InterceptedBean interceptedBean;
+
     public void testAuthorization() {
-        testBoundary.doSomething();
+        //testBoundary.doSomething();
+        interceptedBean.executeWithRequiredUser();
+        interceptedBean.executeWithPermission();
     }
 }

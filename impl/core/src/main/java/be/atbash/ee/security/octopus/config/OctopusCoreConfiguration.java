@@ -190,7 +190,13 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         return getOptionalValue("cacheManager.class", MemoryConstrainedCacheManager.class, Class.class);
     }
 
-    // Java SE Support
+    // CDI Interceptor / interdyn
+    @ConfigEntry
+    public String getCDIInterceptorConfigFile() {
+        return getOptionalValue("cdi.interceptor.configfile", "classpath:octopusInterceptor.config", String.class);
+    }
+
+    // Java SE Support + Used in CDI Extension
     private static OctopusCoreConfiguration INSTANCE;
 
     private static final Object LOCK = new Object();

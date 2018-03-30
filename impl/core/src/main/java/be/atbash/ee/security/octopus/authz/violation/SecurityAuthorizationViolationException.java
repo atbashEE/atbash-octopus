@@ -78,6 +78,10 @@ public class SecurityAuthorizationViolationException extends UnauthorizedExcepti
         return exceptionPointInfo;
     }
 
+    public String getLogMessage() {
+        return message + " " + exceptionPointInfo;
+    }
+
     public static Throwable getUnauthorizedException(Throwable someException) {
         // TODO Review reason?
         Throwable result = null;

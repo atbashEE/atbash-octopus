@@ -20,6 +20,8 @@ import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.ee.security.octopus.subject.Subject;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
@@ -35,6 +37,8 @@ import java.util.Set;
 public class AnnotationAuthorizationChecker {
 
     private static final Object LOCK = new Object();
+
+    private Logger logger = LoggerFactory.getLogger(AnnotationAuthorizationChecker.class);
 
     @Inject
     private AnnotationCheckFactory annotationCheckFactory;
@@ -70,6 +74,7 @@ public class AnnotationAuthorizationChecker {
                 }
             }
             if (!accessAllowed && exception != null) {
+                logger.warn(exception.getLogMessage());
                 throw exception;
             }
         }

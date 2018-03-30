@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.authc;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import org.slf4j.Logger;
@@ -206,6 +207,11 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
             if (ae == null) {
                 //Exception thrown was not an expected AuthenticationException.  Therefore it is probably a little more
                 //severe or unexpected.  So, wrap in an AuthenticationException, log to warn, and propagate:
+                if (t instanceof SecurityAuthorizationViolationException) {
+                    log.warn(((SecurityAuthorizationViolationException) t).getLogMessage());
+                } else {
+                    log.warn(t.getMessage());
+                }
                 String msg = "Authentication failed for token submission [" + token + "].  Possible unexpected " +
                         "error? (Typical or expected login exceptions should extend from AuthenticationException).";
                 ae = new AuthenticationException(msg, t);

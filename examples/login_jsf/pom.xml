@@ -66,6 +66,13 @@
             <version>${atbash-config.version}</version>
         </dependency>
 
+        <!-- due to different version from different dependencies :) -->
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config</artifactId>
+            <version>${atbash-config.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
