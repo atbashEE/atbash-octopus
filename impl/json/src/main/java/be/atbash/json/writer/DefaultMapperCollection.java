@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ package be.atbash.json.writer;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import be.atbash.util.exception.AtbashIllegalActionException;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -62,7 +64,7 @@ public class DefaultMapperCollection<T> extends Mapper<T> {
             Constructor<T> c = clz.getConstructor();
             return c.newInstance();
         } catch (Exception e) {
-            return null;
+            throw new AtbashIllegalActionException(String.format("Instantiation of %s failed: %s", clz.getName(), e.getMessage()));
         }
     }
 
