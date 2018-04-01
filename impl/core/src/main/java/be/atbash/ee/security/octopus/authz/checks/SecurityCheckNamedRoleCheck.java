@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
+import be.atbash.ee.security.octopus.authz.permission.role.voter.GenericRoleVoter;
 import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
@@ -71,7 +72,7 @@ public class SecurityCheckNamedRoleCheck implements SecurityCheck {
         for (NamedRole permissionConstant : securityCheckData.getRoleValues()) {
             String beanName = nameFactory.generateRoleBeanName(permissionConstant.name());
 
-            GenericPermissionVoter voter = CDIUtils.retrieveInstanceByName(beanName, GenericPermissionVoter.class);
+            GenericRoleVoter voter = CDIUtils.retrieveInstanceByName(beanName, GenericRoleVoter.class);
             result.addAll(voter.checkPermission(context));
 
         }
