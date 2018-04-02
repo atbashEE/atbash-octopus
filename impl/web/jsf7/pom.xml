@@ -48,6 +48,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
+        <dependency>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
@@ -61,14 +69,6 @@
             <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
