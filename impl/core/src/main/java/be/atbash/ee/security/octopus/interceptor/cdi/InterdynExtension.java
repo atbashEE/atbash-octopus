@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.interceptor.cdi;
 
-import be.atbash.config.ConfigOptionalValue;
 import be.atbash.config.util.ResourceUtils;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProvider;
@@ -91,10 +90,7 @@ public class InterdynExtension implements Extension {
         if (initialized) {
             return;
         }
-        Boolean interceptorEnabled = ConfigOptionalValue.getValue("cdi.interceptor.enabled", Boolean.class);
-        if (interceptorEnabled != null && interceptorEnabled) {
-            enabled = true;
-        }
+        enabled = OctopusCoreConfiguration.getInstance().getCDIInterceptorActive();
         if (enabled) {
 
             String configFile = OctopusCoreConfiguration.getInstance().getCDIInterceptorConfigFile();

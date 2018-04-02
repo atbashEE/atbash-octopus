@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.AbstractConfiguration;
+import be.atbash.config.ConfigOptionalValue;
 import be.atbash.config.exception.ConfigurationException;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
@@ -191,6 +192,12 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
     }
 
     // CDI Interceptor / interdyn
+    @ConfigEntry
+    public boolean getCDIInterceptorActive() {
+        Boolean interceptorEnabled = ConfigOptionalValue.getValue("cdi.interceptor.enabled", Boolean.class);
+        return interceptorEnabled != null && interceptorEnabled;
+    }
+
     @ConfigEntry
     public String getCDIInterceptorConfigFile() {
         return getOptionalValue("cdi.interceptor.configfile", "classpath:octopusInterceptor.config", String.class);
