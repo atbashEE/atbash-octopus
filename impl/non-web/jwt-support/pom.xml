@@ -51,7 +51,7 @@
         <dependency>
             <groupId>be.atbash.json</groupId>
             <artifactId>octopus-json-smart</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${atbash-json.version}</version>
         </dependency>
 
         <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
