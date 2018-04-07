@@ -15,13 +15,13 @@
  */
 package be.atbash.ee.security.octopus.authz.permission;
 
-import be.atbash.json.parser.JSONEncoder;
+import be.atbash.json.parser.CustomJSONEncoder;
 
 /**
  *
  */
 
-public class PermissionEncoder implements JSONEncoder{
+public class PermissionEncoder implements CustomJSONEncoder {
 
     @Override
     public Object parse(Object data) {

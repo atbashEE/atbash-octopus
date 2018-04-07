@@ -15,14 +15,14 @@
  */
 package be.atbash.ee.security.octopus.token;
 
-import be.atbash.json.writer.CustomBeanMapper;
-import be.atbash.json.writer.JSONReader;
+import be.atbash.json.parser.reader.JSONReader;
+import be.atbash.json.writer.CustomBeanJSONEncoder;
 
 /**
  *
  */
 
-public class MPJWTTokenMapper extends CustomBeanMapper<MPJWTToken> {
+public class MPJWTTokenMapper extends CustomBeanJSONEncoder<MPJWTToken> {
 
     /**
      * Reader can be link to the JsonReader Base
@@ -36,5 +36,11 @@ public class MPJWTTokenMapper extends CustomBeanMapper<MPJWTToken> {
     @Override
     public void setCustomValue(MPJWTToken current, String key, Object value) {
         current.addAdditionalClaims(key, value.toString());
+    }
+
+    @Override
+    public Object parse(Object o) {
+        // FIXME, solve in octopus-json
+        return null;
     }
 }
