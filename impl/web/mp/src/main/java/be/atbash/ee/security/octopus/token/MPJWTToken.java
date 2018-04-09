@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Represent the MP Auth token (can be used in a
  */
-@MappedBy(encoder = MPJWTTokenMapper.class)
+@MappedBy(beanEncoder = MPJWTTokenMapper.class)
 public class MPJWTToken implements JSONAware, Cloneable {
 
     private String iss; // issuer
