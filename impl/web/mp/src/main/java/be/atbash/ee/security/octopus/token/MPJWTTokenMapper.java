@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.token;
 
-import be.atbash.json.parser.reader.JSONReader;
 import be.atbash.json.writer.CustomBeanJSONEncoder;
 
 /**
@@ -24,13 +23,8 @@ import be.atbash.json.writer.CustomBeanJSONEncoder;
 
 public class MPJWTTokenMapper extends CustomBeanJSONEncoder<MPJWTToken> {
 
-    /**
-     * Reader can be link to the JsonReader Base
-     *
-     * @param base
-     */
-    public MPJWTTokenMapper(JSONReader base) {
-        super(base, MPJWTToken.class);
+    public MPJWTTokenMapper() {
+        super( MPJWTToken.class);
     }
 
     @Override
