@@ -35,7 +35,6 @@
     <modules>
         <module>common-se</module>
         <module>se-standalone</module>
-        <module>jwt-support</module>
         <module>offline-token-generator</module>
         <module>javafx</module>
     </modules>

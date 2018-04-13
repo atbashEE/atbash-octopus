@@ -50,9 +50,9 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.json</groupId>
             <artifactId>octopus-jwt-support</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${jwt-support.version}</version>
         </dependency>
 
         <!-- tests -->
