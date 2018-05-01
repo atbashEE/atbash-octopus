@@ -62,7 +62,7 @@
         <dependency>
             <groupId>be.atbash.config</groupId>
             <artifactId>geronimo-config</artifactId>
-            <version>0.9.1</version>
+            <version>${atbash-config.version}</version>
         </dependency>
 
         <dependency>
