@@ -23,7 +23,7 @@
 
     <groupId>be.atbash.ee.security</groupId>
     <artifactId>octopus-parent</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <packaging>pom</packaging>
 
     <name>Atbash Octopus Parent</name>
@@ -176,6 +176,7 @@
                         <exclude>**/NOTICE.txt</exclude>
                         <exclude>**/NOTICE</exclude>
                         <exclude>**/Base64Codec.java</exclude>
+                        <exclude>**/commands.txt</exclude>
                     </excludes>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>

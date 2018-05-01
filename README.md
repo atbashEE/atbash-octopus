@@ -16,3 +16,10 @@ Other differences
 Currently only a very small subset of the original Octopus functionality is available.
 
 And thus for the moment, it is no valid replacement.
+
+
+# End of alfa tryout
+
+The status of Atbash Octopus is now that the new architecture has proven itself. Version 0.3 can be considered as the LAST ALFA version.
+
+In the next phase, features (new and migrated features from Octopus) will be added to the platform.

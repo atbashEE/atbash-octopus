@@ -24,14 +24,14 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-parent</artifactId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Octopus utilities parent</name>
 
     <artifactId>octopus-utilities</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -41,4 +41,26 @@
     <dependencies>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- don't need to deploy the examples to nexus. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

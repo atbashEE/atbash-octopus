@@ -3,11 +3,11 @@
   <parent>
     <artifactId>octopus-utilities</artifactId>
     <groupId>be.atbash.ee.security</groupId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>jwk-util</artifactId>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.3</version>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -85,6 +85,20 @@
             <phase>none</phase>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
   </build>

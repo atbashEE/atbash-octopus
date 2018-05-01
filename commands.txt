@@ -1,0 +1,12 @@
+# local development
+
+mvn clean install
+
+
+# Update license header
+
+mvn license:format
+
+
+
+mvn versions:set -DnewVersion=0.3 -DgenerateBackupPoms=false

@@ -24,14 +24,14 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-parent</artifactId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Declarative Permission based security for Java EE / Java SE</name>
 
     <artifactId>octopus</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <packaging>pom</packaging>
 
     <modules>
