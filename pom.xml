@@ -26,7 +26,26 @@
     <version>0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>Atbash Octopus Parent</name>
     <inceptionYear>2014</inceptionYear>
+    <description>Atbash Octopus Parent</description>
+    <url>https://github.com/atbashEE/atbash-octopus</url>
+
+    <scm>
+        <connection>scm:git:git://github.com/atbashEE/atbash-octopus.git</connection>
+        <developerConnection>scm:git:ssh://github.com:atbashEE/atbash-octopus.git</developerConnection>
+        <url>http://github.com/atbashEE/atbash-octopus/tree/master</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>rubus</id>
+            <name>Rudy De Busscher</name>
+            <email>rdebusscher@gmail.com</email>
+            <organization>Atbash, Belgium</organization>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <licenses>
         <license>
@@ -180,4 +199,80 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Configure the jar with the javadoc (or rather, convince Maven that
+                        we want javadoc at all) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <configuration>
+                            <javadocVersion>1.8</javadocVersion>
+                            <notimestamp>true</notimestamp>
+                            <!--splitindex>true</splitindex-->
+                            <doctitle>${project.name} ${project.version}</doctitle>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <bottom>
+                                <![CDATA[]]>
+                            </bottom>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+
 </project>

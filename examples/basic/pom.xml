@@ -30,10 +30,6 @@
     <version>0.3-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <build>
-        <finalName>mem-basic</finalName>
-    </build>
-
     <properties>
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
@@ -73,5 +69,28 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <finalName>mem-basic</finalName>
+        <plugins>
+            <!-- don't need to deploy the examples to nexus. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
