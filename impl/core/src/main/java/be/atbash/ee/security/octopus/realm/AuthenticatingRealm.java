@@ -456,6 +456,9 @@ public abstract class AuthenticatingRealm extends CachingRealm {
             log.debug("No AuthenticationInfo found for submitted AuthenticationToken [{}].  Returning null.", token);
         }
 
+        if (token instanceof UsernamePasswordToken) {
+            ((UsernamePasswordToken) token).clear();
+        }
         return info;
     }
 
