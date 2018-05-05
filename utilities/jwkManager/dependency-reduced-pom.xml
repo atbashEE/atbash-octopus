@@ -3,11 +3,11 @@
   <parent>
     <artifactId>octopus-utilities</artifactId>
     <groupId>be.atbash.ee.security</groupId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>jwk-util</artifactId>
-  <version>0.3</version>
+  <version>0.4-SNAPSHOT</version>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>

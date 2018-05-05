@@ -22,12 +22,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.3</version>
+        <version>0.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>java-fx</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-javafx</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <!-- We can't put this into octopus-javafx as we force then everyone to use this MP config implementation -->
