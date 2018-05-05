@@ -29,6 +29,7 @@ import be.atbash.ee.security.octopus.codec.Hex;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

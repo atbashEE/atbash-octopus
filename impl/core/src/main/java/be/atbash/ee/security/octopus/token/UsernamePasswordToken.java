@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.token;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.util.PublicAPI;
 
 /**
  * <p>A simple username/password authentication token to support the most widely-used authentication mechanism.  This
@@ -40,6 +41,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  * {@link #clear() clear()} after using the token to perform a login attempt.</p>
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.UsernamePasswordToken"})
+@PublicAPI
 public class UsernamePasswordToken implements HostAuthenticationToken, RememberMeAuthenticationToken {
 
     /*--------------------------------------------

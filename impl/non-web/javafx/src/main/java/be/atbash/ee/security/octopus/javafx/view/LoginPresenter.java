@@ -17,9 +17,9 @@ package be.atbash.ee.security.octopus.javafx.view;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
-import be.atbash.ee.security.octopus.javafx.authc.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
