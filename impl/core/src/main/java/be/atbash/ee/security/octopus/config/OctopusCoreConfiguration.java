@@ -21,11 +21,13 @@ import be.atbash.config.exception.ConfigurationException;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
+import be.atbash.config.logging.StartupLogging;
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
 import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.cache.MemoryConstrainedCacheManager;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
+import be.atbash.util.reflection.CDICheck;
 import be.atbash.util.reflection.ClassUtils;
 import be.atbash.util.reflection.UnknownClassException;
 
@@ -213,6 +215,9 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
             synchronized (LOCK) {
                 if (INSTANCE == null) {
                     INSTANCE = new OctopusCoreConfiguration();
+                    if (!CDICheck.withinContainer()) {
+                        StartupLogging.logConfiguration(INSTANCE);
+                    }
                 }
             }
         }
