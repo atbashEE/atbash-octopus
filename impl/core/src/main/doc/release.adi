@@ -1,3 +1,7 @@
+=== 0.4
+
+. Integration with Keycloak (Client Credentials for Java SE, AuthorizationCode grant for Web, AccessToken for JAX-RS)
+
 === 0.3
 
 . Authorization parts implementation (tags like securedComponent, interceptors for EJB/CDI, filters for URLs)

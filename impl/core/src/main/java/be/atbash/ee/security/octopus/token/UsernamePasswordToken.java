@@ -79,6 +79,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
 
     /**
      * JavaBeans compatible no-arg constructor.
+     * TODO Required, usefull?
      */
     public UsernamePasswordToken() {
     }
@@ -218,6 +219,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
 
     /**
      * Sets the username for submission during an authentication attempt.
+     * TODO Required ? useful -> better via constructor
      *
      * @param username the username to be used for submission during an authentication attempt.
      */
@@ -236,6 +238,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
 
     /**
      * Sets the password for submission during an authentication attempt.
+     * TODO Required ? useful -> better via constructor
      *
      * @param password the password to be used for submission during an authentication attemp.
      */
@@ -283,6 +286,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * <p/>
      * <p>(Shiro's default Authenticator
      * allows <tt>null</tt> hosts to allow localhost and proxy server environments).</p>
+     * TODO Required ? useful -> better via constructor
      *
      * @param host the host name or IP string from where the attempt is occuring
      */
@@ -304,6 +308,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
     /**
      * Sets if the submitting user wishes their identity (pricipal(s)) to be remembered across sessions.  Unless
      * overridden, the default value is <tt>false</tt>, indicating <em>not</em> to be remembered across sessions.
+     * TODO Required ? useful -> better via constructor
      *
      * @param rememberMe value inidicating if the user wishes their identity (principal(s)) to be remembered across
      *                   sessions.

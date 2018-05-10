@@ -26,6 +26,7 @@ import be.atbash.ee.security.octopus.authz.permission.role.RolePermissionResolve
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.realm.mgmt.LookupProvider;
+import be.atbash.ee.security.octopus.realm.mgmt.RoleMapperProvider;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.CDIUtils;
@@ -115,14 +116,15 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     /**
      * Used in the Java SE case.
      *
-     * @param lookupProvider
      * @param <T>
+     * @param lookupProvider
+     * @param roleMapperProvider
      */
-    <T extends Enum<T>> void initDependencies(LookupProvider<T> lookupProvider) {
+    <T extends Enum<T>> void initDependencies(LookupProvider<T> lookupProvider, RoleMapperProvider roleMapperProvider) {
         permissionResolver = new PermissionResolver(lookupProvider.getPermissionLookup(), lookupProvider.getStringPermissionLookup());
 
+        rolePermissionResolver = roleMapperProvider.getRolePermissionResolver();
         // FIXME
-        //rolePermissionResolver =
         //permissionAdapter =
 
         super.init();

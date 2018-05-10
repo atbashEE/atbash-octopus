@@ -1,3 +1,10 @@
+=== Specify authorization info
+
+Authorization info will be retrieved by the Octopus framework by calling implementations of _be.atbash.ee.security.octopus.authz.AuthorizationInfoProvider_.
+
+The method _getAuthorizationInfo_ needs to supply the authorization info (permissions and roles) for the user.
+
+
 
 // FIXME Basic documentation, more detail/explanation needed
 === Interceptors

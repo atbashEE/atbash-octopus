@@ -27,6 +27,7 @@ import java.util.Map;
  * Should never be created by the developer directly, only reading the information
  */
 @Typed
+// @PublicAPI
 public class UserPrincipal implements Principal, Serializable {
 
     private Serializable id;
@@ -86,6 +87,7 @@ public class UserPrincipal implements Principal, Serializable {
         return userName;
     }
 
+    // TODO Should we protect the 'Octopus used keys', like Token? But then getInfo() needs to removed!!
     public void addUserInfo(Serializable key, Serializable value) {
         userInfo.put(key, value);
     }

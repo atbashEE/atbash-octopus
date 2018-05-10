@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
 /**
  * Interface implemented by classes that can determine if an AuthenticationToken's provided
  * credentials matches a corresponding account's credentials stored in the system.
- * <p>
+ *
  * <p>Simple direct comparisons are handled well by the
  * {@link SimpleCredentialsMatcher SimpleCredentialsMatcher}.  If you
  * hash user's credentials before storing them in a realm (a common practice), look at the
@@ -30,9 +30,6 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
  * as they support this scenario.
  *
  * @see SimpleCredentialsMatcher
- * @see AllowAllCredentialsMatcher
- * @see Md5CredentialsMatcher
- * @see Sha1CredentialsMatcher
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.credential.CredentialsMatcher"})
 public interface CredentialsMatcher {

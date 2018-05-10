@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
+import be.atbash.ee.security.octopus.authz.init.RoleMapperProviderLoader;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
@@ -27,6 +28,7 @@ import be.atbash.ee.security.octopus.authz.permission.role.RolePermissionResolve
 import be.atbash.ee.security.octopus.authz.permission.typesafe.RoleLookup;
 import be.atbash.ee.security.octopus.config.LookupConfiguration;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.realm.mgmt.RoleMapperProvider;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
 import be.atbash.util.PublicAPI;
@@ -62,6 +64,10 @@ public class AuthorizationInfoBuilder {
 
         if (config == null) {
             config = OctopusCoreConfiguration.getInstance();
+
+            RoleMapperProvider<? extends Enum> roleMapperProvider = new RoleMapperProviderLoader().loadRoleMapperProvider();
+            roleLookup = roleMapperProvider.defineRoleLookup();
+            rolePermissionResolver = roleMapperProvider.getRolePermissionResolver();
         }
         LookupConfiguration lookupConfiguration = new LookupConfiguration();
         if (roleLookup == null) {

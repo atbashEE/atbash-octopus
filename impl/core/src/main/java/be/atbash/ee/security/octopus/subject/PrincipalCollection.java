@@ -74,6 +74,7 @@ public interface PrincipalCollection extends Iterable, Serializable {
      *
      * @return the primary principal used to uniquely identify the owning account/Subject
      */
+    // FIXME PrimaryPrincipal always a UserPrincipal?
     Object getPrimaryPrincipal();
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,8 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.ee.security.octopus.util.codec.ByteSource;
-
-import java.io.Serializable;
 
 import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
 
@@ -44,12 +43,12 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      */
     protected Object credentials;
 
+    protected ValidatedAuthenticationToken token;
+
     /**
      * Any salt used in hashing the credentials.
      */
     protected ByteSource credentialsSalt;
-
-    protected boolean oneTimeTokenBased;
 
     /**
      * Default no-argument constructor.
@@ -81,10 +80,9 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      * @param principal the 'primary' principal associated with the specified realm.
      * @param token     the token that verify the given principal.
      */
-    public SimpleAuthenticationInfo(Object principal, Serializable token, boolean oneTimeTokenBased) {
+    public SimpleAuthenticationInfo(Object principal, ValidatedAuthenticationToken token) {
         principals = new SimplePrincipalCollection(principal);
-        this.credentials = token;
-        this.oneTimeTokenBased = oneTimeTokenBased;
+        this.token = token;
         if (principal instanceof UserPrincipal) {
             UserPrincipal user = (UserPrincipal) principal;
             user.addUserInfo(INFO_KEY_TOKEN, token);
@@ -148,6 +146,7 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      *
      * @param principals the indentifying attributes of the corresponding Realm account.
      */
+    // FIXME Remove, Constructor Only allowed!!
     public void setPrincipals(PrincipalCollection principals) {
         this.principals = principals;
     }
@@ -162,22 +161,16 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      *
      * @param credentials attribute(s) that verify the account's identity/principals, such as a password or private key.
      */
+    // FIXME Remove, Constructor Only allowed!!
     public void setCredentials(Object credentials) {
         this.credentials = credentials;
     }
 
     @Override
     public boolean isOneTimeAuthentication() {
-        return oneTimeTokenBased;
-    }
+        // TODO is this always the case, token == onetime (the OfflineToken for Java SE is not, but probably only used only once.
 
-    /**
-     * Define that the token used to generate this AuthenticationInfo was a one Time token (like MP token)
-     *
-     * @param oneTimeTokenBased
-     */
-    public void setOneTimeTokenBased(boolean oneTimeTokenBased) {
-        this.oneTimeTokenBased = oneTimeTokenBased;
+        return token != null;
     }
 
     /**
@@ -210,6 +203,11 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      */
     public void setCredentialsSalt(ByteSource salt) {
         credentialsSalt = salt;
+    }
+
+    @Override
+    public ValidatedAuthenticationToken getValidatedToken() {
+        return token;
     }
 
     /**

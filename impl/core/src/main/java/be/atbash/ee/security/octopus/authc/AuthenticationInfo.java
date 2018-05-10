@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.authc;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 
 import java.io.Serializable;
 
@@ -81,8 +82,19 @@ public interface AuthenticationInfo extends Serializable {
      * Various authentication methods (like MPToken) are only presented once and the principal id (for MPToken the jti is taken) is unique for each logon.
      * So there is no need to cache anything related to this token.
      *
-     * @return when true, authentication and authorization will never be cached
+     * @return when true, authentication will never be cached
      */
     boolean isOneTimeAuthentication();
+
+    /**
+     * Returns the token from which this AuthenticationInfo is derived. This can be a different token
+     * then the original token which is used in the calls.
+     * <p/>
+     * For example, a UserNamePasswordToken is 'exchanged' into a KeycloakUserToken which is used.
+     * The KeycloakUserToken is a validated token, and thus the AuthenticationInfo doesn't needs to be passed to the CredentialMatchers anymore.
+     *
+     * @return
+     */
+    ValidatedAuthenticationToken getValidatedToken();
 
 }

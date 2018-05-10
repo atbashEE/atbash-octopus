@@ -1,6 +1,6 @@
 = Octopus Framework
 Rudy De Busscher <rdebusscher@gmail.com>
-v0.3, ??/??/2018
+v0.4, ??/??/2018
 
 == Release notes
 
@@ -9,6 +9,10 @@ include::release.adi[]
 == Modules
 
 include::modules.adi[]
+
+== Authentication
+
+include::authentication.adi[]
 
 == Authorization
 
@@ -25,6 +29,8 @@ include::mpauth.adi[]
 == Java SE
 
 include::offlineToken.adi[]
+
+include::keycloak-se.adi
 
 == Configuration
 

@@ -138,17 +138,32 @@ public class OctopusRealm extends AuthorizingRealm {
 
         AuthenticationInfo authenticationInfo = getAuthenticationInfo(authenticationToken);
 
-        if (authenticationInfo != null && authenticationToken instanceof AuthorizationToken) {
-            AuthorizationToken authorizationToken = (AuthorizationToken) authenticationToken;
+        AuthorizationToken authorizationToken = getAuthorizationToken(authenticationToken, authenticationInfo);
+        if (authorizationToken != null) {
 
             // FIXME Check if the authorizationToken.authorizationProviderClass() is defined as CDI bean
             TokenBasedAuthorizationInfoProvider authorizationInfoProvider = CDIUtils.retrieveInstance(authorizationToken.authorizationProviderClass());
             AuthorizationInfo authorizationInfo = authorizationInfoProvider.getAuthorizationInfo(authorizationToken);
 
+            // FIXME Additional authorizationInfoProviders
             cacheAuthorizationInfo(authenticationInfo.getPrincipals(), authorizationInfo);
         }
         return authenticationInfo;
 
+    }
+
+    private AuthorizationToken getAuthorizationToken(AuthenticationToken token, AuthenticationInfo authenticationInfo) {
+        AuthorizationToken result = null;
+
+        if (authenticationInfo != null && token instanceof AuthorizationToken) {
+            result = (AuthorizationToken) token;
+        }
+
+        if (authenticationInfo != null && authenticationInfo.getValidatedToken() instanceof AuthorizationToken) {
+            result = (AuthorizationToken) authenticationInfo.getValidatedToken();
+        }
+
+        return result;
     }
 
     private void checkAuthorizationInfoMarkers() {

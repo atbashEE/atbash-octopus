@@ -1,0 +1,25 @@
+=== keycloak SE
+
+Add the following dependency to the application
+
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-keycloak-se</artifactId>
+        <version>0.4</version>
+    </dependency>
+----
+
+Define the configuration for keycloak, using the keycloak.json file (within directory /src/main/resources).
+The content can be created from the Keycloak admin web console.
+
+
+Authenticate with Keycloak through the Client Credentials flow using the following code
+
+----
+    AuthenticationToken token = new UsernamePasswordToken("username", "password");
+    SecurityUtils.getSubject().login(token);
+----
+
+Can be combined in combination with JavaFX out of the box.
+

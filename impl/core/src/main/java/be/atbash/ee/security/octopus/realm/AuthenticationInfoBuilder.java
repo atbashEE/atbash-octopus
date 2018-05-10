@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.realm;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.ee.security.octopus.util.codec.ByteSource;
 import be.atbash.ee.security.octopus.util.codec.SimpleByteSource;
 import be.atbash.util.exception.AtbashIllegalActionException;
@@ -38,7 +39,7 @@ public class AuthenticationInfoBuilder {
     private String name;
     private String userName;
     private Object password;
-    private Serializable token;
+    private ValidatedAuthenticationToken token;
     private ByteSource salt;
     private Map<Serializable, Serializable> userInfo = new HashMap<>();
     private boolean externalPasswordCheck = false;
@@ -90,7 +91,7 @@ public class AuthenticationInfoBuilder {
         return this;
     }
 
-    public AuthenticationInfoBuilder token(Serializable token) {
+    public AuthenticationInfoBuilder token(ValidatedAuthenticationToken token) {
         if (token == null) {
             return this;
         }
@@ -123,7 +124,7 @@ public class AuthenticationInfoBuilder {
                 result = null; // FIXME
             } else {
                 if (tokenBased) {
-                    result = new SimpleAuthenticationInfo(principal, token, true);
+                    result = new SimpleAuthenticationInfo(principal, token);
                 } else {
                     result = new SimpleAuthenticationInfo(principal, password);
                 }

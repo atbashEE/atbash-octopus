@@ -1,0 +1,75 @@
+=== Authentication ways
+
+Octopus allows different methods for the authentication of the other party.
+
+. Octopus is able to verify if the user-supplied credentials (user name - password combination) is valid. For example Database and File based storages.
+. Octopus passes the user-supplied credentials (user name - password combination) to an external source for verification. For example LDAP.
+. Authentication is 'externalised' and application is contacted with a token. Examples are Google OAuth2, CAS, SAML, Keycloak, Octopus SSO, etc.
+
+*Octopus verifies*
+
+In this case, we need to supply the password using the +AuthenticationInfoBuilder+ to Octopus. The defaults matchers (There is also support for hashed password, which is recommended of course) are able then to verify if the password matches.
+
+*External validation*
+
+In case we can't supply Octopus the password, but user has entered credentials in our application, we can ask for an external authentication and supply a correct _Matcher_ which calls the external validation. For LDAP, their is a Octopus supplied one which can be configured.
+
+*External authentication*
+
+When the user enters the credentials in an external system and the verification also happens there, we need special handling for receiving the token which identifies the authenticated user.
+
+*Summary*
+
+In the below table, one can see which of the 3 options applies to your situation.
+
+[options="header"]
+|=======================
+|Credential entry|Credential verification |Type
+|Application    |Application     |Octopus Verifies
+|Application    |External| External validation
+|External    |External    |External authentication
+|=======================
+
+=== AuthenticationInfoProvider
+
+The interface _be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider_ needs to be implemented by the developer if he want to supply some authentication information to Octopus in response to an AuthenticationToken.
+
+The AuthenticationToken is the data created in response of a authentication request from the end user. This can be a UsernamePasswordToken in the case our application has shown a login form to the end user for this information. But the AuthenticationToken can also be a token from the external system in response of a successfull authentication in that system.
+
+As developer you can use an implementation of this interface to retrieve the password from your database for instance. Depending on the environment (CDI based or not), the instance must be configured differently.
+
+. CDI environment -> Define the implementation as CDI bean by annotating it as Application scoped bean (since no user specific information is kept, this is the best scope)
+. non CDI environment -> Define the class through the Service loader mechanism (create a file src/main/resources/META-INF/services/be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider which contains the fully qualified name of the implementation class)
+
+In both cases, the method _getAuthenticationInfo_ should return null when the user name cannot be found (but maybe can be resolved through another AuthenticationInfoProvider, see ???) or an instance of AuthenticationInfo which can be created through the AuthenticationInfoBuilder.
+
+=== AuthenticationInfoBuilder
+
+With the AuthenticationInfoBuilder, we can create an instance of AuthenticationInfo which provides Octopus the necessary information to decide if the user can be authenticated.
+
+. principalId(Serializable) : Required, uniquely identifies the user. It can later be used to determine the permissions for the user.
+. name(String) : Optional, defines the _full name_ of the user.
+. userName(String) : Optional, defines the user name to identify the user.
+. password(Object) : Optional (password or token is required), defines the password known for the user internally (can be the hashed format, see ???)
+. salt(byte[]) : Optional (recommended for password usage), defines the salt when creating the hashed version of the password.
+. externalPasswordCheck() : Optional, indicates that Ocoptus can't verify the user and that an external system must perform this (for ex LDAP)
+. token(ValidatedAuthenticationToken) : Optional (password or token is required), indicates the token received from the external system which identifies the user.
+
+
+
+.addUserInfo() :
+
+=== AuthenticationToken
+
+The AuthenticationToken represent the user supplied information to decide if the user is allowed access to the application.
+
+When the information (like user and password) is requested by the application itself (by using a login form), the type is a ++UsernamePasswordToken++.
+
+But the type can also describe a token which identifies the user by the external system (in case of the above described external authentication scenario)
+These tokens implement the interface _ValidatedAuthenticationToken_ which is a marker for Octopus that it is a token which doesn't need to be validated. (The external system has performed already a successful validation and assembled the token)
+It is not the _raw_ token which the external party has send to us, but it is already the processed (for example payload of JWT) data and is already validated.
+
+These token can also implement _AuthorizationToken_ interface. This is the case when the token also contain authorization information like roles and permissions.
+
+The interface only requires one method, which returns the class name of the logic which will retrieve the authorization info from the token.
+

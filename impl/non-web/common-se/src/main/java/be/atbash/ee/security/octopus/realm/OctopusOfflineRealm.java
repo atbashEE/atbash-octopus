@@ -19,8 +19,10 @@ import be.atbash.ee.security.octopus.authc.*;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
+import be.atbash.ee.security.octopus.authz.init.RoleMapperProviderLoader;
 import be.atbash.ee.security.octopus.mgt.authz.LookupProviderLoader;
 import be.atbash.ee.security.octopus.realm.mgmt.LookupProvider;
+import be.atbash.ee.security.octopus.realm.mgmt.RoleMapperProvider;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
@@ -43,7 +45,8 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     public void initDependencies() {
         LookupProvider<? extends Enum> lookupProvider = new LookupProviderLoader().loadLookupProvider();
-        initDependencies(lookupProvider);
+        RoleMapperProvider<? extends Enum> roleMapperProvider = new RoleMapperProviderLoader().loadRoleMapperProvider();
+        initDependencies(lookupProvider, roleMapperProvider);
     }
 
     @Override
@@ -102,16 +105,31 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
             }
         }
 
-        if (authenticationInfo != null && token instanceof AuthorizationToken) {
-            AuthorizationToken authorizationToken = (AuthorizationToken) token;
-
+        AuthorizationToken authorizationToken = getAuthorizationToken(token, authenticationInfo);
+        if (authorizationToken != null) {
             TokenBasedAuthorizationInfoProvider authorizationInfoProvider = ClassUtils.newInstance(authorizationToken.authorizationProviderClass());
             AuthorizationInfo authorizationInfo = authorizationInfoProvider.getAuthorizationInfo(authorizationToken);
 
+            // FIXME Additional authorizationInfoProviders
+            // FIXME authenticationInfo == null
             cacheAuthorizationInfo(authenticationInfo.getPrincipals(), authorizationInfo);
         }
 
         return authenticationInfo;
+    }
+
+    private AuthorizationToken getAuthorizationToken(AuthenticationToken token, AuthenticationInfo authenticationInfo) {
+        AuthorizationToken result = null;
+
+        if (authenticationInfo != null && token instanceof AuthorizationToken) {
+            result = (AuthorizationToken) token;
+        }
+
+        if (authenticationInfo != null && authenticationInfo.getValidatedToken() instanceof AuthorizationToken) {
+            result = (AuthorizationToken) authenticationInfo.getValidatedToken();
+        }
+
+        return result;
     }
 
     private void prepareAuthenticationInfoProviderHandler() {

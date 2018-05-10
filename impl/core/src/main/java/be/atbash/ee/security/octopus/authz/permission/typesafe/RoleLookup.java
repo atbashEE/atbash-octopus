@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.inject.Typed;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,8 @@ public class RoleLookup<T extends Enum<T>> {
     private Map<T, RolePermission> map;  // for holding the mapping between the two
 
     private Class<T> enumClazz;
+
+    private Map<String, RolePermission> roleMap;
 
     public RoleLookup() {
         // although this bean is excluded, Weld (Glassfish 3.1.2.2) wants it to have a no arg constructor.
@@ -56,13 +59,25 @@ public class RoleLookup<T extends Enum<T>> {
                 LOGGER.info("There is no type safe equivalent and CDI Bean for named role " + item.name());
             }
         }
+
+        roleMap = new HashMap<>();
+    }
+
+    public RoleLookup(Map<String, String> mapping) {
+        roleMap = new HashMap<>();
+        for (Map.Entry<String, String> entry : mapping.entrySet()) {
+            roleMap.put(entry.getKey(), new RolePermission(entry.getValue()));
+        }
     }
 
     public RolePermission getRole(T roleName) {
-        return map.get(roleName);
+        return map != null ? map.get(roleName) : null;
     }
 
     public RolePermission getRole(String roleName) {
+        if (roleMap.containsKey(roleName)) {
+            return roleMap.get(roleName);
+        }
         return getRole(Enum.valueOf(enumClazz, roleName));
     }
 

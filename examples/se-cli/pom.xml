@@ -65,6 +65,18 @@
             <version>1.7.25</version>
         </dependency>
 
+        <!-- Deltaspike -->
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-security-module-api</artifactId>
+            <version>${deltaspike.example.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-security-module-impl</artifactId>
+            <version>${deltaspike.example.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -88,3 +88,11 @@ default : *(none)*
 
 Defines the annotations which can be used on method and class level to define the security requirements.
 
+
+=== Keycloak configuration
+
+==== keycloak.file
+
+default : */keycloak.json*
+
+Defines the location of the JSON file for configuration of the Octopus Keycloak integration.

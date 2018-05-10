@@ -37,6 +37,8 @@
         <module>local-secret</module>
         <module>se-cli</module>
         <module>javafx</module>
+        <module>keycloak-cli</module>
+
         <module>basic</module>
         <module>login_jsf</module>
         <module>secure-tags</module>

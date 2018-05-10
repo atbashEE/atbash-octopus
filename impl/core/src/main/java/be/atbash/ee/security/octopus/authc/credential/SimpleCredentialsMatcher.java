@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ import java.util.Arrays;
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.credential.SimpleCredentialsMatcher"})
+// FIXME Rename (not Simple but Default)
+// TODO Do we need protected methods so that we can override
 public class SimpleCredentialsMatcher extends CodecSupport implements CredentialsMatcher {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleCredentialsMatcher.class);

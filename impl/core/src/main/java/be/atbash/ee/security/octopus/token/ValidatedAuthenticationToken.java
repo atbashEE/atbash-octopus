@@ -20,5 +20,5 @@ package be.atbash.ee.security.octopus.token;
  * Token implementing this interface are always interpreted as valid because they are created following a valid
  * authentication like OAuth2, JWT, ...
  */
-public interface ValidatedAuthenticationToken {
+public interface ValidatedAuthenticationToken extends AuthenticationToken {
 }
