@@ -17,13 +17,13 @@ package be.atbash.ee.security.octopus.keycloak.adapter;
 
 import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersNone;
-import be.atbash.ee.security.octopus.keycloak.adapter.data.JsonAccessTokenResponse;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import net.jadler.Jadler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
+import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.adapters.config.AdapterConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,8 +49,8 @@ public class KeycloakAuthenticatorTest {
     @Test
     public void authenticate() {
 
-        JsonAccessTokenResponse response = new JsonAccessTokenResponse();
-        response.setAccess_token("accessToken");
+        AccessTokenResponse response = new AccessTokenResponse();
+        response.setToken("accessToken");
 
         JWTEncoder encoder = new JWTEncoder();
         Jadler.onRequest().havingMethodEqualTo("POST")

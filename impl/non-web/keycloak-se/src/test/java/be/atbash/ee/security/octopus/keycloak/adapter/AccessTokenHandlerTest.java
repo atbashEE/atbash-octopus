@@ -18,8 +18,6 @@ package be.atbash.ee.security.octopus.keycloak.adapter;
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
 import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
-import be.atbash.ee.security.octopus.keycloak.adapter.data.TestIdToken;
-import be.atbash.ee.security.octopus.keycloak.adapter.data.TestToken;
 import be.atbash.ee.security.octopus.keys.AtbashKey;
 import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
 import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
@@ -31,14 +29,15 @@ import com.nimbusds.jose.jwk.KeyType;
 import org.junit.After;
 import org.junit.Test;
 import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessTokenResponse;
+import org.keycloak.representations.IDToken;
 import org.keycloak.representations.adapters.config.AdapterConfig;
 import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 import java.security.PublicKey;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +62,7 @@ public class AccessTokenHandlerTest {
     @Test
     public void extractUser_happyCase() {
 
-        TestToken accessToken = defineAccessToken();
+        AccessToken accessToken = defineAccessToken();
 
         // generate RSA keys.
         List<AtbashKey> atbashKeys = defineRSAKey();
@@ -78,7 +77,7 @@ public class AccessTokenHandlerTest {
         String jsonToken = encoder.encode(accessToken, builder.build());
 
         // Just create an empty IdToken, testing reading idToken is done somewhere else.
-        String jsonIdToken = encoder.encode(new TestIdToken(), builder.build());
+        String jsonIdToken = encoder.encode(new IDToken(), builder.build());
 
         // Create the AccessTokenResponse
         AccessTokenResponse tokenResponse = new AccessTokenResponse();
@@ -99,8 +98,8 @@ public class AccessTokenHandlerTest {
     @Test(expected = OIDCAuthenticationException.class)
     public void extractUser_AccessTokenValidationProblem() {
 
-        TestToken accessToken = defineAccessToken();
-        accessToken.setSub(null); // This will trigger an exception within RSATokenVerifier.verifyToken
+        AccessToken accessToken = defineAccessToken();
+        accessToken.setSubject(null); // This will trigger an exception within RSATokenVerifier.verifyToken
 
         // generate RSA keys.
         List<AtbashKey> atbashKeys = defineRSAKey();
@@ -115,7 +114,7 @@ public class AccessTokenHandlerTest {
         String jsonToken = encoder.encode(accessToken, builder.build());
 
         // Just create an empty IdToken, testing reading idToken is done somewhere else.
-        String jsonIdToken = encoder.encode(new TestIdToken(), builder.build());
+        String jsonIdToken = encoder.encode(new IDToken(), builder.build());
 
         // Create the AccessTokenResponse
         AccessTokenResponse tokenResponse = new AccessTokenResponse();
@@ -137,7 +136,7 @@ public class AccessTokenHandlerTest {
     @Test(expected = OIDCAuthenticationException.class)
     public void extractUser_IdTokenInvalid() {
 
-        TestToken accessToken = defineAccessToken();
+        AccessToken accessToken = defineAccessToken();
 
         // generate RSA keys.
         List<AtbashKey> atbashKeys = defineRSAKey();
@@ -171,7 +170,7 @@ public class AccessTokenHandlerTest {
     @Test(expected = OIDCAuthenticationException.class)
     public void extractUser_StaleToken() {
 
-        TestToken accessToken = defineAccessToken();
+        AccessToken accessToken = defineAccessToken();
 
         // generate RSA keys.
         List<AtbashKey> atbashKeys = defineRSAKey();
@@ -186,7 +185,7 @@ public class AccessTokenHandlerTest {
         String jsonToken = encoder.encode(accessToken, builder.build());
 
         // Just create an empty IdToken, testing reading idToken is done somewhere else.
-        String jsonIdToken = encoder.encode(new TestIdToken(), builder.build());
+        String jsonIdToken = encoder.encode(new IDToken(), builder.build());
 
         // Create the AccessTokenResponse
         AccessTokenResponse tokenResponse = new AccessTokenResponse();
@@ -230,19 +229,19 @@ public class AccessTokenHandlerTest {
         return generator.generateKeys(generationParameters);
     }
 
-    private TestToken defineAccessToken() {
-        TestToken accessToken = new TestToken();
+    private AccessToken defineAccessToken() {
+        AccessToken accessToken = new AccessToken();
         // Required values for the verifier
-        accessToken.setSub("Atbash");
-        accessToken.setIss("http://localhost/auth/realms/test");
-        accessToken.setTyp("Bearer");
+        accessToken.setSubject("Atbash");
+        accessToken.issuer("http://localhost/auth/realms/test");
+        accessToken.type("Bearer");
 
         // Values for the things we want to test here.
-        accessToken.setClient_session(CLIENT_SESSION);
-        TestToken.RealmAccess realmAccess = new TestToken.RealmAccess();
-        List<String> roles = Arrays.asList(ROLE1, ROLE2);
-        realmAccess.setRoles(roles);
-        accessToken.setRealm_access(realmAccess);
+        accessToken.clientSession(CLIENT_SESSION);
+        AccessToken.Access realmAccess = new AccessToken.Access();
+        realmAccess.addRole(ROLE1);
+        realmAccess.addRole(ROLE2);
+        accessToken.setRealmAccess(realmAccess);
         return accessToken;
     }
 
