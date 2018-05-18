@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.token;
 import be.atbash.json.JSONAware;
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.MappedBy;
+import net.minidev.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,6 +168,13 @@ public class MPJWTToken implements JSONAware, Cloneable {
                 jsonObject.appendField(entry.getKey(), entry.getValue());
             }
         }
+
+        JSONArray groupsArr = new JSONArray();
+        for (String group : groups) {
+            groupsArr.appendElement(group);
+        }
+        jsonObject.appendField("groups", groupsArr);
+
         return jsonObject.toJSONString();
     }
 

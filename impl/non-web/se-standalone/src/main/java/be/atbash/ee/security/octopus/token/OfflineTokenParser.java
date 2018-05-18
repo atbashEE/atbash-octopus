@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,16 @@ package be.atbash.ee.security.octopus.token;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTData;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTDecoder;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTVerifier;
-import be.atbash.ee.security.octopus.jwt.keys.HMACSecret;
-import be.atbash.ee.security.octopus.jwt.keys.KeySelector;
-import be.atbash.ee.security.octopus.jwt.keys.SingleKeySelector;
+import be.atbash.ee.security.octopus.keys.AtbashKey;
+import be.atbash.ee.security.octopus.keys.selector.KeySelector;
+import be.atbash.ee.security.octopus.keys.selector.SingleKeySelector;
 import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jwt.JWTClaimsSet;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.ArrayList;
 
 import static be.atbash.ee.security.octopus.token.OfflineToken.LOCAL_SECRET_KEY_ID;
 
@@ -37,12 +41,14 @@ public final class OfflineTokenParser {
     }
 
     public static OfflineToken parse(String token, String passPhrase) {
-        String localSecret = LocalSecretFactory.generateSecret(passPhrase);
+        byte[] localSecret = LocalSecretFactory.generateSecret(passPhrase);
 
         JWTDecoder decode = new JWTDecoder();
 
-        JWK hmac = new HMACSecret(localSecret, LOCAL_SECRET_KEY_ID, true);
-        KeySelector selector = new SingleKeySelector(hmac);
+        SecretKey key = new SecretKeySpec(localSecret, 0, localSecret.length, "AES");
+
+        AtbashKey atbashKey = new AtbashKey(LOCAL_SECRET_KEY_ID, new ArrayList<KeyUse>(), key);
+        KeySelector selector = new SingleKeySelector(atbashKey);
         JWTData<OfflineToken> jwtData = decode.decode(token, OfflineToken.class, selector, new OfflineTokenVerifier());
         return jwtData.getData();
 

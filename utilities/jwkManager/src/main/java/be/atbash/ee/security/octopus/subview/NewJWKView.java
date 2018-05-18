@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,13 @@
  */
 package be.atbash.ee.security.octopus.subview;
 
-import be.atbash.ee.security.octopus.jwk.RSAKeyFactory;
+import be.atbash.ee.security.octopus.keys.AtbashKey;
+import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
+import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
+import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
+import be.atbash.ee.security.octopus.keys.selector.filter.AsymmetricPartKeyFilter;
 import be.atbash.ee.security.octopus.subview.model.JWKSetData;
-import com.nimbusds.jose.Algorithm;
-import com.nimbusds.jose.jwk.KeyUse;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.jwk.RSAKey;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -33,6 +36,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -110,11 +116,36 @@ public class NewJWKView extends SubView {
     }
 
     private void createKey() {
-        RSAKeyFactory keyFactory = new RSAKeyFactory();
-        // FIXME Not only RSA and Signature
-        RSAKey rsaKey = keyFactory.makeRSA(Integer.valueOf(keySize.getValue()), KeyUse.SIGNATURE, new Algorithm("PS512"), id.getValue());
+
+        RSAGenerationParameters generationParameters = new RSAGenerationParameters.RSAGenerationParametersBuilder()
+                .withKeyId(id.getValue())
+                .withKeySize(Integer.valueOf(keySize.getValue()))
+                .build();
+        KeyGenerator generator = new KeyGenerator();
+        List<AtbashKey> keys = generator.generateKeys(generationParameters);
+
+        // FIXME Converter of AtbashKey to JWK into jwt-support module
+        RSAKey rsaKey = new RSAKey.Builder(getPublicKey(keys)).keyID(id.getValue())
+                .privateKey(getPrivateKey(keys))
+                .build();
         jwkSetData.add(rsaKey);
 
         new JWKView(primaryStage, rootPane, jwkSetData).initialize();
+    }
+
+    private RSAPublicKey getPublicKey(List<AtbashKey> keys) {
+        List<AtbashKey> publicKeys = new AsymmetricPartKeyFilter(AsymmetricPart.PUBLIC).filter(keys);
+        if (publicKeys.size() != 1) {
+            throw new AtbashUnexpectedException("We should always find a Public RSA key");
+        }
+        return (RSAPublicKey) publicKeys.get(0).getKey();
+    }
+
+    private RSAPrivateKey getPrivateKey(List<AtbashKey> keys) {
+        List<AtbashKey> publicKeys = new AsymmetricPartKeyFilter(AsymmetricPart.PRIVATE).filter(keys);
+        if (publicKeys.size() != 1) {
+            throw new AtbashUnexpectedException("We should always find a private RSA key");
+        }
+        return (RSAPrivateKey) publicKeys.get(0).getKey();
     }
 }

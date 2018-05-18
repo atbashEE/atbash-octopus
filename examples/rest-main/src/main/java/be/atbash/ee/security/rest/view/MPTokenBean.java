@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package be.atbash.ee.security.rest.view;
 
-import be.atbash.ee.security.octopus.jwk.JWKManager;
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
 import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
+import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
+import be.atbash.ee.security.octopus.keys.selector.KeySelector;
+import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
 import be.atbash.ee.security.octopus.token.MPJWTToken;
 import be.atbash.ee.security.octopus.token.MPJWTTokenBuilder;
 
@@ -49,15 +51,17 @@ public class MPTokenBean {
     private JWTEncoder jwtEncoder;
 
     @Inject
-    private JWKManager jwkManager;
+    private KeySelector keySelector;
 
     public void testMPToken() {
 
         MPJWTToken mpjwtToken = tokenBuilder.setAudience("Octopus Rest MP").
                 setSubject("Octopus Test").build();
 
+        SelectorCriteria criteria = SelectorCriteria.newBuilder().withAsymmetricPart(AsymmetricPart.PRIVATE).build();
+
         JWTParameters parameters = JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS)
-                .withSecretKeyForSigning(jwkManager.getJWKSigningKey())
+                .withSecretKeyForSigning(keySelector.selectAtbashKey(criteria))
                 .build();
         String bearerHeader = jwtEncoder.encode(mpjwtToken, parameters);
 

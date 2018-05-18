@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@ package be.atbash.ee.security.octopus.token;
 
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
 import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
-import be.atbash.ee.security.octopus.jwt.keys.HMACSecret;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
+import be.atbash.ee.security.octopus.util.HmacSecretUtil;
+import be.atbash.util.base64.Base64Codec;
 
 import static be.atbash.ee.security.octopus.token.OfflineToken.LOCAL_SECRET_KEY_ID;
 
@@ -38,7 +39,7 @@ public final class GenerateOfflineToken {
 
         JWTParameters parameters = JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS)
                 .withHeader("Octopus Offline", "v0.2")
-                .withSecretKeyForSigning(new HMACSecret(localSecret, LOCAL_SECRET_KEY_ID, true))
+                .withSecretKeyForSigning(HmacSecretUtil.generateSecretKey(LOCAL_SECRET_KEY_ID, Base64Codec.decode(localSecret)))
                 .build();
 
         return encoder.encode(offlineToken, parameters);

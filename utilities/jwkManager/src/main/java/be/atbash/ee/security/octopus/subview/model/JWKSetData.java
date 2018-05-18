@@ -79,14 +79,19 @@ public class JWKSetData {
             item.setKid(jwk.getKeyID());
             item.setKeyType(jwk.getKeyType().getValue());
             item.setPrivatePart(jwk.isPrivate());
-            item.setKeyUse(jwk.getKeyUse().identifier());
+            if (jwk.getKeyUse() != null) {
+                item.setKeyUse(jwk.getKeyUse().identifier());
+            }
             result.add(item);
         }
         return result;
     }
 
     public void add(JWK key) {
-        jwkSet.getKeys().add(key);
+        // jwkSet.getKeys() -> immutable list
+        List<JWK> temp = new ArrayList<>(jwkSet.getKeys());
+        temp.add(key);
+        jwkSet = new JWKSet(temp);
         changed.setValue(true);
     }
 
