@@ -88,6 +88,45 @@ default : *(none)*
 
 Defines the annotations which can be used on method and class level to define the security requirements.
 
+=== JSF Configuration
+
+==== loginPage
+
+default : */login.xhtml*
+
+The JSF page which is shown when the system needs to ask for the user credentials (and no 3th party is defined for integration)
+
+==== logoutPage
+
+default : */*
+
+The page which is shown when the is logged out. Make sure the page is anonymously accessible. By default, it is the page defined as welcome-file in the web.xml
+
+==== allowPostAsSavedRequest
+
+default : *true*
+
+Is it allowed that during a POST to the server, the login page is shown.  After the redirect to the login page, it is possible that beans has lost their state and that post isn't functioning properly.
+
+==== logoutFilter.postOnly
+
+default : *false*
+
+When using the Logout filter, is it only active for a POST request (to avoid issues with the browser prefetch)
+
+==== unauthorizedExceptionPage
+
+default : */unauthorized.xhtml*
+
+The page which is shown when the user has some missing permissions.
+
+==== primefaces.mobile.exclusion
+
+default : *false*
+
+Exclude the wrapping of the PrimeFaces mobile renderers (for compatibility reasons, will be removed in some future version)
+
+
 
 === Keycloak configuration
 

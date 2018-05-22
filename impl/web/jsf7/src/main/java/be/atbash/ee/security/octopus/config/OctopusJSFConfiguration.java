@@ -18,7 +18,6 @@ package be.atbash.ee.security.octopus.config;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -43,6 +42,18 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigProperty(name = "allowPostAsSavedRequest", defaultValue = "true")
     private boolean allowPostAsSavedRequest;
 
+    @Inject
+    @ConfigProperty(name = "logoutFilter.postOnly", defaultValue = "false")
+    private boolean logoutFilterPostOnly;
+
+    @Inject
+    @ConfigProperty(name = "unauthorizedExceptionPage", defaultValue = "/unauthorized.xhtml")
+    private String unauthorizedPage;
+
+    @Inject
+    @ConfigProperty(name = "primefaces.mobile.exclusion", defaultValue = "false")
+    private boolean primeFacesMobileExclusion;
+
     @ConfigEntry()
     public String getLoginPage() {
         return loginPage;
@@ -54,18 +65,23 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     }
 
     @ConfigEntry
+    public boolean getLogoutFilterPostOnly() {
+        return logoutFilterPostOnly;
+    }
+
+    @ConfigEntry
     public boolean getPostIsAllowedSavedRequest() {
         return allowPostAsSavedRequest;
     }
 
     @ConfigEntry
     public String getUnauthorizedExceptionPage() {
-        return ConfigResolver.getPropertyValue("unauthorizedExceptionPage", "/unauthorized.xhtml");
+        return unauthorizedPage;
     }
 
     @ConfigEntry
-    public String getExcludePrimeFacesMobile() {
-        return ConfigResolver.getPropertyValue("primefaces.mobile.exclusion", "false");
+    public boolean getExcludePrimeFacesMobile() {
+        return primeFacesMobileExclusion;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package be.atbash.ee.security.octopus.filter.authc;
 
-import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
+import be.atbash.ee.security.octopus.context.OctopusSecurityContext;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
-import be.atbash.ee.security.octopus.session.SessionException;
-import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import be.atbash.ee.security.octopus.view.OctopusJSFSecurityContext;
+import be.atbash.util.CDIUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -33,25 +32,11 @@ import java.util.Locale;
 
 /**
  * Simple Filter that, upon receiving a request, will immediately log-out the currently executing
- * {@link #getSubject(ServletRequest, ServletResponse) subject}
- * and then redirect them to a configured {@link #getRedirectUrl() redirectUrl}.
+ * subject.
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.web.filter.authc.LogoutFilter")
 public class LogoutFilter extends AdviceFilter {
-
-    private static final Logger log = LoggerFactory.getLogger(LogoutFilter.class);
-
-    /**
-     * The default redirect URL to where the user will be redirected after logout.  The value is {@code "/"}, Shiro's
-     * representation of the web application's context root.
-     */
-    public static final String DEFAULT_REDIRECT_URL = "/";
-
-    /**
-     * The URL to where the user will be redirected after logout.
-     */
-    private String redirectUrl = DEFAULT_REDIRECT_URL;
 
     /**
      * Due to browser pre-fetching, using a GET requests for logout my cause a user to be logged accidentally, for example:
@@ -60,9 +45,16 @@ public class LogoutFilter extends AdviceFilter {
      */
     private boolean postOnlyLogout = false;
 
+    private OctopusSecurityContext securityContext;
+
     @PostConstruct
     public void initInstance() {
         setName("logout");
+
+        securityContext = CDIUtils.retrieveInstance(OctopusJSFSecurityContext.class);
+
+        OctopusJSFConfiguration configuration = CDIUtils.retrieveInstance(OctopusJSFConfiguration.class);
+        postOnlyLogout = configuration.getLogoutFilterPostOnly();
     }
 
     /**
@@ -79,10 +71,8 @@ public class LogoutFilter extends AdviceFilter {
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-        WebSubject subject = getSubject(request, response);
-
         // Check if POST only logout is enabled
-        if (isPostOnlyLogout()) {
+        if (postOnlyLogout) {
 
             // check if the current request's method is a POST, if not redirect
             if (!WebUtils.toHttp(request).getMethod().toUpperCase(Locale.ENGLISH).equals("POST")) {
@@ -90,84 +80,8 @@ public class LogoutFilter extends AdviceFilter {
             }
         }
 
-        String redirectUrl = getRedirectUrl(request, response, subject);
-        //try/catch added for SHIRO-298:
-        try {
-            subject.logout();
-        } catch (SessionException ise) {
-            log.debug("Encountered session exception during logout.  This can generally safely be ignored.", ise);
-        }
-        issueRedirect(request, response, redirectUrl);
+        securityContext.logout();
         return false;
-    }
-
-    /**
-     * Returns the currently executing {@link Subject}.  This implementation merely defaults to calling
-     * {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}, but can be overridden
-     * by subclasses for different retrieval strategies.
-     *
-     * @param request  the incoming Servlet request
-     * @param response the outgoing Servlet response
-     * @return the currently executing {@link Subject}.
-     */
-    protected WebSubject getSubject(ServletRequest request, ServletResponse response) {
-        return SecurityUtils.getSubject();
-    }
-
-    /**
-     * Issues an HTTP redirect to the specified URL after subject logout.  This implementation simply calls
-     * {@code WebUtils.}{@link WebUtils#issueRedirect(ServletRequest, ServletResponse, String) issueRedirect(request,response,redirectUrl)}.
-     *
-     * @param request     the incoming Servlet request
-     * @param response    the outgoing Servlet response
-     * @param redirectUrl the URL to where the browser will be redirected immediately after Subject logout.
-     * @throws Exception if there is any error.
-     */
-    protected void issueRedirect(ServletRequest request, ServletResponse response, String redirectUrl) throws Exception {
-        WebUtils.issueRedirect(request, response, redirectUrl);
-    }
-
-    /**
-     * Returns the redirect URL to send the user after logout.  This default implementation ignores the arguments and
-     * returns the static configured {@link #getRedirectUrl() redirectUrl} property, but this method may be overridden
-     * by subclasses to dynamically construct the URL based on the request or subject if necessary.
-     * <p/>
-     * Note: the Subject is <em>not</em> yet logged out at the time this method is invoked.  You may access the Subject's
-     * session if one is available and if necessary.
-     * <p/>
-     * Tip: if you need to access the Subject's session, consider using the
-     * {@code Subject.}{@link Subject#getSession(boolean) getSession(false)} method to ensure a new session isn't created unnecessarily.
-     * If a session would be created, it will be immediately stopped after logout, not providing any value and
-     * unnecessarily taxing session infrastructure/resources.
-     *
-     * @param request  the incoming Servlet request
-     * @param response the outgoing ServletResponse
-     * @param subject  the not-yet-logged-out currently executing Subject
-     * @return the redirect URL to send the user after logout.
-     */
-    protected String getRedirectUrl(ServletRequest request, ServletResponse response, WebSubject subject) {
-        return getRedirectUrl();
-    }
-
-    /**
-     * Returns the URL to where the user will be redirected after logout.  Default is the web application's context
-     * root, i.e. {@code "/"}
-     *
-     * @return the URL to where the user will be redirected after logout.
-     */
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
-
-    /**
-     * Sets the URL to where the user will be redirected after logout.  Default is the web application's context
-     * root, i.e. {@code "/"}
-     *
-     * @param redirectUrl the url to where the user will be redirected after logout
-     */
-    @SuppressWarnings("unused")
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
     }
 
     /**
@@ -188,25 +102,4 @@ public class LogoutFilter extends AdviceFilter {
         return false;
     }
 
-    /**
-     * Due to browser pre-fetching, using a GET requests for logout my cause a user to be logged accidentally, for example:
-     * out while typing in an address bar.  If <code>postOnlyLogout</code> is <code>true</code>. Only POST requests will cause
-     * a logout to occur.
-     *
-     * @return Returns true if POST only logout is enabled
-     */
-    public boolean isPostOnlyLogout() {
-        return postOnlyLogout;
-    }
-
-    /**
-     * Due to browser pre-fetching, using a GET requests for logout my cause a user to be logged accidentally, for example:
-     * out while typing in an address bar.  If <code>postOnlyLogout</code> is <code>true</code>. Only POST requests will cause
-     * a logout to occur.
-     *
-     * @param postOnlyLogout enable or disable POST only logout.
-     */
-    public void setPostOnlyLogout(boolean postOnlyLogout) {
-        this.postOnlyLogout = postOnlyLogout;
-    }
 }

@@ -33,6 +33,7 @@ import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.exception.AtbashIllegalActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -543,4 +544,58 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         */
     }
 
+    public void logout(WebSubject subject) {
+        if (subject == null) {
+            throw new AtbashIllegalActionException("(OCT-DEV-051) Subject method argument cannot be null.");
+        }
+
+        //beforeLogout(subject); only for RememberMe
+
+        PrincipalCollection principals = subject.getPrincipals();
+        // it is possible to have a Subject without PrincipalCollection?
+        if (principals != null && !principals.isEmpty()) {
+            if (log.isDebugEnabled()) {
+                log.debug("Logging out subject with primary principal {}", principals.getPrimaryPrincipal());
+            }
+            octopusRealm.onLogout(principals);
+        }
+
+        delete(subject);
+        /*
+
+        FIXME Verify if and how it is required and should be used.
+        try {
+            delete(subject);
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                String msg = "Unable to cleanly unbind Subject.  Ignoring (logging out).";
+                log.debug(msg, e);
+            }
+        } finally {
+            try {
+                stopSession(subject);
+            } catch (Exception e) {
+                if (log.isDebugEnabled()) {
+                    String msg = "Unable to cleanly stop Session for Subject [" + subject.getPrincipal() + "] " +
+                            "Ignoring (logging out).";
+                    log.debug(msg, e);
+                }
+            }
+        }
+
+        */
+    }
+
+    /**
+     * Removes (or 'unbinds') the Subject's state from the application, typically called during {@link #logout}..
+     * <p/>
+     * This implementation merely delegates to the internal {@link #setSubjectDAO(SubjectDAO) subjectDAO} and calls
+     * {@link SubjectDAO#delete(org.apache.shiro.subject.Subject) delete(subject)}.
+     *
+     * @param subject the subject for which state will be removed
+     * @see SubjectDAO#delete(org.apache.shiro.subject.Subject)
+     */
+    protected void delete(WebSubject subject) {
+        this.subjectDAO.delete(subject);
+    }
 }

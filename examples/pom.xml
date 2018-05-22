@@ -41,6 +41,8 @@
 
         <module>basic</module>
         <module>login_jsf</module>
+
+        <module>events</module>
         <module>secure-tags</module>
         <module>authz</module>
         <module>rest-main</module>

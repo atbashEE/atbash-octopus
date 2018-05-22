@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.javafx.view;
 
-import be.atbash.ee.security.octopus.SecurityUtils;
+import be.atbash.ee.security.octopus.context.OctopusSecurityContext;
 import be.atbash.ee.security.octopus.javafx.LoginFXMLView;
 import be.atbash.ee.security.octopus.javafx.SecureFXMLApplication;
 import com.airhacks.afterburner.views.FXMLView;
@@ -52,7 +52,7 @@ public class LoginManager {
      * Will show the login application screen.
      */
     public void logout() {
-        SecurityUtils.getSubject().logout();
+        OctopusSecurityContext.getInstance().logout();
         SecureFXMLApplication.showPage(loginView);
     }
 

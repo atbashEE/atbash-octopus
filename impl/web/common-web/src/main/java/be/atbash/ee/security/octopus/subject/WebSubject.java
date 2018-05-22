@@ -623,10 +623,9 @@ public class WebSubject implements RequestPairSource, Subject {
      * Non-HTTP environments may of course use a logged-out subject for login again if desired.
      */
     public void logout() {
-        // FIXME Required ?? or delegated to the SecurityContext of Soteria?
         try {
             clearRunAsIdentitiesInternal();
-            //this.securityManager.logout(this);
+            securityManager.logout(this);
         } finally {
             session = null;
             principals = null;

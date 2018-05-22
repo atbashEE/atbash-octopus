@@ -73,3 +73,39 @@ These token can also implement _AuthorizationToken_ interface. This is the case 
 
 The interface only requires one method, which returns the class name of the logic which will retrieve the authorization info from the token.
 
+=== Logout
+
+If you want to perform a logout within a Web environment, just call
+
+    securityContext.logout();
+
+on an injected OctopusWebSecurityContext
+
+    @Inject
+    private OctopusWebSecurityContext securityContext;
+
+or within a JSF environment, you should call
+
+    loginBean.logout()
+
+Since we need to perform a redirect to the logout page (or the main page if no specific page is defined)
+
+An alternative is to define a (virtual) URL which performs the logout. It does the same thing as calling the _loginBean_ method.
+For example define the following entry with the _securedURLs.ini_ file.
+
+    /doLogout = logout
+
+When a URL _doLogout_ is called, it will logout the subject (of course, the URL can be freely chosen but make sure it is anonymously accessible.)
+
+The following steps are performed during logout.
+
+. Call all registered _AuthenticationListener_, method onLogout()
+. The default _AuthenticationListener_ fires the CDI event LogoutEvent so it becomes easier to react on a logout
+. Remove Principal information from AuthenticationCache and AuthorizationCache
+. Remove Session information (if Session is used to store information about Principal)
+. Remove Principal information and set current Subject as unauthenticated.
+. Redirect to logout Page (if logout sequence started from loginBean)
+
+// TODO Global logout in case of an SSO (oauth2, Keycloak, Octopus SSO, ...
+
+// TODO LogoutURLProcessor

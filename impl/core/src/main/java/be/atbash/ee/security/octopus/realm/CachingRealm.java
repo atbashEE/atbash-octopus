@@ -138,6 +138,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      * @see #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)
      */
     public void onLogout(PrincipalCollection principals) {
+        super.onLogout(principals);
         clearCache(principals);
     }
 

@@ -33,7 +33,7 @@ public class SecureRendererKit extends RenderKitWrapper {
         this.renderKit = renderKit;
 
         OctopusJSFConfiguration octopusJSFConfiguration = CDIUtils.retrieveInstance(OctopusJSFConfiguration.class);
-        excludePrimeFacesMobile = Boolean.valueOf(octopusJSFConfiguration.getExcludePrimeFacesMobile());
+        excludePrimeFacesMobile = octopusJSFConfiguration.getExcludePrimeFacesMobile();
     }
 
     @Override

@@ -30,6 +30,7 @@ import be.atbash.util.CDIUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  *
@@ -172,10 +173,9 @@ public class OctopusRealm extends AuthorizingRealm {
     }
 
     private void configureListeners() {
-        /* FIXME
-        AuthenticationListener listener = BeanProvider.getContextualReference(OctopusAuthenticationListener.class);
-        getAuthenticationListeners().add(listener);
-*/
-        listenerConfigured = true;
+
+        List<AuthenticationListener> authenticationListeners = CDIUtils.retrieveInstances(AuthenticationListener.class);
+        setAuthenticationListeners(authenticationListeners);
+
     }
 }

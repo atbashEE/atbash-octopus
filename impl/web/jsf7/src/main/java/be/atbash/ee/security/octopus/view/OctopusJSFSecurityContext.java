@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.util.Reviewed;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Specializes;
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
     private LogoutHandler logoutHandler;
 
     @Inject
-    private OctopusJSFConfiguration octopusJSFConfiguration;
+    private OctopusJSFConfiguration octopusJSFConfiguration;  // required for 2step authentication.
 
     public void loginWithRedirect(HttpServletRequest request, ExternalContext externalContext, AuthenticationToken token, String rootUrl) throws IOException {
 
@@ -82,12 +82,13 @@ public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
         }
     }
 
+    @Reviewed
     public void logout() {
-        //super.logout();
+        super.logout();
 
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         try {
-            externalContext.redirect(logoutHandler.getLogoutPage(externalContext));
+            WebSubject subject = SecurityUtils.getSubject();
+            WebUtils.issueRedirect(subject.getServletRequest(), subject.getServletResponse(), logoutHandler.getLogoutPage(), null, false, false);
         } catch (IOException e) {
             throw new AtbashUnexpectedException(e);
         }

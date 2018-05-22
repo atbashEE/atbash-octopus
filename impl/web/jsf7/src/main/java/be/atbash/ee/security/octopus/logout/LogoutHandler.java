@@ -15,12 +15,15 @@
  */
 package be.atbash.ee.security.octopus.logout;
 
+import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
+import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.Reviewed;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 import java.util.List;
 
@@ -28,7 +31,7 @@ import java.util.List;
  *
  */
 @ApplicationScoped
-// FIXE Chekc if the logoutHandler works together with the Logout Filter
+@Reviewed
 public class LogoutHandler {
 
     @Inject
@@ -41,9 +44,9 @@ public class LogoutHandler {
         logoutURLProcessors = CDIUtils.retrieveInstances(LogoutURLProcessor.class);
     }
 
-    /* We can create overloaded methods with other types ike ServletRequest to find out at which URL we are running */
-    public String getLogoutPage(ExternalContext externalContext) {
-        String rootUrl = getRootUrl(externalContext);
+    public String getLogoutPage() {
+        String rootUrl = getRootUrl();
+
         String logoutPage = octopusJSFConfiguration.getLogoutPage();
         if (logoutPage.startsWith("/")) {
             rootUrl += logoutPage;
@@ -57,8 +60,9 @@ public class LogoutHandler {
         return rootUrl;
     }
 
-    private String getRootUrl(ExternalContext externalContext) {
-        return externalContext.getRequestContextPath();
+    private String getRootUrl() {
+        WebSubject subject = SecurityUtils.getSubject();
+        return WebUtils.getContextPath(subject.getServletRequest());
     }
 
 }
