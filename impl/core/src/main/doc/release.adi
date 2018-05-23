@@ -2,6 +2,7 @@
 
 . Integration with Keycloak (Client Credentials for Java SE, AuthorizationCode grant for Web, AccessToken for JAX-RS)
 . Logout functionality for Web.
+. Authentication events.
 
 === 0.3
 

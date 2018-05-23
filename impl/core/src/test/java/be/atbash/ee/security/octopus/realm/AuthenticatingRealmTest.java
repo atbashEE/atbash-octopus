@@ -60,7 +60,7 @@ public class AuthenticatingRealmTest {
         UsernamePasswordToken token = new UsernamePasswordToken("JUnit", "Atbash".toCharArray());
         realm.getAuthenticationInfo(token);
 
-        assertThat(token.getUsername()).isNull();
+        assertThat(token.getUsername()).isEqualTo("JUnit");
         assertThat(token.getPassword()).isNull();
     }
 

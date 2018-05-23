@@ -88,17 +88,6 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
         }
     }
 
-    /**
-     * Returns the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication
-     * attempts.
-     *
-     * @return the {@link AuthenticationListener AuthenticationListener}s that should be notified during authentication
-     * attempts.
-     */
-    @SuppressWarnings({"UnusedDeclaration"})
-    public Collection<AuthenticationListener> getAuthenticationListeners() {
-        return listeners;
-    }
 
     /*-------------------------------------------
     |               M E T H O D S               |

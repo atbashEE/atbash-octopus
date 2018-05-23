@@ -38,7 +38,7 @@ public final class TemporaryAuthorizationContextManager {
 
     static {
         PRIVILEGED_CLASSES = Arrays.asList("be.atbash.ee.security.octopus.realm.OctopusRealm"
-                , "be.atbash.ee.security.octopus.realm.OctopusOfflineRealm");
+                , "be.atbash.ee.security.octopus.realm.OctopusOfflineRealm", "be.atbash.ee.security.octopus.authc.DefaultWebAuthenticationListener");
     }
 
     private TemporaryAuthorizationContextManager() {

@@ -109,3 +109,37 @@ The following steps are performed during logout.
 // TODO Global logout in case of an SSO (oauth2, Keycloak, Octopus SSO, ...
 
 // TODO LogoutURLProcessor
+
+// TODO When a new HttpSession (just before logon, after logout ?!)
+
+=== Events
+
+There are a few CDI event generated depending on the authentication process.  These events can be used for your own logic (last login, number of invalid attempts, ...)
+
+To get notified when someone is successful logged in, you can define the following method on a CDI bean.
+
+    public void onSuccess(@Observes LogonEvent logonEvent) {
+    }
+
+
+==== LogonEvent
+
+This event is thrown when a user is successful logged in into the application.
+
+. logonEvent.getInfo() : The _AuthenticationInfo_ associated with this login.
+. logonEvent.getAuthenticationToken() : The _AuthenticationToken_ used to grant the user access. In case it is a UsernamePasswordToken, the sensitive information (like password and remote host) is already cleared.
+. logonEvent.getUserPrincipal() : The _UserPrincipal_ created for the user in response of the the successful authentication.
+
+==== LogonFailureEvent
+
+This event is thrown when the user is denied access based on the presented credentials (wrong password, expired JWT token, ...)
+
+. logonFailureEvent.getAuthenticationToken() : The _AuthenticationToken_ used to grant the user access. In case it is a UsernamePasswordToken, the sensitive information (like password and remote host) is still present.
+. logonFailureEvent.getException() : The exception thrown because of the denied access.
+
+==== LogoutEvent
+
+The event is thrown just **before** the user is effectively logged out of the system.
+
+. logonEvent.getUserPrincipal() : The _UserPrincipal_ of the user which is in the process of being logged out.
+

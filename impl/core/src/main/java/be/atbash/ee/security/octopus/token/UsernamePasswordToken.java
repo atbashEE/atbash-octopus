@@ -322,14 +322,12 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
     ============================================*/
 
     /**
-     * Clears out (nulls) the username, password, rememberMe, and inetAddress.  The password bytes are explicitly set to
+     * Clears out (nulls) the password, and inetAddress.  The password bytes are explicitly set to
      * <tt>0x00</tt> before nulling to eliminate the possibility of memory access at a later time.
      */
     public void clear() {
-        username = null;
+        // Username and rememberMe is not cleared, useful for events.
         host = null;
-        rememberMe = false;
-
         if (password != null) {
             for (int i = 0; i < password.length; i++) {
                 password[i] = 0x00;
