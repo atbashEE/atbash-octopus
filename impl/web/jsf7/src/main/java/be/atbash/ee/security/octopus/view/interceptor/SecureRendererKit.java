@@ -52,6 +52,7 @@ public class SecureRendererKit extends RenderKitWrapper {
     @Override
     public void addRenderer(String s, String s2, Renderer renderer) {
         boolean addRenderer = true;
+        // TODO Better testing + required?
         if (excludePrimeFacesMobile && renderer.getClass().getName().contains("mobile")) {
             addRenderer = false;
         }

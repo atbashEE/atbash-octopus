@@ -224,6 +224,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      */
     @SuppressWarnings({"UnusedDeclaration"})
     public void setAuthenticationCachingEnabled(boolean authenticationCachingEnabled) {
+        // FIXME We need a config to enable this, this is still the old Shiro way with ini usage
         this.authenticationCachingEnabled = authenticationCachingEnabled;
         if (authenticationCachingEnabled) {
             setCachingEnabled(true);

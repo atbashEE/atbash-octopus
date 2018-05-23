@@ -59,6 +59,7 @@ public class WebSubject implements RequestPairSource, Subject {
 
     private static final Logger log = LoggerFactory.getLogger(WebSubject.class);
 
+    // TODO Required, Used useful?
     private static final String RUN_AS_PRINCIPALS_SESSION_KEY = WebSubject.class.getName() + ".RUN_AS_PRINCIPALS_SESSION_KEY";
 
     private PrincipalCollection principals;
@@ -97,7 +98,6 @@ public class WebSubject implements RequestPairSource, Subject {
         this(principals, authenticated, host, session, true, securityManager);
     }
 
-    //since 1.2
     public WebSubject(PrincipalCollection principals, boolean authenticated, String host,
                       Session session, boolean sessionCreationEnabled, WebSecurityManager securityManager) {
         if (securityManager == null) {

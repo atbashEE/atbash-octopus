@@ -24,6 +24,7 @@ import javax.enterprise.context.Dependent;
  *
  */
 @Dependent
+//@PublicAPI But not yet stable :)
 public class OctopusWebSecurityContext extends OctopusSecurityContext {
 
     private Subject subject;
