@@ -219,7 +219,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      */
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         boolean loggedIn = false; //false by default or we wouldn't be in this method
-        if (isLoginAttempt(request, response)) {
+        if (isLoginAttempt(request)) {
             loggedIn = executeLogin(request, response);
         }
         if (!loggedIn) {
@@ -236,11 +236,10 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * to {@link #isLoginAttempt(String) isLoginAttempt(authzHeaderValue)}. If the header is <code>null</code>,
      * <code>false</code> is returned.
      *
-     * @param request  incoming ServletRequest
-     * @param response outgoing ServletResponse
+     * @param request incoming ServletRequest
      * @return true if the incoming request is an attempt to log in based, false otherwise
      */
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+    protected boolean isLoginAttempt(ServletRequest request) {
         String authzHeader = getAuthzHeader(request);
         return authzHeader != null && isLoginAttempt(authzHeader);
     }
@@ -249,8 +248,8 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * Delegates to {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse) isLoginAttempt}.
      */
     @Override
-    protected final boolean isLoginRequest(ServletRequest request, ServletResponse response) {
-        return isLoginAttempt(request, response);
+    protected final boolean isLoginRequest(ServletRequest request) {
+        return isLoginAttempt(request);
     }
 
     /**

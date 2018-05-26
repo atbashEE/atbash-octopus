@@ -23,8 +23,10 @@ import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.config.logging.StartupLogging;
 import be.atbash.util.StringUtils;
 import be.atbash.util.reflection.CDICheck;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  *
@@ -33,13 +35,34 @@ import javax.enterprise.context.ApplicationScoped;
 @ModuleConfigName("Octopus Keycloak Configuration")
 public class OctopusKeycloakConfiguration extends AbstractConfiguration implements ModuleConfig {
 
+    @Inject
+    @ConfigProperty(name = "keycloak.scopes", defaultValue = "")
+    private String scopes;
+
+    @Inject
+    @ConfigProperty(name = "keycloak.idpHint", defaultValue = "")
+    private String idpHint;
+
     @ConfigEntry
     public String getLocationKeycloakFile() {
-        String propertyValue = getOptionalValue("keycloak.file", "/keycloak.json", String.class);
+        String propertyValue = getOptionalValue("keycloak.file", "classpath:/keycloak.json", String.class);
         if (StringUtils.isEmpty(propertyValue)) {
             throw new ConfigurationException("keycloak.file configuration property is required");
         }
         return propertyValue;
+    }
+
+    @ConfigEntry
+    public String getScopes() {
+        // TODO use in SE module ?
+        return scopes;
+    }
+
+    @ConfigEntry
+    public String getIdpHint() {
+        // TODO use in SE module ?
+        // Todo support it in Web
+        return idpHint;
     }
 
     // Java SE Support

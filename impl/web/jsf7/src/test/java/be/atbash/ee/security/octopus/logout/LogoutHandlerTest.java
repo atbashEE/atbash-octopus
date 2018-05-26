@@ -70,12 +70,12 @@ public class LogoutHandlerTest {
 
         ThreadContext.bind(webSubjectMock);
         when(webSubjectMock.getServletRequest()).thenReturn(httpServletRequestMock);
-        when(httpServletRequestMock.getContextPath()).thenReturn("/root");
+        configureServerRequest();
 
         when(jsfConfigurationMock.getLogoutPage()).thenReturn("/logout.xhtml");
 
         String page = logoutHandler.getLogoutPage();
-        assertThat(page).isEqualTo("/root/logout.xhtml");
+        assertThat(page).isEqualTo("http://test.org/root/logout.xhtml");
     }
 
     @Test
@@ -87,19 +87,25 @@ public class LogoutHandlerTest {
 
         ThreadContext.bind(webSubjectMock);
         when(webSubjectMock.getServletRequest()).thenReturn(httpServletRequestMock);
-        when(httpServletRequestMock.getContextPath()).thenReturn("/root");
+        configureServerRequest();
 
         when(jsfConfigurationMock.getLogoutPage()).thenReturn("/logout");
 
         String page = logoutHandler.getLogoutPage();
-        assertThat(page).isEqualTo("/root/logout?fromProcessor");
+        assertThat(page).isEqualTo("http://test.org/root/logout?fromProcessor");
+    }
+
+    private void configureServerRequest() {
+        when(httpServletRequestMock.getScheme()).thenReturn("http");
+        when(httpServletRequestMock.getServerName()).thenReturn("test.org");
+        when(httpServletRequestMock.getServerPort()).thenReturn(80);
+        when(httpServletRequestMock.getContextPath()).thenReturn("/root");
     }
 
     private static class TestProcessor implements LogoutURLProcessor {
 
         @Override
-        public String postProcessLogoutUrl(String logoutURL) {
-
+        public String postProcessLogoutUrl(String logoutURL, LogoutParameters parameters) {
             return logoutURL + "?fromProcessor";
         }
     }

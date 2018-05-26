@@ -34,9 +34,15 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "securedURLs.file", defaultValue = "/WEB-INF/securedURLs.ini")
     private String securedURLsFile;
 
+    // FIXME Move to JSF Config
     @Inject
     @ConfigProperty(name = "unauthorizedExceptionPage", defaultValue = "/unauthorized.xhtml")
     private String unauthorizedExceptionPage;
+
+    // FIXME Move to JSF Config
+    @Inject
+    @ConfigProperty(name = "allowPostAsSavedRequest", defaultValue = "true")
+    private boolean allowPostAsSavedRequest;
 
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
@@ -46,6 +52,11 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigEntry
     public String getUnauthorizedExceptionPage() {
         return unauthorizedExceptionPage;
+    }
+
+    @ConfigEntry
+    public boolean getPostIsAllowedSavedRequest() {
+        return allowPostAsSavedRequest;
     }
 
 }

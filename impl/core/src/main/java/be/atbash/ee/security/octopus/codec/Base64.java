@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  * @see <a href="http://en.wikipedia.org/wiki/Base64">Wikipedia: Base 64</a>
  * @see <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>
  */
-// FIXME Base64 in javax.xml.bind.DatatypeConverter ??
+// FIXME remove and use Base64Codec from ustils-se
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.codec.Base64"})
 public class Base64 {
 

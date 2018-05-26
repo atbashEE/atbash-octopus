@@ -41,7 +41,7 @@ public class NamedPermissionFilter extends AuthorizationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws
             Exception {
-        WebSubject subject = getSubject(request, response);
+        WebSubject subject = getSubject();
         String[] permissions = (String[]) mappedValue;  // Fixme What does Octopus give as as we don't specify value like np[]
 
         boolean permitted = true;

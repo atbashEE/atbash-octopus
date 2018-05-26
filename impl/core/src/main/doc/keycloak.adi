@@ -1,0 +1,22 @@
+==== keycloak Integration
+
+Support the integration of a JSF application with Keycloak authentication.
+
+Add the following dependency to the application
+
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-keycloak</artifactId>
+        <version>0.4</version>
+    </dependency>
+----
+
+Define the configuration for keycloak, using the _keycloak.json_ file (within directory /src/main/resources).
+The content can be created from the Keycloak admin web console.
+
+No need to define an implementation of _AuthenticationInfoProvider_ or _AuthorizationInfoProvider_.  (TODO Add info when multiple providers are supported)
+
+When Keycloak is configured for returning role information within the Access token, the values are added as roles within the Octopus system.
+With an implementation of _RolePermissionResolver_ in place, these role names can be converted to a list of permissions.
+

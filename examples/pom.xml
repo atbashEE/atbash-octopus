@@ -41,6 +41,7 @@
 
         <module>basic</module>
         <module>login_jsf</module>
+        <module>keycloak-jsf</module>
 
         <module>events</module>
         <module>secure-tags</module>

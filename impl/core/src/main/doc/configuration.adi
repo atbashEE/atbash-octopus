@@ -114,6 +114,12 @@ default : *false*
 
 When using the Logout filter, is it only active for a POST request (to avoid issues with the browser prefetch)
 
+==== single.logout
+
+default : *false*
+
+When the user has used some authentication mechanism which supports SSO (like Keycloak, OAuth2, ...) should a logout from the application mean also a logout from the SSO?
+
 ==== unauthorizedExceptionPage
 
 default : */unauthorized.xhtml*

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public abstract class AuthenticationFilter extends AccessControlFilter {
 
     public static final String DEFAULT_SUCCESS_URL = "/";
 
+    // FIXME Remove. Used in Shiro for the FORM authentication Filter but now replaced by User filter
     private String successUrl = DEFAULT_SUCCESS_URL;
 
     /**
@@ -73,8 +74,8 @@ public abstract class AuthenticationFilter extends AccessControlFilter {
      * @return true if the subject is authenticated; false if the subject is unauthenticated
      */
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        WebSubject subject = getSubject(request, response);
-        return subject.isAuthenticated();
+        WebSubject subject = getSubject();
+        return subject.isAuthenticated() || subject.isRemembered();
     }
 
     /**

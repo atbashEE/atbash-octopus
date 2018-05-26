@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import java.util.Arrays;
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.authc.AuthenticatingFilter"})
 public abstract class AuthenticatingFilter extends AuthenticationFilter {
+    // To have the filter optionally work. like
+    // authcBasic[PERMISSIVE] -> When basic info available use it otherwise it stays anonymous.
     public static final String PERMISSIVE = "permissive";
 
     //TODO - complete JavaDoc
@@ -47,7 +49,7 @@ public abstract class AuthenticatingFilter extends AuthenticationFilter {
             throw new IllegalStateException(msg);
         }
         try {
-            WebSubject subject = getSubject(request, response);
+            WebSubject subject = getSubject();
             subject.login(token);
             return onLoginSuccess(token, subject, request, response);
         } catch (AuthenticationException e) {
@@ -119,7 +121,7 @@ public abstract class AuthenticatingFilter extends AuthenticationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         return super.isAccessAllowed(request, response, mappedValue) ||
-                (!isLoginRequest(request, response) && isPermissive(mappedValue));
+                (!isLoginRequest(request) && isPermissive(mappedValue));
     }
 
     /**

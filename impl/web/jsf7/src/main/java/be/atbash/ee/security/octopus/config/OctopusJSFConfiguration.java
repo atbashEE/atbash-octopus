@@ -39,10 +39,6 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     private String logoutPage;
 
     @Inject
-    @ConfigProperty(name = "allowPostAsSavedRequest", defaultValue = "true")
-    private boolean allowPostAsSavedRequest;
-
-    @Inject
     @ConfigProperty(name = "logoutFilter.postOnly", defaultValue = "false")
     private boolean logoutFilterPostOnly;
 
@@ -53,6 +49,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @Inject
     @ConfigProperty(name = "primefaces.mobile.exclusion", defaultValue = "false")
     private boolean primeFacesMobileExclusion;
+
+    @Inject
+    @ConfigProperty(name = "single.logout", defaultValue = "false")
+    private boolean singleLogout;
 
     @ConfigEntry()
     public String getLoginPage() {
@@ -70,18 +70,20 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     }
 
     @ConfigEntry
-    public boolean getPostIsAllowedSavedRequest() {
-        return allowPostAsSavedRequest;
-    }
-
-    @ConfigEntry
     public String getUnauthorizedExceptionPage() {
         return unauthorizedPage;
     }
 
     @ConfigEntry
-    public boolean getExcludePrimeFacesMobile() {
+    public boolean isExcludePrimeFacesMobile() {
         return primeFacesMobileExclusion;
     }
 
+    @ConfigEntry
+    public boolean isSingleLogout() {
+        // TODO We should also support single logout on a individual base, meaning
+        // By default no single.logout but clicking on the SSO logout  button, performs also the SSO logout.
+        // Subject.ssoLogout() ?
+        return singleLogout;
+    }
 }

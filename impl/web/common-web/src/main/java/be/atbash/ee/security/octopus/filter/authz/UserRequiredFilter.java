@@ -35,7 +35,7 @@ public class UserRequiredFilter extends AuthorizationFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-        WebSubject subject = getSubject(request, response);
+        WebSubject subject = getSubject();
         // If principal is not null, then the user is known and should be allowed access.
         return subject.getPrincipal() != null;
 

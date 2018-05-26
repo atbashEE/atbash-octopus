@@ -38,6 +38,7 @@ import java.io.IOException;
  */
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.web.filter.authz.AuthorizationFilter")
 public abstract class AuthorizationFilter extends AccessControlFilter {
+    // FIXME Move to JSF (not common web) so that common web is free from references to 'pages'
 
     @Inject
     private OctopusWebConfiguration webConfiguration;
@@ -93,7 +94,7 @@ public abstract class AuthorizationFilter extends AccessControlFilter {
      */
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
 
-        WebSubject subject = getSubject(request, response);
+        WebSubject subject = getSubject();
         // If the subject isn't identified, redirect to login URL
         if (subject.getPrincipal() == null) {
             saveRequestAndRedirectToLogin(request, response);

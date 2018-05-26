@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
     protected Map<String, Object> appliedPaths = new LinkedHashMap<>();
 
     /**
-     * Splits any comma-delmited values that might be found in the <code>config</code> argument and sets the resulting
+     * Split any comma-delimited values that might be found in the <code>config</code> argument and sets the resulting
      * <code>String[]</code> array on the <code>appliedPaths</code> internal Map.
      * <p/>
      * That is:
@@ -72,7 +72,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
      * </code></pre>
      *
      * @param path   the application context path to match for executing this filter.
-     * @param config the specified for <em>this particular filter only</em> for the given <code>path</code>
+     * @param config the specified config for <em>this particular filter only</em> for the given <code>path</code>
      * @return this configured filter.
      */
     public Filter processPathConfig(String path, String config) {

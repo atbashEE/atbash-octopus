@@ -17,30 +17,32 @@ package be.atbash.ee.security.octopus.keycloak;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
-import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakAuthenticator;
-import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakRemoteConnectionException;
-import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
-import be.atbash.ee.security.octopus.keycloak.adapter.OIDCAuthenticationException;
+import be.atbash.ee.security.octopus.keycloak.adapter.*;
 import be.atbash.ee.security.octopus.keycloak.config.OctopusKeycloakConfiguration;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
+import org.keycloak.adapters.KeycloakDeployment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  */
-
+@ApplicationScoped
 public class ClientAuthenticationInfoProvider implements AuthenticationInfoProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientAuthenticationInfoProvider.class);
 
     @Override
     public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) {
+        AuthenticationInfoBuilder builder = new AuthenticationInfoBuilder();
         if (token instanceof UsernamePasswordToken) {
-            AuthenticationInfoBuilder builder = new AuthenticationInfoBuilder();
-            KeycloakAuthenticator authenticator = new KeycloakAuthenticator(OctopusKeycloakConfiguration.getInstance().getLocationKeycloakFile());
+            // for the Java SE use case
+            KeycloakDeployment deployment = KeycloakDeploymentHelper.loadDeploymentDescriptor(OctopusKeycloakConfiguration.getInstance().getLocationKeycloakFile());
+            KeycloakAuthenticator authenticator = new KeycloakAuthenticator(deployment);
             try {
                 KeycloakUserToken keycloakUserToken = authenticator.authenticate((UsernamePasswordToken) token);
 
@@ -55,6 +57,18 @@ public class ClientAuthenticationInfoProvider implements AuthenticationInfoProvi
             }
 
             return builder.build();
+        }
+        if (token instanceof KeycloakUserToken) {
+            // For the Web use case
+            KeycloakUserToken keycloakUserToken = (KeycloakUserToken) token;
+
+            builder.principalId(keycloakUserToken.getId());
+
+            builder.name(keycloakUserToken.getName());
+            builder.token(keycloakUserToken);
+
+            return builder.build();
+
         }
         return null;
     }

@@ -39,7 +39,7 @@ public class NamedPermissionOneFilter extends AuthorizationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws
             Exception {
-        WebSubject subject = getSubject(request, response);
+        WebSubject subject = getSubject();
         String[] permissions = (String[]) mappedValue;
 
         boolean permitted = false;

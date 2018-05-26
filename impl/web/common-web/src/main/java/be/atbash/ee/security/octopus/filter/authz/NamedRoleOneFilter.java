@@ -46,7 +46,7 @@ public class NamedRoleOneFilter extends AuthorizationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws
             Exception {
-        Subject subject = getSubject(request, response);
+        Subject subject = getSubject();
         String[] roles = (String[]) mappedValue;
 
         boolean permitted = false;

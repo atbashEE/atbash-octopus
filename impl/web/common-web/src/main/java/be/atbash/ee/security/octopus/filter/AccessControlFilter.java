@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.util.Reviewed;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -31,13 +32,8 @@ import java.io.IOException;
  * which is used by many subclasses as the behavior when a user is unauthenticated.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.AccessControlFilter"})
+@Reviewed
 public abstract class AccessControlFilter extends PathMatchingFilter {
-
-    /**
-     * Simple default login URL equal to <code>/login.jsp</code>, which can be overridden by calling the
-     * {@link #setLoginUrl(String) setLoginUrl} method.
-     */
-    public static final String DEFAULT_LOGIN_URL = "/login.jsp";
 
     /**
      * Constant representing the HTTP 'GET' request method, equal to <code>GET</code>.
@@ -52,45 +48,40 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
     /**
      * The login url to used to authenticate a user, used when redirecting users if authentication is required.
      */
-    private String loginUrl = DEFAULT_LOGIN_URL;
+    // TODO Verify we can have an AuthenticatingFilter (perform authentication based on the request info like header)
+    // without the methods in this class? Directly descent from PathMatchingFilter?
+    private String loginUrl;
 
     /**
      * Returns the login URL used to authenticate a user.
      * <p/>
-     * Most Shiro filters use this url
-     * as the location to redirect a user when the filter requires authentication.  Unless overridden, the
-     * {@link #DEFAULT_LOGIN_URL DEFAULT_LOGIN_URL} is assumed, which can be overridden via
-     * {@link #setLoginUrl(String) setLoginUrl}.
      *
      * @return the login URL used to authenticate a user, used when redirecting users if authentication is required.
      */
-    public String getLoginUrl() {
+    protected String getLoginUrl() {
+        // TODO Verify, we have no longer a default LoginURL; Do we need to check it here or somewhere else (that we do have one in the case it is used)
         return loginUrl;
     }
 
     /**
      * Sets the login URL used to authenticate a user.
      * <p/>
-     * Most Shiro filters use this url as the location to redirect a user when the filter requires
-     * authentication.  Unless overridden, the {@link #DEFAULT_LOGIN_URL DEFAULT_LOGIN_URL} is assumed.
      *
      * @param loginUrl the login URL used to authenticate a user, used when redirecting users if authentication is required.
      */
-    public void setLoginUrl(String loginUrl) {
+    protected void setLoginUrl(String loginUrl) {
         this.loginUrl = loginUrl;
     }
 
     /**
      * Convenience method that acquires the Subject associated with the request.
      * <p/>
-     * The default implementation simply returns
-     * {@link org.apache.shiro.SecurityUtils#getSubject() SecurityUtils.getSubject()}.
+     * The implementation simply returns
+     * {@link SecurityUtils#getSubject() SecurityUtils.getSubject()}.
      *
-     * @param request  the incoming <code>ServletRequest</code>
-     * @param response the outgoing <code>ServletResponse</code>
      * @return the Subject associated with the request.
      */
-    protected WebSubject getSubject(ServletRequest request, ServletResponse response) {
+    protected WebSubject getSubject() {
         return SecurityUtils.getSubject();
     }
 
@@ -126,6 +117,7 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
      * @throws Exception if there is an error processing the request.
      */
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+        // FIXME Used (mappedValue?), we can just remove it I guess.
         return onAccessDenied(request, response);
     }
 
@@ -165,18 +157,17 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
      * {@link #getLoginUrl() loginUrl} by calling
      * <code>{@link #pathsMatch(String, String) pathsMatch(loginUrl, request)}</code>.
      *
-     * @param request  the incoming <code>ServletRequest</code>
-     * @param response the outgoing <code>ServletResponse</code>
+     * @param request the incoming <code>ServletRequest</code>
      * @return <code>true</code> if the incoming request is a login request, <code>false</code> otherwise.
      */
-    protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {
+    protected boolean isLoginRequest(ServletRequest request) {
         return pathsMatch(getLoginUrl(), request);
     }
 
     /**
      * Convenience method for subclasses to use when a login redirect is required.
      * <p/>
-     * This implementation simply calls {@link #saveRequest(ServletRequest) saveRequest(request)}
+     * This implementation simply calls {@link WebUtils.saveRequest(ServletRequest) saveRequest(request)}
      * and then {@link #redirectToLogin(ServletRequest, ServletResponse) redirectToLogin(request,response)}.
      *
      * @param request  the incoming <code>ServletRequest</code>
@@ -184,24 +175,8 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
      * @throws IOException if an error occurs.
      */
     protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
-        saveRequest(request);
-        redirectToLogin(request, response);
-    }
-
-    /**
-     * Convenience method merely delegates to
-     * {@link WebUtils#saveRequest(ServletRequest) WebUtils.saveRequest(request)} to save the request
-     * state for reuse later.  This is mostly used to retain user request state when a redirect is issued to
-     * return the user to their originally requested url/resource.
-     * <p/>
-     * If you need to save and then immediately redirect the user to login, consider using
-     * {@link #saveRequestAndRedirectToLogin(ServletRequest, ServletResponse)
-     * saveRequestAndRedirectToLogin(request,response)} directly.
-     *
-     * @param request the incoming ServletRequest to save for re-use later (for example, after a redirect).
-     */
-    protected void saveRequest(ServletRequest request) {
         WebUtils.saveRequest(request);
+        redirectToLogin(request, response);
     }
 
     /**

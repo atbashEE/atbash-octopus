@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Map;
 
@@ -581,6 +582,7 @@ public class WebUtils {
         String successUrl = null;
         boolean contextRelative = true;
         SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+        // FIXME, Verify what happens with a POST and the PostAllowed config parameter.
         if (savedRequest != null && savedRequest.getMethod().equalsIgnoreCase(AccessControlFilter.GET_METHOD)) {
             successUrl = savedRequest.getRequestUrl();
             contextRelative = false;
@@ -597,6 +599,43 @@ public class WebUtils {
         }
 
         WebUtils.issueRedirect(request, response, successUrl, null, contextRelative);
+    }
+
+    public static String determineRoot(HttpServletRequest req) {
+        return req.getScheme() + "://" +
+                req.getServerName() +
+                getServerPort(req) +
+                req.getContextPath();
+    }
+
+    private static String getServerPort(HttpServletRequest req) {
+        String result = ':' + String.valueOf(req.getServerPort());
+        if (":80".equals(result)) {
+            result = "";
+        }
+        if (":443".equals(result)) {
+            result = "";
+        }
+        return result;
+    }
+
+    /**
+     * baseURI is the contextRoot appended with the ApplicationPath
+     * TODO Document that when creating a Octopus SSO Server application Path can only be a 1 'level' (like /data, but not /octopus/data)
+     *
+     * @param baseURI
+     * @return
+     */
+    public static String determineRoot(URI baseURI) {
+        String base = baseURI.toASCIIString();
+
+        // Strip the trailing /
+        String result = base.substring(0, base.length() - 1);
+
+        // Find the last /
+        int idx = result.lastIndexOf('/');
+
+        return result.substring(0, idx);
     }
 
 }

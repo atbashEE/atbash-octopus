@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -296,6 +296,7 @@ public class RedirectView {
             // Always send status code 302.
             response.sendRedirect(response.encodeRedirectURL(targetUrl));
         } else {
+            // FIXME With a 303, the POST should be resend as GET. This is not what we intend here !!
             // Correct HTTP status code is 303, in particular for POST requests.
             response.setStatus(303);
             response.setHeader("Location", response.encodeRedirectURL(targetUrl));

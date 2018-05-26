@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-final class AccessTokenHandler {
+public final class AccessTokenHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AccessTokenHandler.class);
 
     private AccessTokenHandler() {
     }
 
-    static KeycloakUserToken extractUser(KeycloakDeployment deployment, AccessTokenResponse accessTokenResponse) {
+    public static KeycloakUserToken extractUser(KeycloakDeployment deployment, AccessTokenResponse accessTokenResponse) {
         String idTokenString = accessTokenResponse.getIdToken();
         AccessToken accessToken;
         IDToken idToken = null;

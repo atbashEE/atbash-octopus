@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.keycloak.adapter;
 
-import be.atbash.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import org.apache.http.HttpEntity;
@@ -28,7 +27,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.adapters.OIDCAuthenticationError;
 import org.keycloak.adapters.ServerRequest;
 import org.keycloak.adapters.authentication.ClientCredentialsProviderUtils;
@@ -37,8 +35,6 @@ import org.keycloak.constants.ServiceUrlConstants;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.util.JsonSerialization;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,28 +46,8 @@ import java.util.List;
  */
 public class KeycloakAuthenticator {
 
-    protected KeycloakDeployment deployment;
+    private KeycloakDeployment deployment;
 
-    public KeycloakAuthenticator(String path) {
-        // FIXME Use ResourceUtils
-        InputStream is = this.getClass().getResourceAsStream(path);
-        if (is == null) {
-            try {
-                is = new FileInputStream(path);
-            } catch (FileNotFoundException e) {
-
-                //Will be handled by the check is == null
-            }
-        }
-
-        if (is == null) {
-            throw new ConfigurationException(String.format("unable to load keycloak deployment configuration from %s", path));
-        }
-        deployment = KeycloakDeploymentBuilder.build(is);
-
-    }
-
-    // TODO Remove? Not used! Only in tests :)
     public KeycloakAuthenticator(KeycloakDeployment deployment) {
         this.deployment = deployment;
     }
@@ -148,6 +124,7 @@ public class KeycloakAuthenticator {
     }
 
     public void logout(KeycloakUserToken user) {
+        // FIXME Use from Java SE somehow?
         try {
             ServerRequest.invokeLogout(deployment, user.getAccessTokenResponse().getRefreshToken());
         } catch (IOException | ServerRequest.HttpFailure e) {

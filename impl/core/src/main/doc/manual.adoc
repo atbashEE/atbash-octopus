@@ -26,6 +26,10 @@ include::jaxrs.adi[]
 
 include::mpauth.adi[]
 
+=== JSF
+
+include::keycloak.adi
+
 == Java SE
 
 include::offlineToken.adi[]

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,13 @@ package be.atbash.ee.security.octopus.logout;
  */
 
 public interface LogoutURLProcessor {
-
-    String postProcessLogoutUrl(String logoutURL);
+    /**
+     * Allows to process the logout URL (to have for example a global Logout.
+     * It receives and should return always absolute URL addresses (http...)
+     *
+     * @param logoutURL
+     * @return
+     */
+    String postProcessLogoutUrl(String logoutURL, LogoutParameters parameters);
 
 }
