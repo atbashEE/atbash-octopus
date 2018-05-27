@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus;
 
+import be.atbash.util.base64.Base64Codec;
 import oshi.SystemInfo;
 
 import javax.crypto.SecretKeyFactory;
@@ -36,7 +37,7 @@ public class LocalSecret {
         String passPhrase = "Rudy";
 
         // PBKDF2WithHmacSHA1 available on Java 7 and Java 8. Must match value used on LocalSecretFactory.
-        // TODO possible usage scenario. using theis local secret, the end user can create the OfflineToken with a Web application (where he needs to authenticate himself
+        // TODO possible usage scenario. using this local secret, the end user can create the OfflineToken with a Web application (where he needs to authenticate himself
         // in order to create a correct OfflineToken instance for the user.
         byte[] secret = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1").generateSecret(
                 new PBEKeySpec(passPhrase.toCharArray(), salt.getBytes(), 1024, 256)).getEncoded();

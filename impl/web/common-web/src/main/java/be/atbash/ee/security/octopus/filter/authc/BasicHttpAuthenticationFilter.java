@@ -17,9 +17,10 @@ package be.atbash.ee.security.octopus.filter.authc;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.WebConstants;
-import be.atbash.ee.security.octopus.codec.Base64;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.util.base64.Base64Codec;
+import be.atbash.util.codec.CodecSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
- * Requires the requesting user to be {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated} for the
+ * Requires the requesting user to be {@link be.atbash.ee.security.octopus.subject.Subject#isAuthenticated() authenticated} for the
  * request to continue, and if they're not, requires the user to login via the HTTP Basic protocol-specific challenge.
  * Upon successful login, they're allowed to continue on to the requested resource/url.
  * <p/>
@@ -53,7 +54,7 @@ import java.util.Locale;
  * </ol>
  * The {@link #onAccessDenied(ServletRequest, ServletResponse)} method will
  * only be called if the subject making the request is not
- * {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated}
+ * {@link be.atbash.ee.security.octopus.subject.Subject#isAuthenticated() authenticated}
  *
  * @see <a href="ftp://ftp.isi.edu/in-notes/rfc2617.txt">RFC 2617</a>
  * @see <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">Basic Access Authentication</a>
@@ -395,7 +396,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * @return the username (index 0)/password (index 1) pair obtained from the encoded header data.
      */
     protected String[] getPrincipalsAndCredentials(String scheme, String encoded) {
-        String decoded = Base64.decodeToString(encoded);
+        String decoded = CodecSupport.toString(Base64Codec.decode(encoded));
         return decoded.split(":", 2);
     }
 }

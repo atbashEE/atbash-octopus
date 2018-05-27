@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.codec;
 
+import be.atbash.util.codec.CodecSupport;
+
 import javax.enterprise.context.ApplicationScoped;
 
 /**

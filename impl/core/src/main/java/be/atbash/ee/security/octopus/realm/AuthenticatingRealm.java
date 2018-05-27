@@ -23,14 +23,14 @@ import be.atbash.ee.security.octopus.authc.IncorrectCredentialsException;
 import be.atbash.ee.security.octopus.authc.credential.CredentialsMatcherHandler;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
-import be.atbash.ee.security.octopus.codec.Base64;
 import be.atbash.ee.security.octopus.codec.CodecUtil;
-import be.atbash.ee.security.octopus.codec.Hex;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
+import be.atbash.util.base64.Base64Codec;
+import be.atbash.util.codec.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -502,10 +502,14 @@ public abstract class AuthenticatingRealm extends CachingRealm {
                             Hex.decode(storedBytes);
                             break;
                         case BASE64:
-                            Base64.decode(storedBytes);
+                            // TODO All Hex characters are valid base64 characters, so we can't detect hex encoded password with Base64 config.
+
+                            if (!Base64Codec.isBase64Encoded(storedBytes)) {
+                                throw new IllegalArgumentException("Invalid Base64 encoded value");
+                            }
                             break;
                         default:
-                            throw new IllegalArgumentException("hashEncoding " + hashEncoding + " not supported");
+                            throw new IllegalArgumentException(String.format("hashEncoding %s not supported", hashEncoding));
 
                     }
                 } catch (IllegalArgumentException e) {

@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import be.atbash.ee.security.octopus.util.codec.ByteSource;
+import be.atbash.util.codec.ByteSource;
 
 import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
 

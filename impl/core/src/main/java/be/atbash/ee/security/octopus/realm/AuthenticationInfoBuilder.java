@@ -19,8 +19,8 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import be.atbash.ee.security.octopus.util.codec.ByteSource;
-import be.atbash.ee.security.octopus.util.codec.SimpleByteSource;
+import be.atbash.util.codec.ByteSource;
+import be.atbash.util.codec.SimpleByteSource;
 import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;

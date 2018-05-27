@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 package be.atbash.ee.security.octopus.crypto.hash;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.codec.Base64;
-import be.atbash.ee.security.octopus.codec.CodecException;
-import be.atbash.ee.security.octopus.codec.CodecSupport;
-import be.atbash.ee.security.octopus.codec.Hex;
 import be.atbash.ee.security.octopus.crypto.UnknownAlgorithmException;
-import be.atbash.ee.security.octopus.util.codec.ByteSource;
 import be.atbash.util.StringUtils;
+import be.atbash.util.base64.Base64Codec;
+import be.atbash.util.codec.ByteSource;
+import be.atbash.util.codec.CodecException;
+import be.atbash.util.codec.CodecSupport;
+import be.atbash.util.codec.Hex;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -107,7 +107,7 @@ public class SimpleHash extends CodecSupport implements Serializable {
      * @param algorithmName the {@link MessageDigest MessageDigest} algorithm name to use when
      *                      performing the hash.
      * @param source        the object to be hashed.
-     * @throws org.apache.shiro.codec.CodecException if the specified {@code source} cannot be converted into a byte array (byte[]).
+     * @throws CodecException if the specified {@code source} cannot be converted into a byte array (byte[]).
      * @throws UnknownAlgorithmException             if the {@code algorithmName} is not available.
      */
     public SimpleHash(String algorithmName, Object source) throws CodecException, UnknownAlgorithmException {
@@ -380,7 +380,7 @@ public class SimpleHash extends CodecSupport implements Serializable {
     public String toBase64() {
         if (base64Encoded == null) {
             //cache result in case this method is called multiple times.
-            base64Encoded = Base64.encodeToString(getBytes());
+            base64Encoded = Base64Codec.encodeToString(getBytes(), true);
         }
         return base64Encoded;
     }

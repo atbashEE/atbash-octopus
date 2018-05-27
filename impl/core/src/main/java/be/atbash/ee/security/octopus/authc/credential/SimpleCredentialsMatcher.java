@@ -17,8 +17,8 @@ package be.atbash.ee.security.octopus.authc.credential;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.codec.CodecSupport;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.util.codec.CodecSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
