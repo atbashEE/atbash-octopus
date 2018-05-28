@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,11 +86,10 @@ public class AntPathMatcher implements PatternMatcher {
     }
 
     public boolean matches(String pattern, String source) {
-        return match(pattern, source);
-    }
-
-    public boolean match(String pattern, String path) {
-        return doMatch(pattern, path, true);
+        if (pattern == null) {
+            return false;
+        }
+        return doMatch(pattern, source, true);
     }
 
     public boolean matchStart(String pattern, String path) {
@@ -389,7 +388,7 @@ public class AntPathMatcher implements PatternMatcher {
      * <li>'<code>*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>/docs/cvs/commit.html</code>'</li>
      * <li>'<code>*</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>/docs/cvs/commit.html</code>'</li>
      * </ul>
-     * <p>Assumes that {@link #match} returns <code>true</code> for '<code>pattern</code>'
+     * <p>Assumes that {@link #matches} returns <code>true</code> for '<code>pattern</code>'
      * and '<code>path</code>', but does <strong>not</strong> enforce this.
      */
     public String extractPathWithinPattern(String pattern, String path) {
