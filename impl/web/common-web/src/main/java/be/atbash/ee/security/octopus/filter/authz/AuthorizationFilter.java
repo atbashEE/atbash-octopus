@@ -19,10 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.subject.WebSubject;
-import be.atbash.ee.security.octopus.util.WebUtils;
-import be.atbash.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -38,34 +35,9 @@ import java.io.IOException;
  */
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.web.filter.authz.AuthorizationFilter")
 public abstract class AuthorizationFilter extends AccessControlFilter {
-    // FIXME Move to JSF (not common web) so that common web is free from references to 'pages'
 
     @Inject
-    private OctopusWebConfiguration webConfiguration;
-
-    /**
-     * The URL to which users should be redirected if they are denied access to an underlying path or resource,
-     * {@code null} by default which will issue a raw {@link HttpServletResponse#SC_UNAUTHORIZED} response
-     * (401 Unauthorized).
-     */
-    private String unauthorizedUrl;
-
-    /**
-     * Returns the URL to which users should be redirected if they are denied access to an underlying path or resource,
-     * or {@code null} if a raw {@link HttpServletResponse#SC_UNAUTHORIZED} response should be issued (401 Unauthorized).
-     * <p/>
-     *
-     * @return the URL to which users should be redirected if they are denied access to an underlying path or resource,
-     * or {@code null} if a raw {@link HttpServletResponse#SC_UNAUTHORIZED} response should be issued (401 Unauthorized).
-     */
-    public String getUnauthorizedUrl() {
-        return unauthorizedUrl;
-    }
-
-    @PostConstruct
-    public void init() {
-        unauthorizedUrl = webConfiguration.getUnauthorizedExceptionPage();
-    }
+    private AccessDeniedHandler accessDeniedHandler;
 
     /**
      * Handles the response when access has been denied.  It behaves as follows:
@@ -94,22 +66,7 @@ public abstract class AuthorizationFilter extends AccessControlFilter {
      */
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
 
-        WebSubject subject = getSubject();
-        // If the subject isn't identified, redirect to login URL
-        if (subject.getPrincipal() == null) {
-            saveRequestAndRedirectToLogin(request, response);
-        } else {
-            // If subject is known but not authorized, redirect to the unauthorized URL if there is one
-            // If no unauthorized URL is specified, just return an unauthorized HTTP status code
-            String unauthorizedUrl = getUnauthorizedUrl();
-            //SHIRO-142 - ensure that redirect _or_ error code occurs - both cannot happen due to response commit:
-            if (StringUtils.hasText(unauthorizedUrl)) {
-                WebUtils.issueRedirect(request, response, unauthorizedUrl);
-            } else {
-                WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            }
-        }
-        return false;
+        return accessDeniedHandler.onAccessDenied(request, response);
     }
 
 }

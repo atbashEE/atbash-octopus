@@ -22,6 +22,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -29,6 +30,10 @@ import javax.inject.Inject;
 @ApplicationScoped
 @ModuleConfigName("Octopus JSF Configuration")
 public class OctopusJSFConfiguration implements ModuleConfig {
+
+    @Inject
+    @ConfigProperty(name = "user.filter.default", defaultValue = "user")
+    private String defaultUserFilter;
 
     @Inject
     @ConfigProperty(name = "loginPage", defaultValue = "/login.xhtml")
@@ -69,6 +74,14 @@ public class OctopusJSFConfiguration implements ModuleConfig {
         return logoutFilterPostOnly;
     }
 
+    /**
+     * Returns the URL to which users should be redirected if they are denied access to an underlying path or resource,
+     * or {@code null} if a raw {@link HttpServletResponse#SC_UNAUTHORIZED} response should be issued (401 Unauthorized).
+     * <p/>
+     *
+     * @return the URL to which users should be redirected if they are denied access to an underlying path or resource,
+     * or {@code null} if a raw {@link HttpServletResponse#SC_UNAUTHORIZED} response should be issued (401 Unauthorized).
+     */
     @ConfigEntry
     public String getUnauthorizedExceptionPage() {
         return unauthorizedPage;
@@ -85,5 +98,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
         // By default no single.logout but clicking on the SSO logout  button, performs also the SSO logout.
         // Subject.ssoLogout() ?
         return singleLogout;
+    }
+
+    @ConfigEntry
+    public String getDefaultUserFilter() {
+        return defaultUserFilter;
     }
 }

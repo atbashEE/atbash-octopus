@@ -38,7 +38,7 @@ import java.io.IOException;
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.authc.UserFilter"})
 @Reviewed
 public class AbstractUserFilter extends AccessControlFilter {
-
+    // Fixme Move to JSF as this is the only framework for the moment where the user is able to enter credentials if unauthorized
     private static final String FACES_REDIRECT_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<partial-response><redirect url=\"%s\"></redirect></partial-response>";
 

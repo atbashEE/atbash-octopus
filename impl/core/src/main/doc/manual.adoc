@@ -18,6 +18,8 @@ include::authentication.adi[]
 
 include::authorization.adi[]
 
+include::filters.adi[]
+
 == Java EE
 
 === JAX-RS

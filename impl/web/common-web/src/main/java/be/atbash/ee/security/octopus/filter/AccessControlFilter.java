@@ -174,7 +174,7 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
      * @param response the outgoing <code>ServletResponse</code>
      * @throws IOException if an error occurs.
      */
-    protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
+    public void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
         WebUtils.saveRequest(request);
         redirectToLogin(request, response);
     }

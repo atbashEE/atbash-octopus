@@ -3,6 +3,7 @@
 . Integration with Keycloak (Client Credentials for Java SE, AuthorizationCode grant for Web, AccessToken for JAX-RS)
 . Logout functionality for Web.
 . Authentication events.
+. Support for default user filter (no need to define user filter before authorizationFilter)
 
 === 0.3
 

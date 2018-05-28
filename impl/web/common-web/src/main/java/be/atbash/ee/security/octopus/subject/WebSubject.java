@@ -172,6 +172,7 @@ public class WebSubject implements RequestPairSource, Subject {
      * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()
      */
     public Object getPrincipal() {
+        // ToDO update rest of methods so that we always have a primaryPrincipal (never null)
         return getPrimaryPrincipal(getPrincipals());
     }
 

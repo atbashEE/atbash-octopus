@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.keycloak.servlet;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
-import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
+import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.keycloak.adapter.AccessTokenHandler;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakDeploymentHelper;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
@@ -56,7 +56,7 @@ public class KeycloakServlet extends HttpServlet {
     private Logger logger;
 
     @Inject
-    private OctopusWebConfiguration webConfiguration;
+    private OctopusJSFConfiguration jsfConfiguration;
 
     @Inject
     private OctopusKeycloakConfiguration keycloakConfiguration;
@@ -253,7 +253,8 @@ public class KeycloakServlet extends HttpServlet {
             //sess.setAttribute(OAuth2User.OAUTH2_USER_INFO, oAuth2User); TODO
             sess.setAttribute("AuthenticationExceptionMessage", e.getMessage());
             // DataSecurityProvider decided that  user has no access to application
-            response.sendRedirect(request.getContextPath() + webConfiguration.getUnauthorizedExceptionPage());
+            // TODO use Webutils.issueRedirect
+            response.sendRedirect(request.getContextPath() + jsfConfiguration.getUnauthorizedExceptionPage());
         }
 
         logger.debug("successful authenticated");

@@ -52,7 +52,7 @@ public class MPUserFilter extends AuthenticatingFilter {
 
     @PostConstruct
     public void initInstance() {
-        setName("mpUser");
+        setName("mpUser"); // TODO Rename to authcMP or just mp (and then authcBasic becomes basic?
     }
 
     @Override

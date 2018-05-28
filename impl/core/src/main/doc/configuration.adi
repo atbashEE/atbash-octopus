@@ -88,7 +88,17 @@ default : *(none)*
 
 Defines the annotations which can be used on method and class level to define the security requirements.
 
+=== Web Configuration
+
+???
+
 === JSF Configuration
+
+==== user.filter.default
+
+default : *user*
+
+When authorization filter encounters a non authenticated user, this filter is used to perform the redirect to the login page. The filter name point to a filter instance which implements +AbstractUserFilter+.
 
 ==== loginPage
 
