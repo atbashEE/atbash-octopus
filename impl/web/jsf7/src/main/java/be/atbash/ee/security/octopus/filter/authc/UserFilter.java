@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.filter.authc;
 
-import be.atbash.ee.security.octopus.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 
 import javax.annotation.PostConstruct;

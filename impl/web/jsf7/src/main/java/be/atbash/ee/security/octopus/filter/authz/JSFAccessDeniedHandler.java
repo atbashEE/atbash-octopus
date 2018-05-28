@@ -16,9 +16,9 @@
 package be.atbash.ee.security.octopus.filter.authz;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
-import be.atbash.ee.security.octopus.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.filter.mgt.FilterChainManager;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.WebUtils;

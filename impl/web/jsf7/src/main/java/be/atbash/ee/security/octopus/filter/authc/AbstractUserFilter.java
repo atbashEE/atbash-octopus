@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.authc;
+package be.atbash.ee.security.octopus.filter.authc;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
+import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.util.Reviewed;
@@ -38,12 +38,12 @@ import java.io.IOException;
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.authc.UserFilter"})
 @Reviewed
 public class AbstractUserFilter extends AccessControlFilter {
-    // Fixme Move to JSF as this is the only framework for the moment where the user is able to enter credentials if unauthorized
+
     private static final String FACES_REDIRECT_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<partial-response><redirect url=\"%s\"></redirect></partial-response>";
 
     @Inject
-    private OctopusWebConfiguration webConfiguration;
+    private OctopusJSFConfiguration jsfConfiguration;
 
     /**
      * Returns <code>true</code> if the request is a
@@ -75,7 +75,7 @@ public class AbstractUserFilter extends AccessControlFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        boolean postIsAllowedSavedRequest = webConfiguration.getPostIsAllowedSavedRequest();
+        boolean postIsAllowedSavedRequest = jsfConfiguration.getPostIsAllowedSavedRequest();
 
         HttpServletRequest req = (HttpServletRequest) request;
         if (POST_METHOD.equals(req.getMethod()) && !postIsAllowedSavedRequest) {

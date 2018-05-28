@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.authc;
+package be.atbash.ee.security.octopus.filter.authc;
 
-import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
+import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.WebSubject;
@@ -40,6 +40,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
+
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractUserFilterTest {
 
@@ -56,7 +57,7 @@ public class AbstractUserFilterTest {
     private WebSubject subjectMock;
 
     @Mock
-    private OctopusWebConfiguration webConfigurationMock;
+    private OctopusJSFConfiguration jsfConfigurationMock;
 
     @Mock
     private Session sessionMock;
@@ -124,7 +125,7 @@ public class AbstractUserFilterTest {
 
     @Test
     public void onAccessDenied_POST_postAllowed() throws Exception {
-        when(webConfigurationMock.getPostIsAllowedSavedRequest()).thenReturn(true);
+        when(jsfConfigurationMock.getPostIsAllowedSavedRequest()).thenReturn(true);
         userFilter.setLoginUrl("/login.page");
         when(requestMock.getMethod()).thenReturn("POST");
         when(requestMock.getRequestURI()).thenReturn("/original.page");
@@ -145,7 +146,7 @@ public class AbstractUserFilterTest {
 
     @Test
     public void onAccessDenied_POST_postNotAllowed() throws Exception {
-        when(webConfigurationMock.getPostIsAllowedSavedRequest()).thenReturn(false);
+        when(jsfConfigurationMock.getPostIsAllowedSavedRequest()).thenReturn(false);
         userFilter.setLoginUrl("/login.page");
         when(requestMock.getMethod()).thenReturn("POST");
         when(requestMock.getContextPath()).thenReturn("/test");

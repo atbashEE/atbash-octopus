@@ -48,6 +48,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     private boolean logoutFilterPostOnly;
 
     @Inject
+    @ConfigProperty(name = "allowPostAsSavedRequest", defaultValue = "true")
+    private boolean allowPostAsSavedRequest;
+
+    @Inject
     @ConfigProperty(name = "unauthorizedExceptionPage", defaultValue = "/unauthorized.xhtml")
     private String unauthorizedPage;
 
@@ -72,6 +76,11 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigEntry
     public boolean getLogoutFilterPostOnly() {
         return logoutFilterPostOnly;
+    }
+
+    @ConfigEntry
+    public boolean getPostIsAllowedSavedRequest() {
+        return allowPostAsSavedRequest;
     }
 
     /**

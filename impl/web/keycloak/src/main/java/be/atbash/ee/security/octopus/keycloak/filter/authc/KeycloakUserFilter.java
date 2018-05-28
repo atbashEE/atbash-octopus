@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.keycloak.filter.authc;
 
-import be.atbash.ee.security.octopus.authc.AbstractUserFilter;
+import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

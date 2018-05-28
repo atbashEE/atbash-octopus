@@ -34,19 +34,9 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "securedURLs.file", defaultValue = "/WEB-INF/securedURLs.ini")
     private String securedURLsFile;
 
-    // FIXME Move to JSF Config
-    @Inject
-    @ConfigProperty(name = "allowPostAsSavedRequest", defaultValue = "true")
-    private boolean allowPostAsSavedRequest;
-
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
         return securedURLsFile;
-    }
-
-    @ConfigEntry
-    public boolean getPostIsAllowedSavedRequest() {
-        return allowPostAsSavedRequest;
     }
 
 }
