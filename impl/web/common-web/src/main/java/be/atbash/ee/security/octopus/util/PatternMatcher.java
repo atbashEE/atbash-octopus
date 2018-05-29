@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.util;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.util.Reviewed;
 
 /**
  * Interface for components that can match source strings against a specified pattern string.
@@ -26,6 +27,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  * @see org.apache.shiro.util.AntPathMatcher AntPathMatcher
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.util.PatternMatcher"})
+@Reviewed
 public interface PatternMatcher {
 
     /**

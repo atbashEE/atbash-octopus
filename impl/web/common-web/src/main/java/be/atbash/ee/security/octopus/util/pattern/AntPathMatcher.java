@@ -17,7 +17,9 @@ package be.atbash.ee.security.octopus.util.pattern;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
+import be.atbash.util.Reviewed;
 import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;
 
@@ -62,51 +64,39 @@ import javax.enterprise.inject.Typed;
  */
 @Typed
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.util.AntPathMatcher"})
+@Reviewed
 public class AntPathMatcher implements PatternMatcher {
 
-    //TODO - complete JavaDoc
+    private String pathSeparator = "/";
 
-    /**
-     * Default path separator: "/"
-     */
-    public static final String DEFAULT_PATH_SEPARATOR = "/";
-
-    private String pathSeparator = DEFAULT_PATH_SEPARATOR;
-
-    /**
-     * Set the path separator to use for pattern parsing.
-     * Default is "/", as in Ant.
-     */
-    public void setPathSeparator(String pathSeparator) {
-        this.pathSeparator = (pathSeparator != null ? pathSeparator : DEFAULT_PATH_SEPARATOR);
-    }
-
-    public boolean isPattern(String path) {
-        return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
-    }
-
-    public boolean matches(String pattern, String source) {
+    public boolean matches(String pattern, String path) {
         if (pattern == null) {
             return false;
         }
-        return doMatch(pattern, source, true);
+        if (StringUtils.isEmpty(path)) {
+            // TODO Document and supply exception number
+            throw new AtbashIllegalActionException("(OCT-DEV-???) Path value is empty");
+        }
+        if (isPattern(path)) {
+            // TODO Document and supply exception number
+            throw new AtbashIllegalActionException(String.format("(OCT-DEV-???) Path value contains pattern characters which is not allowed : '%s'", path));
+        }
+        return doMatch(pattern, path);
     }
 
-    public boolean matchStart(String pattern, String path) {
-        return doMatch(pattern, path, false);
+    private boolean isPattern(String path) {
+        return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
     }
 
     /**
      * Actually match the given <code>path</code> against the given <code>pattern</code>.
      *
-     * @param pattern   the pattern to match against
-     * @param path      the path String to test
-     * @param fullMatch whether a full pattern match is required
-     *                  (else a pattern match as far as the given base path goes is sufficient)
+     * @param pattern the pattern to match against
+     * @param path    the path String to test
      * @return <code>true</code> if the supplied <code>path</code> matched,
      * <code>false</code> if it didn't
      */
-    protected boolean doMatch(String pattern, String path, boolean fullMatch) {
+    private boolean doMatch(String pattern, String path) {
         if (path.startsWith(pathSeparator) != pattern.startsWith(pathSeparator)) {
             return false;
         }
@@ -137,9 +127,7 @@ public class AntPathMatcher implements PatternMatcher {
             if (pattIdxStart > pattIdxEnd) {
                 return (pattern.endsWith(pathSeparator) == path.endsWith(pathSeparator));
             }
-            if (!fullMatch) {
-                return true;
-            }
+
             if (pattIdxStart == pattIdxEnd && pattDirs[pattIdxStart].equals("*") &&
                     path.endsWith(pathSeparator)) {
                 return true;
@@ -153,9 +141,6 @@ public class AntPathMatcher implements PatternMatcher {
         } else if (pattIdxStart > pattIdxEnd) {
             // String not exhausted, but pattern is. Failure.
             return false;
-        } else if (!fullMatch && "**".equals(pattDirs[pattIdxStart])) {
-            // Path start definitely matches due to "**" part in pattern.
-            return true;
         }
 
         // up to last '**'
@@ -373,52 +358,6 @@ public class AntPathMatcher implements PatternMatcher {
         }
 
         return true;
-    }
-
-    /**
-     * Given a pattern and a full path, determine the pattern-mapped part.
-     * <p>For example:
-     * <ul>
-     * <li>'<code>/docs/cvs/commit.html</code>' and '<code>/docs/cvs/commit.html</code> -> ''</li>
-     * <li>'<code>/docs/*</code>' and '<code>/docs/cvs/commit</code> -> '<code>cvs/commit</code>'</li>
-     * <li>'<code>/docs/cvs/*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>commit.html</code>'</li>
-     * <li>'<code>/docs/**</code>' and '<code>/docs/cvs/commit</code> -> '<code>cvs/commit</code>'</li>
-     * <li>'<code>/docs/**\/*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>cvs/commit.html</code>'</li>
-     * <li>'<code>/*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>docs/cvs/commit.html</code>'</li>
-     * <li>'<code>*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>/docs/cvs/commit.html</code>'</li>
-     * <li>'<code>*</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>/docs/cvs/commit.html</code>'</li>
-     * </ul>
-     * <p>Assumes that {@link #matches} returns <code>true</code> for '<code>pattern</code>'
-     * and '<code>path</code>', but does <strong>not</strong> enforce this.
-     */
-    public String extractPathWithinPattern(String pattern, String path) {
-        String[] patternParts = StringUtils.tokenizeToStringArray(pattern, pathSeparator);
-        String[] pathParts = StringUtils.tokenizeToStringArray(path, pathSeparator);
-
-        StringBuilder buffer = new StringBuilder();
-
-        // Add any path parts that have a wildcarded pattern part.
-        int puts = 0;
-        for (int i = 0; i < patternParts.length; i++) {
-            String patternPart = patternParts[i];
-            if ((patternPart.indexOf('*') > -1 || patternPart.indexOf('?') > -1) && pathParts.length >= i + 1) {
-                if (puts > 0 || (i == 0 && !pattern.startsWith(pathSeparator))) {
-                    buffer.append(pathSeparator);
-                }
-                buffer.append(pathParts[i]);
-                puts++;
-            }
-        }
-
-        // Append any trailing path parts.
-        for (int i = patternParts.length; i < pathParts.length; i++) {
-            if (puts > 0 || i > 0) {
-                buffer.append(pathSeparator);
-            }
-            buffer.append(pathParts[i]);
-        }
-
-        return buffer.toString();
     }
 
 }
