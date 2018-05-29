@@ -16,9 +16,6 @@
 package be.atbash.ee.security.octopus.authz.permission;
 
 import be.atbash.ee.security.octopus.authz.permission.typesafe.PermissionLookup;
-import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,15 +26,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
- *
+ * Version only using Java SE
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class PermissionResolverTest {
+public class PermissionResolverSETest {
 
     private PermissionResolver permissionResolver;
-
-    private BeanManagerFake beanManagerFake;
 
     @Mock
     private StringPermissionLookup stringPermissionLookupMock;
@@ -45,26 +40,10 @@ public class PermissionResolverTest {
     @Mock
     private PermissionLookup permissionLookupMock;
 
-    @Before
-    public void setup() {
-        beanManagerFake = new BeanManagerFake();
-
-        permissionResolver = new PermissionResolver();
-    }
-
-    private void finishSetup() {
-        beanManagerFake.endRegistration();
-        permissionResolver.init();
-    }
-
-    @After
-    public void teardown() {
-        beanManagerFake.deregistration();
-    }
-
     @Test
     public void resolvePermission_simpleName() {
-        finishSetup();
+        permissionResolver = new PermissionResolver(null, null);
+
         Permission permission = permissionResolver.resolvePermission("Demo");
         assertThat(permission).isInstanceOf(WildcardPermission.class);
         WildcardPermission wildcardPermission = (WildcardPermission) permission;
@@ -73,7 +52,8 @@ public class PermissionResolverTest {
 
     @Test
     public void resolvePermission_wildCardPermission() {
-        finishSetup();
+        permissionResolver = new PermissionResolver(null, null);
+
         Permission permission = permissionResolver.resolvePermission("oTheR:reAD:sOme");
         assertThat(permission).isInstanceOf(WildcardPermission.class);
         WildcardPermission wildcardPermission = (WildcardPermission) permission;
@@ -82,8 +62,7 @@ public class PermissionResolverTest {
 
     @Test
     public void resolvePermission_StringLookup() {
-        beanManagerFake.registerBean(stringPermissionLookupMock, StringPermissionLookup.class);
-        finishSetup();
+        permissionResolver = new PermissionResolver(null, stringPermissionLookupMock);
 
         NamedDomainPermission namedDomainPermission = new NamedDomainPermission("somePermission", "JUnit", "test", "*");
         when(stringPermissionLookupMock.getPermission("somePermission")).thenReturn(namedDomainPermission);
@@ -96,8 +75,7 @@ public class PermissionResolverTest {
 
     @Test
     public void resolvePermission_PermissionLookup() {
-        beanManagerFake.registerBean(permissionLookupMock, PermissionLookup.class);
-        finishSetup();
+        permissionResolver = new PermissionResolver(permissionLookupMock, null);
 
         NamedDomainPermission namedDomainPermission = new NamedDomainPermission("otherPermission", "other", "*", "hi");
         when(permissionLookupMock.getPermission("otherPermission")).thenReturn(namedDomainPermission);
@@ -110,9 +88,7 @@ public class PermissionResolverTest {
 
     @Test
     public void resolvePermission_PriorityOfLookup() {
-        beanManagerFake.registerBean(permissionLookupMock, PermissionLookup.class);
-        beanManagerFake.registerBean(stringPermissionLookupMock, StringPermissionLookup.class);
-        finishSetup();
+        permissionResolver = new PermissionResolver(permissionLookupMock, stringPermissionLookupMock);
 
         NamedDomainPermission namedDomainPermission = new NamedDomainPermission("otherPermission", "other", "*", "hi");
         when(permissionLookupMock.getPermission("otherPermission")).thenReturn(namedDomainPermission);

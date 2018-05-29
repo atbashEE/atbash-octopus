@@ -18,41 +18,35 @@ package be.atbash.ee.security.octopus.authz.permission;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authz.permission.typesafe.PermissionLookup;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.Reviewed;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
  * A {@code PermisisonResolver} resolves a String value and converts it into a
- * {@link org.apache.shiro.authz.Permission Permission} instance.
+ * {@link Permission Permission} instance.
  * <p/>
- * The default {@link WildcardPermissionResolver} should be
- * suitable for most purposes, which constructs {@link WildcardPermission} objects.
- * However, any resolver may be configured if an application wishes to use different
- * {@link org.apache.shiro.authz.Permission} implementations.
+ * The default should be suitable for most purposes, which constructs {@link WildcardPermission} objects when no match is found by any lookup .
+ * However, any resolver may be configured (in the CDI environment, not with Java SE) if an application wishes to use different
+ * {@link Permission} implementations.
  * <p/>
- * A {@code PermissionResolver} is used by many Shiro components such as annotations, property file
+ * A {@code PermissionResolver} is used by many Octopus components such as annotations, ini file
  * configuration, URL configuration, etc.  It is useful whenever a String representation of a permission is specified
  * and that String needs to be converted to a Permission instance before executing a security check.
  * <p/>
- * Shiro chooses to support {@link WildcardPermission Wildcardpermission}s by default in almost all components and
- * we do that in the form of the {@link WildcardPermissionResolver WildcardPermissionResolver}.   One of the nice
+ * Octopus chooses to support {@link WildcardPermission Wildcardpermission}s by default in almost all components.   One of the nice
  * things about {@code WildcardPermission}s being supported by default is that it makes it very easy to
- * store complex permissions in the database - and also makes it very easy to represent permissions in JSP files,
+ * store complex permissions in the database - and also makes it very easy to represent permissions in JSF files,
  * annotations, etc., where a simple string representation is useful.
  * <p/>
- * Although this happens to be the Shiro default, you are of course free to provide custom
- * String-to-Permission conversion by providing Shiro components any instance of this interface.
- *
- * @see org.apache.shiro.authz.ModularRealmAuthorizer#setPermissionResolver(PermissionResolver) ModularRealmAuthorizer.setPermissionResolver
- * @see org.apache.shiro.realm.AuthorizingRealm#setPermissionResolver(PermissionResolver) AuthorizingRealm.setPermissionResolver
- * @see PermissionResolverAware PermissionResolverAware
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authz.permission.PermissionResolver"})
 @ApplicationScoped
 // Code of be.c4j.ee.security.permission.OctopusPermissionResolver is included here
+@Reviewed
 public class PermissionResolver {
-    // FIXME Is this really the only place where we do it. I have the feeling there is somewhere equivalent code.
+
     private PermissionLookup permissionLookup;
 
     private StringPermissionLookup stringLookup;
