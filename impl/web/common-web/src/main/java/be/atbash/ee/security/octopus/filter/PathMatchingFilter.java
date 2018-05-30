@@ -26,8 +26,10 @@ import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
+
+import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 
 /**
  * <p>Base class for Filters that will process only specified paths and allow all others to pass through.</p>
@@ -45,7 +47,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
      */
 
     @Inject
-    protected PatternMatcher pathMatcher;
+    private PatternMatcher pathMatcher;
 
     /**
      * A collection of path-to-config entries where the key is a path which this filter should process and
@@ -55,7 +57,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
      * <p>The values are filter-specific data that this Filter should use when processing the corresponding
      * key (path).  The values can be null if no Filter-specific config was specified for that url.
      */
-    protected Map<String, Object> appliedPaths = new LinkedHashMap<>();
+    protected Map<String, Object> appliedPaths = new HashMap<>();
 
     /**
      * Split any comma-delimited values that might be found in the <code>config</code> argument and sets the resulting
@@ -158,25 +160,18 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
      */
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-        if (appliedPaths == null || appliedPaths.isEmpty()) {
+        String pathKeyName = (String) request.getAttribute(OCTOPUS_CHAIN_NAME);
+        if (StringUtils.isEmpty(pathKeyName)) {
+            // There is not passing through the Octopus filters and thus we just allow that the chain continues.
+            // In fact, we should never be in this case, all (Octopus) filters descending from PathMatchingFilter should have this attribute.
             if (log.isTraceEnabled()) {
                 log.trace("appliedPaths property is null or empty.  This Filter will passthrough immediately.");
             }
             return true;
         }
+        Object config = appliedPaths.get(pathKeyName);
 
-        for (String path : appliedPaths.keySet()) {
-            // If the path does match, then pass on to the subclass implementation for specific checks
-            //(first match 'wins'):
-            if (pathsMatch(path, request)) {
-                log.trace("Current requestURI matches pattern '{}'.  Determining filter chain execution...", path);
-                Object config = appliedPaths.get(path);
-                return isFilterChainContinued(request, response, path, config);
-            }
-        }
-
-        //no path matched, allow the request to go through:
-        return true;
+        return isFilterChainContinued(request, response, pathKeyName, config);
     }
 
     /**
@@ -190,7 +185,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
             if (log.isTraceEnabled()) {
                 log.trace("Filter '{}' is enabled for the current request under path '{}' with config [{}].  " +
                                 "Delegating to subclass implementation for 'onPreHandle' check.",
-                        new Object[]{getName(), path, pathConfig});
+                        getName(), path, pathConfig);
             }
             //The filter is enabled for this specific request, so delegate to subclass implementations
             //so they can decide if the request should continue through the chain or not:
@@ -200,7 +195,7 @@ public abstract class PathMatchingFilter extends AdviceFilter implements PathCon
         if (log.isTraceEnabled()) {
             log.trace("Filter '{}' is disabled for the current request under path '{}' with config [{}].  " +
                             "The next element in the FilterChain will be called immediately.",
-                    new Object[]{getName(), path, pathConfig});
+                    getName(), path, pathConfig);
         }
         //This filter is disabled for this specific request,
         //return 'true' immediately to indicate that the filter will not process the request
