@@ -479,11 +479,9 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     }
 
     public boolean isPermitted(PrincipalCollection principals, String permission) {
-        throw new UnsupportedOperationException("not implemented be.atbash.ee.security.octopus.realm.AuthorizingRealm.isPermitted");
-        /*
-        Permission p = getPermissionResolver().resolvePermission(permission);
+        Permission p = permissionResolver.resolvePermission(permission);
         return isPermitted(principals, p);
-        */
+
     }
 
     public boolean isPermitted(PrincipalCollection principals, Permission permission) {
