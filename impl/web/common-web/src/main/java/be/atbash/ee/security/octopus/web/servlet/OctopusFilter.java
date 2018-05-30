@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,6 +187,7 @@ public class OctopusFilter extends OncePerRequestFilter {
      */
     protected void executeChain(HttpServletRequest request, HttpServletResponse response, FilterChain origChain)
             throws IOException, ServletException {
+        // get the chain of Filters, or the original Chain if no matches found.
         FilterChain chain = getExecutionChain(request, response, origChain);
         chain.doFilter(request, response);
     }

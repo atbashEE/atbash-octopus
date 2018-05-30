@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.filter.mgt.FilterChainManager;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.util.Reviewed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ import javax.servlet.ServletResponse;
 
 /**
  * A {@code FilterChainResolver} can resolve an appropriate {@link FilterChain} which can be executed for any given
- * request or URI/URL.
+ * request or URI/URL. The name of the matched pattern is set as attribute on the request with name {@code OCTOPUS_CHAIN_NAME}.
  * <p/>
  * This mechanism allows for a much more flexible FilterChain resolution than normal {@code web.xml} servlet filter
  * definitions:  it allows arbitrary filter chains to be defined per URL in a much more concise and easy to read manner,
@@ -39,6 +40,7 @@ import javax.servlet.ServletResponse;
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.mgt.FilterChainResolver", "org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver"})
+@Reviewed
 public class FilterChainResolver {
     public static final String OCTOPUS_CHAIN_NAME = "octopus.chainName";
 
@@ -50,6 +52,16 @@ public class FilterChainResolver {
     @Inject
     private PatternMatcher pathMatcher;
 
+    /**
+     * Resolves the {@link FilterChain} for the request. If a match is found, the chain is wrapped within a ProxiedFilterChain together with the original
+     * Filterchain (from the servlet environment)
+     *
+     * @param request       the incoming ServletRequest
+     * @param response      the outgoing ServletResponse
+     * @param originalChain the original {@code FilterChain} intercepted by the ShiroFilter implementation.
+     * @return the filter chain that should be executed for the given request, or {@code null} if the
+     * original chain should be used.
+     */
     public FilterChain getChain(ServletRequest request, ServletResponse response, FilterChain originalChain) {
         if (!filterChainManager.hasChains()) {
             return null;
@@ -64,8 +76,8 @@ public class FilterChainResolver {
             // If the path does match, then pass on to the subclass implementation for specific checks:
             if (pathMatches(pathPattern, requestURI)) {
                 if (log.isTraceEnabled()) {
-                    log.trace("Matched path pattern [" + pathPattern + "] for requestURI [" + requestURI + "].  " +
-                            "Utilizing corresponding filter chain...");
+                    log.trace(String.format("Matched path pattern [%s] for requestURI [%s].  " +
+                            "Utilizing corresponding filter chain...", pathPattern, requestURI));
                 }
                 request.setAttribute(OCTOPUS_CHAIN_NAME, pathPattern);
                 return filterChainManager.proxy(originalChain, pathPattern);
@@ -80,7 +92,7 @@ public class FilterChainResolver {
      * matches a configured filter chain path (the {@code pattern} argument), {@code false} otherwise.
      * <p/>
      * Simply delegates to
-     * <b><code>{@link #getPathMatcher() getPathMatcher()}.{@link org.apache.shiro.util.PatternMatcher#matches(String, String) matches(pattern,path)}</code></b>.
+     * <b><code>{@link PatternMatcher patternMatcher()}.{@link PatternMatcher#matches(String, String) matches(pattern,path)}</code></b>.
      * Subclass implementors should think carefully before overriding this method, as typically a custom
      * {@code PathMatcher} should be configured for custom path matching behavior instead.  Favor OO composition
      * rather than inheritance to limit your exposure to Shiro implementation details which may change over time.
