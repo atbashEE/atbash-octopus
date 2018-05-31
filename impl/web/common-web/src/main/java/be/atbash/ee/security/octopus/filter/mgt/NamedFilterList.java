@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.filter.mgt;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import be.atbash.ee.security.octopus.web.servlet.AbstractFilter;
 import be.atbash.ee.security.octopus.web.servlet.ProxiedFilterChain;
 import be.atbash.util.Reviewed;
@@ -31,10 +32,10 @@ import java.util.*;
  */
 @Reviewed
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.mgt.NamedFilterList", "org.apache.shiro.web.filter.mgt.SimpleNamedFilterList"})
-public class NamedFilterList implements List<AbstractFilter> {
+public class NamedFilterList implements List<AdviceFilter> {
 
     private String name;
-    private List<AbstractFilter> backingList;
+    private List<AdviceFilter> backingList;
 
     /**
      * Creates a new {@code SimpleNamedFilterList} instance with the specified {@code name}, defaulting to a new
@@ -77,22 +78,22 @@ public class NamedFilterList implements List<AbstractFilter> {
     }
 
     @Override
-    public boolean add(AbstractFilter filter) {
+    public boolean add(AdviceFilter filter) {
         return backingList.add(filter);
     }
 
     @Override
-    public void add(int index, AbstractFilter filter) {
+    public void add(int index, AdviceFilter filter) {
         backingList.add(index, filter);
     }
 
     @Override
-    public boolean addAll(Collection<? extends AbstractFilter> c) {
+    public boolean addAll(Collection<? extends AdviceFilter> c) {
         return backingList.addAll(c);
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends AbstractFilter> c) {
+    public boolean addAll(int index, Collection<? extends AdviceFilter> c) {
         return backingList.addAll(index, c);
     }
 
@@ -112,7 +113,7 @@ public class NamedFilterList implements List<AbstractFilter> {
     }
 
     @Override
-    public AbstractFilter get(int index) {
+    public AdviceFilter get(int index) {
         return backingList.get(index);
     }
 
@@ -127,7 +128,7 @@ public class NamedFilterList implements List<AbstractFilter> {
     }
 
     @Override
-    public Iterator<AbstractFilter> iterator() {
+    public Iterator<AdviceFilter> iterator() {
         return backingList.iterator();
     }
 
@@ -137,17 +138,17 @@ public class NamedFilterList implements List<AbstractFilter> {
     }
 
     @Override
-    public ListIterator<AbstractFilter> listIterator() {
+    public ListIterator<AdviceFilter> listIterator() {
         return backingList.listIterator();
     }
 
     @Override
-    public ListIterator<AbstractFilter> listIterator(int index) {
+    public ListIterator<AdviceFilter> listIterator(int index) {
         return backingList.listIterator(index);
     }
 
     @Override
-    public AbstractFilter remove(int index) {
+    public AdviceFilter remove(int index) {
         return backingList.remove(index);
     }
 
@@ -167,7 +168,7 @@ public class NamedFilterList implements List<AbstractFilter> {
     }
 
     @Override
-    public AbstractFilter set(int index, AbstractFilter filter) {
+    public AdviceFilter set(int index, AdviceFilter filter) {
         return backingList.set(index, filter);
     }
 
@@ -177,7 +178,7 @@ public class NamedFilterList implements List<AbstractFilter> {
     }
 
     @Override
-    public List<AbstractFilter> subList(int fromIndex, int toIndex) {
+    public List<AdviceFilter> subList(int fromIndex, int toIndex) {
         return backingList.subList(fromIndex, toIndex);
     }
 

@@ -18,9 +18,11 @@ package be.atbash.ee.security.octopus.filter.mgt;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
+import be.atbash.ee.security.octopus.filter.GlobalFilterProvider;
 import be.atbash.ee.security.octopus.filter.PathConfigProcessor;
-import be.atbash.ee.security.octopus.web.servlet.AbstractFilter;
+import be.atbash.ee.security.octopus.util.order.ProviderComparator;
 import be.atbash.ee.security.octopus.web.url.SecuredURLReader;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
 import be.atbash.util.StringUtils;
 import org.slf4j.Logger;
@@ -32,10 +34,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static be.atbash.ee.security.octopus.filter.authc.AnonymousFilter.ANONYMOUS_FILTER_NAME;
 import static be.atbash.ee.security.octopus.filter.mgt.ExceptionFilter.EXCEPTION_FILTER_NAME;
@@ -56,11 +55,13 @@ public class FilterChainManager {
     @Inject
     private Instance<AdviceFilter> filterProvider;
 
-    private Map<String, AbstractFilter> filters; //pool of filters available for creating chains
+    private Map<String, AdviceFilter> filters; //pool of filters available for creating chains
     //key: filter name, value: Filter
 
     private Map<String, NamedFilterList> filterChains;
     //key: chain name = URL, value: chain
+
+    private List<GlobalFilterProvider> globalFilterProviders;
 
     /**
      * It initialize this class by first looking up all filters it can find as CDI Beans (all AdviceFilter implementations)
@@ -72,8 +73,17 @@ public class FilterChainManager {
         filterChains = new LinkedHashMap<>();
 
         defineFilters();
-
+        defineGlobalFilterProviders();
         defineChains();
+    }
+
+    private void defineGlobalFilterProviders() {
+
+        // retrieveInstances is an unmodifiable list
+        globalFilterProviders = new ArrayList<>(CDIUtils.retrieveInstances(GlobalFilterProvider.class));
+
+        Collections.sort(globalFilterProviders, new ProviderComparator());
+
     }
 
     /**
@@ -121,9 +131,9 @@ public class FilterChainManager {
      * @param name   the name to assign to the filter, used to reference the filter in chain definitions
      * @param filter the filter to assign to the filter pool
      */
-    protected void addFilter(String name, AbstractFilter filter) {
+    protected void addFilter(String name, AdviceFilter filter) {
         // protected in case someone wants to make a Specialized version
-        AbstractFilter existing = getFilter(name);
+        AdviceFilter existing = getFilter(name);
         if (existing == null) {
             filters.put(name, filter);
         } else {
@@ -139,7 +149,7 @@ public class FilterChainManager {
      *
      * @return the pool of available {@code Filter}s managed by this manager, keyed by {@code name}.
      */
-    public Map<String, AbstractFilter> getFilters() {
+    public Map<String, AdviceFilter> getFilters() {
         return filters;
     }
 
@@ -149,7 +159,7 @@ public class FilterChainManager {
      * @param name name of the filter to retrieve
      * @return The Filter bound to that name or null when no such filter exists.
      */
-    public AbstractFilter getFilter(String name) {
+    public AdviceFilter getFilter(String name) {
         return filters.get(name);
     }
 
@@ -210,7 +220,7 @@ public class FilterChainManager {
      * @see be.atbash.ee.security.octopus.util.pattern.AntPathMatcher
      */
     // TODO Change/verify the example with perms in the javadoc
-    public void createChain(String chainName, String chainDefinition) {
+    protected void createChain(String chainName, String chainDefinition) {
         if (!StringUtils.hasText(chainName)) {
             throw new NullPointerException("chainName cannot be null or empty.");
         }
@@ -225,6 +235,17 @@ public class FilterChainManager {
 
         // Add the ExceptionFilter as first filter in the chain. Always!!
         addToChain(realChainName, EXCEPTION_FILTER_NAME, null);
+
+        for (GlobalFilterProvider globalFilterProvider : globalFilterProviders) {
+            List<String> additionalFilters = globalFilterProvider.addFiltersTo(realChainName);
+
+            for (String additionalFilter : additionalFilters) {
+                String[] nameConfigPair = toNameConfigPair(additionalFilter);
+                //now we have the filter name, path and (possibly null) path-specific config.  Let's apply them:
+                addToChain(realChainName, nameConfigPair[0], nameConfigPair[1]);
+            }
+
+        }
 
         //parse the value by tokenizing it to get the resulting filter-specific config entries
         //
@@ -353,19 +374,6 @@ public class FilterChainManager {
     /**
      * Adds (appends) a filter to the filter chain identified by the given {@code chainName}.  If there is no chain
      * with the given name, a new one is created and the filter will be the first in the chain.
-     *
-     * @param chainName  the name of the chain where the filter will be appended.
-     * @param filterName the name of the {@link #addFilter registered} filter to add to the chain.
-     * @throws IllegalArgumentException if there is not a {@link #addFilter(String, AbstractFilter) registered}
-     *                                  filter under the given {@code filterName}
-     */
-    public void addToChain(String chainName, String filterName) {
-        addToChain(chainName, filterName, null);
-    }
-
-    /**
-     * Adds (appends) a filter to the filter chain identified by the given {@code chainName}.  If there is no chain
-     * with the given name, a new one is created and the filter will be the first in the chain.
      * <p/>
      * Note that the chainSpecificFilterConfig argument expects the associated filter to be an instance of
      * a {@link PathConfigProcessor PathConfigProcessor} to accept per-chain configuration.
@@ -378,7 +386,7 @@ public class FilterChainManager {
      * @throws ConfigurationException if there is not a {@link #addFilter(String, AbstractFilter) registered}
      *                                filter under the given {@code filterName}.
      */
-    public void addToChain(String chainName, String filterName, String chainSpecificFilterConfig) {
+    protected void addToChain(String chainName, String filterName, String chainSpecificFilterConfig) {
 
         // TODO Support a flag for 'validating' filter chains.
         // Like did we use the correct order?
@@ -386,7 +394,7 @@ public class FilterChainManager {
         if (!StringUtils.hasText(chainName)) {
             throw new IllegalArgumentException("(E0010) Error : chainName cannot be null or empty.");
         }
-        AbstractFilter filter = getFilter(filterName);
+        AdviceFilter filter = getFilter(filterName);
         if (filter == null) {
             throw new ConfigurationException(
                     String.format("(E0011) Error : There is no filter with name '%s' to apply to chain [%s]" +
@@ -407,7 +415,7 @@ public class FilterChainManager {
      * @param chainSpecificFilterConfig The filter config, the 'syntax' is filter dependent.
      * @throws ConfigurationException When chainSpecificFilterConfig is specified but filter itself doesn't accept it.
      */
-    private void applyChainConfig(String chainName, AbstractFilter filter, String chainSpecificFilterConfig) {
+    private void applyChainConfig(String chainName, AdviceFilter filter, String chainSpecificFilterConfig) {
         if (log.isDebugEnabled()) {
             log.debug("Attempting to apply path [" + chainName + "] to filter [" + filter + "] " +
                     "with config [" + chainSpecificFilterConfig + "]");

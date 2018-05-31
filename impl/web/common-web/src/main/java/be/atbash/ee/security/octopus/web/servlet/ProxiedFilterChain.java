@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.web.servlet;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +38,10 @@ public class ProxiedFilterChain implements FilterChain {
     private static final Logger log = LoggerFactory.getLogger(ProxiedFilterChain.class);
 
     private FilterChain orig;
-    private List<AbstractFilter> filters;
+    private List<AdviceFilter> filters;
     private int index;
 
-    public ProxiedFilterChain(FilterChain orig, List<AbstractFilter> filters) {
+    public ProxiedFilterChain(FilterChain orig, List<AdviceFilter> filters) {
         if (orig == null) {
             throw new NullPointerException("original FilterChain cannot be null.");
         }
