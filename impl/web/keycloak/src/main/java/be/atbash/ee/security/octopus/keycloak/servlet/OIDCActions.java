@@ -15,6 +15,9 @@
  */
 package be.atbash.ee.security.octopus.keycloak.servlet;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
+import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import org.keycloak.adapters.CorsHeaders;
 import org.keycloak.adapters.KeycloakDeployment;
@@ -47,11 +50,13 @@ public class OIDCActions {
     private HttpServletRequest request;
 
     private HttpServletResponse response;
+    private ActiveSessionRegistry activeSessionRegistry;
 
-    public OIDCActions(KeycloakDeployment deployment, HttpServletRequest request, HttpServletResponse response) {
+    public OIDCActions(KeycloakDeployment deployment, HttpServletRequest request, HttpServletResponse response, ActiveSessionRegistry activeSessionRegistry) {
         this.deployment = deployment;
         this.request = request;
         this.response = response;
+        this.activeSessionRegistry = activeSessionRegistry;
 
         logger = LoggerFactory.getLogger(OIDCActions.class);
 
@@ -110,6 +115,16 @@ public class OIDCActions {
                 return;
             }
 
+            System.out.println("handleLogout");
+            for (final String clientSession : action.getKeycloakSessionIds()) {
+
+                activeSessionRegistry.invalidateSession(new ActiveSessionRegistry.UserSessionFinder() {
+                    @Override
+                    public boolean isCorrectPrincipal(UserPrincipal userPrincipal, String sessionId) {
+                        return clientSession.equals(userPrincipal.getUserInfo(OctopusConstants.EXTERNAL_SESSION_ID));
+                    }
+                });
+            }
             // FIXME Handle global logout
             /*
             if (action.getAdapterSessionIds() != null) {

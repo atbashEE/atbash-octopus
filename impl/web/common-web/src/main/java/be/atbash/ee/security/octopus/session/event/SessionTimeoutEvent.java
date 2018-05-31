@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus;
+package be.atbash.ee.security.octopus.session.event;
 
-import be.atbash.util.Reviewed;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
 /**
  *
  */
-@Reviewed
-public final class OctopusConstants {
+
+public class SessionTimeoutEvent {
+
+
+    private UserPrincipal principal;
+
+    public SessionTimeoutEvent(UserPrincipal somePrincipal) {
+        principal = somePrincipal;
+    }
+
+    public UserPrincipal getPrincipal() {
+        return principal;
+    }
 
     /**
-     * HTTP Authorization header, equal to <code>Authorization</code>
+     * Does the same as getPrincipal() but here for uniformity.
+     *
      */
-    public static final String INFO_KEY_TOKEN = "token";
-
-    public static final String EMAIL = "email";
-
-    public static final String PICTURE = "picture";
-    public static final String GENDER = "gender";
-    public static final String LOCALE = "locale";
-    public static final String UPSTREAM_TOKEN = "upstreamToken";
-    public static final String EXTERNAL_SESSION_ID = "externalSession";
+    public UserPrincipal getUserPrincipal() {
+        return principal;
+    }
 
 }

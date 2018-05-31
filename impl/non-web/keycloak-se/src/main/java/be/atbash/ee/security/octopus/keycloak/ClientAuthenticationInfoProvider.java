@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.keycloak;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.keycloak.adapter.*;
@@ -65,6 +66,7 @@ public class ClientAuthenticationInfoProvider implements AuthenticationInfoProvi
             builder.principalId(keycloakUserToken.getId());
 
             builder.name(keycloakUserToken.getName());
+            builder.addUserInfo(OctopusConstants.EXTERNAL_SESSION_ID, keycloakUserToken.getClientSession());
             builder.token(keycloakUserToken);
 
             return builder.build();

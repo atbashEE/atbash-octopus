@@ -63,6 +63,11 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigProperty(name = "single.logout", defaultValue = "false")
     private boolean singleLogout;
 
+    @Inject
+    @ConfigProperty(name = "session.hijacking.level", defaultValue = "ON")
+    // WildFly swarm version used in IT testing, doesn't handle yet Enum in a generic way yet!
+    private String sessionHijackingLevel;
+
     @ConfigEntry()
     public String getLoginPage() {
         return loginPage;
@@ -112,5 +117,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigEntry
     public String getDefaultUserFilter() {
         return defaultUserFilter;
+    }
+
+    @ConfigEntry
+    public SessionHijackingLevel getSessionHijackingLevel() {
+        return SessionHijackingLevel.valueOf(sessionHijackingLevel);
     }
 }

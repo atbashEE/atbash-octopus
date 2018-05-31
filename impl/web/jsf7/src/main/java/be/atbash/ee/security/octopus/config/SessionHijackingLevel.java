@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus;
-
-import be.atbash.util.Reviewed;
+package be.atbash.ee.security.octopus.config;
 
 /**
  *
  */
-@Reviewed
-public final class OctopusConstants {
 
-    /**
-     * HTTP Authorization header, equal to <code>Authorization</code>
-     */
-    public static final String INFO_KEY_TOKEN = "token";
+public enum SessionHijackingLevel {
 
-    public static final String EMAIL = "email";
-
-    public static final String PICTURE = "picture";
-    public static final String GENDER = "gender";
-    public static final String LOCALE = "locale";
-    public static final String UPSTREAM_TOKEN = "upstreamToken";
-    public static final String EXTERNAL_SESSION_ID = "externalSession";
+    ON, PARTIAL, OFF
 
 }

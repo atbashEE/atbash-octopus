@@ -83,6 +83,7 @@ public class AccessTokenHandlerTest {
         AccessTokenResponse tokenResponse = new AccessTokenResponse();
         tokenResponse.setToken(jsonToken);
         tokenResponse.setIdToken(jsonIdToken);
+        tokenResponse.setSessionState(CLIENT_SESSION);
 
         // Create a KeycloakDeployment dummy.
         KeycloakDeployment deployment = defineKeycloakDeployment(atbashKeys);
@@ -237,7 +238,6 @@ public class AccessTokenHandlerTest {
         accessToken.type("Bearer");
 
         // Values for the things we want to test here.
-        accessToken.clientSession(CLIENT_SESSION);
         AccessToken.Access realmAccess = new AccessToken.Access();
         realmAccess.addRole(ROLE1);
         realmAccess.addRole(ROLE2);

@@ -75,7 +75,7 @@ public final class AccessTokenHandler {
 
         // TODO Seems that roles aren't available in idToken only in accessToken
         user.setRoles(accessToken.getRealmAccess().getRoles());
-        user.setClientSession(accessToken.getClientSession());
+        user.setClientSession(accessTokenResponse.getSessionState());
 
         // TODO Other parameters
 

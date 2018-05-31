@@ -23,6 +23,7 @@ import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakDeploymentHelper;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
 import be.atbash.ee.security.octopus.keycloak.adapter.OIDCAuthenticationException;
 import be.atbash.ee.security.octopus.keycloak.config.OctopusKeycloakConfiguration;
+import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -60,6 +61,9 @@ public class KeycloakServlet extends HttpServlet {
 
     @Inject
     private OctopusKeycloakConfiguration keycloakConfiguration;
+
+    @Inject
+    private ActiveSessionRegistry activeSessionRegistry;
 
     private KeycloakDeployment deployment;
 
@@ -100,14 +104,14 @@ public class KeycloakServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        OIDCActions oidcActions = new OIDCActions(deployment, request, response);
+        OIDCActions oidcActions = new OIDCActions(deployment, request, response, activeSessionRegistry);
         handleRequest(oidcActions);
         // TODO Handle the return case false meaning action did not result in some code execution.
     }
 
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        OIDCActions oidcActions = new OIDCActions(deployment, request, response);
+        OIDCActions oidcActions = new OIDCActions(deployment, request, response, activeSessionRegistry);
         handleRequest(oidcActions);
         // TODO Handle the return case false meaning action did not result in some code execution.
     }
