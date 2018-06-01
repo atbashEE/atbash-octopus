@@ -1,0 +1,45 @@
+=== Session fixation
+
+A possible way to fight against a session fixation attack is that the session is changed during the authentication of the end user.
+
+Therefore, by default, the HTTPSession which is active during login (When using username - password, OAuth2, KeyCloak, CAS, ...) is invalidated and a new one is created.
+
+Because vital information is placed on the session for the correct functioning of Octopus, all session attributes are copied to the new session.
+
+One can disable this invalidation and recreation of the session by means of the parameter +session.invalidate.login+
+
+
+=== Session Hijacking
+
+With a Session Hijack attack, someone got hold of your sessionId and use it to access the application with your credentials.
+
+A protection is built-in Octopus and compares the IP address and the User agent information. If it detects a request with a different IP address and User-Agent then a previous request with the same SessionId, it blocks it.
+
+The request where the anomaly is detected receives a response with status 401, a marker is placed on the other session for which there was a hijack attempt. This can be checked by the EL expression +#{octopusUserInfoBean.sessionHijackDetected}+
+
+With the configuration parameter, +session.hijacking.level+ we can control the level of the protection.
+
+* _ON_ (default value), the IP address and User-Agent header value must match for all requests with the same sessionId
+* _PARTIAL_, only the User-Agent header value must match.
+* _OFF_, no protection, only recommended when your application does not contain personal information or uses no permissions.
+
+The _PARTIAL_ value is required if your end users switch for example from a wired to a wireless internet connection (used in some companies) and the IP address is different on both systems. Or you have a mobile JSF application (with PrimeFaces mobile for example) with end user connection can change (between WIFI and 3G for example)
+
+=== Single session
+
+By default, a user can only be logged in once into the application. If the same user, this is determined by the principalId of the AuthenticationInfo see ???, is already logged in, the other session is invalidated (and thus a logout is performed) automatically.
+
+This behaviour can be controlled by the configuration parameter +session.single+.
+
+=== Catch OctopusUnexpectedException
+
+Various parts of the code throws the OctopusUnexpectedException when some unexpected condition happens. Make sure you catch at a minimum these Exception (by means of an ExcetionHandler in JSF for example) so that no stacktrace is exposed to the client.
+
+It is a good idea to route any exception to a custom page/JAX-RS endpoint response so that internal application information isn't exposed.
+
+
+=== OWASP
+
+Additional information can be found here
+
+https://www.owasp.org/index.php/Session_Management_Cheat_Sheet

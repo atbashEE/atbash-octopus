@@ -142,6 +142,13 @@ default : *false*
 
 Exclude the wrapping of the PrimeFaces mobile renderers (for compatibility reasons, will be removed in some future version)
 
+==== session.hijacking.level (JSF Only)
+
+default : *ON*
+
+Determines the Session Hijack Protection level. It uses the IP Address and User-Agent header information and checks if the sessionId could be 'stolen'.
+
+The default level _ON_, checks both properties, _PARTIAL_ only the User-Agent header value and _OFF_ disables the protection.
 
 
 === Keycloak configuration
