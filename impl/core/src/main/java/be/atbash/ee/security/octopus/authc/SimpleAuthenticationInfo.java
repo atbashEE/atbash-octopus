@@ -30,7 +30,7 @@ import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
  * @see org.apache.shiro.realm.AuthenticatingRealm
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.SimpleAuthenticationInfo"})
-// FIXME Rename to ???
+// FIXME Rename to ??? Or integrate with AuthenticationInfo interface. After we have sorted out 2step.
 public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
 
     /**
@@ -82,6 +82,7 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
     public SimpleAuthenticationInfo(UserPrincipal principal, ValidatedAuthenticationToken token) {
         principals = new PrincipalCollection(principal);
         this.token = token;
+        principals.add(token);
 
         principal.addUserInfo(INFO_KEY_TOKEN, token);
 
