@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-mp</artifactId>
+            <artifactId>octopus-mp-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

@@ -22,8 +22,8 @@ import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
 import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
 import be.atbash.ee.security.octopus.keys.selector.KeySelector;
 import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
-import be.atbash.ee.security.octopus.token.MPJWTToken;
-import be.atbash.ee.security.octopus.token.MPJWTTokenBuilder;
+import be.atbash.ee.security.octopus.mp.token.MPJWTToken;
+import be.atbash.ee.security.octopus.mp.token.MPJWTTokenBuilder;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
