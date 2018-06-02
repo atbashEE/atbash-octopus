@@ -22,6 +22,7 @@ import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.filter.authc.BasicHttpAuthenticationFilter;
 import be.atbash.ee.security.octopus.filter.authc.UserFilter;
 import be.atbash.ee.security.octopus.filter.mgt.FilterChainManager;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -97,7 +98,7 @@ public class JSFAccessDeniedHandlerTest {
         when(chainManagerMock.getFilter("user")).thenReturn(userFilterMock);
 
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new Object()); // any value will do
+        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // any value will do
         when(subjectMock.isAuthenticated()).thenReturn(false);
 
         accessDeniedHandler.init();
@@ -111,7 +112,7 @@ public class JSFAccessDeniedHandlerTest {
         //  authenticated + unauthorizedPage defined -> redirect to unauthorized Page
 
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new Object()); // any value will do
+        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // any value will do
         when(subjectMock.isAuthenticated()).thenReturn(true);
 
         when(jsfConfigurationMock.getUnauthorizedExceptionPage()).thenReturn("/unauthorized.xhtml");
@@ -127,7 +128,7 @@ public class JSFAccessDeniedHandlerTest {
         //  authenticated + no unauthorizedPage defined -> send status
 
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new Object()); // any value will do
+        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // any value will do
         when(subjectMock.isAuthenticated()).thenReturn(true);
 
         when(jsfConfigurationMock.getUnauthorizedExceptionPage()).thenReturn("");

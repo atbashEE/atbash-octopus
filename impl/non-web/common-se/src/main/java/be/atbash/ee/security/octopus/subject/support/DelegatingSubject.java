@@ -94,7 +94,7 @@ public class DelegatingSubject implements Subject {
     /**
      * @see Subject#getPrincipal()
      */
-    public Object getPrincipal() {
+    public UserPrincipal getPrincipal() {
         return getPrimaryPrincipal(getPrincipals());
     }
 

@@ -37,6 +37,7 @@ import be.atbash.ee.security.octopus.interceptor.testclasses.TestCustomVoter;
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestPermissionCheck;
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestRoleCheck;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
@@ -141,7 +142,7 @@ public class OctopusInterceptorTest {
                 when(subjectMock.getPrincipal()).thenReturn(systemAccountPrincipal);
             } else {
 
-                when(subjectMock.getPrincipal()).thenReturn(new Object());
+                when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal());
 
             }
             when(subjectMock.isAuthenticated()).thenReturn(true);

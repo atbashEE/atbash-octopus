@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.filter.authc;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.session.Session;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.SavedRequest;
@@ -83,7 +84,7 @@ public class AbstractUserFilterTest {
     public void isAccessAllowed_noLoginRequest_anonymousUser() {
         configureIsLoginRequest(false);
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new Object()); // We just need to return something
+        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // We just need to return something
         when(subjectMock.isAuthenticated()).thenReturn(false);
 
         boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
@@ -94,7 +95,7 @@ public class AbstractUserFilterTest {
     public void isAccessAllowed_noLoginRequest_authenticatedUser() {
         configureIsLoginRequest(false);
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new Object()); // We just need to return something
+        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // We just need to return something
         when(subjectMock.isAuthenticated()).thenReturn(true);
 
         boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public interface Subject {
      * @return this Subject's application-specific unique identity.
      * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()
      */
-    Object getPrincipal();
+    UserPrincipal getPrincipal();
 
     /**
      * Performs a login attempt for this Subject/user.  If unsuccessful,
