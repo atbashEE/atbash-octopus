@@ -38,7 +38,7 @@ public class AuthorizationData implements AuthorizationInfoProvider {
     @Override
     public AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
 
-        UserPrincipal userPrincipal = (UserPrincipal) principals.getPrimaryPrincipal();
+        UserPrincipal userPrincipal = principals.getPrimaryPrincipal();
 
         AuthorizationInfoBuilder builder = new AuthorizationInfoBuilder();
 

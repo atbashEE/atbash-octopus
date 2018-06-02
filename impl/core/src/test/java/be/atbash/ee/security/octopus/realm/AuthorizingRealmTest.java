@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheException;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.BeanManagerFake;
 import org.junit.After;
@@ -97,8 +97,8 @@ public class AuthorizingRealmTest {
         listeners.add(listener);
         realm.setAuthenticationListeners(listeners);
 
-        // Test fucntionality
-        realm.onLogout(new SimplePrincipalCollection("Atbash"));
+        // Test functionality
+        realm.onLogout(new PrincipalCollection(new UserPrincipal(1L, "Atbash", "Atbash")));
 
         // Listener called?
         assertThat(listener.getPrincipals()).isNotNull();
@@ -107,17 +107,17 @@ public class AuthorizingRealmTest {
         verify(authenticationCacheMock).remove(authenticationCacheKeyCaptor.capture());
         verify(authorizationCacheMock).remove(authorizationCacheKeyCaptor.capture());
 
-        assertThat(authenticationCacheKeyCaptor.getValue()).isEqualTo("Atbash");
+        Object captorValue = authenticationCacheKeyCaptor.getValue();
+        assertThat(captorValue).isInstanceOf(UserPrincipal.class);
+        UserPrincipal userPrincipal = (UserPrincipal) captorValue;
+        assertThat(userPrincipal.getUserName()).isEqualTo("Atbash");
         Object key = authorizationCacheKeyCaptor.getValue();
         assertThat(key).isInstanceOf(PrincipalCollection.class);
 
         PrincipalCollection principalCollection = (PrincipalCollection) key;
-        Object primaryPrincipal = principalCollection.getPrimaryPrincipal();
+        UserPrincipal primaryPrincipal = principalCollection.getPrimaryPrincipal();
 
-        // Here primaryPrincipal is a String due to new SimplePrincipalCollection("Atbash")
-        assertThat(primaryPrincipal).isInstanceOf(String.class);
-
-        assertThat(primaryPrincipal).isEqualTo("Atbash");
+        assertThat(primaryPrincipal.getUserName()).isEqualTo("Atbash");
 
     }
 

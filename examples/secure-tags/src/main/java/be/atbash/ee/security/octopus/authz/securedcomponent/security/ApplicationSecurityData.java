@@ -59,7 +59,7 @@ public class ApplicationSecurityData implements SecurityDataProvider {
     @Override
     public AuthorizationInfo getAuthorizationInfo(PrincipalCollection principalCollection) {
         AuthorizationInfoBuilder builder = new AuthorizationInfoBuilder();
-        UserPrincipal principal = (UserPrincipal) principalCollection.getPrimaryPrincipal();
+        UserPrincipal principal = principalCollection.getPrimaryPrincipal();
         if ("admin".equalsIgnoreCase(principal.getUserName())) {
             builder.addPermission("demo:*:*");
             builder.addPermission("special:action:*");

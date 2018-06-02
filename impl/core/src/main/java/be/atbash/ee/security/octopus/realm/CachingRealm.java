@@ -25,14 +25,12 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.util.Nameable;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CDIUtils;
-import be.atbash.util.CollectionUtils;
 import be.atbash.util.reflection.CDICheck;
 import be.atbash.util.reflection.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.Collection;
 
 /**
  * A very basic abstract extension point for the {@link Realm} interface that provides caching support for subclasses.
@@ -165,35 +163,4 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
     protected void doClearCache(PrincipalCollection principals) {
     }
 
-    /**
-     * A utility method for subclasses that returns the first available principal of interest to this particular realm.
-     * The heuristic used to acquire the principal is as follows:
-     * <ul>
-     * <li>Attempt to get <em>this particular Realm's</em> 'primary' principal in the {@code PrincipalCollection} via a
-     * <code>principals.{@link PrincipalCollection#fromRealm(String) fromRealm}({@link #getName() getName()})</code>
-     * call.</li>
-     * <li>If the previous call does not result in any principals, attempt to get the overall 'primary' principal
-     * from the PrincipalCollection via {@link org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()}.</li>
-     * <li>If there are no principals from that call (or the PrincipalCollection argument was null to begin with),
-     * return {@code null}</li>
-     * </ul>
-     *
-     * @param principals the PrincipalCollection holding all principals (from all realms) associated with a single Subject.
-     * @return the 'primary' principal attributed to this particular realm, or the fallback 'master' principal if it
-     * exists, or if not {@code null}.
-     */
-    protected Object getAvailablePrincipal(PrincipalCollection principals) {
-        Object primary = null;
-        if (!OctopusCollectionUtils.isEmpty(principals)) {
-            Collection thisPrincipals = principals.asList();
-            if (!CollectionUtils.isEmpty(thisPrincipals)) {
-                primary = thisPrincipals.iterator().next();
-            } else {
-                //no principals attributed to this particular realm.  Fall back to the 'master' primary:
-                primary = principals.getPrimaryPrincipal();
-            }
-        }
-
-        return primary;
-    }
 }

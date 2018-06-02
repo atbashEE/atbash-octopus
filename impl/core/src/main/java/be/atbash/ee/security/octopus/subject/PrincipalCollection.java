@@ -16,34 +16,63 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.util.CollectionUtils;
+import be.atbash.util.PublicAPI;
+import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashIllegalActionException;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A collection of all principals associated with a corresponding {@link Subject Subject}.  A <em>principal</em> is
  * just a security term for an identifying attribute, such as a username or user id or social security number or
  * anything else that can be considered an 'identifying' attribute for a {@code Subject}.
  * <p/>
- * A PrincipalCollection organizes its internal principals based on the {@code Realm} where they came from when the
- * Subject was first created.  To obtain the principal(s) for a specific Realm, see the {@link #fromRealm} method.  You
- * can also see which realms contributed to this collection via the {@link #getRealmNames() getRealmNames()} method.
+ * The primary Principal is always an instance of Octopus {@link UserPrincipal userPrincipal}. Additional principals are the {@code ValidatedAuthenticationToken} ones
+ * used for creating the UserPrincipal, or derived from the UserPrincipal.
  *
  * @see #getPrimaryPrincipal()
- * @see #fromRealm(String realmName)
- * @see #getRealmNames()
  */
-// TODO I think we shouldn't have multiple Principals but 2Step authc uses them!
-// No that we can rewrite Shiro code, see if we can do 2step without multiple Principals
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.subject.PrincipalCollection", "org.apache.shiro.subject.SimplePrincipalCollection"})
-public interface PrincipalCollection extends Iterable, Serializable {
+@PublicAPI
+public class PrincipalCollection implements Iterable, Serializable {
+
+    private Set<Serializable> principals;
+
+    private transient String cachedToString; //cached toString() result, as this can be printed many times in logging
+
+    public PrincipalCollection(UserPrincipal primaryPrincipal) {
+        if (primaryPrincipal == null) {
+            throw new AtbashIllegalActionException("(???TODO) UserPrincipal can never be null when creating the PrincipalCollection");
+        }
+        principals = new HashSet<>();
+        principals.add(primaryPrincipal);
+    }
+
+    /**
+     * Add an additional Principal to the collection.
+     *
+     * @param principal
+     */
+    public void add(Serializable principal) {
+        // FIXME Should parameter be ValidatedAuthenticationToken or do we allow that developers add their own Principal.
+        // Probably the second option is best and thus we need Object as type.
+        if (principal == null) {
+            throw new IllegalArgumentException("principal argument cannot be null.");
+        }
+        cachedToString = null;
+        // TODO Check if a principal of the same type already exist? What about byType which can return more then one?
+        principals.add(principal);
+    }
 
     /**
      * Returns the primary principal used application-wide to uniquely identify the owning account/Subject.
      * <p/>
-     * The value is usually always a uniquely identifying attribute specific to the data source that retrieved the
+     * The value is always a {@link UserPrincipal userPrincipal} instance where the id is an identifying attribute specific to the data source that retrieved the
      * account data.  Some examples:
      * <ul>
      * <li>a {@link java.util.UUID UUID}</li>
@@ -51,31 +80,13 @@ public interface PrincipalCollection extends Iterable, Serializable {
      * <li>an LDAP UUID or static DN</li>
      * <li>a String username unique across all user accounts</li>
      * </ul>
-     * <h3>Multi-Realm Applications</h3>
-     * In a single-{@code Realm} application, typically there is only ever one unique principal to retain and that
-     * is the value returned from this method.  However, in a multi-{@code Realm} application, where the
-     * {@code PrincipalCollection} might retain principals across more than one realm, the value returned from this
-     * method should be the single principal that uniquely identifies the subject for the entire application.
-     * <p/>
-     * That value is of course application specific, but most applications will typically choose one of the primary
-     * principals from one of the {@code Realm}s.
-     * <p/>
-     * Shiro's default implementations of this interface make this
-     * assumption by usually simply returning {@link #iterator()}.{@link java.util.Iterator#next() next()}, which just
-     * returns the first returned principal obtained from the first consulted/configured {@code Realm} during the
-     * authentication attempt.  This means in a multi-{@code Realm} application, {@code Realm} configuraiton order
-     * matters if you want to retain this default heuristic.
-     * <p/>
-     * If this heuristic is not sufficient, most Shiro end-users will need to implement a custom
-     * {@link org.apache.shiro.authc.pam.AuthenticationStrategy}.  An {@code AuthenticationStrategy} has exact control
-     * over the {@link PrincipalCollection} returned at the end of an authentication attempt via the
-     * <code>AuthenticationStrategy#{@link org.apache.shiro.authc.pam.AuthenticationStrategy#afterAllAttempts(org.apache.shiro.authc.AuthenticationToken, org.apache.shiro.authc.AuthenticationInfo) afterAllAttempts}</code>
-     * implementation.
      *
      * @return the primary principal used to uniquely identify the owning account/Subject
      */
-    // FIXME PrimaryPrincipal always a UserPrincipal?
-    Object getPrimaryPrincipal();
+
+    public UserPrincipal getPrimaryPrincipal() {
+        return oneByType(UserPrincipal.class);
+    }
 
     /**
      * Returns the first discovered principal assignable from the specified type, or {@code null} if there are none
@@ -86,7 +97,17 @@ public interface PrincipalCollection extends Iterable, Serializable {
      * @param type the type of the principal that should be returned.
      * @return a principal of the specified type or {@code null} if there isn't one of the specified type.
      */
-    <T> T oneByType(Class<T> type);
+    public <T> T oneByType(Class<T> type) {
+        if (CollectionUtils.isEmpty(principals)) {
+            return null;
+        }
+        for (Object principal : principals) {
+            if (type.isAssignableFrom(principal.getClass())) {
+                return (T) principal;
+            }
+        }
+        return null;
+    }
 
     /**
      * Returns all principals assignable from the specified type, or an empty Collection if no principals of that
@@ -98,17 +119,34 @@ public interface PrincipalCollection extends Iterable, Serializable {
      * @return a Collection of principals that are assignable from the specified type, or
      * an empty Collection if no principals of this type are associated.
      */
-    <T> Collection<T> byType(Class<T> type);
+    public <T> Collection<T> byType(Class<T> type) {
+        if (CollectionUtils.isEmpty(principals)) {
+            return Collections.EMPTY_SET;
+        }
+        Set<T> result = new HashSet<>();
+        for (Object principal : principals) {
+            if (type.isAssignableFrom(principal.getClass())) {
+                result.add((T) principal);
+            }
+        }
 
-    /**
+        if (result.isEmpty()) {
+            return Collections.EMPTY_SET;
+        }
+        return Collections.unmodifiableSet(result);
+
+    }
+
+    /*
      * Returns a single Subject's principals retrieved from all configured Realms as a List, or an empty List if
      * there are not any principals.
      * <p/>
      * Note that this will return an empty List if the 'owning' subject has not yet logged in.
      *
      * @return a single Subject's principals retrieved from all configured Realms as a List.
-     */
+
     List asList();
+     */
 
     /**
      * Returns a single Subject's principals retrieved from all configured Realms as a Set, or an empty Set if there
@@ -118,32 +156,87 @@ public interface PrincipalCollection extends Iterable, Serializable {
      *
      * @return a single Subject's principals retrieved from all configured Realms as a Set.
      */
-    Set asSet();
-
-    /*
-     * Returns a single Subject's principals retrieved from the specified Realm <em>only</em> as a Collection, or an empty
-     * Collection if there are not any principals from that realm.
-     * <p/>
-     * Note that this will return an empty Collection if the 'owning' subject has not yet logged in.
-     *
-     * @param realmName the name of the Realm from which the principals were retrieved.
-     * @return the Subject's principals from the specified Realm only as a Collection or an empty Collection if there
-     *         are not any principals from that realm.
-
-    Collection fromRealm(String realmName);
-
-    /**
-     * Returns the realm names that this collection has principals for.
-     *
-     * @return the names of realms that this collection has one or more principals for.
-
-    Set<String> getRealmNames();
-     */
+    public Set<Serializable> asSet() {
+        if (CollectionUtils.isEmpty(principals)) {
+            return Collections.EMPTY_SET;
+        }
+        return Collections.unmodifiableSet(principals);
+    }
 
     /**
      * Returns {@code true} if this collection is empty, {@code false} otherwise.
      *
      * @return {@code true} if this collection is empty, {@code false} otherwise.
      */
-    boolean isEmpty();
+    public boolean isEmpty() {
+        return CollectionUtils.isEmpty(principals);
+    }
+
+    public void clear() {
+        cachedToString = null;
+        if (principals != null) {
+            principals.clear();
+            principals = null;
+        }
+    }
+
+    public Iterator iterator() {
+        return asSet().iterator();
+    }
+
+    /**
+     * Returns a simple string representation suitable for printing.
+     *
+     * @return a simple string representation suitable for printing.
+     */
+    public String toString() {
+        if (cachedToString == null) {
+            if (!CollectionUtils.isEmpty(principals)) {
+                cachedToString = StringUtils.toDelimitedString(principals.toArray());
+            } else {
+                cachedToString = "empty";
+            }
+        }
+        return cachedToString;
+    }
+
+    /**
+     * Serialization write support.
+     * <p/>
+     * NOTE: Don't forget to change the serialVersionUID constant at the top of this class
+     * if you make any backwards-incompatible serializatoin changes!!!
+     * (use the JDK 'serialver' program for this) // FIXME Note from Shiro, is principalColleciton still stored?
+     *
+     * @param out output stream provided by Java serialization
+     * @throws IOException if there is a stream error
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        boolean principalsExist = !CollectionUtils.isEmpty(principals);
+        out.writeBoolean(principalsExist);
+        if (principalsExist) {
+            out.writeObject(principals);
+        }
+    }
+
+    /**
+     * Serialization read support - reads in the Map principals collection if it exists in the
+     * input stream.
+     * <p/>
+     * NOTE: Don't forget to change the serialVersionUID constant at the top of this class
+     * if you make any backwards-incompatible serialization changes!!!
+     * (use the JDK 'serialver' program for this)
+     *
+     * @param in input stream provided by
+     * @throws IOException            if there is an input/output problem
+     * @throws ClassNotFoundException if the underlying Map implementation class is not available to the classloader.
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        boolean principalsExist = in.readBoolean();
+        if (principalsExist) {
+            principals = (Set) in.readObject();
+        }
+    }
+
 }

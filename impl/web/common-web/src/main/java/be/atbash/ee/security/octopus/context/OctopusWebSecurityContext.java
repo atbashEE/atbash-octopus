@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.context;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
 import javax.enterprise.context.Dependent;
 
@@ -59,7 +60,7 @@ public class OctopusWebSecurityContext extends OctopusSecurityContext {
     }
     */
 
-    public static boolean isSystemAccount(Object principal) {
+    public static boolean isSystemAccount(UserPrincipal principal) {
         return false; //FIXME
         //return principal instanceof SystemAccountPrincipal; FIXME
     }

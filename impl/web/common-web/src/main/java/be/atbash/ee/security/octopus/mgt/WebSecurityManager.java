@@ -429,10 +429,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
         } else {
         */
-        Object principal = info.getPrincipals().getPrimaryPrincipal();
-        if (principal instanceof UserPrincipal) {
-
-            UserPrincipal userPrincipal = (UserPrincipal) principal;
+        UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
 
                 /*
                 // TODO Review this, Can it be solved differently?
@@ -441,18 +438,10 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
                 } else {
                 */
-            loggedIn = createSubject(token, info, webSubject);
+        loggedIn = createSubject(token, info, webSubject);
 
-            onSuccessfulLogin(token, info, loggedIn);
+        onSuccessfulLogin(token, info, loggedIn);
 
-            //}
-        } else {
-            loggedIn = createSubject(token, info, webSubject);
-
-            onSuccessfulLogin(token, info, loggedIn);
-
-        }
-        //}
         return loggedIn;
     }
 

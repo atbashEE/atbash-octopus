@@ -19,7 +19,6 @@ import be.atbash.ee.security.octopus.authc.event.LogonEvent;
 import be.atbash.ee.security.octopus.authc.event.LogonFailureEvent;
 import be.atbash.ee.security.octopus.authc.event.LogoutEvent;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
@@ -70,10 +69,8 @@ public class DefaultWebAuthenticationListener implements AuthenticationListener 
 
     @Override
     public void onLogout(PrincipalCollection principals) {
-        if (principals.getPrimaryPrincipal() instanceof UserPrincipal) {
-            LogoutEvent event = new LogoutEvent((UserPrincipal) principals.getPrimaryPrincipal());
-            logoutEvent.fire(event);
-        }
+        LogoutEvent event = new LogoutEvent(principals.getPrimaryPrincipal());
+        logoutEvent.fire(event);
     }
 
 }

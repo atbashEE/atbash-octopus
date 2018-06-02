@@ -38,6 +38,7 @@ public class UserPrincipal implements Principal, Serializable {
     private Map<Serializable, Serializable> userInfo = new HashMap<>();
 
     // Weld needs this to make a proxy
+    // TODO Try to remove it, because it doesn't set the id and it is used for example within hashCode
     public UserPrincipal() {
     }
 

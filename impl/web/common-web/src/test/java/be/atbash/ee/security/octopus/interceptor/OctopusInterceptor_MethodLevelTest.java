@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolat
 import be.atbash.ee.security.octopus.interceptor.testclasses.MethodLevel;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
@@ -209,7 +209,8 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
         finishCDISetup();
 
         try {
-            octopusRealm.checkPermission(new SimplePrincipalCollection(), AUTHORIZATION_PERMISSION);
+            UserPrincipal userPrincipal = new UserPrincipal(123L, "Atbash", "Atbash");
+            octopusRealm.checkPermission(new PrincipalCollection(userPrincipal), AUTHORIZATION_PERMISSION);
 
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);

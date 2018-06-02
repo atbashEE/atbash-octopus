@@ -82,7 +82,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
         if (token instanceof SystemAccountAuthenticationToken) {
             // TODO Use the authenticationInfoProvider for this.
-            authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
+            //authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
         } else {
             if (!(token instanceof IncorrectDataToken)) {
                 class Guard {

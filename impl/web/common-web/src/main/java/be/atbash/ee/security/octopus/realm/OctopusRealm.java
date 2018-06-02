@@ -22,6 +22,7 @@ import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
 import be.atbash.ee.security.octopus.context.OctopusWebSecurityContext;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthorizationToken;
@@ -55,9 +56,9 @@ public class OctopusRealm extends AuthorizingRealm {
         TemporaryAuthorizationContextManager.startInAuthorization(Guard.class);
         AuthorizationInfo authorizationInfo;
         try {
-            Object primaryPrincipal = principals.getPrimaryPrincipal();
+            UserPrincipal userPrincipal = principals.getPrimaryPrincipal();
 
-            if (OctopusWebSecurityContext.isSystemAccount(primaryPrincipal)) {
+            if (OctopusWebSecurityContext.isSystemAccount(userPrincipal)) {
                 // No permissions or roles, use @SystemAccount
                 authorizationInfo = new SimpleAuthorizationInfo();  // TODO
             } else {
@@ -78,7 +79,7 @@ public class OctopusRealm extends AuthorizingRealm {
         if (token instanceof SystemAccountAuthenticationToken) {
             // FIXME Use the other systems and don't treat SystemAccount differently!
             // TODO Check about the realm names
-            authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
+            //authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
         } else {
             if (!(token instanceof IncorrectDataToken)) {
                 class Guard {

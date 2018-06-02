@@ -135,10 +135,11 @@ public class WebSubject implements RequestPairSource, Subject {
         return host;
     }
 
-    private Object getPrimaryPrincipal(PrincipalCollection principals) {
+    private UserPrincipal getPrimaryPrincipal(PrincipalCollection principals) {
         if (!OctopusCollectionUtils.isEmpty(principals)) {
             return principals.getPrimaryPrincipal();
         }
+        // FIXME Is this possible ??
         return null;
     }
 

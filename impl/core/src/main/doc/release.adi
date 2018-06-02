@@ -5,6 +5,12 @@
 . Authentication events.
 . Support for default user filter (no need to define user filter before authorizationFilter)
 
+==== Important changes
+
+. Primary Principal is always a _be.atbash.ee.security.octopus.subject.UserPrincipal_ instance.
+. _be.atbash.ee.security.octopus.subject.PrincipalCollection_ is now a class and l longer an interface.
+. All filters used within filter chain definition (securedURLs.ini) must be an implementation of _be.atbash.ee.security.octopus.filter.AdviceFilter_
+
 === 0.3
 
 . Authorization parts implementation (tags like securedComponent, interceptors for EJB/CDI, filters for URLs)
@@ -23,4 +29,5 @@
 === 0.1
 
 . POC integration Apache Shiro into Octopus
+. Use of CDI as much as possible.
 

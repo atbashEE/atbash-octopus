@@ -44,7 +44,8 @@ public class WebSubjectTest {
         // - sets null to PrincipalCollection
         // - Session
         // - authenticated -> false
-        WebSubject subject = new WebSubject(new SimplePrincipalCollection(),
+        UserPrincipal userPrincipal = new UserPrincipal(123L, "Atbash", "Atbash");
+        WebSubject subject = new WebSubject(new PrincipalCollection(userPrincipal),
                 true, null, sessionMock, webSecurityManagerMock);
 
         assertThat(subject.getPrincipals()).isNotNull();

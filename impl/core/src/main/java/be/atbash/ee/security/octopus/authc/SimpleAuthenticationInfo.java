@@ -17,7 +17,6 @@ package be.atbash.ee.security.octopus.authc;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.SimplePrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.codec.ByteSource;
@@ -66,8 +65,8 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      * @param principal   the 'primary' principal associated with the specified realm.
      * @param credentials the credentials that verify the given principal.
      */
-    public SimpleAuthenticationInfo(Object principal, Object credentials) {
-        principals = new SimplePrincipalCollection(principal);
+    public SimpleAuthenticationInfo(UserPrincipal principal, Object credentials) {
+        principals = new PrincipalCollection(principal);
         this.credentials = credentials;
     }
 
@@ -80,14 +79,12 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      * @param principal the 'primary' principal associated with the specified realm.
      * @param token     the token that verify the given principal.
      */
-    public SimpleAuthenticationInfo(Object principal, ValidatedAuthenticationToken token) {
-        principals = new SimplePrincipalCollection(principal);
+    public SimpleAuthenticationInfo(UserPrincipal principal, ValidatedAuthenticationToken token) {
+        principals = new PrincipalCollection(principal);
         this.token = token;
-        if (principal instanceof UserPrincipal) {
-            UserPrincipal user = (UserPrincipal) principal;
-            user.addUserInfo(INFO_KEY_TOKEN, token);
 
-        }
+        principal.addUserInfo(INFO_KEY_TOKEN, token);
+
     }
 
     /**
@@ -103,35 +100,8 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
      * @param realmName         the realm from where the principal and credentials were acquired.
      * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
      */
-    public SimpleAuthenticationInfo(Object principal, Object hashedCredentials, ByteSource credentialsSalt) {
-        principals = new SimplePrincipalCollection(principal);
-        credentials = hashedCredentials;
-        this.credentialsSalt = credentialsSalt;
-    }
-
-    /**
-     * Constructor that takes in an account's identifying principal(s) and its corresponding credentials that verify
-     * the principals.
-     *
-     * @param principals  a Realm's account's identifying principal(s)
-     * @param credentials the accounts corresponding principals that verify the principals.
-     */
-    public SimpleAuthenticationInfo(PrincipalCollection principals, Object credentials) {
-        this.principals = new SimplePrincipalCollection(principals);
-        this.credentials = credentials;
-    }
-
-    /**
-     * Constructor that takes in an account's identifying principal(s), hashed credentials used to verify the
-     * principals, and the salt used when hashing the credentials.
-     *
-     * @param principals        a Realm's account's identifying principal(s)
-     * @param hashedCredentials the hashed credentials that verify the principals.
-     * @param credentialsSalt   the salt used when hashing the hashedCredentials.
-     * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
-     */
-    public SimpleAuthenticationInfo(PrincipalCollection principals, Object hashedCredentials, ByteSource credentialsSalt) {
-        this.principals = new SimplePrincipalCollection(principals);
+    public SimpleAuthenticationInfo(UserPrincipal principal, Object hashedCredentials, ByteSource credentialsSalt) {
+        principals = new PrincipalCollection(principal);
         credentials = hashedCredentials;
         this.credentialsSalt = credentialsSalt;
     }
@@ -144,7 +114,7 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
     /**
      * Sets the identifying principal(s) represented by this instance.
      *
-     * @param principals the indentifying attributes of the corresponding Realm account.
+     * @param principals the identifying attributes of the corresponding Realm account.
      */
     // FIXME Remove, Constructor Only allowed!!
     public void setPrincipals(PrincipalCollection principals) {

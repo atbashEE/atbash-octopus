@@ -551,7 +551,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * @return the cache key to use when looking up cached {@link AuthenticationInfo} instances.
      */
     protected Object getAuthenticationCacheKey(PrincipalCollection principals) {
-        return getAvailablePrincipal(principals);
+        return principals.getPrimaryPrincipal();
     }
 
     /**

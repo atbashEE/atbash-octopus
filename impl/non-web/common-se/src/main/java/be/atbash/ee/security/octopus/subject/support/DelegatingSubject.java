@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,7 @@ import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
-import be.atbash.ee.security.octopus.subject.ExecutionException;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.SubjectBuilder;
+import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CollectionUtils;
@@ -87,7 +84,7 @@ public class DelegatingSubject implements Subject {
         return !OctopusCollectionUtils.isEmpty(getPrincipals());
     }
 
-    private Object getPrimaryPrincipal(PrincipalCollection principals) {
+    private UserPrincipal getPrimaryPrincipal(PrincipalCollection principals) {
         if (!OctopusCollectionUtils.isEmpty(principals)) {
             return principals.getPrimaryPrincipal();
         }

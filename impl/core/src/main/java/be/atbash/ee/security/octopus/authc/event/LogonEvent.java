@@ -40,7 +40,7 @@ public class LogonEvent {
     }
 
     public UserPrincipal getUserPrincipal() {
-        return (UserPrincipal) info.getPrincipals().getPrimaryPrincipal();
+        return info.getPrincipals().getPrimaryPrincipal();
     }
 
 }

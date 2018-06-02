@@ -95,7 +95,7 @@ public class AuthenticationInfoBuilderTest {
         assertThat(info.getPrincipals().getPrimaryPrincipal()).isNotNull();
         assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
 
-        UserPrincipal userPrincipal = (UserPrincipal) info.getPrincipals().getPrimaryPrincipal();
+        UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
         assertThat(userPrincipal.getId()).isEqualTo(1L);
 
     }
@@ -109,7 +109,7 @@ public class AuthenticationInfoBuilderTest {
         assertThat(info.getPrincipals()).isNotEmpty();
         assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
 
-        UserPrincipal userPrincipal = (UserPrincipal) info.getPrincipals().getPrimaryPrincipal();
+        UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
         assertThat(userPrincipal.getId()).isEqualTo(2L);
         assertThat(userPrincipal.getUserName()).isEqualTo("JUnit");
         assertThat(userPrincipal.getName()).isEqualTo("Atbash");
@@ -130,7 +130,7 @@ public class AuthenticationInfoBuilderTest {
         assertThat(info.getPrincipals()).isNotEmpty();
         assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
 
-        UserPrincipal userPrincipal = (UserPrincipal) info.getPrincipals().getPrimaryPrincipal();
+        UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
         assertThat(userPrincipal.getUserInfo("key")).isEqualTo(321L);
         assertThat(userPrincipal.getUserInfo("key2")).isEqualTo("value2");
 

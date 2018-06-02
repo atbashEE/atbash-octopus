@@ -27,7 +27,7 @@ public class DemoAuthorizationInfoProvider implements AuthorizationInfoProvider 
     public AuthorizationInfo getAuthorizationInfo(PrincipalCollection principalCollection) {
         AuthorizationInfoBuilder builder = new AuthorizationInfoBuilder();
 
-        UserPrincipal userPrincipal = (UserPrincipal) principalCollection.getPrimaryPrincipal();
+        UserPrincipal userPrincipal = principalCollection.getPrimaryPrincipal();
         // admin user has an specific permission. String based.
         if ("admin".equals(userPrincipal.getUserName())) {
             builder.addPermission("admin");
