@@ -57,7 +57,7 @@ class MPJWTTokenBuilderTest extends Specification {
         token.iat == now.getTime()
         token.exp == now.getTime() + 30 * 60 * 1000
         token.sub == "Subject"
-        token.upn == null
+        token.upn == "Subject" // defaulted from sub
     }
 
     def "Build_setExpirationPeriod"() {
@@ -82,7 +82,7 @@ class MPJWTTokenBuilderTest extends Specification {
         token.exp > token.iat + 2 * 60 * 1000
         token.exp - 100 < token.iat + 2 * 60 * 1000  // 0.1 sec skew
         token.sub == "Subject"
-        token.upn == null
+        token.upn == "Subject" // defaulted from sub
     }
 
     def "Build_defaults"() {
@@ -104,7 +104,7 @@ class MPJWTTokenBuilderTest extends Specification {
         token.iat - now.getTime() < 100  // Faster then 0.1 sec
         token.exp == token.iat + 3 * 1000
         token.sub == "tcejbuS"
-        token.upn == null
+        token.upn == "tcejbuS" // defaulted from sub
     }
 
     def "Build_missingIss"() {

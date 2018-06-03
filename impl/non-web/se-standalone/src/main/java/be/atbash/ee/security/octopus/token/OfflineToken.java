@@ -36,6 +36,7 @@ public class OfflineToken implements AuthenticationToken, AuthorizationToken, Va
     private Serializable id;
 
     private String subject;
+    private String name;
     private List<String> audience;
     private List<Permission> permissions;
     private List<String> roles;
@@ -56,6 +57,14 @@ public class OfflineToken implements AuthenticationToken, AuthorizationToken, Va
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getAudience() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ public class CreateOfflineTokenFile {
         // Example data
         OfflineToken token = new OfflineToken();
         token.setId("Rudy");
-        token.setSubject("Rudy De Busscher");
+        token.setSubject("rdebusscher");
+        token.setName("Rudy De Busscher");
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(new WildcardPermission("demo:offline:*"));
