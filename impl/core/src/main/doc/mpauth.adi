@@ -1,6 +1,103 @@
 ==== MP Auth token
 
-Creation of the token can be done be using the **be.atbash.ee.security.octopus.token.MPJWTTokenBuilder** class.
+Octopus has support for the MicroProfile JWT auth token, https://github.com/eclipse/microprofile-jwt-auth.
 
-Maven artefact be.atbash.ee.security:octopus-mp contains the _mpUser_ filter.
+JWT token, compliant with the MP JWT AUth specification, can be used to authenticate and authorize the user within a an Octopus protected application.
 
+For an authenticated user, a JWT token can be created using the information available to Octopus (like user name and permissions)
+
+==== Setup endpoints
+
+When you want to protect some URLs (endpoints) with the MicroProfile JWT auth token, add following dependency to your projects Maven project file.
+
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-mp</artifactId>
+        <version>0.4</version>
+    </dependency>
+
+This dependency needs to be added to the other dependencies required for using Octopus in a Rest environment (see)
+
+Specify the filter to protect the URLs within the _securedURLs.ni_ (or configured name) file.
+
+    /data/** = noSessionCreation, mpUser
+
+Configure the location where the cryptographic keys can be found for the verification of the RSA based signing. Define within _octopusConfig.properties_ the parameter and value
+
+    keys.location=classpath:test.jwks
+
+See ??? for more information about reading cryptographic keys.
+
+Define the expected audience for received JWT tokens. Define within _octopusConfig.properties_ the parameter and value
+
+    mp.aud=Octopus Rest MP
+
+==== Setup clients
+
+Octopus contains support for calling MicroProfile JWT auth token protected endpoints.
+
+Add the required maven dependencies
+
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-mp-rest-client</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-partial-bean-module-impl</artifactId>
+            <version>${deltaspike.version}</version>
+        </dependency>
+
+Other dependencies may be required, depending on the other features of Octopus you might want to use. For example the _octopus-js7_ dependency to support the JSF view.
+
+Warning
+
+Deltaspike 1.8.1 is required as a minimum due to the usage of for example DeltaSpikeProxyInvocationHandler within the Atbash Rest client.
+
+Define the interface which describes the remote endpoint
+
+    @Path("/hello")
+    @ApplicationScoped
+    @RegisterRestClient
+    @RegisterProvider(MPRestClientProvider.class)
+    public interface HelloService {
+
+        @GET
+        String sayHello();
+
+    }
+
+By specifying the _@RegisterRestClient_ annotation, a CDI bean is created that can be injected and used to call the remote endpoint.
+The annotation @RegisterProvider is used to add a specific provider to the generated client so that the MicroProfile JWT auth compatible JWT token is added to the header of the request. The information of the current user (as defined by the UserPrincipal, is used to populate the claims of the JWT.
+
+The JWT needs some values for claims issues, audience, etc ... These can be specified within the configuration file _octopusConfig.properties_ (or equivalent when another name is defined)
+
+    mp.iss=Octopus example
+    mp.aud=Octopus Rest MP
+    mp.exp=1m
+    keys.location=classpath:test.jwks
+
+We also need to define where the endpoint is located, this is also defined within the configuration file like this for the above example.
+
+   be.atbash.ee.security.rest.HelloService/mp-rest/url=http://localhost:8080/rest-mp/data
+
+For more information on the format, look at the MicroProfile JWT Auth specification document.
+
+Calling the endpoint becomes then very easy, like this.
+
+    @ApplicationScoped
+    public class SomeService {
+
+        @Inject
+        @RestClient
+        private HelloService helloService;
+
+
+        public void doGreeting() {
+           String greeting = helloService.sayHello("Rudy");
+        }
+    }
+
+The _@RestClient_ is a Qualifier so that the special created CDI bean is used for injection at that point.

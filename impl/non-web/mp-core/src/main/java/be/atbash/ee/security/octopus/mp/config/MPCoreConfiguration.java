@@ -19,8 +19,10 @@ import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
+import be.atbash.config.logging.StartupLogging;
 import be.atbash.ee.security.octopus.util.duration.PeriodUtil;
 import be.atbash.util.StringUtils;
+import be.atbash.util.reflection.CDICheck;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -28,7 +30,7 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @ApplicationScoped
-@ModuleConfigName("Octopus MicroProfile Configuration (Core)")
+@ModuleConfigName("Octopus MicroProfile JWT Configuration (Core)")
 public class MPCoreConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     @ConfigEntry
@@ -50,4 +52,24 @@ public class MPCoreConfiguration extends AbstractConfiguration implements Module
         }
         return expirationExpression;
     }
+
+    // Java SE Support
+    private static MPCoreConfiguration INSTANCE;
+
+    private static final Object LOCK = new Object();
+
+    public static MPCoreConfiguration getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
+                if (INSTANCE == null) {
+                    INSTANCE = new MPCoreConfiguration();
+                    if (!CDICheck.withinContainer()) {
+                        StartupLogging.logConfiguration(INSTANCE);
+                    }
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
 }

@@ -10,10 +10,11 @@ List of Maven modules
 |be.atbash.ee.security:octopus-javafx |SE (JavaFX) | Integration within FXML views.
 |be.atbash.ee.security:octopus-keycloak-se |SE | Integration of Keycloak with CLI programs (pure Java SE or JavaFX).
 |be.atbash.ee.security:octopus-common-web |EE (Web) | All Octopus classes Specific for Java EE (Web - Servlets)
-|be.atbash.ee.security:octopus-rest |EE (JAX-RS) | Specific for JAX-RS
 |be.atbash.ee.security:octopus-jsf7 |EE (JSF) | Specific for JSF
-|be.atbash.ee.security:octopus-mp |EE (JAX-RS) | Support for MP JWT Auth tokens
 |be.atbash.ee.security:keycloak |EE (JSF) | Integration with Keycloak (including SSO)
+|be.atbash.ee.security:octopus-rest |EE (JAX-RS) | Specific for JAX-RS
+|be.atbash.ee.security:octopus-mp-rest-client | SE (JAX-RS), EE (JAX-RS) | Support for MP Rest Client with MP JWT auth
+|be.atbash.ee.security:octopus-mp |EE (JAX-RS) | Support for MP JWT Auth tokens server side.
 |======================
 
 octopus-utilities contains for the moment the JavaFX app to maintain JWK files.

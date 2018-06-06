@@ -42,6 +42,10 @@ public class MPJWTTokenBuilder {
     @PostConstruct
     public void init() {
         token = new MPJWTToken();
+        // Java SE
+        if (mpCoreConfiguration == null) {
+            mpCoreConfiguration = MPCoreConfiguration.getInstance();
+        }
     }
 
     public MPJWTTokenBuilder setIssuer(String issuer) {
@@ -66,9 +70,11 @@ public class MPJWTTokenBuilder {
     }
 
     public MPJWTTokenBuilder setExpirationPeriod(String expiration) {
-        int seconds = PeriodUtil.defineSecondsInPeriod(expiration);
+        if (!StringUtils.isEmpty(expiration)) {
 
-        token.setExp(new Date().getTime() + seconds * 1000);
+            int seconds = PeriodUtil.defineSecondsInPeriod(expiration);
+            token.setExp(new Date().getTime() + seconds * 1000);
+        }
         return this;
     }
 
@@ -153,5 +159,9 @@ public class MPJWTTokenBuilder {
             token.setJti(UUID.randomUUID().toString());
         }
 
+        if (StringUtils.isEmpty(token.getUpn()) && !StringUtils.isEmpty(token.getSub())) {
+            // Set upn to same value as sub when it is not defined.
+            token.setUpn(token.getSub());
+        }
     }
 }

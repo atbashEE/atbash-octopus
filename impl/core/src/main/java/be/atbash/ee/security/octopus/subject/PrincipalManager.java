@@ -21,8 +21,10 @@ import be.atbash.util.CDIUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  *
@@ -56,4 +58,30 @@ public class PrincipalManager {
         }
         return result;
     }
+
+    // Java SE support
+    private static PrincipalManager INSTANCE;
+
+    private static final Object LOCK = new Object();
+
+    private void loadConverters() {
+        converters = new ArrayList<>();
+
+        for (PrincipalConverter principalConverter : ServiceLoader.load(PrincipalConverter.class)) {
+            converters.add(principalConverter);
+        }
+    }
+
+    public static PrincipalManager getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
+                if (INSTANCE == null) {
+                    INSTANCE = new PrincipalManager();
+                    INSTANCE.loadConverters();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
 }

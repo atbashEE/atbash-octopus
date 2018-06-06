@@ -1,4 +1,4 @@
-=== Core
+=== Octopus Core Configuration
 
 ==== hashAlgorithmName
 
@@ -88,6 +88,18 @@ default : *(none)*
 
 Defines the annotations which can be used on method and class level to define the security requirements.
 
+==== cdi.interceptor.enabled
+
+default : *false*
+
+If set active, CDI beans will also receive the Octopus interceptor and thus permissions checks will be performed for all 'external' called methods. The fully qualified name of the intercepted beans will be matched with the name patterns defined within the file referenced by the _cdi.interceptor.configfile_ parameter.
+
+==== cdi.interceptor.configfile
+
+default : *classpath:octopusInterceptor.config*
+
+File containing the patterns of the fully qualified class names of CDI beans which will be intercepted by the Octopus security interceptor.
+
 === Web Configuration
 
 ???
@@ -158,3 +170,45 @@ The default level _ON_, checks both properties, _PARTIAL_ only the User-Agent he
 default : */keycloak.json*
 
 Defines the location of the JSON file for configuration of the Octopus Keycloak integration.
+
+=== Octopus MicroProfile JWT Configuration (Core)
+
+==== mp.iss
+
+default : *none*
+
+The issues claim set within the JWT created by the _MPJWTTokenBuilder_ by default. When _MPRestClientProvider_ is used in combination with the Rest client, this value is required.
+
+==== mp.aud
+
+default : *none*
+
+The audience claim set within the JWT created by the _MPJWTTokenBuilder_ by default. When _MPRestClientProvider_ is used in combination with the Rest client, this value is required.
+And the expected audience value when a MP JWT token is validated.
+
+==== mp.exp
+
+default : *none*
+
+The expiration setting used in the exp claim set within the JWT created by the _MPJWTTokenBuilder_. When _MPRestClientProvider_ is used in combination with the Rest client, this value is required.
+The value has following format
+
+<v><unit>
+
+* v : A positive number
+* unit : s (seconds), m (minutes) or h (hours)
+
+Examples
+
+* 5s -> JWT will have an expiration time of 5 seconds (so current time + 5 seconds)
+* 20m -> JWT will have an expiration time of 20 minutes (so current time + 20 minutes)
+* 1h -> JWT will have an expiration time of 1 hour (so current time + 1 hour)
+
+=== Octopus MicroProfile JWT Configuration (Rest Client)
+
+==== mp.key.id
+
+default : *none*
+
+The key id (looked up from the cryptographic keys read by the Key support) which will be used for the signing of the JWT.
+We no key Id is specified, a key which has a private part is chosen (but there can only be one)

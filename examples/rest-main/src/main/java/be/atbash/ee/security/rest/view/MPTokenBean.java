@@ -15,27 +15,12 @@
  */
 package be.atbash.ee.security.rest.view;
 
-import be.atbash.ee.security.octopus.jwt.JWTEncoding;
-import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
-import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
-import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
-import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
-import be.atbash.ee.security.octopus.keys.selector.KeySelector;
-import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
-import be.atbash.ee.security.octopus.mp.token.MPJWTToken;
-import be.atbash.ee.security.octopus.mp.token.MPJWTTokenBuilder;
+import be.atbash.ee.security.rest.HelloService;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -45,33 +30,12 @@ import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 public class MPTokenBean {
 
     @Inject
-    private MPJWTTokenBuilder tokenBuilder;
-
-    @Inject
-    private JWTEncoder jwtEncoder;
-
-    @Inject
-    private KeySelector keySelector;
+    @RestClient
+    private HelloService helloService;
 
     public void testMPToken() {
 
-        MPJWTToken mpjwtToken = tokenBuilder.setAudience("Octopus Rest MP").
-                setSubject("Octopus Test").build();
-
-        SelectorCriteria criteria = SelectorCriteria.newBuilder().withAsymmetricPart(AsymmetricPart.PRIVATE).build();
-
-        JWTParameters parameters = JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS)
-                .withSecretKeyForSigning(keySelector.selectAtbashKey(criteria))
-                .build();
-        String bearerHeader = jwtEncoder.encode(mpjwtToken, parameters);
-
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:8080/rest-mp/data/hello");
-        Response response = target.request(MediaType.APPLICATION_JSON)
-                .header(AUTHORIZATION_HEADER, BEARER + " " + bearerHeader)
-                .get();
-        System.out.println("status : " + response.getStatus());
-        System.out.println(response.readEntity(String.class));
+        System.out.println(helloService.sayHello());
 
     }
 }

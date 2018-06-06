@@ -44,18 +44,20 @@
         </dependency>
 
         <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>6.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-rest</artifactId>
+            <artifactId>octopus-jsf7</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>be.atbash.json</groupId>
-            <artifactId>octopus-jwt-support</artifactId>
-            <version>${jwt-support.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-mp-core</artifactId>
+            <artifactId>octopus-mp-rest-client</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -74,6 +76,12 @@
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
+            <version>${deltaspike.example.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-partial-bean-module-impl</artifactId>
             <version>${deltaspike.example.version}</version>
         </dependency>
 

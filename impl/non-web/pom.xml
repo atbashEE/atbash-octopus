@@ -36,6 +36,7 @@
         <module>common-se</module>
         <module>keycloak-se</module>
         <module>mp-core</module>
+        <module>mp-rest-client</module>
         <module>se-standalone</module>
         <module>offline-token-generator</module>
         <module>javafx</module>

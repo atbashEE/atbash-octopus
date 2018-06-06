@@ -1,0 +1,62 @@
+==== MP Rest Client
+
+Using the Atbash Rest client for calling an endpoint protected by the JWT auth specification, can also be used from plain Java SE. This means that it is also possible to call some JAX-RS endpoint quite easily from JavaFX.
+
+
+==== Setup clients
+
+The same dependencies can be used within the Java SE environment, as follows.
+
+Add the required maven dependencies
+
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-mp-rest-client</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-partial-bean-module-impl</artifactId>
+            <version>${deltaspike.version}</version>
+        </dependency>
+
+
+Warning
+
+Deltaspike 1.8.1 is required as a minimum due to the usage of for example DeltaSpikeProxyInvocationHandler within the Atbash Rest client.
+
+Define the interface which describes the remote endpoint
+
+    @Path("/hello")
+    public interface HelloService {
+
+        @GET
+        String sayHello();
+
+    }
+
+No additional annotations are required since we are not using the cdi integration features.
+
+Configuration wise, we need to define the values of the claims (like issuer and audience) of the JWT and the cryptographic key to use.  The following keys are thus required within the configuration file.
+
+    mp.iss=Octopus example
+    mp.aud=Octopus Rest MP
+    mp.exp=1m
+    keys.location=classpath:test.jwks
+
+
+Calling the endpoint can be performed then using the folliwing code
+
+        HelloService helloService = AbstractRestClientBuilder.newBuilder()
+                .baseUrl(new URL("http://localhost:8080/rest-mp/data"))
+                .register(MPRestClientProvider.class)
+                .build(HelloService.class);
+        System.out.println(helloService.sayHello());
+
+
+We also register the _MPRestClientProvider_ provider. It looks at the current user from Octopus Security Context and creates the required JWT to add into the authorization header.
+
+==== Manual creation of JWT
+
+In the case you don't ike to use the Atbash Rest client or just needs a JWT which is compliant with the MicroProfile JWT Auth specification, you can use the **be.atbash.ee.security.octopus.token.MPJWTTokenBuilder** class.
