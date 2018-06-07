@@ -21,6 +21,6 @@ import be.atbash.util.PublicAPI;
  *
  */
 @PublicAPI
-public interface NamedPermission {
+public interface NamedPermission extends Permission {
     String name();
 }

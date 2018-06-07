@@ -16,10 +16,22 @@
 package be.atbash.ee.security.octopus.jsf.security;
 
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 
 /**
  *
  */
 public enum DemoPermission implements NamedPermission {
-    BASIC_PERMISSION, ADVANCED_PERMISSION
+    BASIC_PERMISSION, ADVANCED_PERMISSION;
+
+    @Override
+    public boolean implies(Permission permission) {
+        return permission instanceof DemoPermission && permission.equals(this);
+    }
+
+    @Override
+    public String toJSONString() {
+        // Not important here
+        return null;
+    }
 }

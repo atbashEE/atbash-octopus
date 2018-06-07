@@ -75,23 +75,30 @@ public class AuthorizationInfoBuilder {
         }
     }
 
-    public AuthorizationInfoBuilder addPermission(NamedPermission namedPermission) {
-        if (namedPermission instanceof NamedDomainPermission) {
-            permissions.add((NamedDomainPermission) namedPermission);
-        } else {
-            addPermission(namedPermission.name());
-        }
-        return this;
-    }
-
     public AuthorizationInfoBuilder addPermission(String permissionName) {
         stringPermissions.add(permissionName);
         return this;
     }
 
+    public AuthorizationInfoBuilder addPermission(Permission permission) {
+        boolean processed = false;
+        if (permission instanceof NamedDomainPermission) {
+            permissions.add(permission);
+            processed = true;
+        }
+        if (!processed && permission instanceof NamedPermission) {
+            addPermission(((NamedPermission) permission).name());
+            processed = true;
+        }
+        if (!processed) {
+            permissions.add(permission);
+        }
+        return this;
+    }
+
     public AuthorizationInfoBuilder addNamedPermissions(Collection<? extends NamedPermission> namedPermissions) {
         for (NamedPermission namedPermission : namedPermissions) {
-            addPermission(namedPermission);
+            addPermission(namedPermission.name());
         }
         return this;
     }

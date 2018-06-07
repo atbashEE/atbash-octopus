@@ -16,10 +16,22 @@
 package be.atbash.ee.security.octopus.provider.testclasses;
 
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
+import be.atbash.ee.security.octopus.authz.permission.Permission;
 
 /**
  *
  */
 public enum TestPermissionAnnotation implements NamedPermission {
-    TEST, SECOND
+    TEST, SECOND;
+
+    @Override
+    public boolean implies(Permission permission) {
+        return permission instanceof TestPermissionAnnotation && permission.equals(this);
+    }
+
+    @Override
+    public String toJSONString() {
+        // Not important here
+        return null;
+    }
 }

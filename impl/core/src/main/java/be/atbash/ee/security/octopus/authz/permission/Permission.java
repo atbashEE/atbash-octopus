@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,9 +74,9 @@ public interface Permission extends JSONAware {
      * then any Subject granted {@code permission1} would have ability greater than or equal to that defined by
      * {@code permission2}.
      *
-     * @param p the permission to check for behavior/functionality comparison.
+     * @param permission the permission to check for behavior/functionality comparison.
      * @return {@code true} if this current instance <em>implies</em> all the functionality and/or resource access
      * described by the specified {@code Permission} argument, {@code false} otherwise.
      */
-    boolean implies(Permission p);
+    boolean implies(Permission permission);
 }

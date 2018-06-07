@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
+import be.atbash.ee.security.octopus.authz.permission.WildcardPermission;
 import be.atbash.ee.security.octopus.authz.permission.role.ApplicationRole;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermissionResolver;
@@ -105,6 +106,19 @@ public class AuthorizationInfoBuilderTest {
         assertThat(info.getStringPermissions()).hasSize(1);
         assertThat(info.getStringPermissions()).contains("JUnit:*:*");
         assertThat(info.getObjectPermissions()).isEmpty();
+        assertThat(info.getRoles()).isEmpty();
+    }
+
+    @Test
+    public void addPermission_wildCardPermission() {
+        beanManagerFake.endRegistration();
+        AuthorizationInfoBuilder builder = new AuthorizationInfoBuilder();
+
+        AuthorizationInfo info = builder.addPermission(new WildcardPermission("JUnit:*:*")).build();
+        assertThat(info).isNotNull();
+        assertThat(info.getStringPermissions()).isEmpty();
+        assertThat(info.getObjectPermissions()).hasSize(1);
+        assertThat(info.getObjectPermissions()).contains(new WildcardPermission("JUnit:*:*"));
         assertThat(info.getRoles()).isEmpty();
     }
 
@@ -318,6 +332,17 @@ public class AuthorizationInfoBuilderTest {
         @Override
         public String name() {
             return name;
+        }
+
+        @Override
+        public boolean implies(Permission permission) {
+            return permission instanceof SimplePermission && permission.equals(this);
+        }
+
+        @Override
+        public String toJSONString() {
+            // Not important here
+            return null;
         }
     }
 

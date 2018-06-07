@@ -8,7 +8,15 @@
 ==== Important changes
 
 . Primary Principal is always a _be.atbash.ee.security.octopus.subject.UserPrincipal_ instance.
-. _be.atbash.ee.security.octopus.subject.PrincipalCollection_ is now a class and l longer an interface.
+. ++NamedPermission++ interface extends now ++Permission++.
+
+This means that enums implementing NamedPermission must implement ++implies++. When there is no hierarchy between the values, the following method can be used (for _DemoPermission_ enum)
+
+    public boolean implies(Permission permission) {
+        return permission instanceof DemoPermission && permission.equals(this);
+    }
+
+. _be.atbash.ee.security.octopus.subject.PrincipalCollection_ is now a class and longer an interface.
 . All filters used within filter chain definition (securedURLs.ini) must be an implementation of _be.atbash.ee.security.octopus.filter.AdviceFilter_
 
 === 0.3
