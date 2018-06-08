@@ -1,3 +1,37 @@
 ==== Core
 
-FIXME
+The authorization annotations (like @NamedPermissions which check if the user has a certain permission) can be used on a JAX-RS control.
+
+Normally, these annotation are only picked up by an interceptor when placed on an EJB bean (when interceptor is configured in _ejb-jar.xml_) or an application Scoped CDI bean (when configuration parameter +cdi.interceptor.enabled+ has the value _true_.
+
+These annotations are also picked up by Octopus on JAX-RS controller classes (without the need to define them as EJB or CDI bean) when the configuration parameter +rest.interceptor.enabled+ is set to _true_ (default value is _false_).
+
+At that moment, a ContainerRequestFilter enforces the authorization defined by these annotations. And also throws an exception when an JAX-RS endpoint is called without any permission requirements (no annotation on method or class)
+
+With the following example
+
+    @Path("/hello")
+    @javax.inject.Singleton
+    public class HelloController {
+
+        @Inject
+        private UserPrincipal principal;
+
+        @GET
+        @RequiresUser
+        public String sayHello() {
+            return "Hello " + principal.getName();
+        }
+
+        @Path("/protectedPermission1")
+        @RequiresPermissions("demo:read:*")
+        @GET
+        public String testPermission1() {
+            return "Has permission demo:read:*";
+        }
+    }
+
+The _sayHello_ endpoint just requires a user, the _testPermission1_ needs a user which has the permission _demo:read:*_ .  How the user authentication is enforced is not defined by the annotations, but can be done by specifying a filter within the _securedURLs.ini_ file (filters like _mpUser_, _authcKeycloak_, etc ...)
+
+The _javax.inject.Singleton_ enforces that only 1 instance is created for all the requests it will be serving.
+

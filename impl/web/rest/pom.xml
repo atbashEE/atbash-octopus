@@ -61,6 +61,15 @@
             <artifactId>octopus-common-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <!-- Deltaspike -->
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-security-module-api</artifactId>
+            <version>${deltaspike.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
