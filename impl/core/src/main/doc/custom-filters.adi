@@ -1,44 +1,33 @@
-=== Filters
+=== Custom Filters
 
-There are basically 3 types of filters within the system.
+Only filters which are descendant of +be.atbash.ee.security.octopus.filter.AdviceFilter+ can be by Octopus (like from within the _securedURLs.ini_ file).
 
-==== Authenticating filters
+When you need to create a custom filter (first check the documentation about filters to see if the filter you need isn't available) you can start from some base classes. These classes are also used in the standard octopus filters.
 
-These filters extract information from the request and determine the principal based on that information. Examples are
+Filters are a Web only concept, and thus are always dependent on the module _octopus-common-web_.
 
-. authcBasic -> BASIC authentication
-. mpUser -> MicroProfile JWT auth token
+==== Custom user Filter
 
-When such a filter is available within the chain and the request doesn't define the required and correct information, an response with status 401 is returned.
+A user filter is typical a filter for authentication where the end user has the possibility to provide credentials when no authenticated user is detected.
 
-All these filters extend from +be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter+
+Various filters are already available within octopus (KeyCloak, OAuth2, etc ...) but as a developer, you can create your custom version by extending +be.atbash.ee.security.octopus.authc.AbstractUserFilter+.
 
-==== User filters
+This Abstract user filter can be found within the _octopus_jsf7_ module.
 
-These filters are typically used to determine if the user is authenticated and if not, a redirect is performed to some kind of login form where the user can enter his credentials.
-This form can be defined within the application (when using LDAP, SPI, ...) or externally when integrating with Keycloak, Google Oauth2, CAS, etc ...)
+==== Custom authentication filter
 
-All these filters extends from +be.atbash.ee.security.octopus.authc.AbstractUserFilter+ which is defined within the JSF module. JSF is for the moment the only supported web framework where the user is able to interact with the application.
+The authentication filters who define the current user based on the information available on the Request (like an authorization header with a JWT) are available for various systems (like MicroProfile JWT, Keycloak, ...)
 
-The predefined filters defined within Octopus are
+This filters try ro authenticate the user based on the request info and in when this is not valid, a response with the appropriate status is returned.
 
-. user -> redirect to /login.xhtml page or URL defined within config parameter _loginPage_
-. userKeycloak -> redirect to Keycloak Login page (Keycloak integration)
+These are mostly used for JAX-RS endpoints and when you need your custom filter you should start from the +be.atbash.ee.security.octopus.filter.RestAuthenticatingFilter+. (located in the _octopus-rest_ module).
 
-==== Authorization filters
+In some rare situation where you don't want the status 401 when the request can't be authenticated, you can start from the +be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter+ which is located in the _octopus-common-web_ module.
 
-These filters determine is the user has the required permission, role, the customer voter allows access, ...
+==== Authorization filter
 
-They assume that there is already an authenticated user / principal (because an anonymous user can't be assigned some permissions)
+An authorization filter checks if the user has specific permissions before access is granted to the URL.  There are already various filters defined by default in octopus and with the CustomVoterFilter, almost any kind of authorization filter can be created by the deeloper.
 
-When no authenticated (or remembered) user / principal is detected, the response depends on the framework which handles the request and is encapsulated by the implementations of the +accessDeniedHandler+.
+In case you need another custom authorization filter, extend from the +be.atbash.ee.security.octopus.filter.authz.AuthorizationFilter+ class.
 
-On  a JSF request, the default user filter is retrieved from the configuration (parameter _user.filter.default_) and a redirect to the _login page_ is performed (after the current request information is saved).
-This allows filter chain definitions without the need to always specify the user filter name.
-
-----
-   /pages/hr/** = np[hr:read:*]
-----
-
-On a JAX-RS request, a response with status 401 is returned (as we have no possibility the ask for credentials of the current user).
-
+The base class for this type of filters is defined within the _octopus-common-web_ module as it can be used in JSF and JAX-RS environments.
