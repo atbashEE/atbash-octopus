@@ -36,6 +36,7 @@ public class SecurityAuthorizationViolationException extends UnauthorizedExcepti
     }
 
     public SecurityAuthorizationViolationException(Set<SecurityViolation> securityViolations) {
+        // FIXME duplicate (almost) of be.atbash.ee.security.octopus.filter.authz.NamedPermissionFilter
         StringBuilder violations = new StringBuilder();
         violations.append("Violation of ");
         boolean first = true;

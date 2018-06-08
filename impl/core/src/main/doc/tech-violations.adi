@@ -1,0 +1,17 @@
+=== Violation handling
+
+==== Filters
+
+When a violation occurs (user has not the required permission, role, ...) the method _isAccessAllowed()_ just returns false. This causes the filter chain to abort and thus the real logic (page, rest endpoint, ...) is never executed.
+
+Information about which violation occurred is placed as attribute on the servlet request.
+
+name : **octopus.violation.message**, value : **String**
+
+This information is used by the **AccessDeniedHandler** to return an appropriate message (On JSF page, As JSON for JAX-RS, ...)
+
+===== Annotations
+
+When an interceptor handling the annotation detects a violation, it throws an exception **SecurityAuthorizationViolationException**.
+
+TODO

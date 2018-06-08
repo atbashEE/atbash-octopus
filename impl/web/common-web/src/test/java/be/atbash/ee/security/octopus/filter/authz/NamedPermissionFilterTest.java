@@ -32,8 +32,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import javax.servlet.ServletRequest;
 import java.util.List;
 
+import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_VIOLATION_MESSAGE;
 import static be.atbash.ee.security.octopus.authz.permission.testclasses.TestPermission.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -51,11 +53,20 @@ public class NamedPermissionFilterTest {
     @Mock
     private PermissionResolver permissionResolverMock;
 
+    @Mock
+    private ServletRequest servletRequestMock;
+
     @InjectMocks
     private NamedPermissionFilter filter;
 
     @Captor
     private ArgumentCaptor<Permission> permissionArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> attributeNameCaptor;
 
     @Before
     public void setUp() {
@@ -91,7 +102,7 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedTypeSafe_NotAllowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{PERMISSION3.name()});
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{PERMISSION3.name()});
 
         assertThat(accessAllowed).isFalse();
 
@@ -100,6 +111,11 @@ public class NamedPermissionFilterTest {
 
         Permission permission = permissionArgumentCaptor.getValue();
         assertThat(permission.toString()).isEqualTo("permission:3:*");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Permission permission:3:*");
 
     }
 
@@ -133,7 +149,7 @@ public class NamedPermissionFilterTest {
             }
         });
 
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{PERMISSION1.name(), PERMISSION2.name()});
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{PERMISSION1.name(), PERMISSION2.name()});
         assertThat(accessAllowed).isFalse();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -146,6 +162,12 @@ public class NamedPermissionFilterTest {
 
         permission = (NamedDomainPermission) allValues.get(1);
         assertThat(permission.toString()).isEqualTo("permission:2:*");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Permission permission:2:*");
+
     }
 
     @Test
@@ -166,7 +188,7 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedString_NotAllowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{"permission3"});
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"permission3"});
 
         assertThat(accessAllowed).isFalse();
 
@@ -175,6 +197,11 @@ public class NamedPermissionFilterTest {
 
         Permission permission = permissionArgumentCaptor.getValue();
         assertThat(permission.toString()).isEqualTo("spermission:3:*");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Permission spermission:3:*");
 
     }
 
@@ -208,7 +235,7 @@ public class NamedPermissionFilterTest {
             }
         });
 
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{"permission1", "permission2"});
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"permission1", "permission2"});
         assertThat(accessAllowed).isFalse();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -221,6 +248,12 @@ public class NamedPermissionFilterTest {
 
         permission = (NamedDomainPermission) allValues.get(1);
         assertThat(permission.toString()).isEqualTo("spermission:2:*");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Permission spermission:2:*");
+
     }
 
     @Test
@@ -241,7 +274,7 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_Simple_NotAllowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{"junit"});
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"junit"});
         assertThat(accessAllowed).isFalse();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -249,6 +282,11 @@ public class NamedPermissionFilterTest {
 
         Permission permission = permissionArgumentCaptor.getValue();
         assertThat(permission.toString()).isEqualTo("junit:*:*");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Permission junit:*:*");
     }
 
 }

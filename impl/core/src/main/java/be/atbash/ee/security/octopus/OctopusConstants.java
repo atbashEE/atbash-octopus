@@ -36,4 +36,9 @@ public final class OctopusConstants {
     public static final String UPSTREAM_TOKEN = "upstreamToken";
     public static final String EXTERNAL_SESSION_ID = "externalSession";
 
+    /**
+     * Attribute name on Servlet request indicating message related to violation of permission,  role, ... . Set by the filters and read by the {@code AccessDeniedHandler}.
+     */
+    public static final String OCTOPUS_VIOLATION_MESSAGE = "octopus.violation.message";
+
 }

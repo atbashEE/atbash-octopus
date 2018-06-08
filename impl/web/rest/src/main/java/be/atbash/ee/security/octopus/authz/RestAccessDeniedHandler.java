@@ -16,7 +16,9 @@
 package be.atbash.ee.security.octopus.authz;
 
 import be.atbash.ee.security.octopus.filter.authz.AccessDeniedHandler;
+import be.atbash.ee.security.octopus.filter.mgt.ErrorInfo;
 import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.util.Reviewed;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletRequest;
@@ -24,16 +26,32 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_VIOLATION_MESSAGE;
+
 /**
  *
  */
+@Reviewed
 @ApplicationScoped
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
-        // FIXME Allow a JSON Error response
-        WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        String message = "Unable to determine the message";
+
+        Object attribute = request.getAttribute(OCTOPUS_VIOLATION_MESSAGE);
+        if (attribute != null) {
+            message = attribute.toString();
+        }
+        ErrorInfo info = new ErrorInfo("OCT-002", message);
+
+        HttpServletResponse servletResponse = WebUtils.toHttp(response);
+
+        servletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        servletResponse.setHeader("Content-Type", "application/json");
+        servletResponse.getWriter().print(info.toJSON());
+
         return false;
     }
 }

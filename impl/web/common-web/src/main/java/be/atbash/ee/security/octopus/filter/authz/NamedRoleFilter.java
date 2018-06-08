@@ -26,6 +26,10 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+
+import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_VIOLATION_MESSAGE;
 
 /**
  *
@@ -50,10 +54,16 @@ public class NamedRoleFilter extends AuthorizationFilter {
         String[] roles = (String[]) mappedValue;
 
         boolean permitted = true;
+        List<String> violatedRoles = new ArrayList<>();
         for (String role : roles) {
             if (!subject.isPermitted(getRolePermission(role))) {
                 permitted = false;
+                violatedRoles.add(role);
             }
+        }
+
+        if (!permitted) {
+            defineViolationMessage(request, violatedRoles);
         }
         return permitted;
     }
@@ -68,6 +78,24 @@ public class NamedRoleFilter extends AuthorizationFilter {
             result = roleLookup.getRole(role);
         }
         return result;
+    }
+
+    private void defineViolationMessage(ServletRequest request, List<String> violatedRoles) {
+        // FIXME Duplicate (almost ) at be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException.SecurityAuthorizationViolationException(java.util.Set<org.apache.deltaspike.security.api.authorization.SecurityViolation>)
+
+        StringBuilder violations = new StringBuilder();
+        violations.append("Violation of Role ");
+        boolean first = true;
+
+        for (String role : violatedRoles) {
+            if (!first) {
+                violations.append(" - ");
+            }
+            violations.append(role);
+            first = false;
+        }
+
+        request.setAttribute(OCTOPUS_VIOLATION_MESSAGE, violations.toString());
     }
 
 }

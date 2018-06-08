@@ -33,8 +33,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import javax.servlet.ServletRequest;
 import java.util.List;
 
+import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_VIOLATION_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -52,10 +54,19 @@ public class NamedRoleFilterTest {
     @Mock
     private RoleLookup<? extends NamedRole> roleLookupMock;
 
+    @Mock
+    private ServletRequest servletRequestMock;
+
     private NamedRoleFilter filter;
 
     @Captor
     private ArgumentCaptor<Permission> permissionArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> attributeNameCaptor;
 
     @Before
     public void setup() {
@@ -94,7 +105,7 @@ public class NamedRoleFilterTest {
         filter.initInstance();
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role3"});
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"role3"});
         assertThat(allowed).isFalse();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -102,6 +113,11 @@ public class NamedRoleFilterTest {
 
         Permission permission = permissionArgumentCaptor.getValue();
         assertThat(permission.toString()).isEqualTo(">role3<");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Role role3");
 
     }
 
@@ -140,7 +156,7 @@ public class NamedRoleFilterTest {
                     }
                 }
         );
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1", "role2"});
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"role1", "role2"});
         assertThat(allowed).isFalse();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -152,6 +168,11 @@ public class NamedRoleFilterTest {
 
         permission = allValues.get(1);
         assertThat(permission.toString()).isEqualTo(">role2<");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Role role2");
 
     }
 
@@ -184,7 +205,7 @@ public class NamedRoleFilterTest {
         when(roleLookupMock.getRole("role3")).thenReturn(new RolePermission("mappedRole3"));
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role3"});
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"role3"});
         assertThat(allowed).isFalse();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -192,6 +213,11 @@ public class NamedRoleFilterTest {
 
         Permission permission = permissionArgumentCaptor.getValue();
         assertThat(permission.toString()).isEqualTo(">mappedRole3<");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Role role3");
 
     }
 
@@ -239,7 +265,7 @@ public class NamedRoleFilterTest {
                 }
         );
 
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1", "role3"});
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"role1", "role3"});
         assertThat(allowed).isFalse();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -251,6 +277,11 @@ public class NamedRoleFilterTest {
 
         permission = allValues.get(1);
         assertThat(permission.toString()).isEqualTo(">mappedRole3<");
+
+        verify(servletRequestMock).setAttribute(attributeNameCaptor.capture(), stringArgumentCaptor.capture());
+
+        assertThat(attributeNameCaptor.getValue()).isEqualTo(OCTOPUS_VIOLATION_MESSAGE);
+        assertThat(stringArgumentCaptor.getValue()).isEqualTo("Violation of Role role3");
 
     }
 }

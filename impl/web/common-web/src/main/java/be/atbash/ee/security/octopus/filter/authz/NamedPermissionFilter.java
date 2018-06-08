@@ -24,6 +24,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+
+import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_VIOLATION_MESSAGE;
 
 @ApplicationScoped
 public class NamedPermissionFilter extends AuthorizationFilter {
@@ -45,14 +49,40 @@ public class NamedPermissionFilter extends AuthorizationFilter {
         String[] permissions = (String[]) mappedValue;  // Fixme What does Octopus give as as we don't specify value like np[]
 
         boolean permitted = true;
+        List<Permission> violatedPermissions = new ArrayList<>();
         for (String permissionName : permissions) {
 
             Permission permission = permissionResolver.resolvePermission(permissionName);
             if (!subject.isPermitted(permission)) {
                 permitted = false;
+                violatedPermissions.add(permission);
             }
         }
+        if (!permitted) {
+            // FIXME this is also required for voters.
+            // Need to have something predefined so that it can be used in custom voters.
+            defineViolationMessage(request, violatedPermissions);
+        }
+
         return permitted;
+    }
+
+    private void defineViolationMessage(ServletRequest request, List<Permission> violatedPermissions) {
+        // FIXME Duplicate (almost ) at be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException.SecurityAuthorizationViolationException(java.util.Set<org.apache.deltaspike.security.api.authorization.SecurityViolation>)
+
+        StringBuilder violations = new StringBuilder();
+        violations.append("Violation of Permission ");
+        boolean first = true;
+
+        for (Permission violatedPermission : violatedPermissions) {
+            if (!first) {
+                violations.append(" - ");
+            }
+            violations.append(violatedPermission.toString());
+            first = false;
+        }
+
+        request.setAttribute(OCTOPUS_VIOLATION_MESSAGE, violations.toString());
     }
 
 }
