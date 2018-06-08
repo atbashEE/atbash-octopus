@@ -22,6 +22,7 @@ import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
+import be.atbash.ee.security.octopus.util.ExceptionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -142,16 +143,17 @@ public abstract class AuthenticatingFilter extends AuthenticationFilter {
      * {@link UnauthenticatedException}.
      */
     @Override
-    protected void cleanup(ServletRequest request, ServletResponse response, Exception existing) throws ServletException, IOException {
-        if (existing instanceof UnauthenticatedException || (existing instanceof ServletException && existing.getCause() instanceof UnauthenticatedException)) {
+    protected void cleanup(ServletRequest request, ServletResponse response, Throwable existing) throws ServletException, IOException {
+        Throwable unwrappedException = ExceptionUtil.unwrap(existing);
+        if (ExceptionUtil.isUnauthenticatedException(unwrappedException)) {
             try {
                 onAccessDenied(request, response);
-                existing = null;
+                unwrappedException = null;
             } catch (Exception e) {
-                existing = e;
+                unwrappedException = e;
             }
         }
-        super.cleanup(request, response, existing);
+        super.cleanup(request, response, unwrappedException);
 
     }
 }

@@ -17,13 +17,13 @@ package be.atbash.ee.security.octopus.mp.filter.authc;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
-import be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter;
+import be.atbash.ee.security.octopus.filter.RestAuthenticatingFilter;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTData;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTDecoder;
 import be.atbash.ee.security.octopus.keys.selector.KeySelector;
-import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.mp.token.MPJWTToken;
 import be.atbash.ee.security.octopus.mp.token.MPToken;
+import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -40,7 +40,7 @@ import static be.atbash.ee.security.octopus.WebConstants.BEARER;
  *
  */
 @ApplicationScoped
-public class MPUserFilter extends AuthenticatingFilter {
+public class MPUserFilter extends RestAuthenticatingFilter {
 
     @Inject
     private JWTDecoder jwtDecoder;
