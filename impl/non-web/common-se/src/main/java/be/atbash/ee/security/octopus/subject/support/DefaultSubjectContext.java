@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 package be.atbash.ee.security.octopus.subject.support;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
+import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.MapContext;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of the {@link SubjectContext} interface.  Note that the getters and setters are not
@@ -47,10 +47,11 @@ public class DefaultSubjectContext extends MapContext implements SubjectContext 
 
     private static final String AUTHENTICATED = DefaultSubjectContext.class.getName() + ".AUTHENTICATED";
 
-    private static final transient Logger log = LoggerFactory.getLogger(DefaultSubjectContext.class);
+    private AuthorizingRealm authorizingRealm;
 
     public DefaultSubjectContext() {
         super();
+        this.authorizingRealm = OctopusOfflineRealm.getInstance();
     }
 
     public DefaultSubjectContext(SubjectContext ctx) {
@@ -133,4 +134,8 @@ public class DefaultSubjectContext extends MapContext implements SubjectContext 
         nullSafePut(AUTHENTICATION_TOKEN, token);
     }
 
+    @Override
+    public AuthorizingRealm getAuthorizingRealm() {
+        return authorizingRealm;
+    }
 }

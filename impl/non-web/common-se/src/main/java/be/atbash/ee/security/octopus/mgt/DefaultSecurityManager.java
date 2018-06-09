@@ -81,7 +81,7 @@ public class DefaultSecurityManager implements Authorizer {
     public DefaultSecurityManager() {
         super();
         subjectFactory = new DefaultSubjectFactory();
-        octopusRealm = new OctopusOfflineRealm();
+        octopusRealm = OctopusOfflineRealm.getInstance();
 
         octopusRealm.initDependencies();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.subject.support;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
+import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
@@ -80,13 +81,16 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
     public static final String AUTHENTICATED_SESSION_KEY = WebSubjectContext.class.getName() + "_AUTHENTICATED_SESSION_KEY";
 
     private static final transient Logger log = LoggerFactory.getLogger(WebSubjectContext.class);
+    private AuthorizingRealm authorizingRealm;
 
-    public WebSubjectContext() {
+    public WebSubjectContext(AuthorizingRealm authorizingRealm) {
         super();
+        this.authorizingRealm = authorizingRealm;
     }
 
     public WebSubjectContext(SubjectContext ctx) {
         super(ctx);
+        this.authorizingRealm = ctx.getAuthorizingRealm();
     }
 
     public WebSecurityManager getSecurityManager() {
@@ -342,5 +346,10 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
         }
 
         return response;
+    }
+
+    @Override
+    public AuthorizingRealm getAuthorizingRealm() {
+        return authorizingRealm;
     }
 }

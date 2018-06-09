@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public class DefaultSubjectFactory {
         PrincipalCollection principals = context.resolvePrincipals();
         boolean authenticated = context.resolveAuthenticated();
 
-        return new DelegatingSubject(principals, authenticated, new DefaultSecurityManager());
+        return new DelegatingSubject(principals, authenticated, new DefaultSecurityManager(), context.getAuthorizingRealm());
     }
 
 }

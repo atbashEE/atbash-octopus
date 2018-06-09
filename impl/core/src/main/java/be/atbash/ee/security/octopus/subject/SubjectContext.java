@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
 import java.util.Map;
@@ -124,4 +125,5 @@ public interface SubjectContext extends Map<String, Object> {
 
     void setAuthenticationToken(AuthenticationToken token);
 
+    AuthorizingRealm getAuthorizingRealm();
 }

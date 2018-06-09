@@ -352,7 +352,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     }
 
     public Collection<Permission> getMatchingPermissions(Subject subject, Permission permission) {
-        // TODO Need some cache !!!
+        // TODO Need some cache !!! (when !coreConfiguration.isDynamicAuthorization)
         Collection<Permission> result = new ArrayList<>();
 
         PrincipalCollection principals = subject.getPrincipals();
@@ -365,6 +365,14 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
             }
         }
         return result;
+    }
+
+    public Collection<Permission> getPermissions(Subject subject) {
+        // TODO Need some cache !!! (when !coreConfiguration.isDynamicAuthorization)
+        PrincipalCollection principals = subject.getPrincipals();
+        AuthorizationInfo info = getAuthorizationInfo(principals);
+
+        return getPermissions(info, principals);
     }
 
     protected Object getAuthorizationCacheKey(PrincipalCollection principals) {

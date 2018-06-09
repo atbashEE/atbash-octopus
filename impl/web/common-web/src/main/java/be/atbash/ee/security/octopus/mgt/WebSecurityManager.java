@@ -205,7 +205,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * authenticated subject.
      */
     protected WebSubject createSubject(AuthenticationToken token, AuthenticationInfo info, WebSubject existing) {
-        WebSubjectContext context = new WebSubjectContext();
+        WebSubjectContext context = new WebSubjectContext(octopusRealm);
         context.setAuthenticated(true);
         context.setAuthenticationToken(token);
         context.setAuthenticationInfo(info);

@@ -35,6 +35,8 @@ import be.atbash.util.reflection.ClassUtils;
  */
 public class OctopusOfflineRealm extends AuthorizingRealm {
 
+    private static final OctopusOfflineRealm INSTANCE = new OctopusOfflineRealm();
+
     private boolean listenerConfigured = false;  // FIXME Needed ?
 
     private boolean authorizationInfoRequired = false;
@@ -42,6 +44,9 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
     private AuthenticationInfoProviderHandler authenticationInfoProviderHandler;
 
     private AuthorizationInfoProviderHandler authorizationInfoProviderHandler;
+
+    private OctopusOfflineRealm() {
+    }
 
     public void initDependencies() {
         LookupProvider<? extends Enum> lookupProvider = new LookupProviderLoader().loadLookupProvider();
@@ -196,4 +201,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         listenerConfigured = true;
     }
 
+    public static OctopusOfflineRealm getInstance() {
+        return INSTANCE;
+    }
 }

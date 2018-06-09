@@ -20,6 +20,8 @@ import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
+import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
+import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionContext;
 import be.atbash.ee.security.octopus.session.SessionException;
@@ -72,21 +74,25 @@ public class WebSubject implements RequestPairSource, Subject {
 
     private HttpServletRequest servletRequest;
     private HttpServletResponse servletResponse;
+    private AuthorizingRealm authorizingRealm;
 
     public WebSubject(PrincipalCollection principals, boolean authenticated,
                       String host, Session session,
                       HttpServletRequest request, HttpServletResponse response,
-                      WebSecurityManager securityManager) {
-        this(principals, authenticated, host, session, true, request, response, securityManager);
+                      WebSecurityManager securityManager,
+                      AuthorizingRealm authorizingRealm) {
+        this(principals, authenticated, host, session, true, request, response, securityManager, authorizingRealm);
     }
 
     public WebSubject(PrincipalCollection principals, boolean authenticated,
                       String host, Session session, boolean sessionEnabled,
                       HttpServletRequest request, HttpServletResponse response,
-                      WebSecurityManager securityManager) {
+                      WebSecurityManager securityManager,
+                      AuthorizingRealm authorizingRealm) {
         this(principals, authenticated, host, session, sessionEnabled, securityManager);
         servletRequest = request;
         servletResponse = response;
+        this.authorizingRealm = authorizingRealm;
     }
 
     public WebSubject(WebSecurityManager securityManager) {
@@ -933,6 +939,11 @@ public class WebSubject implements RequestPairSource, Subject {
 
     }
 
+    @Override
+    public Collection<Permission> getAllPermissions() {
+        return authorizingRealm.getPermissions(this);
+    }
+
     /**
      * A {@code WebSubject.Builder}
      * additionally ensures that the Servlet request/response pair that is triggering the Subject instance's creation
@@ -1023,7 +1034,7 @@ public class WebSubject implements RequestPairSource, Subject {
          */
 
         protected WebSubjectContext newSubjectContextInstance() {
-            return new WebSubjectContext();
+            return new WebSubjectContext(CDIUtils.retrieveInstance(OctopusRealm.class));
         }
 
         /**

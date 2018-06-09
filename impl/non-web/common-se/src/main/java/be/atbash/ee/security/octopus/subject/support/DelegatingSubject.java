@@ -21,6 +21,7 @@ import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
+import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
@@ -66,16 +67,14 @@ public class DelegatingSubject implements Subject {
     protected boolean authenticated;
 
     protected transient DefaultSecurityManager securityManager;
+    private AuthorizingRealm authorizingRealm;
 
-    public DelegatingSubject(DefaultSecurityManager securityManager) {
-        this(null, false, securityManager);
-    }
-
-    public DelegatingSubject(PrincipalCollection principals, boolean authenticated, DefaultSecurityManager securityManager) {
+    public DelegatingSubject(PrincipalCollection principals, boolean authenticated, DefaultSecurityManager securityManager, AuthorizingRealm authorizingRealm) {
         if (securityManager == null) {
             throw new IllegalArgumentException("SecurityManager argument cannot be null.");
         }
         this.securityManager = securityManager;
+        this.authorizingRealm = authorizingRealm;
         this.principals = principals;
         this.authenticated = authenticated;
     }
@@ -360,5 +359,10 @@ public class DelegatingSubject implements Subject {
 
         return popped;
         */
+    }
+
+    @Override
+    public Collection<Permission> getAllPermissions() {
+        return authorizingRealm.getPermissions(this);
     }
 }

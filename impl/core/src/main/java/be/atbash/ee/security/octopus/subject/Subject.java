@@ -420,6 +420,13 @@ public interface Subject {
      * identity (normal state).
      * @see #runAs
      */
+    // FIXME Needed, Use case
     PrincipalCollection getPreviousPrincipals();
 
+    /**
+     * Returns the list of al permissions (roles are returned as instances of RolePermission)
+     *
+     * @return
+     */
+    Collection<Permission> getAllPermissions();
 }
