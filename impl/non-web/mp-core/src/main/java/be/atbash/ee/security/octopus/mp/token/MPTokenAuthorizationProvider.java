@@ -17,16 +17,21 @@ package be.atbash.ee.security.octopus.mp.token;
 
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
+import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.realm.AuthorizationInfoBuilder;
 import be.atbash.ee.security.octopus.token.AuthorizationToken;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  *
  */
 @ApplicationScoped
 public class MPTokenAuthorizationProvider implements TokenBasedAuthorizationInfoProvider {
+
+    @Inject
+    private PermissionResolver permissionResolver;
 
     @Override
     public AuthorizationInfo getAuthorizationInfo(AuthorizationToken token) {
@@ -35,7 +40,11 @@ public class MPTokenAuthorizationProvider implements TokenBasedAuthorizationInfo
             AuthorizationInfoBuilder builder = new AuthorizationInfoBuilder();
             for (String group : mpToken.getJWT().getGroups()) {
 
-                builder.addRole(group);
+                if (group.contains(":")) {
+                    builder.addPermission(permissionResolver.resolvePermission(group));
+                } else {
+                    builder.addRole(group);
+                }
             }
 
             return builder.build();

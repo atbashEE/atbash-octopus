@@ -45,14 +45,12 @@ public class PrincipalManager {
         T result = subject.getPrincipals().oneByType(targetPrincipalClass);
 
         if (result == null) {
-            UserPrincipal userPrincipal = subject.getPrincipal();
-
             Iterator<PrincipalConverter> iterator = converters.iterator();
             while (result == null && iterator.hasNext()) {
 
                 PrincipalConverter converter = iterator.next();
                 if (converter.supportFor(targetPrincipalClass)) {
-                    result = (T) converter.convert(userPrincipal);
+                    result = (T) converter.convert(subject);
                 }
             }
         }

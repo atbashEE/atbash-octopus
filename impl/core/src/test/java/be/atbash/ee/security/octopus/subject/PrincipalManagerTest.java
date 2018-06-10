@@ -137,7 +137,7 @@ public class PrincipalManagerTest {
         }
 
         @Override
-        public TestValidatedAuthenticationToken convert(UserPrincipal userPrincipal) {
+        public TestValidatedAuthenticationToken convert(Subject subject) {
             return token;
         }
     }

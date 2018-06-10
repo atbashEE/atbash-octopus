@@ -26,5 +26,5 @@ public interface PrincipalConverter<T extends ValidatedAuthenticationToken> {
     boolean supportFor(Class<T> authenticationTokenClass);
 
     // FIXME see MPPrincipalConverter, maybe we need an additional String/URL to have dynamic values for iss, aud, ..
-    T convert(UserPrincipal userPrincipal);
+    T convert(Subject subject);
 }
