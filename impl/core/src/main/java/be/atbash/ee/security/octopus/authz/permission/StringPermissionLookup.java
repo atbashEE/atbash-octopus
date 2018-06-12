@@ -82,12 +82,17 @@ public class StringPermissionLookup {
 
     public static String createNameForPermission(String wildCardString) {
         // TODO Do we need a customizeable factory so that developer can define how the names are created.
+        /*
         StringBuilder result = new StringBuilder();
         String[] parts = wildCardString.split(":");
         for (String part : parts) {
             result.append(capitalize(part));
         }
         return result.toString();
+        */
+        // FIXME harmonize the naming (and see how important the typesafe named permissions from enums is - since we are favoring the wildcard, String based one [as they are easier !!]
+        // Factory is maybe a solution but need to inspect the impact (when is name used and when the wildcard representation) of this factory on the functionality of OCTOPUS.
+        return wildCardString;  // We now return just the wildcard string
     }
 
     private static String capitalize(String value) {

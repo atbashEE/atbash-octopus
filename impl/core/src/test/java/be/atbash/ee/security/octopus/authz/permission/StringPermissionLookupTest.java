@@ -33,7 +33,7 @@ public class StringPermissionLookupTest {
         StringPermissionLookup lookup = new StringPermissionLookup();
         NamedDomainPermission permission = lookup.getPermission("atbash");
         assertThat(permission).isNotNull();
-        assertThat(permission.getName()).isEqualTo("Atbash");
+        assertThat(permission.getName()).isEqualTo("atbash");
         assertThat(permission.getWildcardNotation()).isEqualTo("atbash");
 
     }
@@ -43,7 +43,7 @@ public class StringPermissionLookupTest {
         StringPermissionLookup lookup = new StringPermissionLookup();
         NamedDomainPermission permission = lookup.getPermission("atbash:*:*");
         assertThat(permission).isNotNull();
-        assertThat(permission.getName()).isEqualTo("Atbash**");
+        assertThat(permission.getName()).isEqualTo("atbash:*:*");
         assertThat(permission.getWildcardNotation()).isEqualTo("atbash:*:*");
     }
 
