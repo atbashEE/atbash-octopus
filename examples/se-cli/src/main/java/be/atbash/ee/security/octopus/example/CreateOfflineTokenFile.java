@@ -50,6 +50,6 @@ public class CreateOfflineTokenFile {
         writer.write(offlineToken);
         writer.close();
 
-        System.out.println("Offline token written to "+fileName);
+        System.out.println("Offline token written to " + fileName);
     }
 }

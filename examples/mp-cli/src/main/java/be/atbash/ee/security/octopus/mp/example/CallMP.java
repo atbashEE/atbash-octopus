@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.mp.example;
 
 import be.atbash.ee.security.octopus.context.OctopusSecurityContext;
+import be.atbash.ee.security.octopus.mp.exception.UnauthorizedExceptionMapper;
 import be.atbash.ee.security.octopus.mp.rest.MPRestClientProvider;
 import be.atbash.ee.security.octopus.token.OfflineToken;
 import be.atbash.ee.security.octopus.token.OfflineTokenParser;
@@ -41,8 +42,11 @@ public class CallMP {
         HelloService helloService = AbstractRestClientBuilder.newBuilder()
                 .baseUrl(new URL("http://localhost:8080/rest-mp/data"))
                 .register(MPRestClientProvider.class)
+                .register(UnauthorizedExceptionMapper.class)
                 .build(HelloService.class);
 
         System.out.println(helloService.sayHello());
+
+        System.out.println(helloService.testPermission1());
     }
 }

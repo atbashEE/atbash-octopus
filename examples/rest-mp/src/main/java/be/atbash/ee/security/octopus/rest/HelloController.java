@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.rest;
 
+import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
+import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
 import javax.inject.Inject;
@@ -33,7 +35,22 @@ public class HelloController {
     private UserPrincipal principal;
 
     @GET
+    @RequiresUser
     public String sayHello() {
         return "Hello " + principal.getName();
+    }
+
+    @Path("/protectedPermission1")
+    @RequiresPermissions("demo:read:*")
+    @GET
+    public String testPermission1() {
+        return "Has permission demo:read:*";
+    }
+
+    @Path("/protectedPermission2")
+    @RequiresPermissions("demo:write:*")
+    @GET
+    public String testPermission2() {
+        return "Has permission demo:write:*";
     }
 }

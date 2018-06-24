@@ -23,4 +23,13 @@ public interface HelloService {
 
     @GET
     String sayHello();
+
+    @Path("/protectedPermission1")
+    @GET
+    String testPermission1();
+
+    @Path("/protectedPermission2")
+    @GET
+    String testPermission2();
+
 }

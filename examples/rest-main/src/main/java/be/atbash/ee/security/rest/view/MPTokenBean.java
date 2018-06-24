@@ -35,7 +35,10 @@ public class MPTokenBean {
 
     public void testMPToken() {
 
-        System.out.println(helloService.sayHello());
+        System.out.println("Only authentication " + helloService.sayHello());
+
+        System.out.println("Test authorization " + helloService.testPermission1());
+        System.out.println("Test authorization " + helloService.testPermission2());
 
     }
 }
