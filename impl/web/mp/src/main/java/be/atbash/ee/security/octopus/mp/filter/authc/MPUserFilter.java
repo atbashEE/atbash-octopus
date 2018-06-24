@@ -15,8 +15,6 @@
  */
 package be.atbash.ee.security.octopus.mp.filter.authc;
 
-import be.atbash.ee.security.octopus.authc.AuthenticationException;
-import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
 import be.atbash.ee.security.octopus.filter.RestAuthenticatingFilter;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTData;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTDecoder;
@@ -30,11 +28,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -56,28 +49,7 @@ public class MPUserFilter extends RestAuthenticatingFilter {
         setName("mpUser"); // TODO Rename to authcMP or just mp (and then authcBasic becomes basic?
     }
 
-    @Override
-    protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
-
-        if (token == null) {
-            // Authorization header parameter is required.
-            return new IncorrectDataToken("Authorization header required");
-        }
-
-        String[] parts = token.split(" ");
-        if (parts.length != 2) {
-            return new IncorrectDataToken("Authorization header value incorrect");
-        }
-        if (!BEARER.equals(parts[0])) {
-            return new IncorrectDataToken("Authorization header value must start with Bearer");
-        }
-
-        return createToken(parts[1]);
-    }
-
-    private AuthenticationToken createToken(String token) {
+    protected AuthenticationToken createToken(String token) {
 
         JWTData<MPJWTToken> data = jwtDecoder.decode(token, MPJWTToken.class, keySelector, verifier);
         return new MPToken(data.getData());
@@ -89,9 +61,4 @@ public class MPUserFilter extends RestAuthenticatingFilter {
         return executeLogin(request, response);
     }
 
-    @Override
-    protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-        ((HttpServletResponse) response).setStatus(401);
-        return false; // Stop the filter chain
-    }
 }

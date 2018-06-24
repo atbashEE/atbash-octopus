@@ -19,7 +19,6 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
 /**
  * AuthenticationToken which can be used when insufficient/incorrect data was available on the requestHeader. Used in the OAuth2 and JWT authentication filters.
- * FIXME Verify correct usage
  */
 public class IncorrectDataToken implements AuthenticationToken {
 
@@ -37,6 +36,10 @@ public class IncorrectDataToken implements AuthenticationToken {
     @Override
     public Object getCredentials() {
         return null;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override

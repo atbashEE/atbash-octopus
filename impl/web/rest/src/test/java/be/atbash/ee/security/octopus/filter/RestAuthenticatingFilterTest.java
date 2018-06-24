@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
+import be.atbash.ee.security.octopus.authc.InvalidCredentialsException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
@@ -26,11 +28,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
+import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
@@ -43,6 +48,9 @@ public class RestAuthenticatingFilterTest {
 
     @Mock
     private HttpServletResponse servletResponseMock;
+
+    @Mock
+    private HttpServletRequest servletRequestMock;
 
     private RestAuthenticatingFilter filter = new DemoRestFilter();
 
@@ -137,16 +145,110 @@ public class RestAuthenticatingFilterTest {
 
     }
 
+    @Test
+    public void cleanup_InvalidCredentialsException() throws ServletException, IOException {
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(out);
+        when(servletResponseMock.getWriter()).thenReturn(writer);
+
+        InvalidCredentialsException exception = new InvalidCredentialsException("Missing header");
+        filter.cleanup(null, servletResponseMock, exception);
+
+        writer.flush();
+
+        verify(servletResponseMock).reset();
+        verify(servletResponseMock).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        verify(servletResponseMock).setHeader("Content-Type", "application/json");
+
+        assertThat(out.toString()).isEqualTo("{\"code\":\"OCT-002\", \"message\":\"Missing header\"}");
+
+    }
+
+    @Test
+    public void createToken() {
+        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER + " Atbash-JUnit-token");
+
+        AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
+
+        assertThat(token).isInstanceOf(DemoToken.class);
+        DemoToken demoToken = (DemoToken) token;
+        assertThat(demoToken.getCredentials()).isEqualTo("Atbash-JUnit-token");
+    }
+
+    @Test
+    public void createToken_wrongHeader() {
+        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(null);
+
+        AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
+
+        assertThat(token).isInstanceOf(IncorrectDataToken.class);
+        IncorrectDataToken incorrectToken = (IncorrectDataToken) token;
+        assertThat(incorrectToken.getMessage()).isEqualTo("Authorization header required");
+    }
+
+    @Test
+    public void createToken_missingSpace() {
+        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER + "Atbash-JUnit-token");
+
+        AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
+
+        assertThat(token).isInstanceOf(IncorrectDataToken.class);
+        IncorrectDataToken incorrectToken = (IncorrectDataToken) token;
+        assertThat(incorrectToken.getMessage()).isEqualTo("Authorization header value incorrect");
+    }
+
+    @Test
+    public void createToken_MissingBearer() {
+        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn("XX Atbash-JUnit-token");
+
+        AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
+
+        assertThat(token).isInstanceOf(IncorrectDataToken.class);
+        IncorrectDataToken incorrectToken = (IncorrectDataToken) token;
+        assertThat(incorrectToken.getMessage()).isEqualTo("Authorization header value must start with Bearer");
+    }
+
+    @Test
+    public void createToken_WrongNumerOfSpaces() {
+        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER + " Atbash-JUnit-token XX");
+
+        AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
+
+        assertThat(token).isInstanceOf(IncorrectDataToken.class);
+        IncorrectDataToken incorrectToken = (IncorrectDataToken) token;
+        assertThat(incorrectToken.getMessage()).isEqualTo("Authorization header value incorrect");
+    }
+
     private static class DemoRestFilter extends RestAuthenticatingFilter {
 
         @Override
-        protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
-            return null;
+        protected AuthenticationToken createToken(String token) {
+            return new DemoToken(token);
         }
 
         @Override
         protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
             return false;
+        }
+    }
+
+    private static class DemoToken implements AuthenticationToken {
+
+        private Object token;
+
+        public DemoToken(Object token) {
+            this.token = token;
+        }
+
+        @Override
+        public Object getPrincipal() {
+            return null;
+        }
+
+        @Override
+        public Object getCredentials() {
+            return token;
         }
     }
 }

@@ -15,15 +15,24 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.authc.AuthenticationException;
+import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
+import be.atbash.ee.security.octopus.authc.InvalidCredentialsException;
 import be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter;
 import be.atbash.ee.security.octopus.filter.mgt.ErrorInfo;
+import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.ExceptionUtil;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
+import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -54,8 +63,58 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
                 unwrappedException = e;
             }
         }
+
+        if (unwrappedException instanceof InvalidCredentialsException) {
+            HttpServletResponse servletResponse = (HttpServletResponse) response;
+            servletResponse.reset();
+
+            // This is still a 401, unauthorized because of missing header info
+            servletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            servletResponse.setHeader("Content-Type", "application/json");
+
+            ErrorInfo info = new ErrorInfo("OCT-002", unwrappedException.getMessage());
+            servletResponse.getWriter().print(info.toJSON());
+            unwrappedException = null;
+
+        }
         super.cleanup(request, response, unwrappedException);
 
     }
 
+    @Override
+    protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException authenticationexception, ServletRequest request, ServletResponse response) {
+        try {
+            cleanup(request, response, authenticationexception);
+        } catch (ServletException | IOException e) {
+            throw new AtbashUnexpectedException(e);
+        }
+        return false; // Stop the filter chain
+    }
+
+    protected String getAuthzHeader(ServletRequest request) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        return httpServletRequest.getHeader(AUTHORIZATION_HEADER);
+    }
+
+    @Override
+    protected final AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
+        String token = getAuthzHeader(request);
+
+        if (token == null) {
+            // Authorization header parameter is required.
+            return new IncorrectDataToken("Authorization header required");
+        }
+
+        String[] parts = token.split(" ");
+        if (parts.length != 2) {
+            return new IncorrectDataToken("Authorization header value incorrect");
+        }
+        if (!BEARER.equals(parts[0])) {
+            return new IncorrectDataToken("Authorization header value must start with Bearer");
+        }
+
+        return createToken(parts[1]);
+    }
+
+    protected abstract AuthenticationToken createToken(String token);
 }

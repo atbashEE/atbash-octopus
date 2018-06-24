@@ -138,6 +138,10 @@ public class OctopusRealm extends AuthorizingRealm {
         //assertRealmsConfigured();  TODO Needed ??
         //Collection<Realm> realms = getRealms();
 
+        if (authenticationToken instanceof IncorrectDataToken) {
+            throw new InvalidCredentialsException(((IncorrectDataToken) authenticationToken).getMessage());
+        }
+
         AuthenticationInfo authenticationInfo = getAuthenticationInfo(authenticationToken);
 
         AuthorizationToken authorizationToken = getAuthorizationToken(authenticationToken, authenticationInfo);

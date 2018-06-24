@@ -58,7 +58,7 @@ public abstract class AuthenticatingFilter extends AuthenticationFilter {
         }
     }
 
-    protected abstract AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception;
+    protected abstract AuthenticationToken createToken(ServletRequest request, ServletResponse response);
 
     protected AuthenticationToken createToken(String username, String password,
                                               ServletRequest request, ServletResponse response) {
