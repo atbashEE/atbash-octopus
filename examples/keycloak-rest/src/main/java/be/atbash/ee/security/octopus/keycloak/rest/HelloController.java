@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.keycloak.view;
+package be.atbash.ee.security.octopus.keycloak.rest;
 
-import be.atbash.ee.security.octopus.keycloak.TestBoundary;
+import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
+import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
 import be.atbash.ee.security.octopus.subject.PrincipalManager;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
-import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -32,32 +36,52 @@ import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 /**
  *
  */
-@Model
-public class TestBean {
+@Path("/hello")
+@Singleton
+public class HelloController {
 
     @Inject
-    private TestBoundary testBoundary;
+    private UserPrincipal principal;
 
     @Inject
     private PrincipalManager principalManager;
 
-    public void testAuthorization() {
-        testBoundary.doSomething();
+    @GET
+    @RequiresUser
+    public String sayHello() {
+        return "Hello " + principal.getName();
     }
 
-    public void testRemoteCall() {
+    @GET
+    @Path("cascaded")
+    @RequiresUser
+    public String sayHelloCascaded() {
         KeycloakUserToken keycloakUserToken = principalManager.convert(KeycloakUserToken.class);
         String token = keycloakUserToken.getAccessToken();
 
         Client client = ClientBuilder.newClient();
         WebTarget webTarget
-                = client.target("http://localhost:8080/keycloak_rest/data/hello/cascaded");
+                = client.target("http://localhost:8080/keycloak_rest/data/hello");
 
         Response response = webTarget.request()
                 .header(AUTHORIZATION_HEADER, BEARER + " " + token)
                 .get();
-        System.out.println(response.getStatus());
-        System.out.println(response.readEntity(String.class));
+
+        return "cascaded :" + response.readEntity(String.class);
+
     }
 
+    @Path("/protectedPermission1")
+    @RequiresPermissions("demo:read:*")
+    @GET
+    public String testPermission1() {
+        return "Has permission demo:read:*";
+    }
+
+    @Path("/protectedPermission2")
+    @RequiresPermissions("demo:write:*")
+    @GET
+    public String testPermission2() {
+        return "Has permission demo:write:*";
+    }
 }

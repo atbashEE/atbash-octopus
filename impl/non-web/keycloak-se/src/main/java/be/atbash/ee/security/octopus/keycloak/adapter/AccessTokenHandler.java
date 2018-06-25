@@ -65,7 +65,17 @@ public final class AccessTokenHandler {
             logger.error("Stale token");
             throw new OIDCAuthenticationException(OIDCAuthenticationError.Reason.STALE_TOKEN);
         }
+        return extractUser(accessToken, idToken, accessTokenResponse);
 
+    }
+
+    public static KeycloakUserToken extractUser(AccessToken accessToken, IDToken idToken, String token) {
+        AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+        accessTokenResponse.setToken(token);
+        return extractUser(accessToken, idToken, accessTokenResponse);
+    }
+
+    private static KeycloakUserToken extractUser(AccessToken accessToken, IDToken idToken, AccessTokenResponse accessTokenResponse) {
         // For safety, idToken cannot ever be null I guess.
         if (idToken == null) {
             throw new OIDCAuthenticationException(OIDCAuthenticationError.Reason.CODE_TO_TOKEN_FAILURE);
@@ -75,8 +85,13 @@ public final class AccessTokenHandler {
 
         // TODO Seems that roles aren't available in idToken only in accessToken
         user.setRoles(accessToken.getRealmAccess().getRoles());
+
+        // Need for global logout. Only available on the app which initiated the login.
+        // Not available on for example the Rest endpoints with the AuthcKeycloak Filter
+        // TODO Block the subject.logout somehow for global logout (because we are missing session state)
         user.setClientSession(accessTokenResponse.getSessionState());
 
+        user.setId(accessToken.getId());
         // TODO Other parameters
 
         return user;

@@ -1,4 +1,4 @@
-==== keycloak Integration
+==== keycloak Integration JSF
 
 Support the integration of a JSF application with Keycloak authentication.
 
@@ -17,6 +17,50 @@ The content can be created from the Keycloak admin web console.
 
 No need to define an implementation of _AuthenticationInfoProvider_ or _AuthorizationInfoProvider_.  (TODO Add info when multiple providers are supported)
 
+Protected URLs for which an authentication is required, can be protected with the _userKeycloak_ filter.
+
 When Keycloak is configured for returning role information within the Access token, the values are added as roles within the Octopus system.
 With an implementation of _RolePermissionResolver_ in place, these role names can be converted to a list of permissions.
 
+The _access token_ can be retrieved through the **PrincipalManager** when an endpoint needs to be called which is protected by the same Keycloak instance.
+
+----
+    @Inject
+    private PrincipalManager principalManager;
+
+    KeycloakUserToken keycloakUserToken = principalManager.convert(KeycloakUserToken.class);
+    String token = keycloakUserToken.getAccessToken();
+----
+
+==== keycloak Integration JAX-RS
+
+Support the integration of a JAX-RS application with Keycloak authentication.
+
+Add the following dependency to the application
+
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-keycloak-rest</artifactId>
+        <version>0.4</version>
+    </dependency>
+----
+
+Define the configuration for keycloak, using the _keycloak.json_ file (within directory /src/main/resources).
+The content can be created from the Keycloak admin web console.
+
+No need to define an implementation of _AuthenticationInfoProvider_ or _AuthorizationInfoProvider_.  (TODO Add info when multiple providers are supported)
+
+The URLs can be protected by adding the authenticating filter _authcKeycloak_. It expect an Bearer Authorization header in the request containing a valid _Access Token_ from Keycloak. (it verifies it by calling the user endpoint)
+
+Handy is also to define the configuration parameter _rest.interceptor.enabled_ (value _true_) so that authorization annotations on JAX-RS methods are activated.
+
+The _access token_ can be retrieved through the **PrincipalManager** when an endpoint needs to be called which is protected by the same Keycloak instance.
+
+----
+    @Inject
+    private PrincipalManager principalManager;
+
+    KeycloakUserToken keycloakUserToken = principalManager.convert(KeycloakUserToken.class);
+    String token = keycloakUserToken.getAccessToken();
+----

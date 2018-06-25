@@ -212,6 +212,33 @@ public class AccessTokenHandlerTest {
 
     }
 
+    @Test
+    public void extractUser_happyCase2() {
+
+        AccessToken accessToken = defineAccessToken();
+
+        // Just create an empty IdToken, testing reading idToken is done somewhere else.
+        IDToken idToken = new IDToken();
+
+        String token = "This is the original Keycloak token. Under normal situations it is a JWT";
+        KeycloakUserToken user = AccessTokenHandler.extractUser(accessToken, idToken, token);
+
+        // The fact we don't have an exception is already one very good thing :)
+
+        assertThat(user.getRoles()).containsOnly(ROLE1, ROLE2);
+        assertThat(user.getClientSession()).isNull();
+    }
+
+    @Test(expected = OIDCAuthenticationException.class)
+    public void extractUser_missingIdToken() {
+
+        AccessToken accessToken = defineAccessToken();
+
+        String token = "This is the original Keycloak token. Under normal situations it is a JWT";
+        AccessTokenHandler.extractUser(accessToken, null, token);
+
+    }
+
     private KeycloakDeployment defineKeycloakDeployment(List<AtbashKey> atbashKeys) {
         KeycloakDeployment deployment = new KeycloakDeployment();
         deployment.setRealmKey((PublicKey) atbashKeys.get(0).getKey());

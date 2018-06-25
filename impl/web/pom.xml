@@ -43,10 +43,11 @@
 
     <modules>
         <module>common-web</module>
-        <module>mp</module>
         <module>jsf7</module>
-        <module>keycloak</module>
         <module>rest</module>
+        <module>mp</module>
+        <module>keycloak</module>
+        <module>keycloak-rest</module>
     </modules>
 
 </project>

@@ -49,6 +49,8 @@
         <module>authz</module>
         <module>rest-main</module>
         <module>rest-mp</module>
+
+        <module>keycloak-rest</module>
     </modules>
 
     <properties>

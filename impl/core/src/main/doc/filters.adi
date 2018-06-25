@@ -8,6 +8,7 @@ These filters extract information from the request and determine the principal b
 
 . authcBasic -> BASIC authentication
 . mpUser -> MicroProfile JWT auth token
+. authcKeycloak -> AccessToken of Keycloak
 
 When such a filter is available within the chain and the request doesn't define the required and correct information, an response with status 401 is returned.
 

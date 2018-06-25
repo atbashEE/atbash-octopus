@@ -164,6 +164,7 @@ public class KeycloakUserToken extends AbstractOctopusAuthenticationToken implem
     }
 
     public Map<String, Serializable> getUserInfo() {
+        // FIXME, when calling getUserInfo(String), it doesn't include these values :(
         Map<String, Serializable> result = new HashMap<>();
 
         result.put(OctopusConstants.EMAIL, email);
@@ -228,8 +229,6 @@ public class KeycloakUserToken extends AbstractOctopusAuthenticationToken implem
         result.setGender(token.getGender());
         result.setLocale(token.getLocale());
         result.setPicture(token.getPicture());
-
-        // TODO Seems that roles aren't available in idToken only in accessToken
 
         return result;
     }
