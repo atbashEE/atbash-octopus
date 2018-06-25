@@ -15,19 +15,12 @@
  */
 package be.atbash.ee.security.octopus.keycloak.view;
 
+import be.atbash.ee.security.octopus.keycloak.HelloService;
 import be.atbash.ee.security.octopus.keycloak.TestBoundary;
-import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
-import be.atbash.ee.security.octopus.subject.PrincipalManager;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -39,25 +32,15 @@ public class TestBean {
     private TestBoundary testBoundary;
 
     @Inject
-    private PrincipalManager principalManager;
+    @RestClient
+    private HelloService helloService;
 
     public void testAuthorization() {
         testBoundary.doSomething();
     }
 
     public void testRemoteCall() {
-        KeycloakUserToken keycloakUserToken = principalManager.convert(KeycloakUserToken.class);
-        String token = keycloakUserToken.getAccessToken();
-
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget
-                = client.target("http://localhost:8080/keycloak_rest/data/hello/cascaded");
-
-        Response response = webTarget.request()
-                .header(AUTHORIZATION_HEADER, BEARER + " " + token)
-                .get();
-        System.out.println(response.getStatus());
-        System.out.println(response.readEntity(String.class));
+        System.out.println(helloService.sayHello());
     }
 
 }
