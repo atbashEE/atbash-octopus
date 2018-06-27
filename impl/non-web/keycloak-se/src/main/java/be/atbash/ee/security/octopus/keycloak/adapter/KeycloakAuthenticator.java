@@ -28,7 +28,6 @@ import org.apache.http.util.EntityUtils;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.OIDCAuthenticationError;
-import org.keycloak.adapters.ServerRequest;
 import org.keycloak.adapters.authentication.ClientCredentialsProviderUtils;
 import org.keycloak.common.util.KeycloakUriBuilder;
 import org.keycloak.constants.ServiceUrlConstants;
@@ -121,15 +120,6 @@ public class KeycloakAuthenticator {
         }
 
         return tokenResponse;
-    }
-
-    public void logout(KeycloakUserToken user) {
-        // FIXME Use from Java SE somehow?
-        try {
-            ServerRequest.invokeLogout(deployment, user.getAccessTokenResponse().getRefreshToken());
-        } catch (IOException | ServerRequest.HttpFailure e) {
-            throw new AtbashUnexpectedException(e);
-        }
     }
 
 }

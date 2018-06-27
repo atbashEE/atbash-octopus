@@ -1,0 +1,18 @@
+=== Logout
+
+There are various levels of authentication and thus also various scenarios related to logout.
+
+
+==== Java SE
+
+The logout in a Java SE environment is important when you are using third party authenticators like Keycloak, OAuth2 or OpenId Connect servers and so on.
+
+When we authenticated against them, these remote systems started a session for the logged in user; We the java SE programs exits, it is thus important that we also do a logout with these external systems.
+
+So always perform a logout of the subject when the programs stops.
+
+----
+   SecurityUtils.getSubject().logout();
+----
+
+The registered **RemoteLogoutHandler** performs then the logout at the external system.

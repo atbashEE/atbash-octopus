@@ -269,13 +269,7 @@ public class DefaultSecurityManager implements Authorizer {
             if (log.isDebugEnabled()) {
                 log.debug("Logging out subject with primary principal {}", principals.getPrimaryPrincipal());
             }
-            // FIXME TODO
-            /*
-            Authenticator authc = getAuthenticator();
-            if (authc instanceof LogoutAware) {
-                ((LogoutAware) authc).onLogout(principals);
-            }
-            */
+            octopusRealm.onLogout(principals);
         }
 
     }

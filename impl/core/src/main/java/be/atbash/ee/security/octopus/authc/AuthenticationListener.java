@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,13 @@
 package be.atbash.ee.security.octopus.authc;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 
 /**
  * An {@code AuthenticationListener} listens for notifications while {@code Subject}s authenticate with the system.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.AuthenticationListener"})
-public interface AuthenticationListener {
+public interface AuthenticationListener extends RemoteLogoutHandler {
 
     /**
      * Callback triggered when an authentication attempt for a {@code Subject} has succeeded.
@@ -41,13 +40,4 @@ public interface AuthenticationListener {
      */
     void onFailure(AuthenticationToken token, AuthenticationException ae);
 
-    /**
-     * Callback triggered when a {@code Subject} logs-out of the system.
-     * <p/>
-     * This method will only be triggered when a Subject explicitly logs-out of the session.  It will not
-     * be triggered if their Session times out.
-     *
-     * @param principals the identifying principals of the Subject logging out.
-     */
-    void onLogout(PrincipalCollection principals);
 }

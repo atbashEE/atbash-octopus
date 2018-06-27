@@ -19,6 +19,7 @@ import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationListener;
+import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheException;
@@ -42,6 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -57,6 +59,9 @@ public class AuthorizingRealmTest {
 
     @Mock
     private Cache authorizationCacheMock;
+
+    @Mock
+    private RemoteLogoutHandler remoteLogoutHandlerMock;
 
     @Captor
     private ArgumentCaptor<Object> authenticationCacheKeyCaptor;
@@ -121,6 +126,29 @@ public class AuthorizingRealmTest {
 
     }
 
+    @Test
+    public void onLogout_withRemoteHandler() {
+        beanManagerFake.endRegistration();
+
+        TestConfig.addConfigValue("cacheManager.class", TestCacheManager.class.getName());
+
+        TestCachingRealm realm = new TestCachingRealm();
+        realm.setAuthenticationCachingEnabled(true);
+        realm.init();
+
+        TestAuthenticationListener listener = new TestAuthenticationListener();
+        Collection<AuthenticationListener> listeners = new ArrayList<>();
+        listeners.add(listener);
+        realm.setAuthenticationListeners(listeners);
+
+        // Test functionality
+        UserPrincipal principal = new UserPrincipal(1L, "Atbash", "Atbash");
+        principal.setRemoteLogoutHandler(remoteLogoutHandlerMock);
+        realm.onLogout(new PrincipalCollection(principal));
+
+        verify(remoteLogoutHandlerMock).onLogout(any(PrincipalCollection.class));
+    }
+
     private static class TestCachingRealm extends AuthorizingRealm {
 
         @Override
@@ -182,7 +210,7 @@ public class AuthorizingRealmTest {
             Cache<K, V> result = null;
 
             for (Map.Entry<String, Cache> entry : cacheMap.entrySet()) {
-                if (name.endsWith(entry.getKey())) {
+                if (name.contains(entry.getKey())) {
                     result = entry.getValue();
                 }
             }

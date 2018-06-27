@@ -139,6 +139,7 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
         for (AuthenticationListener listener : listeners) {
             listener.onLogout(principals);
         }
+        principals.getPrimaryPrincipal().onLogout(principals);
     }
 
     /**

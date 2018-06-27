@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
 import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
@@ -44,6 +45,7 @@ public class AuthenticationInfoBuilder {
     private Map<Serializable, Serializable> userInfo = new HashMap<>();
     private boolean externalPasswordCheck = false;
     private boolean tokenBased = false;
+    private RemoteLogoutHandler remoteLogoutHandler;
 
     public AuthenticationInfoBuilder principalId(Serializable principalId) {
         if (principalId == null) {
@@ -113,9 +115,15 @@ public class AuthenticationInfoBuilder {
         return this;
     }
 
+    public AuthenticationInfoBuilder withRemoteLogoutHandler(RemoteLogoutHandler remoteLogoutHandler) {
+        this.remoteLogoutHandler = remoteLogoutHandler;
+        return this;
+    }
+
     public AuthenticationInfo build() {
         UserPrincipal principal = new UserPrincipal(principalId, userName, name);
         principal.addUserInfo(userInfo);
+        principal.setRemoteLogoutHandler(remoteLogoutHandler);
         AuthenticationInfo result;
         // TODO We need to check if developer supplied salt() when octopusConfig.saltLength != 0
         if (salt == null) {

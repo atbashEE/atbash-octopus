@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.keycloak.adapter.*;
 import be.atbash.ee.security.octopus.keycloak.config.OctopusKeycloakConfiguration;
+import be.atbash.ee.security.octopus.keycloak.logout.KeycloakRemoteLogout;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
@@ -51,6 +52,8 @@ public class ClientAuthenticationInfoProvider implements AuthenticationInfoProvi
 
                 builder.name(keycloakUserToken.getName());
                 builder.token(keycloakUserToken);
+                // In order for the logout with keycloack.
+                builder.withRemoteLogoutHandler(new KeycloakRemoteLogout());
 
             } catch (KeycloakRemoteConnectionException | OIDCAuthenticationException e) {
                 LOGGER.error(e.getMessage());

@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.subject;
 
+import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
 import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;
@@ -34,6 +35,7 @@ public class UserPrincipal implements Principal, Serializable {
     private String userName;
     private String name;
     private boolean systemAccount = false;
+    private RemoteLogoutHandler remoteLogoutHandler;
 
     private Map<Serializable, Serializable> userInfo = new HashMap<>();
 
@@ -107,6 +109,23 @@ public class UserPrincipal implements Principal, Serializable {
 
     public boolean isSystemAccount() {
         return systemAccount;
+    }
+
+    /**
+     * Stores the {@code AuthenticationListener} which needs to be executed when this userPrincipal
+     * is logged out. Used in specific scenarios to notify the original authenticator (Keycloak in the Java SE case)
+     * that user is logged out.
+     *
+     * @param logoutListener
+     */
+    public void setRemoteLogoutHandler(RemoteLogoutHandler remoteLogoutHandler) {
+        this.remoteLogoutHandler = remoteLogoutHandler;
+    }
+
+    public void onLogout(PrincipalCollection principals) {
+        if (remoteLogoutHandler != null) {
+            remoteLogoutHandler.onLogout(principals);
+        }
     }
 
     @Override

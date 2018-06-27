@@ -23,3 +23,8 @@ Authenticate with Keycloak through the Client Credentials flow using the followi
 
 Can be combined in combination with JavaFX out of the box.
 
+When you exit the program, or the user no longer needs to authenticated, make sue you do a logout. It also logs out the user from the Keycloak instance.
+
+----
+   SecurityUtils.getSubject().logout();
+----
