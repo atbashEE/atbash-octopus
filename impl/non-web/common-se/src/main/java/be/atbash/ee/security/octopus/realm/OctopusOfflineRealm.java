@@ -35,11 +35,7 @@ import be.atbash.util.reflection.ClassUtils;
  */
 public class OctopusOfflineRealm extends AuthorizingRealm {
 
-    private static final OctopusOfflineRealm INSTANCE = new OctopusOfflineRealm();
-
-    private boolean listenerConfigured = false;  // FIXME Needed ?
-
-    private boolean authorizationInfoRequired = false;
+    private static OctopusOfflineRealm INSTANCE;
 
     private AuthenticationInfoProviderHandler authenticationInfoProviderHandler;
 
@@ -48,7 +44,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
     private OctopusOfflineRealm() {
     }
 
-    public void initDependencies() {
+    private void initDependencies() {
         LookupProvider<? extends Enum> lookupProvider = new LookupProviderLoader().loadLookupProvider();
         RoleMapperProvider<? extends Enum> roleMapperProvider = new RoleMapperProviderLoader().loadRoleMapperProvider();
         initDependencies(lookupProvider, roleMapperProvider);
@@ -177,10 +173,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
-        if (!listenerConfigured) {
-            configureListeners();
-            checkAuthorizationInfoMarkers();
-        }
         //assertRealmsConfigured();  TODO Needed ??
         //Collection<Realm> realms = getRealms();
 
@@ -198,10 +190,15 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         AuthenticationListener listener = BeanProvider.getContextualReference(OctopusAuthenticationListener.class);
         getAuthenticationListeners().add(listener);
 */
-        listenerConfigured = true;
     }
 
     public static OctopusOfflineRealm getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new OctopusOfflineRealm();
+            INSTANCE.initDependencies();
+            INSTANCE.configureListeners();
+            INSTANCE.checkAuthorizationInfoMarkers();
+        }
         return INSTANCE;
     }
 }

@@ -118,7 +118,7 @@ public class OctopusFilterTest {
     }
 
     @Test
-    public void doFilterInternal_WrappedException() throws IOException, ServletException {
+    public void doFilterInternal_WrappedException() throws IOException {
 
         when(securityManagerMock.createSubject(any(WebSubjectContext.class))).thenThrow(new NullPointerException());
         try {

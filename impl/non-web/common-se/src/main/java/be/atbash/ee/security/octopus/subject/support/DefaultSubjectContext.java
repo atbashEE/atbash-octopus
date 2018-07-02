@@ -16,14 +16,16 @@
 package be.atbash.ee.security.octopus.subject.support;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.mgt.StandardSecurityManager;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.SubjectContext;
+import be.atbash.ee.security.octopus.subject.*;
+import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.MapContext;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of the {@link SubjectContext} interface.  Note that the getters and setters are not
@@ -34,8 +36,9 @@ import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
  */
 public class DefaultSubjectContext extends MapContext implements SubjectContext {
 
-    // Only used in Java SE but 'hard linked' from SecurityUtil.getSubject()
-    // TODO SecurityUtil hierarchy so this can be solved?
+    private static final transient Logger log = LoggerFactory.getLogger(DefaultSubjectContext.class);
+
+    private static final String SECURITY_MANAGER = DefaultSubjectContext.class.getName() + ".SECURITY_MANAGER";
 
     private static final String AUTHENTICATION_TOKEN = DefaultSubjectContext.class.getName() + ".AUTHENTICATION_TOKEN";
 
@@ -49,13 +52,37 @@ public class DefaultSubjectContext extends MapContext implements SubjectContext 
 
     private AuthorizingRealm authorizingRealm;
 
-    public DefaultSubjectContext() {
-        super();
-        this.authorizingRealm = OctopusOfflineRealm.getInstance();
+    public DefaultSubjectContext(AuthorizingRealm authorizingRealm) {
+        this.authorizingRealm = authorizingRealm;
     }
 
     public DefaultSubjectContext(SubjectContext ctx) {
         super(ctx);
+    }
+
+    @Override
+    public SecurityManager getSecurityManager() {
+        return getTypedValue(SECURITY_MANAGER, SecurityManager.class);
+    }
+
+    @Override
+    public void setSecurityManager(SecurityManager securityManager) {
+        nullSafePut(SECURITY_MANAGER, securityManager);
+    }
+
+    @Override
+    public SecurityManager resolveSecurityManager() {
+        SecurityManager securityManager = getSecurityManager();
+        if (securityManager == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("No SecurityManager available in subject context map.  " +
+                        "Creating a new instance of the StandardSecurityManager.");
+            }
+
+            securityManager = new StandardSecurityManager(SubjectFactory.getInstance(), OctopusOfflineRealm.getInstance());
+            setSecurityManager(securityManager); // Keep for future reference.
+        }
+        return securityManager;
     }
 
     public Subject getSubject() {

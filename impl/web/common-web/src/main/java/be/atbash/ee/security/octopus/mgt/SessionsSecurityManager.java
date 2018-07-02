@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionException;
 import be.atbash.ee.security.octopus.session.SessionKey;
 import be.atbash.ee.security.octopus.session.mgt.ServletContainerSessionManager;
+import be.atbash.ee.security.octopus.subject.SecurityManager;
 
 /**
  * Shiro support of a {@link SecurityManager} class hierarchy that delegates all
@@ -35,7 +36,7 @@ import be.atbash.ee.security.octopus.session.mgt.ServletContainerSessionManager;
  * possible, suitable default instances for all dependencies will be created upon instantiation.
  */
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.mgt.SessionsSecurityManager")
-public abstract class SessionsSecurityManager {
+public abstract class SessionsSecurityManager implements SecurityManager {
 
     /**
      * The internal delegate <code>SessionManager</code> used by this security manager that manages all the

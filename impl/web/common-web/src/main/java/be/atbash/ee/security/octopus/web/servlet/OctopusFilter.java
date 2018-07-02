@@ -19,8 +19,11 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.filter.FilterChainResolver;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
+import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.web.url.SecuredURLReader;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +106,9 @@ public class OctopusFilter extends OncePerRequestFilter {
         Throwable t = null;
 
         try {
-            final WebSubject subject = new WebSubject.Builder(securityManager, servletRequest, servletResponse).buildWebSubject();
+
+            final WebSubject subject = createWebSubject(servletRequest, servletResponse);
+
             ThreadContext.bind(subject);
 
             //noinspection unchecked
@@ -131,6 +136,14 @@ public class OctopusFilter extends OncePerRequestFilter {
             String msg = "Filtered request failed.";
             throw new ServletException(msg, t);
         }
+    }
+
+    private WebSubject createWebSubject(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+        WebSubjectContext subjectContext = new WebSubjectContext(CDIUtils.retrieveInstance(OctopusRealm.class));
+        subjectContext.setSecurityManager(securityManager);
+        subjectContext.setServletRequest(servletRequest);
+        subjectContext.setServletResponse(servletResponse);
+        return securityManager.createSubject(subjectContext);
     }
 
     /**

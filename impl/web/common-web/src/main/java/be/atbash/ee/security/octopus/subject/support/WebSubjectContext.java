@@ -20,14 +20,13 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.session.Session;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.SubjectContext;
-import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.subject.*;
+import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.MapContext;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.ee.security.octopus.util.RequestPairSource;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,32 +92,29 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
         this.authorizingRealm = ctx.getAuthorizingRealm();
     }
 
-    public WebSecurityManager getSecurityManager() {
-        return getTypedValue(SECURITY_MANAGER, WebSecurityManager.class);
+    @Override
+    public SecurityManager getSecurityManager() {
+        return getTypedValue(SECURITY_MANAGER, SecurityManager.class);
     }
 
-    public void setSecurityManager(WebSecurityManager securityManager) {
+    @Override
+    public void setSecurityManager(SecurityManager securityManager) {
         nullSafePut(SECURITY_MANAGER, securityManager);
     }
 
-    public WebSecurityManager resolveSecurityManager() {
-        WebSecurityManager securityManager = getSecurityManager();
+    @Override
+    public SecurityManager resolveSecurityManager() {
+        SecurityManager securityManager = getSecurityManager();
         if (securityManager == null) {
             if (log.isDebugEnabled()) {
                 log.debug("No SecurityManager available in subject context map.  " +
                         "Falling back to SecurityUtils.getSecurityManager() lookup.");
             }
-            /*
-            // FIXME
 
-            try {
-                securityManager = SecurityUtils.getSecurityManager();
-            } catch (UnavailableSecurityManagerException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("No SecurityManager available via SecurityUtils.  Heuristics exhausted.", e);
-                }
-            }
-            */
+            securityManager = CDIUtils.retrieveInstance(WebSecurityManager.class);
+            // Set instance from CDI because we don't have one at this moment.
+            setSecurityManager(securityManager);
+
         }
         return securityManager;
     }
@@ -175,6 +171,8 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
             }
         }
 
+        setPrincipals(principals); // Keep for future usage when we try to do resolvePrincipals again.
+
         return principals;
     }
 
@@ -195,6 +193,8 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
                 session = existingSubject.getSession(false);
             }
         }
+
+        setSession(session); // Keep for future usage when we try to do resolveSession again.
         return session;
     }
 
@@ -223,6 +223,7 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
             authc = Boolean.FALSE;
         }
         /*
+        FIXME ?? Needed, compare with Shiro version
         if (authc == null) {
             //see if there is an AuthenticationInfo object.  If so, the very presence of one indicates a successful
             //authentication attempt:
@@ -296,6 +297,8 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
                 host = request.getRemoteHost();
             }
         }
+
+        setHost(host); // Keep for future usage when we try to do resolveHost again.
         return host;
     }
 
@@ -319,6 +322,8 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
             request = existing.getServletRequest();
 
         }
+        setServletRequest(request); // Keep for future usage when we try to do resolveServletRequest again.
+
         return request;
     }
 
@@ -344,6 +349,8 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
             response = existing.getServletResponse();
 
         }
+
+        setServletResponse(response); // Keep for future usage when we try to do resolveServletResponse again.
 
         return response;
     }

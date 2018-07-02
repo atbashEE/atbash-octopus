@@ -50,12 +50,6 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
     protected ByteSource credentialsSalt;
 
     /**
-     * Default no-argument constructor.
-     */
-    public SimpleAuthenticationInfo() {
-    }
-
-    /**
      * Constructor that takes in a single 'primary' principal of the account and its corresponding credentials,
      * associated with the specified realm.
      * <p/>

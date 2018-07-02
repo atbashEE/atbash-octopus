@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.mgt;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
@@ -37,7 +38,7 @@ import java.util.Map;
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.mgt.DefaultWebSubjectFactory", "FIXME Others"})
 // FIXME Find out which are exactly integrated here.
-public class SubjectFactory {
+public class WebSubjectFactory {
 
     /**
      * Creates a new Subject instance reflecting the state of the specified contextual data.  The data would be
@@ -54,7 +55,7 @@ public class SubjectFactory {
      */
     public WebSubject createSubject(WebSubjectContext context) {
 
-        WebSecurityManager securityManager = context.resolveSecurityManager();
+        SecurityManager securityManager = context.resolveSecurityManager();
         Session session = context.resolveSession();
         boolean sessionEnabled = context.isSessionCreationEnabled();
         PrincipalCollection principals = context.resolvePrincipals();
@@ -64,7 +65,7 @@ public class SubjectFactory {
         HttpServletResponse response = context.resolveServletResponse();
 
         return new WebSubject(principals, authenticated, host, session, sessionEnabled,
-                request, response, securityManager, context.getAuthorizingRealm());
+                request, response, (WebSecurityManager) securityManager, context.getAuthorizingRealm());
     }
 
 }

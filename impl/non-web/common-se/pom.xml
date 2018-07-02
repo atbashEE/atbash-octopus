@@ -62,6 +62,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Test -->
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config-test</artifactId>
+            <version>${atbash-config.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

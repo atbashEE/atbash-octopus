@@ -21,29 +21,24 @@ import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
-import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionContext;
 import be.atbash.ee.security.octopus.session.SessionException;
 import be.atbash.ee.security.octopus.session.mgt.DefaultSessionContext;
 import be.atbash.ee.security.octopus.subject.support.DisabledSessionException;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectCallable;
-import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.HostAuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.ee.security.octopus.util.RequestPairSource;
-import be.atbash.util.CDIUtils;
 import be.atbash.util.CollectionUtils;
 import be.atbash.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -760,9 +755,7 @@ public class WebSubject implements RequestPairSource, Subject {
     public void runAs(PrincipalCollection principals) throws NullPointerException, IllegalStateException {
         if (!hasPrincipals()) {
             String msg = "This subject does not yet have an identity.  Assuming the identity of another " +
-                    "Subject is only allowed for Subjects with an existing identity.  Try logging this subject in " +
-                    "first, or using the " + WebSubject.Builder.class.getName() + " to build ad hoc Subject instances " +
-                    "with identities as necessary.";
+                    "Subject is only allowed for Subjects with an existing identity.";
             throw new IllegalStateException(msg);
         }
         pushIdentity(principals);
@@ -942,322 +935,6 @@ public class WebSubject implements RequestPairSource, Subject {
     @Override
     public Collection<Permission> getAllPermissions() {
         return authorizingRealm.getPermissions(this);
-    }
-
-    /**
-     * A {@code WebSubject.Builder}
-     * additionally ensures that the Servlet request/response pair that is triggering the Subject instance's creation
-     * is retained for use by internal Shiro components as necessary.
-     */
-    // FIXME Only used from within filter and no real builder pattern required there !!
-    public static class Builder {
-
-        /**
-         * Constructs a new {@code Web.Builder} instance using the {@link SecurityManager SecurityManager} obtained by
-         * calling {@code SecurityUtils.}{@link WebSecurityUtils#getSecurityManager() getSecurityManager()}.  If you want
-         * to specify your own SecurityManager instance, use the
-         * {@link #Builder(SecurityManager, ServletRequest, ServletResponse)} constructor instead.
-         *
-         * @param request  the incoming ServletRequest that will be associated with the built {@code WebSubject} instance.
-         * @param response the outgoing ServletRequest paired with the ServletRequest that will be associated with the
-         *                 built {@code WebSubject} instance.
-         */
-        public Builder(HttpServletRequest request, HttpServletResponse response) {
-            this(CDIUtils.retrieveInstance(WebSecurityManager.class), request, response);
-        }
-
-        /**
-         * Constructs a new {@code Web.Builder} instance using the specified {@code SecurityManager} instance to
-         * create the {@link WebSubject WebSubject} instance.
-         *
-         * @param securityManager the {@code SecurityManager SecurityManager} instance to use to build the
-         *                        {@code WebSubject} instance.
-         * @param request         the incoming ServletRequest that will be associated with the built {@code WebSubject}
-         *                        instance.
-         * @param response        the outgoing ServletRequest paired with the ServletRequest that will be associated
-         *                        with the built {@code WebSubject} instance.
-         */
-        public Builder(WebSecurityManager securityManager, HttpServletRequest request, HttpServletResponse response) {
-            this(securityManager);
-            if (request == null) {
-                throw new IllegalArgumentException("ServletRequest argument cannot be null.");
-            }
-            if (response == null) {
-                throw new IllegalArgumentException("ServletResponse argument cannot be null.");
-            }
-            setRequest(request);
-            setResponse(response);
-        }
-
-        /**
-         * Hold all contextual data via the Builder instance's method invocations to be sent to the
-         * {@code SecurityManager} during the {@link #buildSubject} call.
-         */
-        private final WebSubjectContext subjectContext;
-
-        /**
-         * The SecurityManager to invoke during the {@link #buildSubject} call.
-         */
-        private final WebSecurityManager securityManager;
-
-        /**
-         * Constructs a new {@link Subject.Builder} instance, using the {@code SecurityManager} instance available
-         * to the calling code as determined by a call to {@link org.apache.shiro.SecurityUtils#getSecurityManager()}
-         * to build the {@code Subject} instance.
-         */
-        public Builder() {
-            this(CDIUtils.retrieveInstance(WebSecurityManager.class));
-        }
-
-        /**
-         * Constructs a new {@link Subject.Builder} instance which will use the specified {@code SecurityManager} when
-         * building the {@code Subject} instance.
-         *
-         * @param securityManager the {@code SecurityManager} to use when building the {@code Subject} instance.
-         */
-        public Builder(WebSecurityManager securityManager) {
-            if (securityManager == null) {
-                throw new NullPointerException("SecurityManager method argument cannot be null.");
-            }
-            this.securityManager = securityManager;
-            subjectContext = newSubjectContextInstance();
-            subjectContext.setSecurityManager(securityManager);
-        }
-
-        /**
-         * Overrides the parent implementation to return a new instance of a
-         * {@link DefaultWebSubjectContext DefaultWebSubjectContext} to account for the additional request/response
-         * pair.
-         *
-         * @return a new instance of a {@link DefaultWebSubjectContext DefaultWebSubjectContext} to account for the
-         * additional request/response pair.
-         */
-
-        protected WebSubjectContext newSubjectContextInstance() {
-            return new WebSubjectContext(CDIUtils.retrieveInstance(OctopusRealm.class));
-        }
-
-        /**
-         * Called by the {@code WebSubject.Builder} constructor, this method places the request object in the
-         * context map for later retrieval.
-         *
-         * @param request the incoming ServletRequest that triggered the creation of the {@code WebSubject} instance.
-         * @return 'this' for method chaining.
-         */
-        protected Builder setRequest(HttpServletRequest request) {
-
-            if (request != null) {
-                subjectContext.setServletRequest(request);
-            }
-            return this;
-
-        }
-
-        /**
-         * Called by the {@code WebSubject.Builder} constructor, this method places the response object in the
-         * context map for later retrieval.
-         *
-         * @param response the outgoing ServletRequest paired with the ServletRequest that triggered the creation of
-         *                 the {@code WebSubject} instance.
-         * @return 'this' for method chaining.
-         */
-        protected Builder setResponse(HttpServletResponse response) {
-            if (response != null) {
-                subjectContext.setServletResponse(response);
-            }
-            return this;
-        }
-
-        /**
-         * Creates and returns a new {@code Subject} instance reflecting the cumulative state acquired by the
-         * other methods in this class.
-         * <p/>
-         * This {@code Builder} instance will still retain the underlying state after this method is called - it
-         * will not clear it; repeated calls to this method will return multiple {@link Subject} instances, all
-         * reflecting the exact same state.  If a new (different) {@code Subject} is to be constructed, a new
-         * {@code Builder} instance must be created.
-         * <p/>
-         * <b>Note</b> that the returned {@code Subject} instance is <b>not</b> automatically bound to the application
-         * (thread) for further use.  That is,
-         * {@link org.apache.shiro.SecurityUtils SecurityUtils}.{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}
-         * will not automatically return the same instance as what is returned by the builder.  It is up to the
-         * framework developer to bind the returned {@code Subject} for continued use if desired.
-         *
-         * @return a new {@code Subject} instance reflecting the cumulative state acquired by the
-         * other methods in this class.
-         */
-        public WebSubject buildWebSubject() {
-            return securityManager.createSubject(subjectContext);
-        }
-
-        /*
-         * Returns the backing context used to build the {@code Subject} instance, available to subclasses
-         * since the {@code context} class attribute is marked as {@code private}.
-         *
-         * @return the backing context used to build the {@code Subject} instance, available to subclasses.
-
-        protected SubjectContext getSubjectContext() {
-        return this.subjectContext;
-        }
-         */
-
-        /**
-         * Enables building a {@link Subject Subject} instance that owns the {@link Session Session} with the
-         * specified {@code sessionId}.
-         * <p/>
-         * Usually when specifying a {@code sessionId}, no other {@code Builder} methods would be specified because
-         * everything else (principals, inet address, etc) can usually be reconstructed based on the referenced
-         * session alone.  In other words, this is almost always sufficient:
-         * <pre>
-         * new Subject.Builder().sessionId(sessionId).buildSubject();</pre>
-         * <p/>
-         * <b>Although simple in concept, this method provides very powerful functionality previously absent in almost
-         * all Java environments:</b>
-         * <p/>
-         * The ability to reference a {@code Subject} and their server-side session
-         * <em>across clients of different mediums</em> such as web applications, Java applets,
-         * standalone C# clients over XML-RPC and/or SOAP, and many others. This is a <em>huge</em>
-         * benefit in heterogeneous enterprise applications.
-         * <p/>
-         * To maintain session integrity across client mediums, the {@code sessionId} <b>must</b> be transmitted
-         * to all client mediums securely (e.g. over SSL) to prevent man-in-the-middle attacks.  This
-         * is nothing new - all web applications are susceptible to the same problem when transmitting
-         * {@code Cookie}s or when using URL rewriting.  As long as the
-         * {@code sessionId} is transmitted securely, session integrity can be maintained.
-         *
-         * @param sessionId the id of the session that backs the desired Subject being acquired.
-         * @return this {@code Builder} instance for method chaining.
-         */
-        public Builder sessionId(Serializable sessionId) {
-            if (sessionId != null) {
-                subjectContext.setSessionId(sessionId);
-            }
-            return this;
-        }
-
-        /**
-         * Ensures the {@code Subject} being built will reflect the specified host name or IP as its originating
-         * location.
-         *
-         * @param host the host name or IP address to use as the {@code Subject}'s originating location.
-         * @return this {@code Builder} instance for method chaining.
-         */
-        public Builder host(String host) {
-            if (StringUtils.hasText(host)) {
-                subjectContext.setHost(host);
-            }
-            return this;
-        }
-
-        /**
-         * Ensures the {@code Subject} being built will use the specified {@link Session} instance.  Note that it is
-         * more common to use the {@link #sessionId sessionId} builder method rather than having to construct a
-         * {@code Session} instance for this method.
-         *
-         * @param session the session to use as the {@code Subject}'s {@link Session}
-         * @return this {@code Builder} instance for method chaining.
-         */
-        public Builder session(Session session) {
-            if (session != null) {
-                subjectContext.setSession(session);
-            }
-            return this;
-        }
-
-        /**
-         * Ensures the {@code Subject} being built will reflect the specified principals (aka identity).
-         * <p/>
-         * For example, if your application's unique identifier for users is a {@code String} username, and you wanted
-         * to create a {@code Subject} instance that reflected a user whose username is
-         * '{@code jsmith}', and you knew the Realm that could acquire {@code jsmith}'s principals based on the username
-         * was named &quot;{@code myRealm}&quot;, you might create the '{@code jsmith} {@code Subject} instance this
-         * way:
-         * <pre>
-         * PrincipalCollection identity = new {@link org.apache.shiro.subject.SimplePrincipalCollection#SimplePrincipalCollection(Object, String) SimplePrincipalCollection}(&quot;jsmith&quot;, &quot;myRealm&quot;);
-         * Subject jsmith = new Subject.Builder().principals(identity).buildSubject();</pre>
-         * <p/>
-         * Similarly, if your application's unique identifier for users is a {@code long} value (such as might be used
-         * as a primary key in a relational database) and you were using a {@code JDBC}
-         * {@code Realm} named, (unimaginatively) &quot;jdbcRealm&quot;, you might create the Subject
-         * instance this way:
-         * <pre>
-         * long userId = //get user ID from somewhere
-         * PrincipalCollection userIdentity = new {@link org.apache.shiro.subject.SimplePrincipalCollection#SimplePrincipalCollection(Object, String) SimplePrincipalCollection}(<em>userId</em>, &quot;jdbcRealm&quot;);
-         * Subject user = new Subject.Builder().principals(identity).buildSubject();</pre>
-         *
-         * @param principals the principals to use as the {@code Subject}'s identity.
-         * @return this {@code Builder} instance for method chaining.
-         */
-        public Builder principals(PrincipalCollection principals) {
-            if (!OctopusCollectionUtils.isEmpty(principals)) {
-                subjectContext.setPrincipals(principals);
-            }
-            return this;
-        }
-
-        /**
-         * Configures whether or not the created Subject instance can create a new {@code Session} if one does not
-         * already exist.  If set to {@code false}, any application calls to
-         * {@code subject.getSession()} or {@code subject.getSession(true))} will result in a SessionException.
-         * <p/>
-         * This setting is {@code true} by default, as most applications find value in sessions.
-         *
-         * @param enabled whether or not the created Subject instance can create a new {@code Session} if one does not
-         *                already exist.
-         * @return this {@code Builder} instance for method chaining.
-         */
-        public Builder sessionCreationEnabled(boolean enabled) {
-            subjectContext.setSessionCreationEnabled(enabled);
-            return this;
-        }
-
-        /**
-         * Ensures the {@code Subject} being built will be considered
-         * {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated}.  Per the
-         * {@link org.apache.shiro.subject.Subject#isAuthenticated() isAuthenticated()} JavaDoc, be careful
-         * when specifying {@code true} - you should know what you are doing and have a good reason for ignoring Shiro's
-         * default authentication state mechanisms.
-         *
-         * @param authenticated whether or not the built {@code Subject} will be considered authenticated.
-         * @return this {@code Builder} instance for method chaining.
-         * @see org.apache.shiro.subject.Subject#isAuthenticated()
-         */
-        public Builder authenticated(boolean authenticated) {
-            subjectContext.setAuthenticated(authenticated);
-            return this;
-        }
-
-        /**
-         * Allows custom attributes to be added to the underlying context {@code Map} used to construct the
-         * {@link Subject} instance.
-         * <p/>
-         * A {@code null} key throws an {@link IllegalArgumentException}. A {@code null} value effectively removes
-         * any previously stored attribute under the given key from the context map.
-         * <p/>
-         * <b>*NOTE*:</b> This method is only useful when configuring Shiro with a custom {@link SubjectFactory}
-         * implementation.  This method allows end-users to append additional data to the context map which the
-         * {@code SubjectFactory} implementation can use when building custom Subject instances. As such, this method
-         * is only useful when a custom {@code SubjectFactory} implementation has been configured.
-         *
-         * @param attributeKey   the key under which the corresponding value will be stored in the context {@code Map}.
-         * @param attributeValue the value to store in the context map under the specified {@code attributeKey}.
-         * @return this {@code Builder} instance for method chaining.
-         * @throws IllegalArgumentException if the {@code attributeKey} is {@code null}.
-         * @see SubjectFactory#createSubject(SubjectContext)
-         */
-        public Builder contextAttribute(String attributeKey, Object attributeValue) {
-            if (attributeKey == null) {
-                String msg = "Subject context map key cannot be null.";
-                throw new IllegalArgumentException(msg);
-            }
-            if (attributeValue == null) {
-                subjectContext.remove(attributeKey);
-            } else {
-                subjectContext.put(attributeKey, attributeValue);
-            }
-            return this;
-        }
-
     }
 
 }

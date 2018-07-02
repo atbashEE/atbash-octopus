@@ -53,7 +53,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.slf4j.LoggerFactory;
 
 import javax.interceptor.InvocationContext;
 import java.util.Locale;
@@ -142,7 +141,8 @@ public class OctopusInterceptorTest {
                 when(subjectMock.getPrincipal()).thenReturn(systemAccountPrincipal);
             } else {
 
-                when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal());
+                UserPrincipal userPrincipal = new UserPrincipal("id", "atbash", "Atbash");
+                when(subjectMock.getPrincipal()).thenReturn(userPrincipal);
 
             }
             when(subjectMock.isAuthenticated()).thenReturn(true);
@@ -373,7 +373,8 @@ public class OctopusInterceptorTest {
                     }
                     throw new RuntimeException(e);
                 }
-                return new SimpleAuthenticationInfo();
+                UserPrincipal userPrincipal = new UserPrincipal("id", "atbash", "Atbash");
+                return new SimpleAuthenticationInfo(userPrincipal, "Credentials");
 
             }
 

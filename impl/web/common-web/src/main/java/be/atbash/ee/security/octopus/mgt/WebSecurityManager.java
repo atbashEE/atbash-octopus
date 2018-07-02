@@ -58,7 +58,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
     protected DefaultSubjectDAO subjectDAO;
 
     @Inject
-    protected SubjectFactory subjectFactory;
+    protected WebSubjectFactory webSubjectFactory;
 
     @Inject
     private OctopusRealm octopusRealm;
@@ -167,12 +167,9 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @see #doCreateSubject(org.apache.shiro.subject.SubjectContext)
      * @see #save(org.apache.shiro.subject.Subject)
      */
-    public WebSubject createSubject(WebSubjectContext subjectContext) {
+    public WebSubject createSubject(SubjectContext subjectContext) {
         //create a copy so we don't modify the argument's backing map:
         WebSubjectContext context = copy(subjectContext);
-
-        //ensure that the context has a SecurityManager instance, and if not, add one:
-        context = ensureSecurityManager(context);
 
         //Resolve an associated Session (usually based on a referenced session ID), and place it in the context before
         //sending to the SubjectFactory.  The SubjectFactory should not need to know how to acquire sessions as the
@@ -217,40 +214,21 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         return createSubject(context);
     }
 
-    protected WebSubjectContext copy(WebSubjectContext subjectContext) {
+    protected WebSubjectContext copy(SubjectContext subjectContext) {
         return new WebSubjectContext(subjectContext);
-    }
-
-    /**
-     * Determines if there is a {@code SecurityManager} instance in the context, and if not, adds 'this' to the
-     * context.  This ensures the SubjectFactory instance will have access to a SecurityManager during Subject
-     * construction if necessary.
-     *
-     * @param context the subject context data that may contain a SecurityManager instance.
-     * @return The SubjectContext to use to pass to a {@link SubjectFactory} for subject creation.
-     */
-    @SuppressWarnings({"unchecked"})
-    protected WebSubjectContext ensureSecurityManager(WebSubjectContext context) {
-        if (context.resolveSecurityManager() != null) {
-            log.trace("Context already contains a SecurityManager instance.  Returning.");
-            return context;
-        }
-        log.trace("No SecurityManager found in context.  Adding self reference.");
-        context.setSecurityManager(this);
-        return context;
     }
 
     /**
      * Attempts to resolve any associated session based on the context and returns a
      * context that represents this resolved {@code Session} to ensure it may be referenced if necessary by the
-     * invoked {@link SubjectFactory} that performs actual {@link Subject} construction.
+     * invoked {@link WebSubjectFactory} that performs actual {@link Subject} construction.
      * <p/>
      * If there is a {@code Session} already in the context because that is what the caller wants to be used for
      * {@code Subject} construction, or if no session is resolved, this method effectively does nothing
      * returns the context method argument unaltered.
      *
      * @param context the subject context data that may resolve a Session instance.
-     * @return The context to use to pass to a {@link SubjectFactory} for subject creation.
+     * @return The context to use to pass to a {@link WebSubjectFactory} for subject creation.
      */
     @SuppressWarnings({"unchecked"})
     protected WebSubjectContext resolveSession(WebSubjectContext context) {
@@ -302,7 +280,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      *
      * @param context the subject context data that may provide (directly or indirectly through one of its values) a
      *                {@link PrincipalCollection} identity.
-     * @return The Subject context to use to pass to a {@link SubjectFactory} for subject creation.
+     * @return The Subject context to use to pass to a {@link WebSubjectFactory} for subject creation.
      */
     @SuppressWarnings({"unchecked"})
     protected WebSubjectContext resolvePrincipals(WebSubjectContext context) {
@@ -388,18 +366,18 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      *                {@code Subject} instance.
      * @return a {@code Subject} instance reflecting the data in the specified {@code SubjectContext} data map.
      * @see #getSubjectFactory()
-     * @see SubjectFactory#createSubject(org.apache.shiro.subject.SubjectContext)
+     * @see WebSubjectFactory#createSubject(org.apache.shiro.subject.SubjectContext)
      */
     protected WebSubject doCreateSubject(WebSubjectContext context) {
 
-        return subjectFactory.createSubject(context);
+        return webSubjectFactory.createSubject(context);
     }
 
     public Session start(SessionContext context) throws AuthorizationException {
         return servletContainerSessionManager.createSession(context);
     }
 
-    public WebSubject login(WebSubject webSubject, AuthenticationToken token) throws AuthenticationException {
+    public WebSubject login(Subject webSubject, AuthenticationToken token) throws AuthenticationException {
         AuthenticationInfo info;
         try {
             info = authenticate(token);
@@ -438,7 +416,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
                 } else {
                 */
-        loggedIn = createSubject(token, info, webSubject);
+        loggedIn = createSubject(token, info, (WebSubject) webSubject);
 
         onSuccessfulLogin(token, info, loggedIn);
 
@@ -533,7 +511,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         */
     }
 
-    public void logout(WebSubject subject) {
+    public void logout(Subject subject) {
         if (subject == null) {
             throw new AtbashIllegalActionException("(OCT-DEV-051) Subject method argument cannot be null.");
         }
@@ -549,7 +527,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
             octopusRealm.onLogout(principals);
         }
 
-        delete(subject);
+        delete((WebSubject) subject);
         /*
 
         FIXME Verify if and how it is required and should be used.

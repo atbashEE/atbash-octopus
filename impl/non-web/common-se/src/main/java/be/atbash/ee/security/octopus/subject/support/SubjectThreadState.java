@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.subject.support;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.context.ThreadContext;
-import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
+import be.atbash.ee.security.octopus.mgt.StandardSecurityManager;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.util.ThreadState;
 import be.atbash.util.CollectionUtils;
@@ -36,12 +36,13 @@ import java.util.Map;
  * the thread's execution.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.subject.support.SubjectThreadState"})
+// TODO Check usage within the runAs
 public class SubjectThreadState implements ThreadState {
 
     private Map<Object, Object> originalResources;
 
     private final Subject subject;
-    private transient DefaultSecurityManager securityManager;
+    private transient StandardSecurityManager securityManager;
 
     /**
      * Creates a new {@code SubjectThreadState} that will bind and unbind the specified {@code Subject} to the

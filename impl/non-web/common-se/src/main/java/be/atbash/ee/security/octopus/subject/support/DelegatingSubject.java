@@ -20,9 +20,9 @@ import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
-import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.subject.*;
+import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CollectionUtils;
@@ -66,10 +66,10 @@ public class DelegatingSubject implements Subject {
     protected PrincipalCollection principals;
     protected boolean authenticated;
 
-    protected transient DefaultSecurityManager securityManager;
+    protected transient SecurityManager securityManager;
     private AuthorizingRealm authorizingRealm;
 
-    public DelegatingSubject(PrincipalCollection principals, boolean authenticated, DefaultSecurityManager securityManager, AuthorizingRealm authorizingRealm) {
+    public DelegatingSubject(PrincipalCollection principals, boolean authenticated, SecurityManager securityManager, AuthorizingRealm authorizingRealm) {
         if (securityManager == null) {
             throw new IllegalArgumentException("SecurityManager argument cannot be null.");
         }

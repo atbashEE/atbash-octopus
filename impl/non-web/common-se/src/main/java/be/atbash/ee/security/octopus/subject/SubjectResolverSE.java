@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
 
 /**
  *
@@ -27,7 +28,8 @@ public class SubjectResolverSE implements SubjectResolver {
     public <T extends Subject> T getSubject() {
         T subject = (T) ThreadContext.getSubject();
         if (subject == null) {
-            subject = (T) new SubjectBuilder().buildSubject();
+            subject = (T) new SubjectBuilder(OctopusOfflineRealm.getInstance(), SubjectFactory.getInstance())
+                    .buildSubject();
             ThreadContext.bind(subject);
         }
         return subject;

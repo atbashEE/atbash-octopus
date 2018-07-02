@@ -239,4 +239,22 @@ public class PrincipalCollection implements Iterable, Serializable {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PrincipalCollection)) {
+            return false;
+        }
+
+        PrincipalCollection that = (PrincipalCollection) o;
+
+        return principals != null ? principals.equals(that.principals) : that.principals == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return principals != null ? principals.hashCode() : 0;
+    }
 }

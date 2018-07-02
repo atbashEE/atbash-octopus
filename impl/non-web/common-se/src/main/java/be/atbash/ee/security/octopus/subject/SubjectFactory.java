@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.mgt.DefaultSecurityManager;
 import be.atbash.ee.security.octopus.subject.support.DelegatingSubject;
 
 /**
@@ -24,13 +23,22 @@ import be.atbash.ee.security.octopus.subject.support.DelegatingSubject;
  * instances.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.mgt.DefaultSubjectFactory"})
-public class DefaultSubjectFactory {
+public class SubjectFactory {
+
+    private static final SubjectFactory INSTANCE = new SubjectFactory();
+
+    private SubjectFactory() {
+    }
 
     public Subject createSubject(SubjectContext context) {
         PrincipalCollection principals = context.resolvePrincipals();
         boolean authenticated = context.resolveAuthenticated();
+        SecurityManager securityManager = context.resolveSecurityManager();
 
-        return new DelegatingSubject(principals, authenticated, new DefaultSecurityManager(), context.getAuthorizingRealm());
+        return new DelegatingSubject(principals, authenticated, securityManager, context.getAuthorizingRealm());
     }
 
+    public static SubjectFactory getInstance() {
+        return INSTANCE;
+    }
 }

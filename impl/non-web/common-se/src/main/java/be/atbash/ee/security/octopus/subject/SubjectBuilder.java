@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.subject.support.DefaultSubjectContext;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 
@@ -64,19 +65,14 @@ public class SubjectBuilder {
     /**
      * The SecurityManager to invoke during the {@link #buildSubject} call.
      */
-    private final DefaultSubjectFactory defaultSubjectFactory;
+    private final SubjectFactory subjectFactory;
 
     /**
      * Constructs a new {@link Subject.Builder} instance, using the DefaultSubjectFactory to build the {@code Subject} instance.
      */
-    public SubjectBuilder() {
-
-        this.defaultSubjectFactory = new DefaultSubjectFactory();
-        this.subjectContext = newSubjectContextInstance();
-        if (this.subjectContext == null) {
-            throw new IllegalStateException("Subject instance returned from 'newSubjectContextInstance' " +
-                    "cannot be null.");
-        }
+    public SubjectBuilder(AuthorizingRealm authorizingRealm, SubjectFactory subjectFactory) {
+        this.subjectFactory = subjectFactory;
+        this.subjectContext = newSubjectContextInstance(authorizingRealm);
     }
 
     /**
@@ -85,8 +81,8 @@ public class SubjectBuilder {
      *
      * @return a new {@code SubjectContext} instance
      */
-    protected SubjectContext newSubjectContextInstance() {
-        return new DefaultSubjectContext();
+    private SubjectContext newSubjectContextInstance(AuthorizingRealm authorizingRealm) {
+        return new DefaultSubjectContext(authorizingRealm);
     }
 
     /**
@@ -147,38 +143,6 @@ public class SubjectBuilder {
     }
 
     /**
-     * Allows custom attributes to be added to the underlying context {@code Map} used to construct the
-     * {@link Subject} instance.
-     * <p/>
-     * A {@code null} key throws an {@link IllegalArgumentException}. A {@code null} value effectively removes
-     * any previously stored attribute under the given key from the context map.
-     * <p/>
-     * <b>*NOTE*:</b> This method is only useful when configuring Shiro with a custom {@link SubjectFactory}
-     * implementation.  This method allows end-users to append additional data to the context map which the
-     * {@code SubjectFactory} implementation can use when building custom Subject instances. As such, this method
-     * is only useful when a custom {@code SubjectFactory} implementation has been configured.
-     *
-     * @param attributeKey   the key under which the corresponding value will be stored in the context {@code Map}.
-     * @param attributeValue the value to store in the context map under the specified {@code attributeKey}.
-     * @return this {@code Builder} instance for method chaining.
-     * @throws IllegalArgumentException if the {@code attributeKey} is {@code null}.
-     * @see SubjectFactory#createSubject(SubjectContext)
-     */
-    public SubjectBuilder contextAttribute(String attributeKey, Object attributeValue) {
-        // FIXME Is this method needed? We should not allow to create custom subjects by the developer?
-        if (attributeKey == null) {
-            String msg = "Subject context map key cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-        if (attributeValue == null) {
-            this.subjectContext.remove(attributeKey);
-        } else {
-            this.subjectContext.put(attributeKey, attributeValue);
-        }
-        return this;
-    }
-
-    /**
      * Creates and returns a new {@code Subject} instance reflecting the cumulative state acquired by the
      * other methods in this class.
      * <p/>
@@ -197,7 +161,7 @@ public class SubjectBuilder {
      * other methods in this class.
      */
     public Subject buildSubject() {
-        return defaultSubjectFactory.createSubject(this.subjectContext);
+        return subjectFactory.createSubject(subjectContext);
     }
 }
 
