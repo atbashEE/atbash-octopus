@@ -26,4 +26,5 @@ import java.util.LinkedHashMap;
 public interface ProgrammaticURLProtectionProvider {
 
     LinkedHashMap<String, String> getURLEntriesToAdd();
+    // FIXME For JSF add /javax.faces.resource/** anon -> so that all resources for page can be retrieved.
 }

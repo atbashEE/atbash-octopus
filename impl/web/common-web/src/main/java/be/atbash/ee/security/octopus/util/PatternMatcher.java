@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import be.atbash.util.Reviewed;
  * Different implementations can support different pattern types, for example, Ant style path expressions, or
  * regular expressions, or other types of text based patterns.
  *
- * @see org.apache.shiro.util.AntPathMatcher AntPathMatcher
+ * @see be.atbash.ee.security.octopus.util.pattern.AntPathMatcher AntPathMatcher
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.util.PatternMatcher"})
 @Reviewed

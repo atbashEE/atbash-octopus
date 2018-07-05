@@ -55,6 +55,7 @@ public class ProducerBean {
         }
         */
         if (principal == null) {
+            // FIXME This will result probably in some nullPointer in the hashCode() which uses id.
             result = new UserPrincipal();
         }
         return result;

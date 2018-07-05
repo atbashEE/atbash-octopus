@@ -23,7 +23,8 @@ import java.io.IOException;
  * When an AuthorizationFilter detects that the user is unauthorized, this handler performs the actions.
  * This interface exists to be able to separate the actions for JAX-RS and JSF.
  */
-
+// FIXME When application has JSF and JAX-RS -> both handlers are found and thus deployment issue.
+//So we need another level and based on the fact if we noSessionCreation filter -> use Rest or Jsf handler.
 public interface AccessDeniedHandler {
 
     /**

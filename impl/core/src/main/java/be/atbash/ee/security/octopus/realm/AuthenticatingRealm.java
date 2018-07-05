@@ -161,6 +161,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * @see #isAuthenticationCachingEnabled()
      */
     public Cache<Object, AuthenticationInfo> getAuthenticationCache() {
+        // TODO Caches are internal?? not public method?
         return authenticationCache;
     }
 

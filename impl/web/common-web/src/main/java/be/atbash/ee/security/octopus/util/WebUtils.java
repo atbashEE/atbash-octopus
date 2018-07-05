@@ -371,7 +371,7 @@ public class WebUtils {
      * could be changed/removed at any time.</b>
      *
      * @param requestPairSource a {@link RequestPairSource} instance, almost always a
-     *                          {@link org.apache.shiro.web.subject.WebSubject WebSubject} instance.
+     *                          {@link WebSubject WebSubject} instance.
      * @return {@code true} if a session is allowed to be created for a subject-associated request, {@code false}
      * otherwise.
      */

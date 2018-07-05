@@ -63,6 +63,7 @@ public class AbstractUserFilter extends AccessControlFilter {
         } else {
             WebSubject subject = getSubject();
             // If principal is not null, then the user is known and should be allowed access.
+            // TODO subject.getPrincipal() should not be checked, it is always not null. Verify this after logout for example !!
             return subject.getPrincipal() != null && (subject.isAuthenticated() || subject.isRemembered());
         }
     }

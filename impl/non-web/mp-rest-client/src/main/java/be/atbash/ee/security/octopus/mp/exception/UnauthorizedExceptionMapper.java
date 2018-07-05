@@ -22,7 +22,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * FIXME, this needs to be in some general artifact. Can also be used for KeyCloak rest client for ex.
  */
 
 public class UnauthorizedExceptionMapper implements ResponseExceptionMapper<UnauthorizedException> {

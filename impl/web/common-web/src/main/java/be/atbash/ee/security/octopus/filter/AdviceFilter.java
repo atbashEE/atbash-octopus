@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.io.IOException;
  * A Servlet Filter that enables AOP-style &quot;around&quot; advice for a ServletRequest via
  * {@link #preHandle(ServletRequest, ServletResponse) preHandle},
  * {@link #postHandle(ServletRequest, ServletResponse) postHandle},
- * and {@link #afterCompletion(ServletRequest, ServletResponse, Exception) afterCompletion}
+ * and {@link #afterCompletion(ServletRequest, ServletResponse, Throwable) afterCompletion}
  * hooks.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.servlet.AdviceFilter"})
@@ -62,7 +62,7 @@ public abstract class AdviceFilter extends OncePerRequestFilter {
      * Allows 'post' advice logic to be called, but only if no exception occurs during filter chain execution.  That
      * is, if {@link #executeChain executeChain} throws an exception, this method will never be called.  Be aware of
      * this when implementing logic.  Most resource 'cleanup' behavior is often done in the
-     * {@link #afterCompletion(ServletRequest, ServletResponse, Exception) afterCompletion(request,response,exception)}
+     * {@link #afterCompletion(ServletRequest, ServletResponse, Throwable) afterCompletion(request,response,exception)}
      * implementation, which is guaranteed to be called for every request, even when the chain processing throws
      * an Exception.
      * <p/>
@@ -91,7 +91,7 @@ public abstract class AdviceFilter extends OncePerRequestFilter {
      * @throws Exception if an error occurs.
      */
     @SuppressWarnings({"UnusedDeclaration"})
-    public void afterCompletion(ServletRequest request, ServletResponse response, Exception exception) throws Exception {
+    public void afterCompletion(ServletRequest request, ServletResponse response, Throwable exception) throws Exception {
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class AdviceFilter extends OncePerRequestFilter {
      * Actually implements the chain execution logic, utilizing
      * {@link #preHandle(ServletRequest, ServletResponse) pre},
      * {@link #postHandle(ServletRequest, ServletResponse) post}, and
-     * {@link #afterCompletion(ServletRequest, ServletResponse, Exception) after}
+     * {@link #afterCompletion(ServletRequest, ServletResponse, Throwable) after}
      * advice hooks.
      *
      * @param request  the incoming ServletRequest
@@ -156,7 +156,7 @@ public abstract class AdviceFilter extends OncePerRequestFilter {
      * implementation.
      * <p/>
      * This implementation specifically calls
-     * {@link #afterCompletion(ServletRequest, ServletResponse, Exception) afterCompletion}
+     * {@link #afterCompletion(ServletRequest, ServletResponse, Throwable) afterCompletion}
      * as well as handles any exceptions properly.
      *
      * @param request  the incoming {@code ServletRequest}
@@ -166,9 +166,9 @@ public abstract class AdviceFilter extends OncePerRequestFilter {
      * @throws ServletException if any exception other than an {@code IOException} is thrown.
      * @throws IOException      if the pre/chain/post execution throw an {@code IOException}
      */
-    protected void cleanup(ServletRequest request, ServletResponse response, Exception existing)
+    protected void cleanup(ServletRequest request, ServletResponse response, Throwable existing)
             throws ServletException, IOException {
-        Exception exception = existing;
+        Throwable exception = existing;
         try {
             afterCompletion(request, response, exception);
             if (log.isTraceEnabled()) {

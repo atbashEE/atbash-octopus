@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import javax.servlet.Filter;
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.PathConfigProcessor"})
 public interface PathConfigProcessor {
+// TODO combine within PathMatchingFilter. All our filters have it!
 
     /**
      * Processes the specified {@code config}, unique to the given {@code path}, and returns the Filter that should
