@@ -31,7 +31,7 @@ import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.SimpleAuthenticationInfo"})
 // FIXME Rename to ??? Or integrate with AuthenticationInfo interface. After we have sorted out 2step.
-public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
+public class SimpleAuthenticationInfo implements AuthenticationInfo {
 
     /**
      * The principals identifying the account associated with this AuthenticationInfo instance.
@@ -199,6 +199,11 @@ public class SimpleAuthenticationInfo implements SaltedAuthenticationInfo {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isHashedPassword() {
+        return credentialsSalt != null;
     }
 
     /**

@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
+import be.atbash.util.codec.ByteSource;
 
 import java.io.Serializable;
 
@@ -53,7 +54,7 @@ import java.io.Serializable;
  * @see be.atbash.ee.security.octopus.authz.AuthorizationInfo AuthorizationInfo
  * @see Account
  */
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.AuthenticationInfo"})
+@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.AuthenticationInfo", "org.apache.shiro.authc.SaltedAuthenticationInfo"})
 public interface AuthenticationInfo extends Serializable {
 
     /**
@@ -96,5 +97,19 @@ public interface AuthenticationInfo extends Serializable {
      * @return
      */
     ValidatedAuthenticationToken getValidatedToken();
+
+    /**
+     * Determines if the credentials supplied in this authenticationInfo are hashed. used when only hashed passwords are stored (including salt)
+     *
+     * @return true when salt is supplied.
+     */
+    boolean isHashedPassword();
+
+    /**
+     * Returns the salt used to salt the account's credentials or {@code null} if no salt was used.
+     *
+     * @return the salt used to salt the account's credentials or {@code null} if no salt was used.
+     */
+    ByteSource getCredentialsSalt();
 
 }

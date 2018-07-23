@@ -37,7 +37,7 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     private static OctopusOfflineRealm INSTANCE;
 
-    private AuthenticationInfoProviderHandler authenticationInfoProviderHandler;
+    private AuthenticationInfoProviderHandler authenticationInfoProviderHandler = new AuthenticationInfoProviderHandler();
 
     private AuthorizationInfoProviderHandler authorizationInfoProviderHandler;
 
@@ -77,7 +77,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        prepareAuthenticationInfoProviderHandler();
 
         AuthenticationInfo authenticationInfo = null;
 
@@ -106,16 +105,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
             }
         }
 
-        AuthorizationToken authorizationToken = getAuthorizationToken(token, authenticationInfo);
-        if (authorizationToken != null) {
-            TokenBasedAuthorizationInfoProvider authorizationInfoProvider = ClassUtils.newInstance(authorizationToken.authorizationProviderClass());
-            AuthorizationInfo authorizationInfo = authorizationInfoProvider.getAuthorizationInfo(authorizationToken);
-
-            // FIXME Additional authorizationInfoProviders
-            // FIXME authenticationInfo == null
-            cacheAuthorizationInfo(authenticationInfo.getPrincipals(), authorizationInfo);
-        }
-
         return authenticationInfo;
     }
 
@@ -131,14 +120,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         }
 
         return result;
-    }
-
-    private void prepareAuthenticationInfoProviderHandler() {
-        if (authenticationInfoProviderHandler == null) {
-            authenticationInfoProviderHandler = new AuthenticationInfoProviderHandler();
-
-        }
-
     }
 
     private void prepareAuthorizationInfoProviderHandler() {
@@ -176,7 +157,15 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         //assertRealmsConfigured();  TODO Needed ??
         //Collection<Realm> realms = getRealms();
 
-        return getAuthenticationInfo(authenticationToken);
+        AuthenticationInfo result = getAuthenticationInfo(authenticationToken);
+        AuthorizationToken authorizationToken = getAuthorizationToken(authenticationToken, result);
+        if (authorizationToken != null) {
+            TokenBasedAuthorizationInfoProvider authorizationInfoProvider = ClassUtils.newInstance(authorizationToken.authorizationProviderClass());
+            AuthorizationInfo authorizationInfo = authorizationInfoProvider.getAuthorizationInfo(authorizationToken);
+
+            cacheAuthorizationInfo(result.getPrincipals(), authorizationInfo);
+        }
+        return result;
 
     }
 

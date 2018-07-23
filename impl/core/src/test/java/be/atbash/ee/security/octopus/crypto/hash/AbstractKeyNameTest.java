@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.crypto;
+package be.atbash.ee.security.octopus.crypto.hash;
 
-import be.atbash.ee.security.octopus.OctopusException;
-import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.util.PublicAPI;
+import org.junit.Ignore;
 
 /**
- * Base exception for problems encountered during cryptographic operations.
+ *
  */
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.crypto.CryptoException"})
-@PublicAPI
-public class CryptoException extends OctopusException {
+@Ignore
+public abstract class AbstractKeyNameTest {
+    protected String defineExpectedName() {
+        String expected;
 
-    public CryptoException(String message) {
-        super(message);
+        String version = Runtime.class.getPackage().getSpecificationVersion();
+        if ("1.7".equals(version)) {
+            expected = "PBKDF2WithHmacSHA1";
+        } else {
+            expected = "PBKDF2WithHmacSHA256";
+
+        }
+        return expected;
     }
 
-    public CryptoException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

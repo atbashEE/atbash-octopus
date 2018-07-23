@@ -23,6 +23,14 @@ are compared to the supplied value which should be identically before
 access is granted. The value specified in the configuration file is case
 insensitive compared with the allowed values.
 
+==== hashIterations
+
+default : *1* or *1024*
+
+Defines the number of iterations that are performed within the hashing algorithm.
+
+The default value 1 is taken for the *'real'* hashing functions like SHA-256, 1024 is for the Key deriviation functions like PBKDF2.
+
 ==== cacheManager.class
 
 default : **be.atbash.ee.security.octopus.cache.MemoryConstrainedCacheManager**

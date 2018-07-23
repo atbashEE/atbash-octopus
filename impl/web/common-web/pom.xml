@@ -76,7 +76,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- tests -->
+        <!-- Test -->
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-se</artifactId>
@@ -98,6 +98,13 @@
             <artifactId>octopus-core</artifactId>
             <version>0.4-SNAPSHOT</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config-test</artifactId>
+            <version>${atbash-config.version}</version>
             <scope>test</scope>
         </dependency>
 

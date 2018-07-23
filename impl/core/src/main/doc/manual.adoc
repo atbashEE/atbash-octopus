@@ -32,6 +32,8 @@ include::mpauth.adi[]
 
 === JSF
 
+[comment]: # (FIXME keycloak.adi also contain JAX-RS info. Is Auth methods section more appropriate or do we need to define it twice ?)
+
 include::keycloak.adi
 
 == Java SE
@@ -41,6 +43,10 @@ include::offlineToken.adi[]
 include::keycloak-se.adi
 
 include::mp-client-se.adi[]
+
+== Authentication methods
+
+include::auth-methods.adi[]
 
 == Configuration
 

@@ -27,9 +27,12 @@ import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.cache.MemoryConstrainedCacheManager;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
+import be.atbash.ee.security.octopus.crypto.hash.HashFactory;
+import be.atbash.util.StringUtils;
 import be.atbash.util.reflection.CDICheck;
 import be.atbash.util.reflection.ClassUtils;
 import be.atbash.util.reflection.UnknownClassException;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.annotation.Annotation;
@@ -73,6 +76,24 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
     public int getSaltLength() {
         // FIXME Validation. Warn if less then 16 (other then 0 of course).
         return getOptionalValue("saltLength", 0, Integer.class);
+    }
+
+    @ConfigEntry
+    public Integer getHashIterations() {
+        Integer result = null;
+        String hashAlgorithmName = getHashAlgorithmName();
+        if (!StringUtils.isEmpty(hashAlgorithmName)) {
+
+            int defaultValue = HashFactory.getInstance().getDefaultHashIterations(hashAlgorithmName);
+            String value = ConfigResolver.getPropertyValue("hashIterations", String.valueOf(defaultValue));
+
+            try {
+                result = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                throw new ConfigurationException(String.format("Parameter hashIterations must a a positive integer value : %s", e.getLocalizedMessage()));
+            }
+        }
+        return result;
     }
 
     // CDI bean suffixes

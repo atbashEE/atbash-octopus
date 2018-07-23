@@ -21,7 +21,6 @@ import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.codec.ByteSource;
-import be.atbash.util.codec.SimpleByteSource;
 import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;
@@ -84,7 +83,7 @@ public class AuthenticationInfoBuilder {
     }
 
     public AuthenticationInfoBuilder salt(byte[] salt) {
-        salt(new SimpleByteSource(salt));
+        salt(ByteSource.creator.bytes(salt));
         return this;
     }
 

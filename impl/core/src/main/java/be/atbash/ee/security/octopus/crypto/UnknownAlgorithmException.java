@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,6 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.crypto.UnknownAlgorithmException"})
 public class UnknownAlgorithmException extends CryptoException {
-
-    public UnknownAlgorithmException(String message) {
-        super(message);
-    }
-
-    public UnknownAlgorithmException(Throwable cause) {
-        super(cause);
-    }
 
     public UnknownAlgorithmException(String message, Throwable cause) {
         super(message, cause);

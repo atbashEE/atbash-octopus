@@ -17,12 +17,10 @@ package be.atbash.ee.security.octopus.crypto.hash;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.crypto.UnknownAlgorithmException;
+import be.atbash.util.PublicAPI;
 import be.atbash.util.StringUtils;
 import be.atbash.util.base64.Base64Codec;
-import be.atbash.util.codec.ByteSource;
-import be.atbash.util.codec.CodecException;
-import be.atbash.util.codec.CodecSupport;
-import be.atbash.util.codec.Hex;
+import be.atbash.util.codec.*;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -31,15 +29,13 @@ import java.util.Arrays;
 
 /**
  * A {@code Hash} implementation that allows any {@link MessageDigest MessageDigest} algorithm name to
- * be used.  This class is a less type-safe variant than the other {@code AbstractHash} subclasses
- * (e.g. {@link Sha512Hash}, etc), but it does allow for any algorithm name to be specified in case the other subclass
- * implementations do not represent an algorithm that you may want to use.
+ * be used. Hashes with salt are encouraged to use.
  * <p/>
- * As of Shiro 1.1, this class effectively replaces the (now-deprecated) {@link AbstractHash} class.  It subclasses
- * {@code AbstractHash} only to retain backwards-compatibility.
+ * Instances should be created by using the {@link HashFactory}.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.crypto.hash.AbstractHash", "org.apache.shiro.crypto.hash.Hash", "org.apache.shiro.crypto.hash.SimpleHash"})
-public class SimpleHash extends CodecSupport implements Serializable {
+@PublicAPI
+public class Hash extends CodecSupport implements Serializable {
 
     private static final int DEFAULT_ITERATIONS = 1;
 
@@ -74,55 +70,13 @@ public class SimpleHash extends CodecSupport implements Serializable {
     private transient String base64Encoded = null;
 
     /**
-     * Creates an new instance with only its {@code algorithmName} set - no hashing is performed.
-     * <p/>
-     * Because all other constructors in this class hash the {@code source} constructor argument, this
-     * constructor is useful in scenarios when you have a byte array that you know is already hashed and
-     * just want to set the bytes in their raw form directly on an instance.  After using this constructor,
-     * you can then immediately call {@link #setBytes setBytes} to have a fully-initialized instance.
-     * <p/>
-     * <b>N.B.</b>The algorithm identified by the {@code algorithmName} parameter must be available on the JVM.  If it
-     * is not, a {@link UnknownAlgorithmException} will be thrown when the hash is performed (not at instantiation).
-     *
-     * @param algorithmName the {@link MessageDigest MessageDigest} algorithm name to use when
-     *                      performing the hash.
-     * @see UnknownAlgorithmException
-     */
-    public SimpleHash(String algorithmName) {
-        this.algorithmName = algorithmName;
-        iterations = DEFAULT_ITERATIONS;
-    }
-
-    /**
-     * Creates an {@code algorithmName}-specific hash of the specified {@code source} with no {@code salt} using a
-     * single hash iteration.
-     * <p/>
-     * This is a convenience constructor that merely executes <code>this( algorithmName, source, null, 1);</code>.
-     * <p/>
-     * Please see the
-     * {@link #SimpleHash(String algorithmName, Object source, Object salt, int numIterations) SimpleHashHash(algorithmName, Object,Object,int)}
-     * constructor for the types of Objects that may be passed into this constructor, as well as how to support further
-     * types.
-     *
-     * @param algorithmName the {@link MessageDigest MessageDigest} algorithm name to use when
-     *                      performing the hash.
-     * @param source        the object to be hashed.
-     * @throws CodecException if the specified {@code source} cannot be converted into a byte array (byte[]).
-     * @throws UnknownAlgorithmException             if the {@code algorithmName} is not available.
-     */
-    public SimpleHash(String algorithmName, Object source) throws CodecException, UnknownAlgorithmException {
-        //noinspection NullableProblems
-        this(algorithmName, source, null, DEFAULT_ITERATIONS);
-    }
-
-    /**
      * Creates an {@code algorithmName}-specific hash of the specified {@code source} using the given {@code salt}
      * using a single hash iteration.
      * <p/>
      * It is a convenience constructor that merely executes <code>this( algorithmName, source, salt, 1);</code>.
      * <p/>
      * Please see the
-     * {@link #SimpleHash(String algorithmName, Object source, Object salt, int numIterations) SimpleHashHash(algorithmName, Object,Object,int)}
+     * {@link #Hash(String algorithmName, Object source, Object salt, int numIterations) SimpleHashHash(algorithmName, Object,Object,int)}
      * constructor for the types of Objects that may be passed into this constructor, as well as how to support further
      * types.
      *
@@ -133,7 +87,7 @@ public class SimpleHash extends CodecSupport implements Serializable {
      * @throws CodecException            if either constructor argument cannot be converted into a byte array.
      * @throws UnknownAlgorithmException if the {@code algorithmName} is not available.
      */
-    public SimpleHash(String algorithmName, Object source, Object salt) throws CodecException, UnknownAlgorithmException {
+    public Hash(String algorithmName, Object source, Object salt) throws CodecException, UnknownAlgorithmException {
         this(algorithmName, source, salt, DEFAULT_ITERATIONS);
     }
 
@@ -143,12 +97,12 @@ public class SimpleHash extends CodecSupport implements Serializable {
      * <p/>
      * By default, this class only supports Object method arguments of
      * type {@code byte[]}, {@code char[]}, {@link String}, {@link java.io.File File},
-     * {@link java.io.InputStream InputStream} or {@link org.apache.shiro.util.ByteSource ByteSource}.  If either
-     * argument is anything other than these types a {@link org.apache.shiro.codec.CodecException CodecException}
+     * {@link java.io.InputStream InputStream} or {@link ByteSource}.  If either
+     * argument is anything other than these types a {@link CodecException CodecException}
      * will be thrown.
      * <p/>
-     * If you want to be able to hash other object types, or use other salt types, you need to override the
-     * {@link #toBytes(Object) toBytes(Object)} method to support those specific types.  Your other option is to
+     * If you want to be able to hash other object types, or use other salt types, you need to implement a custom {@link ByteSourceCreator}.
+     * Your other option is to
      * convert your arguments to one of the default supported types first before passing them in to this
      * constructor}.
      *
@@ -160,7 +114,7 @@ public class SimpleHash extends CodecSupport implements Serializable {
      * @throws CodecException            if either Object constructor argument cannot be converted into a byte array.
      * @throws UnknownAlgorithmException if the {@code algorithmName} is not available.
      */
-    public SimpleHash(String algorithmName, Object source, Object salt, int hashIterations)
+    public Hash(String algorithmName, Object source, Object salt, int hashIterations)
             throws CodecException, UnknownAlgorithmException {
         if (!StringUtils.hasText(algorithmName)) {
             throw new NullPointerException("algorithmName argument cannot be null or empty.");
@@ -179,44 +133,27 @@ public class SimpleHash extends CodecSupport implements Serializable {
     /**
      * Acquires the specified {@code source} argument's bytes and returns them in the form of a {@code ByteSource} instance.
      * <p/>
-     * This implementation merely delegates to the convenience {@link #toByteSource(Object)} method for generic
+     * This implementation merely delegates to the convenience {@link ByteSource.creator.bytes((Object)} method for generic
      * conversion.  Can be overridden by subclasses for source-specific conversion.
      *
      * @param source the source object to be hashed.
      * @return the source's bytes in the form of a {@code ByteSource} instance.
      */
-    protected ByteSource convertSourceToBytes(Object source) {
-        return toByteSource(source);
+    private ByteSource convertSourceToBytes(Object source) {
+        return ByteSource.creator.bytes(source);
     }
 
     /**
      * Acquires the specified {@code salt} argument's bytes and returns them in the form of a {@code ByteSource} instance.
      * <p/>
-     * This implementation merely delegates to the convenience {@link #toByteSource(Object)} method for generic
-     * conversion.  Can be overridden by subclasses for salt-specific conversion.
+     * This implementation merely delegates to the convenience {@link ByteSource.creator.bytes(Object)} method for generic
+     * conversion.
      *
      * @param salt the salt to be use for the hash.
      * @return the salt's bytes in the form of a {@code ByteSource} instance.
      */
-    protected ByteSource convertSaltToBytes(Object salt) {
-        return toByteSource(salt);
-    }
-
-    /**
-     * Converts a given object into a {@code ByteSource} instance.  Assumes the object can be converted to bytes.
-     *
-     * @param o the Object to convert into a {@code ByteSource} instance.
-     * @return the {@code ByteSource} representation of the specified object's bytes.
-     */
-    protected ByteSource toByteSource(Object o) {
-        if (o == null) {
-            return null;
-        }
-        if (o instanceof ByteSource) {
-            return (ByteSource) o;
-        }
-        byte[] bytes = toBytes(o);
-        return ByteSource.Util.bytes(bytes);
+    private ByteSource convertSaltToBytes(Object salt) {
+        return ByteSource.creator.bytes(salt);
     }
 
     private void hash(ByteSource source, ByteSource salt, int hashIterations) throws CodecException, UnknownAlgorithmException {
@@ -261,18 +198,6 @@ public class SimpleHash extends CodecSupport implements Serializable {
     }
 
     /**
-     * Sets the iterations used to previously compute AN ALREADY GENERATED HASH.
-     * <p/>
-     * This is provided <em>ONLY</em> to reconstitute an already-created Hash instance.  It should ONLY ever be
-     * invoked when re-constructing a hash instance from an already-hashed value.
-     *
-     * @param iterations the number of hash iterations used to previously create the hash/digest.
-     */
-    public void setIterations(int iterations) {
-        this.iterations = Math.max(DEFAULT_ITERATIONS, iterations);
-    }
-
-    /**
      * Sets the salt used to previously compute AN ALREADY GENERATED HASH.
      * <p/>
      * This is provided <em>ONLY</em> to reconstitute a Hash instance that has already been computed.  It should ONLY
@@ -291,7 +216,7 @@ public class SimpleHash extends CodecSupport implements Serializable {
      * @return the MessageDigest object for the specified {@code algorithm}.
      * @throws UnknownAlgorithmException if the specified algorithm name is not available.
      */
-    protected MessageDigest getDigest(String algorithmName) throws UnknownAlgorithmException {
+    private MessageDigest getDigest(String algorithmName) throws UnknownAlgorithmException {
         try {
             return MessageDigest.getInstance(algorithmName);
         } catch (NoSuchAlgorithmException e) {
@@ -403,8 +328,8 @@ public class SimpleHash extends CodecSupport implements Serializable {
      * this Hash's byte array, {@code false} otherwise.
      */
     public boolean equals(Object o) {
-        if (o instanceof SimpleHash) {
-            SimpleHash other = (SimpleHash) o;
+        if (o instanceof Hash) {
+            Hash other = (Hash) o;
             return Arrays.equals(getBytes(), other.getBytes());
         }
         return false;

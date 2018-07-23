@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package be.atbash.ee.security.octopus.crypto.hash;
 
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import be.atbash.util.PublicAPI;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -25,38 +24,47 @@ import javax.inject.Inject;
 import java.security.SecureRandom;
 
 @ApplicationScoped
+@PublicAPI
 public class SaltHashingUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SaltHashingUtil.class);
+    private static SaltHashingUtil INSTANCE;
 
     private int saltLength;
+
+    private SecureRandom secureRandom;
 
     @Inject
     private OctopusCoreConfiguration config;
 
+    private HashFactory hashFactory;
+
     @PostConstruct
     public void init() {
         saltLength = config.getSaltLength();
+        hashFactory = HashFactory.getInstance();
+        secureRandom = new SecureRandom();
     }
 
     public byte[] nextSalt() {
         byte[] salt = new byte[saltLength];
-        SecureRandom sr = new SecureRandom();
-        sr.nextBytes(salt);
+
+        secureRandom.nextBytes(salt);
         return salt;
     }
 
     public String hash(String password, byte[] salt) {
         HashEncoding hashEncoding = config.getHashEncoding();
 
+        String hashAlgorithmName = hashFactory.defineRealHashAlgorithmName(config.getHashAlgorithmName());
         String result;
+        Hash hash = hashFactory.defineHash(hashAlgorithmName, password, salt, saltLength);
         switch (hashEncoding) {
 
             case HEX:
-                result = hashInHex(password, salt);
+                result = hash.toHex();
                 break;
             case BASE64:
-                result = hashInBase64(password, salt);
+                result = hash.toBase64();
                 break;
             default:
                 throw new IllegalArgumentException("hashEncoding " + hashEncoding + " not supported");
@@ -64,14 +72,12 @@ public class SaltHashingUtil {
         return result;
     }
 
-    public String hashInHex(String password, byte[] salt) {
-        SimpleHash hash = new SimpleHash(config.getHashAlgorithmName(), password, salt);
-        return hash.toHex();
+    public static SaltHashingUtil getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SaltHashingUtil();
+            INSTANCE.config = OctopusCoreConfiguration.getInstance();
+            INSTANCE.init();
+        }
+        return INSTANCE;
     }
-
-    public String hashInBase64(String password, byte[] salt) {
-        SimpleHash hash = new SimpleHash(config.getHashAlgorithmName(), password, salt);
-        return hash.toBase64();
-    }
-
 }

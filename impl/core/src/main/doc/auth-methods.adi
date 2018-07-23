@@ -1,0 +1,63 @@
+=== General information
+
+The user, or in general the other part as it can also be another process, will be represented by an ++AuthenticationToken++. These token can represent a user name and password or a token from an external authentication mechanism like Keycloak or OAuth2.
+
+For these tokens, Octopus requires an instance of ++AuthenticationInfo++ in order to verify the user (credentials) and have information about the user (like name).
+
+See [Authentication ways](#Authentication-ways) for more information about creating an ++AuthenticationInfo++ instance.
+
+=== SPI
+
+With the SPI, you are can integrate any kind of storage for the authentication methods. In fact, all methods are implemented through this SPI and thus it is the fundamental integration point of Octopus with the retrieval of AuthenticationInfo data.
+
+Just return the ++AuthenticationInfo++ instance corresponding to the ++AuthenticationToken++.
+
+=== Hashed password
+
+Using _Hashed password_ is a specific version of the SPI where you supply the expected password in a hash way and give all the information related to the hash (like salt, algorithm name, iterations, etc ..)
+
+The following snippet is the standard way how you can define the logic for using a hashed password.
+
+----
+            AuthenticationInfoBuilder authenticationInfoBuilder = new AuthenticationInfoBuilder();
+            authenticationInfoBuilder.principalId(theId).name(theName);
+            authenticationInfoBuilder.salt(salt);
+            authenticationInfoBuilder.password(hashedPassword);
+            return authenticationInfoBuilder.build();
+----
+
+* _theId_: A required Serializable value which indicates the unique identification of the user/remote process.
+* _theName_: An optional description of the user which can be used to display on the screen
+* _salt_: The salt which is used for generating the hash, see below
+* _hashedPassword_: The String representation (in Hex or Base64, see below) of the hashed password.
+
+The _salt_ is required to pass to the _AuthenticationInfoBuilder_ as this will be the trigger to use the hashing logic of Octopus. Although that it is possible to generate hashes without any salt it is bot allowed within octopus because it is less safe.
+
+The parameter of the _salt_ method is Object. The conversion to a _ByteSource_ is performed by the _ByteSourceCreator_.
+
+Other variables are defined by the configuration
+
+* _hashAlgorithmName_ : The hash algorithm name (like sha-256) or Key derivation function (like PBKDF2)
+* _hashEncoding_ : The String encoding of the hashedPassword, HEX or BASE64
+* _hashIterations_ : Number of iterations in the hashing.
+
+==== Hash utilities
+
+The class ++be.atbash.ee.security.octopus.crypto.hash.SaltHashingUtil++ contains some utility methods related to hashing. It is a CDI bean or can be retrieved in any environment using ++SaltHashingUtil.getInstance()++.
+
+When you need to store data for a new user, you need to have a salt and store the password in his hashed format.
+
+
+A convenient method for generating a new salt if provided by the +nextSalt()+ method.
+
+----
+    byte[] salt = saltHashingUtil.nextSalt();
+----
+
+The length of this value is determined by the configuration parameter _saltLength_. And longer salts are safer then short salt values.
+
+The hash is calculated by the hash method:
+
+----
+    String hashedPassword = saltHashingUtil.hash(password, salt);
+----

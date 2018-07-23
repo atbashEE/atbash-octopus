@@ -15,22 +15,13 @@
  */
 package be.atbash.ee.security.octopus.crypto;
 
-import be.atbash.ee.security.octopus.OctopusException;
-import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.util.PublicAPI;
-
 /**
- * Base exception for problems encountered during cryptographic operations.
+ *
  */
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.crypto.CryptoException"})
-@PublicAPI
-public class CryptoException extends OctopusException {
 
-    public CryptoException(String message) {
-        super(message);
-    }
+public class MissingSaltException extends CryptoException {
 
-    public CryptoException(String message, Throwable cause) {
-        super(message, cause);
+    public MissingSaltException() {
+        super("Salt is required for this operation");
     }
 }
