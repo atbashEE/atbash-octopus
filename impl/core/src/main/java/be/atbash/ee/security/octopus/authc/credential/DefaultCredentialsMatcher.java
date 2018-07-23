@@ -35,11 +35,10 @@ import java.util.Arrays;
  * <p/>
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.credential.SimpleCredentialsMatcher", "org.apache.shiro.authc.credential.HashedCredentialsMatcher"})
-// FIXME Rename (not Simple but Default)
 // TODO Do we need protected methods so that we can override
-public class SimpleCredentialsMatcher extends CodecSupport implements CredentialsMatcher {
+public class DefaultCredentialsMatcher extends CodecSupport implements CredentialsMatcher {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleCredentialsMatcher.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultCredentialsMatcher.class);
 
     private OctopusCoreConfiguration octopusCoreConfiguration = OctopusCoreConfiguration.getInstance();
 
@@ -57,7 +56,7 @@ public class SimpleCredentialsMatcher extends CodecSupport implements Credential
      *             token's credentials.
      * @return the {@code account}'s associated credentials.
      */
-    protected Object getCredentials(AuthenticationInfo info) {
+    private Object getCredentials(AuthenticationInfo info) {
         return info.getCredentials();
     }
 
@@ -78,7 +77,7 @@ public class SimpleCredentialsMatcher extends CodecSupport implements Credential
      * @param accountCredentials the {@code AuthenticationInfo}'s stored credentials.
      * @return {@code true} if the {@code tokenCredentials} are equal to the {@code accountCredentials}.
      */
-    protected boolean equals(Object tokenCredentials, Object accountCredentials) {
+    private boolean equals(Object tokenCredentials, Object accountCredentials) {
         if (tokenCredentials == null || accountCredentials == null) {
             return false;
         }

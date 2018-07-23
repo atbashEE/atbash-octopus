@@ -24,12 +24,9 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
  * credentials matches a corresponding account's credentials stored in the system.
  *
  * <p>Simple direct comparisons are handled well by the
- * {@link SimpleCredentialsMatcher SimpleCredentialsMatcher}.  If you
- * hash user's credentials before storing them in a realm (a common practice), look at the
- * {@link HashedCredentialsMatcher HashedCredentialsMatcher} implementations,
- * as they support this scenario.
+ * {@link DefaultCredentialsMatcher DefaultCredentialsMatcher} which also supports the scenario with hashed passwords.
  *
- * @see SimpleCredentialsMatcher
+ * @see DefaultCredentialsMatcher
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.credential.CredentialsMatcher"})
 public interface CredentialsMatcher {
