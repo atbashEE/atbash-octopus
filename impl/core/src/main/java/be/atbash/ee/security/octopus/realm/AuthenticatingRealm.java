@@ -16,10 +16,7 @@
 package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.authc.AuthenticationException;
-import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.authc.CredentialsException;
-import be.atbash.ee.security.octopus.authc.IncorrectCredentialsException;
+import be.atbash.ee.security.octopus.authc.*;
 import be.atbash.ee.security.octopus.authc.credential.CredentialsMatcherHandler;
 import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
@@ -500,7 +497,10 @@ public abstract class AuthenticatingRealm extends CachingRealm {
                     switch (hashEncoding) {
 
                         case HEX:
-                            Hex.decode(storedBytes);
+
+                            if (!Hex.isHexEncoded(storedBytes)) {
+                                throw new IllegalArgumentException("Invalid HEX encoded value");
+                            }
                             break;
                         case BASE64:
                             // TODO All Hex characters are valid base64 characters, so we can't detect hex encoded password with Base64 config.
@@ -606,7 +606,8 @@ public abstract class AuthenticatingRealm extends CachingRealm {
      * more and letting Shiro do the rest.  But in some systems, this method could actually perform EIS specific
      * log-in logic in addition to just retrieving data - it is up to the Realm implementation.
      * <p/>
-     * A {@code null} return value means that no account could be associated with the specified token.
+     * A {@code null} return value means that no account could be associated with the specified token. Mostly only for an {@link IncorrectDataToken}
+     * Instead of return null, it is also possible that {@link AuthenticationException} is thrown to indicate that authentication failed based on the supplied token.
      *
      * @param token the authentication token containing the user's principal and credentials.
      * @return an {@link AuthenticationInfo} object containing account data resulting from the
