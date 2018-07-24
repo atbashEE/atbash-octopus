@@ -115,7 +115,6 @@ public class OIDCActions {
                 return;
             }
 
-            System.out.println("handleLogout");
             for (final String clientSession : action.getKeycloakSessionIds()) {
 
                 activeSessionRegistry.invalidateSession(new ActiveSessionRegistry.UserSessionFinder() {

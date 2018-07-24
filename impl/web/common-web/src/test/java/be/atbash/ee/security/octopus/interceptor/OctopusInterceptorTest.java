@@ -223,7 +223,6 @@ public class OctopusInterceptorTest {
                     if (permissionString.contains(":")) {
                         return new WildcardPermission(permissionString);
                     }
-                    System.out.println(parameter);
                     throw new IllegalArgumentException();
                 }
                 throw new IllegalArgumentException();

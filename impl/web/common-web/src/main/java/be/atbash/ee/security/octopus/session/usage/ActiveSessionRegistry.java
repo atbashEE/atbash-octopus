@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.session.usage;
 
-import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.event.LogonEvent;
 import be.atbash.ee.security.octopus.authc.event.LogoutEvent;
@@ -165,14 +164,9 @@ public class ActiveSessionRegistry {
         // The HttpSession.invalidate() will trigger the event and removal of entries within sessionRegistry
         // And thus resulting in concurrent modification exceptions.
         List<HttpSession> toBeInvalidated = new ArrayList<>();
-        System.out.println("Invalidate session");
         for (Map.Entry<String, SessionInfo> entry : sessionRegistry.entrySet()) {
-            System.out.println("key()" + entry.getKey());
             if (entry.getValue().isAuthenticated()) {
-                System.out.println("authenticated ");
-                System.out.println(entry.getValue().getUserPrincipal().getUserInfo(OctopusConstants.EXTERNAL_SESSION_ID));
                 if (userSessionFinder.isCorrectPrincipal(entry.getValue().getUserPrincipal(), entry.getValue().getSessionId())) {
-                    System.out.println("ready for invalidation");
                     toBeInvalidated.add(entry.getValue().getHttpSession());
                 }
             }
