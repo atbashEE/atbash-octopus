@@ -38,6 +38,7 @@ import java.io.IOException;
  */
 
 public class MPRestClientProvider implements ClientRequestFilter {
+    // Class name used in a string within OctopusRestClientBuilderListener. Don't refactor unless you change that class!!
 
     private JWTEncoder jwtEncoder;
 

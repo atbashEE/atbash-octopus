@@ -63,6 +63,12 @@
             <version>${atbash-rest-client.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-rest-client-provider</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
         <!-- tests -->
         <dependency>
             <groupId>be.atbash.utils</groupId>

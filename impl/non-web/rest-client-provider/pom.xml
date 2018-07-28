@@ -28,34 +28,20 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Octopus Rest Client for Keycloak OpenId Connect</name>
+    <name>Octopus Rest Client provider</name>
 
-    <artifactId>octopus-keycloak-rest-client</artifactId>
+    <artifactId>octopus-rest-client-provider</artifactId>
     <version>0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencies>
 
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-keycloak-se</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>be.atbash.mp.rest-client</groupId>
             <artifactId>atbash-rest-client-impl</artifactId>
             <version>${atbash-rest-client.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-rest-client-provider</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- tests -->
-
 
     </dependencies>
 

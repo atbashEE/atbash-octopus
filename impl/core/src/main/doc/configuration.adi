@@ -220,3 +220,16 @@ default : *none*
 
 The key id (looked up from the cryptographic keys read by the Key support) which will be used for the signing of the JWT.
 We no key Id is specified, a key which has a private part is chosen (but there can only be one)
+
+=== Octopus Rest client providers
+
+==== octopus.rest.client.providers
+
+default : *none*
+
+List of fully qualified class names which will be added as provider to the generated Rest Clients. This is the equivalent of specifying them with the @RegisterProvider annotation (but now for all clients and not individual specified).
+An alias is defined for a few Providers to make it easier to specify them
+
+- _mp-authc_ -> Adds authentication and authorization information known within Octopus context to the header as MP JWT Auth token
+- _keycloak-authc_ -> When available, adds the keycloak token as header.
+

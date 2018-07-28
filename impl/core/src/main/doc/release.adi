@@ -2,6 +2,7 @@
 
 . Integration with Keycloak (Client Credentials for Java SE, AuthorizationCode grant for Web, AccessToken for JAX-RS)
 . Supported for Hashed Passwords (MessageDigest ones and PBKDF2)
+. Support for MP rest Client and Providers available to add tokens for MP JWT Auth and Keycloak
 . Logout functionality for Web.
 . Authentication events.
 . More features for JAX-RS integration (authorization violations on JAX-RS resource [no need for CDI or EJB], correct 401 return messages, ... )

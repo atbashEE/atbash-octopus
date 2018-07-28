@@ -16,9 +16,7 @@
 package be.atbash.ee.security.rest;
 
 import be.atbash.ee.security.octopus.mp.exception.UnauthorizedExceptionMapper;
-import be.atbash.ee.security.octopus.mp.rest.MPRestClientProvider;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
-import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -28,8 +26,10 @@ import javax.ws.rs.Path;
 @Path("/hello")
 @ApplicationScoped
 @RegisterRestClient
-@RegisterProviders({@RegisterProvider(MPRestClientProvider.class), @RegisterProvider(UnauthorizedExceptionMapper.class)})
-// FIXME Use Feature and add UnauthorizedExceptionMapper dynamically (or new module
+@RegisterProvider(UnauthorizedExceptionMapper.class)
+// @RegisterProvider(MPRestClientProvider.class) automatically by octopus.rest.client.providers config
+
+// FIXME  add UnauthorizedExceptionMapper dynamically (through RestClientBuilderListener)
 public interface HelloService {
 
     @GET

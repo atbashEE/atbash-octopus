@@ -34,6 +34,7 @@
 
     <modules>
         <module>common-se</module>
+        <module>rest-client-provider</module>
         <module>keycloak-se</module>
         <module>keycloak-rest-client</module>
         <module>mp-core</module>
