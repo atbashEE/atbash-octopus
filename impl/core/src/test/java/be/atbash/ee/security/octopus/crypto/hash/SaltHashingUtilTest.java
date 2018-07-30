@@ -58,7 +58,7 @@ public class SaltHashingUtilTest {
     @Test
     public void hash_inHex() {
         TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
-        String hashValue = SaltHashingUtil.getInstance().hash("Test", "Atbash".getBytes());
+        String hashValue = SaltHashingUtil.getInstance().hash("Test".toCharArray(), "Atbash".getBytes());
         assertThat(hashValue).isEqualTo("ACEB16B8AABE225073CF471696C45627B6B0C0E2563C658857038ECE54BB34ED");
     }
 
@@ -66,7 +66,7 @@ public class SaltHashingUtilTest {
     public void hash_inBase64() {
         TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
         TestConfig.addConfigValue("hashEncoding", "BASE64");
-        String hashValue = SaltHashingUtil.getInstance().hash("Test", "Atbash".getBytes());
+        String hashValue = SaltHashingUtil.getInstance().hash("Test".toCharArray(), "Atbash".getBytes());
         assertThat(hashValue).isEqualTo("rOsWuKq-IlBzz0cWlsRWJ7awwOJWPGWIVwOOzlS7NO0");
     }
 }

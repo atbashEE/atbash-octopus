@@ -170,7 +170,7 @@ public class OctopusOfflineRealmTest {
         builder.principalId(1L);
         builder.salt(salt);
 
-        builder.password(hashingUtil.hash("Atbash", salt));
+        builder.password(hashingUtil.hash("Atbash".toCharArray(), salt));
 
         AuthenticationInfo info = builder.build();
         TestAuthenticationInfoProvider.authenticationInfo = info;

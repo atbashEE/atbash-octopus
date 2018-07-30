@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.crypto.hash;
 
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.util.PublicAPI;
+import be.atbash.util.codec.ByteSource;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -52,7 +53,7 @@ public class SaltHashingUtil {
         return salt;
     }
 
-    public String hash(String password, byte[] salt) {
+    public String hash(char[] password, byte[] salt) {
         HashEncoding hashEncoding = config.getHashEncoding();
 
         String hashAlgorithmName = hashFactory.defineRealHashAlgorithmName(config.getHashAlgorithmName());
@@ -70,6 +71,10 @@ public class SaltHashingUtil {
                 throw new IllegalArgumentException("hashEncoding " + hashEncoding + " not supported");
         }
         return result;
+    }
+
+    public String hash(char[] password, ByteSource byteSource) {
+        return hash(password, byteSource.getBytes());
     }
 
     public static SaltHashingUtil getInstance() {

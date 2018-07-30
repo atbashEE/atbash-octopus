@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.c4j.demo.security;
+package be.atbash.ee.security.octopus.hash;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
@@ -47,7 +47,7 @@ public class AppAuthentication implements SecurityDataProvider {
             byte[] salt = saltHashingUtil.nextSalt();
             authenticationInfoBuilder.salt(salt);
             // TODO: Change for production. Here we use username as password
-            String hashedPassword = saltHashingUtil.hash(usernamePasswordToken.getUsername(), salt);
+            String hashedPassword = saltHashingUtil.hash(usernamePasswordToken.getUsername().toCharArray(), salt);
             authenticationInfoBuilder.password(hashedPassword);
             return authenticationInfoBuilder.build();
         }

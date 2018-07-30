@@ -17,9 +17,7 @@ package be.atbash.ee.security.octopus.authc.credential;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.crypto.hash.Hash;
-import be.atbash.ee.security.octopus.crypto.hash.HashFactory;
+import be.atbash.ee.security.octopus.crypto.hash.SaltHashingUtil;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.codec.CodecSupport;
 import org.slf4j.Logger;
@@ -40,9 +38,7 @@ public class DefaultCredentialsMatcher extends CodecSupport implements Credentia
 
     private static final Logger log = LoggerFactory.getLogger(DefaultCredentialsMatcher.class);
 
-    private OctopusCoreConfiguration octopusCoreConfiguration = OctopusCoreConfiguration.getInstance();
-
-    private HashFactory hashFactory = HashFactory.getInstance();
+    private SaltHashingUtil saltHashingUtil = SaltHashingUtil.getInstance();
 
     /**
      * Returns the {@code account}'s credentials.
@@ -115,18 +111,15 @@ public class DefaultCredentialsMatcher extends CodecSupport implements Credentia
         Object tokenCredentials;
         if (info.isHashedPassword()) {
 
-            Hash hash = hashFactory.defineHash(octopusCoreConfiguration.getHashAlgorithmName(), token.getCredentials(), info.getCredentialsSalt(), octopusCoreConfiguration.getHashIterations());
-            switch (octopusCoreConfiguration.getHashEncoding()) {
-
-                case HEX:
-                    tokenCredentials = hash.toHex();
-                    break;
-                case BASE64:
-                    tokenCredentials = hash.toBase64();
-                    break;
-                default:
-                    throw new IllegalArgumentException(String.format("Unsupported Hash encoding %s", octopusCoreConfiguration.getHashEncoding()));
+            char[] password = null;
+            if (token.getCredentials() instanceof char[]) {
+                password = (char[]) token.getCredentials();
             }
+            if (password == null) {
+                throw new IllegalArgumentException("TODO");
+            }
+
+            tokenCredentials = saltHashingUtil.hash(password, info.getCredentialsSalt());
 
         } else {
             tokenCredentials = token.getCredentials();
