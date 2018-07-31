@@ -79,7 +79,7 @@ public class HashFactory {
             try {
                 SecretKeyFactory.getInstance(keyFactoryName); // No assignment -> exception thrown or not is all we need to know.
                 result = keyFactoryName;
-                algorithmNameHashTypes.put(hashAlgorithmName, HashType.KEY_FACTORY);
+                algorithmNameHashTypes.put(keyFactoryName, HashType.KEY_FACTORY);
             } catch (NoSuchAlgorithmException e1) {
                 throw new ConfigurationException(String.format("Hash algorithm name unknown : %s", hashAlgorithmName));
             }
@@ -100,7 +100,11 @@ public class HashFactory {
     public Hash defineHash(String hashAlgorithmName, Object source, Object salt, int hashIterations) {
         Hash result;
 
-        switch (algorithmNameHashTypes.get(hashAlgorithmName)) {
+        HashType hashType = algorithmNameHashTypes.get(hashAlgorithmName);
+        if (hashType == null) {
+            hashType = algorithmNameHashTypes.get(defineRealHashAlgorithmName(hashAlgorithmName));
+        }
+        switch (hashType) {
 
             case HASH:
                 result = new Hash(hashAlgorithmName, source, salt, hashIterations);
@@ -109,7 +113,7 @@ public class HashFactory {
                 result = new SecretKeyHash(hashAlgorithmName, source, salt, hashIterations);
                 break;
             default:
-                throw new IllegalArgumentException(String.format("Hash type %s not supported", algorithmNameHashTypes.get(hashAlgorithmName)));
+                throw new IllegalArgumentException(String.format("Hash type %s not supported", hashType));
         }
         return result;
     }

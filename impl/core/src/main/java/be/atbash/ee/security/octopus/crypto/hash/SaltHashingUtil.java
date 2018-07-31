@@ -58,7 +58,7 @@ public class SaltHashingUtil {
 
         String hashAlgorithmName = hashFactory.defineRealHashAlgorithmName(config.getHashAlgorithmName());
         String result;
-        Hash hash = hashFactory.defineHash(hashAlgorithmName, password, salt, saltLength);
+        Hash hash = hashFactory.defineHash(hashAlgorithmName, password, salt, config.getHashIterations());
         switch (hashEncoding) {
 
             case HEX:
