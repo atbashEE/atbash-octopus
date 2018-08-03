@@ -274,7 +274,7 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
         String host = getHost();
 
         if (host == null) {
-            //check to see if there is an AuthenticationToken from which to retrieve it:
+            //FIXME check to see if there is an AuthenticationToken from which to retrieve it:
 
             /*
             AuthenticationToken token = getAuthenticationToken();

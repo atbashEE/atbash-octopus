@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.filter.authz;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 

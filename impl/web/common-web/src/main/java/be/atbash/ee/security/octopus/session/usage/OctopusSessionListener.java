@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.session.usage;
 
 import be.atbash.util.CDIUtils;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -35,6 +34,5 @@ public class OctopusSessionListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent se) {
         CDIUtils.fireEvent(new SessionRegistryEvent(se.getSession(), UserAction.SESSION_END));
     }
-
 
 }

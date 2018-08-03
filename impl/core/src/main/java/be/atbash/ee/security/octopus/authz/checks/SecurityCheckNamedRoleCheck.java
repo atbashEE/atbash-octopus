@@ -17,7 +17,6 @@ package be.atbash.ee.security.octopus.authz.checks;
 
 import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
 import be.atbash.ee.security.octopus.authz.permission.role.voter.GenericRoleVoter;
-import be.atbash.ee.security.octopus.authz.permission.voter.GenericPermissionVoter;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;

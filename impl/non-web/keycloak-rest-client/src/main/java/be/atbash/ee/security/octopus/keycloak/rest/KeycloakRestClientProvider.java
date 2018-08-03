@@ -27,6 +27,7 @@ import java.io.IOException;
  */
 
 public class KeycloakRestClientProvider implements ClientRequestFilter {
+    // Class name used in a string within OctopusRestClientBuilderListener. Don't refactor unless you change that class!!
 
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {

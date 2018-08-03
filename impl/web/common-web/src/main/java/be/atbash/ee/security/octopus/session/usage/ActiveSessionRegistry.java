@@ -112,8 +112,8 @@ public class ActiveSessionRegistry {
     }
 
     private SessionInfo newApplicationUsageInfo(HttpSession session) {
-        String remoteHost = null;
-        String userAgent = null;
+        String remoteHost;
+        String userAgent;
         //if (ThreadContext.getSecurityManager() != null) {
         // If the Cookie Manager authenticate a user The SubjectDAO want to store it in the Session
         // And no Subject/Security manager is available at that time.

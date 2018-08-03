@@ -42,8 +42,7 @@ public class ProducerBean {
     public UserPrincipal producePrincipal() {
         Object principal = SecurityUtils.getSubject().getPrincipal();
         UserPrincipal result = null;
-        if (principal instanceof UserPrincipal) {
-
+        if (principal != null) {
             result = (UserPrincipal) principal;
         }
         /*
@@ -54,7 +53,7 @@ public class ProducerBean {
             result = new UserPrincipal(identifier);
         }
         */
-        if (principal == null) {
+        if (result == null) {
             // FIXME This will result probably in some nullPointer in the hashCode() which uses id.
             result = new UserPrincipal();
         }

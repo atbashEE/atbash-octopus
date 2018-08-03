@@ -17,7 +17,6 @@ package be.atbash.ee.security.octopus.filter.mgt;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
-import be.atbash.ee.security.octopus.web.servlet.AbstractFilter;
 import be.atbash.ee.security.octopus.web.servlet.ProxiedFilterChain;
 import be.atbash.util.Reviewed;
 import be.atbash.util.StringUtils;

@@ -125,6 +125,7 @@ public class OIDCActions {
                 });
             }
             // FIXME Handle global logout
+            // Verify but is done I guess.
             /*
             if (action.getAdapterSessionIds() != null) {
                 for (String sessionId : action.getAdapterSessionIds()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,7 +204,7 @@ public class SoftHashMap<K, V> implements Map<K, V> {
     public boolean containsValue(Object value) {
         processQueue();
         Collection values = values();
-        return values != null && values.contains(value);
+        return values.contains(value);
     }
 
     public void putAll(Map<? extends K, ? extends V> m) {

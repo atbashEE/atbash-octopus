@@ -64,4 +64,11 @@ public class RateLimitConfigTest {
 
     }
 
+    @Test(expected = ConfigurationException.class)
+    public void createRateLimiter_wrongUnit() {
+        config = new RateLimitConfig();
+        config.createRateLimiter("10/1x");
+
+    }
+
 }

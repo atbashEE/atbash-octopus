@@ -35,6 +35,8 @@ public class KeycloakCLI {
         ProtectedMethods protectedMethods = new ProtectedMethods();
         System.out.println(protectedMethods.checkPermission());
 
+        //System.out.println(protectedMethods.runOnlyAsSuperUser());
+
         SecurityUtils.getSubject().logout();
     }
 

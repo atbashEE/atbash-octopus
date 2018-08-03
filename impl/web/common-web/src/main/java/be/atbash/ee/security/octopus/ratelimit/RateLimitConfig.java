@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class RateLimitConfig {
 
-    private static final Pattern CONFIG_PATTERN = Pattern.compile("(\\d+)/(\\d+)(s|m|h)");
+    private static final Pattern CONFIG_PATTERN = Pattern.compile("(\\d+)/(\\d+)([smh])");
 
     public FixedBucket createRateLimiter(String config) {
         Matcher matcher = CONFIG_PATTERN.matcher(config);

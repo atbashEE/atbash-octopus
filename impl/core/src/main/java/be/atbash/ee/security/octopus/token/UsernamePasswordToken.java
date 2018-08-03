@@ -18,8 +18,6 @@ package be.atbash.ee.security.octopus.token;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.util.PublicAPI;
 
-import java.util.Arrays;
-
 /**
  * <p>A simple username/password authentication token to support the most widely-used authentication mechanism.  This
  * class also implements the {@link RememberMeAuthenticationToken RememberMeAuthenticationToken} interface to support
@@ -87,7 +85,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param username the username submitted for authentication
      * @param password the password character array submitted for authentication
      */
-    public UsernamePasswordToken( String username,  char[] password) {
+    public UsernamePasswordToken(String username, char[] password) {
         this(username, password, false, null);
     }
 
@@ -103,7 +101,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param username the username submitted for authentication
      * @param password the password string submitted for authentication
      */
-    public UsernamePasswordToken( String username,  String password) {
+    public UsernamePasswordToken(String username, String password) {
         this(username, password != null ? password.toCharArray() : null, false, null);
     }
 
@@ -115,7 +113,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param password the password string submitted for authentication
      * @param host     the host name or IP string from where the attempt is occuring
      */
-    public UsernamePasswordToken( String username,  char[] password,  String host) {
+    public UsernamePasswordToken(String username, char[] password, String host) {
         this(username, password, false, host);
     }
 
@@ -131,7 +129,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param password the password string submitted for authentication
      * @param host     the host name or IP string from where the attempt is occuring
      */
-    public UsernamePasswordToken( String username,  String password,  String host) {
+    public UsernamePasswordToken(String username, String password, String host) {
         this(username, password != null ? password.toCharArray() : null, false, host);
     }
 
@@ -159,7 +157,7 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param password   the password string submitted for authentication
      * @param rememberMe if the user wishes their identity to be remembered across sessions
      */
-    public UsernamePasswordToken( String username,  String password,  boolean rememberMe) {
+    public UsernamePasswordToken(String username, String password, boolean rememberMe) {
         this(username, password != null ? password.toCharArray() : null, rememberMe, null);
     }
 
@@ -172,8 +170,8 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param rememberMe if the user wishes their identity to be remembered across sessions
      * @param host       the host name or IP string from where the attempt is occuring
      */
-    public UsernamePasswordToken( String username,  char[] password,
-                                  boolean rememberMe,  String host) {
+    public UsernamePasswordToken(String username, char[] password,
+                                 boolean rememberMe, String host) {
 
         this.username = username;
         this.password = password;
@@ -194,8 +192,8 @@ public class UsernamePasswordToken implements HostAuthenticationToken, RememberM
      * @param rememberMe if the user wishes their identity to be remembered across sessions
      * @param host       the host name or IP string from where the attempt is occuring
      */
-    public UsernamePasswordToken( String username,  String password,
-                                  boolean rememberMe,  String host) {
+    public UsernamePasswordToken(String username, String password,
+                                 boolean rememberMe, String host) {
         this(username, password != null ? password.toCharArray() : null, rememberMe, host);
     }
 
