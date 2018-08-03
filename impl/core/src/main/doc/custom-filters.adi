@@ -26,7 +26,7 @@ In some rare situation where you don't want the status 401 when the request can'
 
 ==== Authorization filter
 
-An authorization filter checks if the user has specific permissions before access is granted to the URL.  There are already various filters defined by default in octopus and with the CustomVoterFilter, almost any kind of authorization filter can be created by the deeloper.
+An authorization filter checks if the user has specific permissions before access is granted to the URL.  There are already various filters defined by default in octopus and with the CustomVoterFilter, almost any kind of authorization filter can be created by the developer.
 
 In case you need another custom authorization filter, extend from the +be.atbash.ee.security.octopus.filter.authz.AuthorizationFilter+ class.
 

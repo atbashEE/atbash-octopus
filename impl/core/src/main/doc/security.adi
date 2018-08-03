@@ -33,7 +33,7 @@ This behaviour can be controlled by the configuration parameter +session.single+
 
 === Catch OctopusUnexpectedException
 
-Various parts of the code throws the OctopusUnexpectedException when some unexpected condition happens. Make sure you catch at a minimum these Exception (by means of an ExcetionHandler in JSF for example) so that no stacktrace is exposed to the client.
+Various parts of the code throws the OctopusUnexpectedException when some unexpected condition happens. Make sure you catch at a minimum these Exception (by means of an ExceptionHandler in JSF for example) so that no stacktrace is exposed to the client.
 
 It is a good idea to route any exception to a custom page/JAX-RS endpoint response so that internal application information isn't exposed.
 

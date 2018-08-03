@@ -6,7 +6,7 @@ This is byte array can only be reconstructed with the same passphrase and the sa
 
 This **local secret** is base64 encoded.
 
-The class **OfflineToken** is a JWT wich is signed using the _local secret_.
+The class **OfflineToken** is a JWT which is signed using the _local secret_.
 
 The JWT is tamper proof, except the user can generate other offlineToken since all the code is available within Atbash Octopus.
 

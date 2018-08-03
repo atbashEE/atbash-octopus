@@ -15,7 +15,7 @@ The filter name you specified in the chain was not found. Chains are defined wit
 /special/** = xyz
 ```
 
-In the above example, xyz is not a standaard defined filter and thus when it is not specified by the developer, it is unknown to Octopus and this Exception is thrown.
+In the above example, xyz is not a standard defined filter and thus when it is not specified by the developer, it is unknown to Octopus and this Exception is thrown.
 
 * E0012
 

@@ -29,7 +29,7 @@ default : *1* or *1024*
 
 Defines the number of iterations that are performed within the hashing algorithm.
 
-The default value 1 is taken for the *'real'* hashing functions like SHA-256, 1024 is for the Key deriviation functions like PBKDF2.
+The default value 1 is taken for the *'real'* hashing functions like SHA-256, 1024 is for the Key derivation functions like PBKDF2.
 
 ==== cacheManager.class
 

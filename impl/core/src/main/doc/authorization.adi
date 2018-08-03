@@ -176,7 +176,7 @@ Custom tags are created to perform declarative authorization on JSF components. 
 
 Defines if a certain JSF component can be viewed (is rendered) for the user/subject.
 
-When defined within another JSF tag (without the for attribute) it controles the parent. With the for attribute one can define the JSF component on which it operates.
+When defined within another JSF tag (without the for attribute) it controls the parent. With the for attribute one can define the JSF component on which it operates.
 
     permission
 
@@ -210,7 +210,7 @@ Specifies the id of one (or more) JSF components for which the authorization che
 Defines the possibility to execute a method when the authorization checks ofr te user are positive based on the supplied permission, role and/or voter.
 The Java method can update the component to allow correct styling based on the permissions of the users.
 
-When defined within another JSF tag (without the for attribute) it controles the parent. With the for attribute one can define the JSF component on which it operates.
+When defined within another JSF tag (without the for attribute) it controls the parent. With the for attribute one can define the JSF component on which it operates.
 
     listener
 
@@ -276,7 +276,7 @@ Do all checks need to be pass on the user/subject or is only 1 enough.
 
 ==== anon
 
-Every one can access the page, no checks perfomed
+Every one can access the page, no checks performed
 
 ==== authcBasic
 
