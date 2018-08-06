@@ -22,12 +22,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>mem-basic</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>war</packaging>
 
     <properties>

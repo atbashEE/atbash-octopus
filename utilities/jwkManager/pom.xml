@@ -25,12 +25,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-utilities</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>jwk-util</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <licenses>

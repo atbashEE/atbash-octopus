@@ -24,14 +24,14 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-web</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Support for MicroProfile JWT-Auth</name>
 
     <artifactId>octopus-mp</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <dependencies>

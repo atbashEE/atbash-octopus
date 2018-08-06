@@ -24,12 +24,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>octopus-core</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-cdi</artifactId>
-            <version>${atbash-utils.version}</version>
+            <version>${atbash-utils.version.prev}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>

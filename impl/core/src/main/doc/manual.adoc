@@ -1,6 +1,6 @@
 = Octopus Framework
 Rudy De Busscher <rdebusscher@gmail.com>
-v0.4, ??/??/2018
+v0.4, 06/08/2018
 
 == Release notes
 

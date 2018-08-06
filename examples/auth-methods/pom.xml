@@ -24,13 +24,13 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>be.atbash.ee.security.examples</groupId>
     <artifactId>auth-methods</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>pom</packaging>
 
 

@@ -22,12 +22,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>keycloak-cli</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-keycloak-se</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>0.4</version>
         </dependency>
 
         <dependency>

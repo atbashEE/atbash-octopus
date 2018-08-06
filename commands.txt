@@ -9,4 +9,4 @@ mvn license:format
 
 
 
-mvn versions:set -DnewVersion=0.4-SNAPSHOT -DgenerateBackupPoms=false
+mvn versions:set -DnewVersion=0.4 -DgenerateBackupPoms=false
