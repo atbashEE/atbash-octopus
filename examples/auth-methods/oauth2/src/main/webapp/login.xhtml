@@ -1,0 +1,40 @@
+<!--
+
+    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+</h:head>
+<h:body>
+    <h2>Authenticate</h2>
+    <h:form id="login">
+        Authentication providers supported :<br/>
+        <ui:repeat value="#{defaultOauth2ServletInfo.providers}" var="_provider">
+            <p:commandLink actionListener="#{defaultOauth2ServletInfo.authenticateWith(_provider)}"
+                           value="#{_provider}"/>
+            <br/>
+        </ui:repeat>
+        <p:messages/>
+    </h:form>
+
+</h:body>
+</html>

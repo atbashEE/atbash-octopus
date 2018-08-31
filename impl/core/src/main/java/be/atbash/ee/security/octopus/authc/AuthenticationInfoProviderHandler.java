@@ -68,6 +68,7 @@ public class AuthenticationInfoProviderHandler {
         }
 
         if (authenticationInfoProviders.isEmpty()) {
+            // TODO Is this properly logged ??
             throw new RealmConfigurationException("Missing implementation as CDI bean of SecurityDataProvider or AuthenticationInfoProvider");
         }
     }

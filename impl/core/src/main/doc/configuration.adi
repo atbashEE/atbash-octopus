@@ -170,6 +170,43 @@ Determines the Session Hijack Protection level. It uses the IP Address and User-
 
 The default level _ON_, checks both properties, _PARTIAL_ only the User-Agent header value and _OFF_ disables the protection.
 
+=== OAuth2 configuration
+
+==== OAuth2.clientId
+
+default : *(none)*
+
+The value used for the clientId configuration value towards your OAuth2 provider.
+
+As alternative, or when multiple providers are used, the name of the OAuth2 provider can be used as prefix like _google.OAuth2.clientId_
+
+==== OAuth2.secretId
+
+default : *(none)*
+
+The value used for the secretId configuration value towards your OAuth2 provider.
+
+As alternative, or when multiple providers are used, the name of the OAuth2 provider can be used as prefix like _google.OAuth2.clientId_
+
+==== OAuth2.scopes
+
+default : *(none)*
+
+The additional scopes you want to use when the authentication is performed with the OAuth2 Provider.
+
+As alternative, or when multiple providers are used, the name of the OAuth2 provider can be used as prefix like _google.OAuth2.clientId_
+
+==== OAuth2.provider.selectionPage
+
+default : */login.xhtml*
+
+The page which is shown to the user when multiple OAuth2 providers are found on the classpath so that the user can choose which provider he wants to take.
+
+==== OAuth2.account.selection
+
+default : *false*
+
+Is the Google account selection page forced?
 
 === Keycloak configuration
 

@@ -1,0 +1,164 @@
+==== setup
+
+Add the following dependency to your project POM.xml file.
+
+[source,xml]
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-oauth2-google</artifactId>
+        <version>0.5</version>
+    </dependency>
+----
+
+The above dependency add the required dependency to have OAuth2 authentication with Google as provider.
+
+But other providers are also supported, this table gives an overview of the provider, artifactId and name (see further)
+
+[options="header"]
+|=======================
+|OAuth2 Provider|artifactId |name
+|Google    |octopus-oauth2-google     |Google
+|GitHub    |octopus-oauth2-github  |Github
+|LinkedIn    |octopus-oauth2-linkedin    |Linkedin
+|Octopus    |octopus-oauth2-octopus    |Octopus
+|=======================
+
+And if you like, you can add multiple OAuth2 modules, so that the end user of your application can choose which provider he wants to use. See in the configuration, what you need to do in order to make this scenario work.
+
+==== Configuration
+
+For each OAuth2 provider, we need to specify the +clientId+ and +clientSecret+ code that we received from the provider. This needs to be done in the +octopusConfig.properties+ file.
+
+----
+OAuth2.clientId=??????????.apps.googleusercontent.com
+OAuth2.clientSecret=???????????????
+----
+
+The OAuth2 modules contain generic implementations of the +AuthenticationInfoProvider+, so that the information retrieved from the provider is automatically transferred to the Octopus System. The token with the info is a +OAuith2UserToken+
+
+See section about multiple AuthenticationProviders so that you can for example limit the access to your application to employees of your company.
+
+// TODO Start move
+Of course, you can do additional things here and also limit who can access your application.
+
+In the case where you have build an application which should only be used by the employees of your company (which are using for example Google for work and thus have all a Google account) you can verify the email domain of the logged in user to check if the authenticated user belongs to your company (OAuth2User.getEmail() ).
+In the case the user isn't allowed access to your app, you can just return _null_ as the result of the getAuthenticationInfo() method.
+// end move
+
+==== Additional configuration
+
+There are additional configuration options possible.
+
+For example, in the case where you use the Provider not only for the authentication but also want to use additional services of the provider (like retrieving the number of repositories of the user from GitHub, the connections on Google+ or LinkedIn, etc...) you need to specify additional scopes during the authentication so that the end user is aware of what your application will do when they authorize.
+
+The OAuth2 scope defines the type of information your application will able to read from the provider when to end user approves it. And those scope names are specific for each provider and thus can't be standardized with Octopus or any other framework.
+
+You are able to specify those scopes which needs to be added to the default one(s) (which Octopus already defines to be able to read basic information like email address and name of the user) in the +octopusConfiguration.proeprties+ file.
+
+For example, the next snippet shows the config to be able to read the Google+ information for the circles of the user.
+
+----
+OAuth2.scopes=https://www.googleapis.com/auth/plus.circles.read
+----
+
+The Octopus module has additional configuration properties and possibilities.
+
+Since the Octopus SSO Server artifact can be used to create your own implementation of a compliant OAuth2/OpenIdConnect server, you need to specify the URL where the server is located which you want to use for authentication/Authoriazation. This is achieved with the _octopus.server_ configuration parameter.
+
+Within the Octopus Server, the developers have also defined the root for the JAX-RS endpoint containing the User endpoint. That value needs to be specified by the parameter _octopus.data.endpoint.root_.
+
+The Octopus server by default returns only the username and email address of the logged in user. There is a special scope supported, called _userinfo_, which returns all the information specified by the developers within the userInfo map when they created the AuthenticationInfoBuilder. You can specify that the information must be returned by defining the _OAuth2.scopes_ parameter in the configuration with the value _userinfo_.
+
+==== Force account selection with Google
+
+Google OAuth2 provider has the option to shown a selection screen which allows the user to select the Google account (s)he want to use for this login instead of choosing the already logged on user (SSO feature)
+
+This selection can be forced to be shown always by setting the parameter
+
+----
+OAuth2.account.selection=true
+----
+
+In this case, the Google selection screen is always shown, even if the user has only 1 account or is already logged in into his Google account.
+
+The other options is that we allow the users individually to decide if they want this selection screen or not.
+
+The parameter must then be set to false, and with the help of the url +/usingMultipleAccounts+ URL with the parameter +value=true+ (s)he can indicate the screen should be shown. The next time Octopus calls the Google OAuth2 provider, an additional parameter is sent to indicate that Google needs to show the account selection screen. Also when the user is only logged in with one account or even has only one account.
+
+You can disable this option again by calling the servlet with a +value=false+ which makes sure the cookie is removed.
+
+The developer can customize the screen which is shown when the user called the +/usingMultipleAccounts+ URL by implementing the +MultipleAccountContent+ interface and annotating it with a CDI scope (preferably ApplicationScoped).
+
+==== Using multiple providers
+
+You can use multiple OAuth2 providers and let the user select the one (s)he want to use for the authentication of your application.
+
+The first step is add the different modules to your application as dependency. Octopus identifies that there are multiple providers on the classpath and when the end users want to access a protected resource, Octopus shows the page identified in the configuration parameter +OAuth2.provider.selectionPage+ so that the end user can make the selection of the provider (s)he wants to use.
+
+This selection page must be provided by the application developer and all the available providers can be retrieved from +defaultOauth2ServletInfo.providers+ EL Expression. _defaultOauth2ServletInfo_ is a CDI bean defined by Octopus which helps the application developer to deal with multiple OAuth2 providers. Below is an example of a simple selection screen.
+
+[source, xhtml]
+----
+    <ui:repeat value="#{defaultOauth2ServletInfo.providers}" var="_provider">
+        <p:commandLink actionListener="#{defaultOauth2ServletInfo.authenticateWith(_provider)}" value="#{_provider}"/>
+        <br/>
+    </ui:repeat>
+----
+
+The +getProviders()+ method returns a List of String's of the OAuth2 providers found on the classpath. The names corresponds to the one listed here ??? The application developer is of course free how the selection screen is structured and what information is shown to help the user to select the provider of his choice. The only requirement he has, is that the method +authenticateWith(String)+ is called so that the correct provider selection can be stored and the authentication flows proceeds correctly to the initially requested page.
+
+The last thing we need to do is to specify the correct _clientId_ and _secretId_ for the different providers (within the _octopusConfig.properties_ file). In the case you need to specify multiple values, you need to use the name profix to the OAuth2 configuration parameter so that Octopus can use the correct one depending on the provider selected by the end user.
+
+----
+# Google
+Google.OAuth2.clientId=25208181163-ekbphgh4s9k3f78g3j3lfulqcd9p7a1l.apps.googleusercontent.com
+Google.OAuth2.clientSecret=yGKzScuRFm90pR0pNWOedDRx
+
+# GitHub
+Github.OAuth2.clientId=271f8e3eacb955487e92
+Github.OAuth2.clientSecret=26a3030a10e742e4edf4a0496ee707fdfd18cf4b
+
+# Linkedin
+Linkedin.OAuth2.clientId=771a48ph3b53xt
+Linkedin.OAuth2.clientSecret=CM5ekYbsZR6y0smD
+----
+
+The above snippet comes from the multiple OAuth2 provider demo application where we specify the _clientId_ and _secretId_ fror the 3 providers.
+
+
+==== Configuration of the OAuth2 provider
+
+This section contains briefly how the OAuth2 authentication on the provider side can be set up. However, this information and requested data can change as it is not under the control of Octopus.
+
+===== Google
+
+. Go the the https://console.developers.google.com/[developers console] of Google.
+. Select the _Create new project_ option from the drop down of project on the menu bar on top of the screen.
+. Specify a name (only used to identify the project in the console later on) and click the _Create_ button.
+. _Select the API manager_ menu option on the side bar (can be hidden, click on the 'Hamburger' icon - The icon with the 3 horizontal lines)
+. Add and enable the _Google+ API_. Other API's can be removed for Octopus.
+. Go to the _Credentials_ menu and select the _OAuth Client ID_ as new Credential.
+. Configure the consent screen (most things are optional).
+. Select _Web Application_ as application type.
+. Specify the redirect URI  <hostname>/<root>/oauth2callback and <hostname> as _Authorized JavaScript origins_
+. Note down the client-id and client secret values.
+
+===== Github
+
+. Go the Developer application page of https://github.com/settings/applications[Githib] by selecting the tab _Developer applciations_.
+. Click on the _Register new application_ button.
+. Define the application name, Authorization callback URL (as <hostname>/<root>/oauth2callback) and the other information
+. Click on the _register application_ button and note down the client-id and client secret values.
+
+===== LinkedIn
+
+. Go to the https://www.linkedin.com/developer/apps[application overview page] of your linked in account.
+. Click on the _Create application_ button.
+. You have to fill in quite some fields. The _Application use_ drop down can be _Other_ if you just use it jsut for the authentication step.
+. We need the scopes _r_emailaddress_ and _r_basicprofile_
+. Note down the client-id and client secret values.
+
+
+
+

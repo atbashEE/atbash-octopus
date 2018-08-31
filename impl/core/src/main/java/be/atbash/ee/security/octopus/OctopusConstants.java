@@ -36,6 +36,14 @@ public final class OctopusConstants {
     public static final String UPSTREAM_TOKEN = "upstreamToken";
     public static final String EXTERNAL_SESSION_ID = "externalSession";
 
+    //public static final String MOBILE_NUMBER = "mobileNumber";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    //public static final String FULL_NAME = "fullName";
+
+    public static final String DOMAIN = "domain";
+    public static final String OAUTH2_TOKEN = "OAuth2token";
+
     /**
      * Attribute name on Servlet request indicating message related to violation of permission,  role, ... . Set by the filters and read by the {@code AccessDeniedHandler}.
      */

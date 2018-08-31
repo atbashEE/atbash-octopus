@@ -40,7 +40,7 @@ public class KeycloakUserToken extends AbstractOctopusAuthenticationToken implem
 
     private String id;
 
-    private String localId;
+    private String localId; // FIXME Not used?
 
     private String lastName;
 

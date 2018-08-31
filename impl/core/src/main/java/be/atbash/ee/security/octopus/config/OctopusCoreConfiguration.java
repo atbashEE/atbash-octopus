@@ -32,7 +32,6 @@ import be.atbash.util.StringUtils;
 import be.atbash.util.reflection.CDICheck;
 import be.atbash.util.reflection.ClassUtils;
 import be.atbash.util.reflection.UnknownClassException;
-import org.apache.deltaspike.core.api.config.ConfigResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.annotation.Annotation;
@@ -85,7 +84,7 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         if (!StringUtils.isEmpty(hashAlgorithmName)) {
 
             int defaultValue = HashFactory.getInstance().getDefaultHashIterations(hashAlgorithmName);
-            String value = ConfigResolver.getPropertyValue("hashIterations", String.valueOf(defaultValue));
+            String value = getOptionalValue("hashIterations", String.valueOf(defaultValue), String.class);
 
             try {
                 result = Integer.parseInt(value);

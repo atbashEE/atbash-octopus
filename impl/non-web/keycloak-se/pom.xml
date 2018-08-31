@@ -95,7 +95,7 @@
             <!-- we use this to simulate a valid response from keycloak -->
             <groupId>be.atbash.json</groupId>
             <artifactId>octopus-jwt-support</artifactId>
-            <version>0.9.0-SNAPSHOT</version>
+            <version>${jwt-support.version}</version>
             <scope>test</scope>
         </dependency>
 

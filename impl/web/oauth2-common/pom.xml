@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-web</artifactId>
+        <version>0.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>octopus-oauth2-common</artifactId>
+    <version>0.5-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- EE API's-->
+
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.2.12</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
+        <dependency>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- oAuth2 -->
+        <dependency>
+            <groupId>com.github.scribejava</groupId>
+            <artifactId>scribejava-apis</artifactId>
+            <version>5.5.0</version>
+        </dependency>
+
+        <!-- Octopus -->
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-jsf7</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+
+        <!-- other -->
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <version>${deltaspike.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-oauth2-se</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+
+        <!-- test dependencies-->
+
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config-test</artifactId>
+            <version>${atbash-config.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-jsf</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-cdi</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.org.lidalia</groupId>
+            <artifactId>slf4j-test</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+    </build>
+</project>

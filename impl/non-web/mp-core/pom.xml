@@ -67,7 +67,7 @@
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-cdi</artifactId>
-            <version>${atbash-utils.version.prev}</version>
+            <version>${atbash-utils.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>

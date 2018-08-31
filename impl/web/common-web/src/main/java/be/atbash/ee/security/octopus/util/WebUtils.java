@@ -539,6 +539,7 @@ public class WebUtils {
     }
 
     public static SavedRequest getAndClearSavedRequest(ServletRequest request) {
+        // TODO Improve (ServletRequest not needed and WebSubject passed to getSavedRequest)
         SavedRequest savedRequest = getSavedRequest(request);
 
         if (savedRequest != null) {
@@ -549,6 +550,7 @@ public class WebUtils {
         return savedRequest;
     }
 
+    // TODO can be private and WebSubject as parameter.
     public static SavedRequest getSavedRequest(ServletRequest request) {
         SavedRequest savedRequest = null;
         WebSubject subject = SecurityUtils.getSubject();

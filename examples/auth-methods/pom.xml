@@ -36,6 +36,7 @@
 
     <modules>
         <module>hashed</module>
+        <module>oauth2</module>
     </modules>
 
     <build>

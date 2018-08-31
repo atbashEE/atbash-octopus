@@ -61,3 +61,7 @@ The hash is calculated by the hash method:
 ----
     String hashedPassword = saltHashingUtil.hash(password, salt);
 ----
+
+=== OAuth2
+
+include::oauth2.adi[]

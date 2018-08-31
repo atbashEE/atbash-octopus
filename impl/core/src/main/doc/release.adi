@@ -1,3 +1,7 @@
+=== 0.5
+
+. Integration with OAuth2 providers (Google)
+
 === 0.4
 
 . Integration with Keycloak (Client Credentials for Java SE, AuthorizationCode grant for Web, AccessToken for JAX-RS)

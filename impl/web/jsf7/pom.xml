@@ -33,7 +33,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jerry.version>0.9.0.2-SNAPSHOT</jerry.version>
+        <jerry.version>0.9.0.3-SNAPSHOT</jerry.version>
     </properties>
     <dependencies>
         <!-- EE API's-->
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-cdi</artifactId>
-            <version>${atbash-utils.version.prev}</version>
+            <version>${atbash-utils.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
