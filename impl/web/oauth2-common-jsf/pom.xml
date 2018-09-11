@@ -28,7 +28,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>octopus-oauth2-common</artifactId>
+    <artifactId>octopus-oauth2-common-jsf</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
