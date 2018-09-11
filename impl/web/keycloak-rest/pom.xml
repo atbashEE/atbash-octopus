@@ -28,7 +28,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Support for MicroProfile JWT-Auth</name>
+    <name>Support for Keycloack token Authorization header</name>
 
     <artifactId>octopus-keycloak-rest</artifactId>
     <version>0.5-SNAPSHOT</version>

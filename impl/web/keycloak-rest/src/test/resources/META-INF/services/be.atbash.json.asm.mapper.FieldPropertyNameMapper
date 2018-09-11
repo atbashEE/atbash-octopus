@@ -1,1 +1,1 @@
-be.atbash.ee.security.octopus.mp.filter.authc.JacksonFieldPropertyNameMapper
+be.atbash.ee.security.octopus.keycloak.filter.authc.JacksonFieldPropertyNameMapper

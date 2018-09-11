@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.mp.filter.authc;
+package be.atbash.ee.security.octopus.keycloak.filter.authc;
 
 import be.atbash.ee.security.octopus.authc.CredentialsException;
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
@@ -21,6 +21,7 @@ import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
+import be.atbash.ee.security.octopus.keycloak.filter.authc.KeycloakAuthenticatingFilter;
 import be.atbash.ee.security.octopus.keys.AtbashKey;
 import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
 import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;

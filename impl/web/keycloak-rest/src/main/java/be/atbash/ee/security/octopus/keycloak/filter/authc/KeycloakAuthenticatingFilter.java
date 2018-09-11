@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.mp.filter.authc;
+package be.atbash.ee.security.octopus.keycloak.filter.authc;
 
 import be.atbash.ee.security.octopus.authc.CredentialsException;
 import be.atbash.ee.security.octopus.filter.RestAuthenticatingFilter;

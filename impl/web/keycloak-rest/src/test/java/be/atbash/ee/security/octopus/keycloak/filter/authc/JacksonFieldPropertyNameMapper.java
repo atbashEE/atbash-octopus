@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.mp.filter.authc;
+package be.atbash.ee.security.octopus.keycloak.filter.authc;
 
 import be.atbash.json.asm.Accessor;
 import be.atbash.json.asm.mapper.FieldPropertyNameMapper;
