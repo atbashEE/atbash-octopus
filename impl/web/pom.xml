@@ -48,6 +48,7 @@
         <module>mp</module>
         <module>keycloak</module>
         <module>keycloak-rest</module>
+        <module>oauth2-common</module>
         <module>oauth2-common-jsf</module>
         <module>oauth2-google</module>
     </modules>
