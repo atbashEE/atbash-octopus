@@ -28,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -49,7 +50,7 @@ public class MPUserFilter extends RestAuthenticatingFilter {
         setName("mpUser"); // TODO Rename to authcMP or just mp (and then authcBasic becomes basic?
     }
 
-    protected AuthenticationToken createToken(String token) {
+    protected AuthenticationToken createToken(HttpServletRequest httpServletRequest, String token) {
 
         JWTData<MPJWTToken> data = jwtDecoder.decode(token, MPJWTToken.class, keySelector, verifier);
         return new MPToken(data.getData());

@@ -13,21 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.oauth2.metadata;
+package be.atbash.ee.security.octopus.oauth2.config;
 
-import be.atbash.ee.security.octopus.oauth2.servlet.OAuth2CallbackProcessor;
+public interface UserProviderSelection {
 
-/**
- *
- */
-public interface OAuth2ProviderMetaData extends OAuth2Provider {
-
-    String getServletPath();
-
-    // FIXME
-    //OAuth2InfoProvider getInfoProvider();
-
-    Class<? extends OAuth2CallbackProcessor> getCallbackProcessor();
-
-    //Class<? extends AbstractOAuth2AuthcFilter> getOAuth2AuthcFilter();
+    String getSelection();
 }

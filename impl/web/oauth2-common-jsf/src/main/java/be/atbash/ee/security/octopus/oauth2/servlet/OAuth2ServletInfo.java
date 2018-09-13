@@ -15,7 +15,9 @@
  */
 package be.atbash.ee.security.octopus.oauth2.servlet;
 
-import be.atbash.ee.security.octopus.oauth2.config.OAuth2Configuration;
+import be.atbash.ee.security.octopus.oauth2.config.UserProviderSelection;
+import be.atbash.ee.security.octopus.oauth2.config.jsf.OAuth2JSFConfiguration;
+import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2Provider;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaData;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaDataControl;
 import be.atbash.ee.security.octopus.util.SavedRequest;
@@ -45,13 +47,13 @@ import java.util.List;
 @SessionScoped
 @Named
 @PublicAPI
-public class OAuth2ServletInfo implements Serializable {
+public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
 
     @Inject
     private OAuth2ProviderMetaDataControl oAuth2ProviderMetaDataControl;
 
     @Inject
-    private OAuth2Configuration oAuth2Configuration;
+    private OAuth2JSFConfiguration oAuth2Configuration;
 
     private String userProviderSelection;
 
@@ -64,7 +66,7 @@ public class OAuth2ServletInfo implements Serializable {
         providerInfos = oAuth2ProviderMetaDataControl.getProviderInfos();
 
         providerSelection = new ArrayList<>();
-        for (OAuth2ProviderMetaData providerInfo : providerInfos) {
+        for (OAuth2Provider providerInfo : providerInfos) {
             providerSelection.add(new SelectItem(providerInfo.getName(), providerInfo.getName()));
         }
 
@@ -112,7 +114,7 @@ public class OAuth2ServletInfo implements Serializable {
 
     private void verifyUserProviderSelection(String userProviderSelection) {
         boolean found = false;
-        for (OAuth2ProviderMetaData providerInfo : providerInfos) {
+        for (OAuth2Provider providerInfo : providerInfos) {
             if (providerInfo.getName().equals(userProviderSelection)) {
                 found = true;
             }
@@ -126,7 +128,8 @@ public class OAuth2ServletInfo implements Serializable {
         return externalContext.getRequestContextPath();
     }
 
-    public String getUserProviderSelection() {
+    @Override
+    public String getSelection() {
         return userProviderSelection;
     }
 
@@ -145,7 +148,7 @@ public class OAuth2ServletInfo implements Serializable {
     private String getProviderNames() {
         // TODO Duplicate with OAuth2ProviderMetaDataControl
         StringBuilder result = new StringBuilder();
-        for (OAuth2ProviderMetaData providerInfo : providerInfos) {
+        for (OAuth2Provider providerInfo : providerInfos) {
             if (result.length() > 1) {
                 result.append(" - ");
             }

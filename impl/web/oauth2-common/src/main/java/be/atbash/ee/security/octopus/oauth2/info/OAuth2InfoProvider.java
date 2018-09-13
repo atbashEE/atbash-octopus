@@ -21,7 +21,7 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Hiding the retrieving user info from Oauth2 provider.
  */
 public interface OAuth2InfoProvider {
 

@@ -223,7 +223,7 @@ public class RestAuthenticatingFilterTest {
     private static class DemoRestFilter extends RestAuthenticatingFilter {
 
         @Override
-        protected AuthenticationToken createToken(String token) {
+        protected AuthenticationToken createToken(HttpServletRequest httpServletRequest, String token) {
             return new DemoToken(token);
         }
 

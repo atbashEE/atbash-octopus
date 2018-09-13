@@ -21,7 +21,6 @@ import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
-import be.atbash.ee.security.octopus.keycloak.filter.authc.KeycloakAuthenticatingFilter;
 import be.atbash.ee.security.octopus.keys.AtbashKey;
 import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
 import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
@@ -93,7 +92,7 @@ public class KeycloakAuthenticatingFilterTest {
         when(httpClientMock.execute(any(HttpGet.class))).thenReturn(httpResponse);
 
         String token = createAccessToken();
-        AuthenticationToken authenticationToken = filter.createToken(token);
+        AuthenticationToken authenticationToken = filter.createToken(null, token);
 
         assertThat(authenticationToken).isInstanceOf(KeycloakUserToken.class);
 
@@ -122,7 +121,7 @@ public class KeycloakAuthenticatingFilterTest {
         when(httpClientMock.execute(any(HttpGet.class))).thenReturn(httpResponse);
 
         try {
-            filter.createToken("doesn't matter here in this test");
+            filter.createToken(null, "doesn't matter here in this test");
         } finally {
 
             verify(httpClientMock).execute(any(HttpGet.class));
@@ -137,7 +136,7 @@ public class KeycloakAuthenticatingFilterTest {
         when(httpClientMock.execute(any(HttpGet.class))).thenThrow(new IOException("Server not found"));
 
         try {
-            filter.createToken("doesn't matter here in this test");
+            filter.createToken(null, "doesn't matter here in this test");
         } finally {
 
             verify(httpClientMock).execute(any(HttpGet.class));

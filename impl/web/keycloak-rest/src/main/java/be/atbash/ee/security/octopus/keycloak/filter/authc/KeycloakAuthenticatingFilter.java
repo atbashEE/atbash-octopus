@@ -38,6 +38,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
@@ -61,7 +62,7 @@ public class KeycloakAuthenticatingFilter extends RestAuthenticatingFilter {
     }
 
     @Override
-    protected AuthenticationToken createToken(String token) {
+    protected AuthenticationToken createToken(HttpServletRequest servletRequest, String token) {
 
         String url = deployment.getAccountUrl().replace("account", "protocol/openid-connect/userinfo");
         // localhost:8080/auth/realms/demo/protocol/openid-connect/userinfo

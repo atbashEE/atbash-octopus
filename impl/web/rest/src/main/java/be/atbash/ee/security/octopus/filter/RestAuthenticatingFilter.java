@@ -18,12 +18,15 @@ package be.atbash.ee.security.octopus.filter;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
 import be.atbash.ee.security.octopus.authc.InvalidCredentialsException;
+import be.atbash.ee.security.octopus.fake.LoginAuthenticationTokenProvider;
 import be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter;
 import be.atbash.ee.security.octopus.filter.mgt.ErrorInfo;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.ExceptionUtil;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -38,6 +41,13 @@ import static be.atbash.ee.security.octopus.WebConstants.BEARER;
  *
  */
 public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
+
+    private LoginAuthenticationTokenProvider loginAuthenticationTokenProvider;
+
+    @PostConstruct
+    public void init() {
+        loginAuthenticationTokenProvider = CDIUtils.retrieveOptionalInstance(LoginAuthenticationTokenProvider.class);
+    }
 
     /**
      * Overrides the default behavior to show and swallow the exception if the exception is
@@ -113,8 +123,12 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
             return new IncorrectDataToken("Authorization header value must start with Bearer");
         }
 
-        return createToken(parts[1]);
+        return createToken((HttpServletRequest) request, parts[1]);
     }
 
-    protected abstract AuthenticationToken createToken(String token);
+    protected abstract AuthenticationToken createToken(HttpServletRequest httpServletRequest, String token);
+
+    protected LoginAuthenticationTokenProvider getLoginAuthenticationTokenProvider() {
+        return loginAuthenticationTokenProvider;
+    }
 }

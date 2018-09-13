@@ -56,7 +56,7 @@ public class OAuth2CallbackServlet extends HttpServlet {
                 processor = CDIUtils.retrieveInstance(OAuth2CallbackProcessor.class);
 
             } else {
-                String userProviderSelection = oauth2ServletInfo.getUserProviderSelection();
+                String userProviderSelection = oauth2ServletInfo.getSelection();
                 Class<? extends OAuth2CallbackProcessor> callbackProcessor = oAuth2ProviderMetaDataControl.getProviderMetaData(userProviderSelection).getCallbackProcessor();
                 processor = CDIUtils.retrieveInstance(callbackProcessor);
             }

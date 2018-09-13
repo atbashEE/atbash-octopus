@@ -15,19 +15,11 @@
  */
 package be.atbash.ee.security.octopus.oauth2.metadata;
 
-import be.atbash.ee.security.octopus.oauth2.servlet.OAuth2CallbackProcessor;
-
 /**
  *
  */
-public interface OAuth2ProviderMetaData extends OAuth2Provider {
+public interface OAuth2Provider {
 
-    String getServletPath();
+    String getName();
 
-    // FIXME
-    //OAuth2InfoProvider getInfoProvider();
-
-    Class<? extends OAuth2CallbackProcessor> getCallbackProcessor();
-
-    //Class<? extends AbstractOAuth2AuthcFilter> getOAuth2AuthcFilter();
 }

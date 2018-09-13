@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.oauth2.servlet;
 
 import be.atbash.ee.security.octopus.context.ThreadContext;
-import be.atbash.ee.security.octopus.oauth2.config.OAuth2Configuration;
+import be.atbash.ee.security.octopus.oauth2.config.jsf.OAuth2JSFConfiguration;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaData;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaDataControl;
 import be.atbash.ee.security.octopus.session.Session;
@@ -50,8 +50,7 @@ public class OAuth2ServletInfoTest {
     private OAuth2ProviderMetaDataControl oauth2ProviderMetaDataControlMock;
 
     @Mock
-    private OAuth2Configuration oAuth2ConfigurationMock;
-
+    private OAuth2JSFConfiguration oAuth2ConfigurationMock;
 
     @InjectMocks
     private OAuth2ServletInfo servletInfo;

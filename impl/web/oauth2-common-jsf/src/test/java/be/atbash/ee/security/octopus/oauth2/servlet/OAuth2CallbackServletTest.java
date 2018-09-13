@@ -100,7 +100,7 @@ public class OAuth2CallbackServletTest {
         providers.add("dummy2");
         when(oauth2ServletInfoMock.getProviders()).thenReturn(providers);
 
-        when(oauth2ServletInfoMock.getUserProviderSelection()).thenReturn("dummy2");
+        when(oauth2ServletInfoMock.getSelection()).thenReturn("dummy2");
         OAuth2ProviderMetaData metadata = new OAuth2ProviderMetaData() {
             @Override
             public String getServletPath() {
