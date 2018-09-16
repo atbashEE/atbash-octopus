@@ -4,11 +4,12 @@ There are basically 3 types of filters within the system.
 
 ==== Authenticating filters
 
-These filters extract information from the request and determine the principal based on that information. Examples are
+These filters extract information from the request and determine the principal based on that information. Octopus defined ones are
 
 . authcBasic -> BASIC authentication
 . mpUser -> MicroProfile JWT auth token
 . authcKeycloak -> AccessToken of Keycloak
+. authcGoogle -> AccessToken of Google.
 
 When such a filter is available within the chain and the request doesn't define the required and correct information, an response with status 401 is returned.
 
@@ -25,6 +26,7 @@ The predefined filters defined within Octopus are
 
 . user -> redirect to /login.xhtml page or URL defined within config parameter _loginPage_
 . userKeycloak -> redirect to Keycloak Login page (Keycloak integration)
+. userOAuth2 -> Redirect to OAuth2 provider login page (provider defined by configuration)
 
 ==== Authorization filters
 

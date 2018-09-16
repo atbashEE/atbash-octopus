@@ -170,7 +170,7 @@ Determines the Session Hijack Protection level. It uses the IP Address and User-
 
 The default level _ON_, checks both properties, _PARTIAL_ only the User-Agent header value and _OFF_ disables the protection.
 
-=== OAuth2 configuration
+=== OAuth2 configuration (common)
 
 ==== OAuth2.clientId
 
@@ -195,6 +195,8 @@ default : *(none)*
 The additional scopes you want to use when the authentication is performed with the OAuth2 Provider.
 
 As alternative, or when multiple providers are used, the name of the OAuth2 provider can be used as prefix like _google.OAuth2.clientId_
+
+=== OAuth2 configuration (JSF)
 
 ==== OAuth2.provider.selectionPage
 

@@ -37,56 +37,9 @@ import javax.inject.Inject;
 @Reviewed
 public class OAuth2JSFConfiguration extends AbstractConfiguration implements ModuleConfig {
 
-    @Inject
-    private OAuth2ProviderMetaDataControl oAuth2ProviderMetaDataControl;
-
-
-    private String defineConfigValue(String configParameter) {
-        StringBuilder result = new StringBuilder();
-        if (oAuth2ProviderMetaDataControl.getProviderInfos().size() < 2) {
-            String configValue = getOptionalValue(configParameter, String.class);
-            if (StringUtils.isEmpty(configValue)) {
-                configValue = getConfigValueProviderSpecific(configParameter, oAuth2ProviderMetaDataControl.getSingleProviderMetaData().getName());
-            }
-            if (configValue != null) {
-                result.append(configValue);
-            }
-        } else {
-            String userProviderSelection = getUserProviderSelection();
-            if (StringUtils.isEmpty(userProviderSelection)) {
-                for (OAuth2Provider oAuth2ProviderMetaData : oAuth2ProviderMetaDataControl.getProviderInfos()) {
-                    result.append(oAuth2ProviderMetaData.getName()).append(" : ");
-                    result.append(getConfigValueProviderSpecific(configParameter, oAuth2ProviderMetaData.getName()));
-                    result.append("\n");
-                }
-            } else {
-                result.append(getConfigValueProviderSpecific(configParameter, userProviderSelection));
-            }
-        }
-        return result.toString();
-    }
-
-    private String getConfigValueProviderSpecific(String configParameter, String providerName) {
-        return getOptionalValue(providerName + '.' + configParameter, String.class);
-    }
-
     @ConfigEntry
     public String getOAuth2ProviderSelectionPage() {
         return getOptionalValue("OAuth2.provider.selectionPage", "/login.xhtml", String.class);
-    }
-
-    private String getUserProviderSelection() {
-        try {
-            // We can't just inject this as it will fail
-            // TODO And also because we have a circular dependency (should try to untangle them?)
-            OAuth2ServletInfo oauth2ServletInfo = CDIUtils.retrieveInstance(OAuth2ServletInfo.class);
-            return oauth2ServletInfo.getSelection();
-        } catch (Exception e) {
-            // At startup logging, the session scope is not active yet and thus we get an exception here.
-            // return null to indicate that the user hasn't made a choice yet.
-            return null;
-
-        }
     }
 
     @ConfigEntry

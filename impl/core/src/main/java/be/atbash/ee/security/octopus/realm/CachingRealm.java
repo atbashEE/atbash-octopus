@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AbstractAuthenticator;
 import be.atbash.ee.security.octopus.authc.LogoutAware;
 import be.atbash.ee.security.octopus.authz.AuthorizerDataProvider;
+import be.atbash.ee.security.octopus.cache.Cache;
 import be.atbash.ee.security.octopus.cache.CacheManager;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
@@ -88,7 +89,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
         }
     }
 
-    protected CacheManager getCacheManager() {
+    CacheManager getCacheManager() {
         return cacheManager;
     }
 
@@ -161,6 +162,25 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      * @param principals principals the principals of the account for which to clear any cached data.
      */
     protected void doClearCache(PrincipalCollection principals) {
+        // FIXME
     }
 
+    public <T> Cache<String, T> retrieveCache(CacheName cacheName) {
+        return cacheManager.getCache(cacheName.getName());
+    }
+
+    public enum CacheName {
+        OAUTH2_TOKEN("OAuth2.AuthenticationToken");
+
+        private String name;
+
+        CacheName(String name) {
+
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

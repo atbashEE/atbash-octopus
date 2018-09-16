@@ -22,32 +22,43 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>be.atbash.ee.security.examples</groupId>
-        <artifactId>auth-methods</artifactId>
+        <artifactId>rest</artifactId>
         <version>0.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 
-    <artifactId>oauth2</artifactId>
+    <artifactId>google</artifactId>
     <packaging>war</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
         <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>${primefaces.example.version}</version>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- octopus-->
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-oauth2-google-jsf</artifactId>
+            <artifactId>octopus-oauth2-google-rest</artifactId>
             <version>${project.parent.version}</version>
 
         </dependency>
@@ -59,16 +70,10 @@
             <version>${atbash-config.version}</version>
         </dependency>
 
+        <!-- deltaspike -->
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
-            <version>${deltaspike.example.version}</version>
-        </dependency>
-
-        <!-- for the correct translation of the error message -->
-        <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
-            <artifactId>deltaspike-jsf-module-impl</artifactId>
             <version>${deltaspike.example.version}</version>
         </dependency>
 
@@ -78,10 +83,11 @@
             <version>${deltaspike.example.version}</version>
         </dependency>
 
+
     </dependencies>
 
     <build>
-        <finalName>oauth2</finalName>
+        <finalName>google-rest</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
