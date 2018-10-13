@@ -15,12 +15,12 @@
  */
 package be.atbash.ee.security.octopus.interceptor.cdi;
 
-import be.atbash.config.util.ResourceUtils;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProvider;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.interceptor.OctopusInterceptorBinding;
 import be.atbash.util.exception.AtbashUnexpectedException;
+import be.atbash.util.resource.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,15 +97,18 @@ public class InterdynExtension implements Extension {
 
             classPatterns = new ArrayList<>();
             try {
-                InputStream inputStream = ResourceUtils.getInputStreamForPath(configFile);
-                // inputStream is never null, IOException is thrown then by above method.
+                InputStream inputStream = ResourceUtil.getInstance().getStream(configFile);
+                if (inputStream != null) {
 
-                Scanner scanner = new Scanner(inputStream);
-                while (scanner.hasNextLine()) {
-                    String configLine = scanner.nextLine();
-                    classPatterns.add(configLine);
+                    Scanner scanner = new Scanner(inputStream);
+                    while (scanner.hasNextLine()) {
+                        String configLine = scanner.nextLine();
+                        classPatterns.add(configLine);
+                    }
+                    inputStream.close();
+                } else {
+                    logger.warn("Unable to read the contents from %s", configFile);
                 }
-                inputStream.close();
             } catch (IOException e) {
                 throw new AtbashUnexpectedException(e.getMessage());
             }

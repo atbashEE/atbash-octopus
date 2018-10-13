@@ -16,10 +16,10 @@
 package be.atbash.ee.security.octopus.authc;
 
 import be.atbash.ee.security.octopus.config.InfoProviderConfiguration;
-import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
 import be.atbash.ee.security.octopus.realm.RealmConfigurationException;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.order.ProviderComparator;
+import be.atbash.util.AnnotationUtil;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

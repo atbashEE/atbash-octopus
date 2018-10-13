@@ -175,43 +175,32 @@ public final class AnnotationUtil {
                 result.addMethodAnnotation(method.getAnnotation(annotationClass));
             }
         }
-        result.addClassAnnotation(getAnnotation(classType, PermitAll.class));
-        result.addClassAnnotation(getAnnotation(classType, RequiresAuthentication.class));
-        result.addClassAnnotation(getAnnotation(classType, RequiresGuest.class));
-        result.addClassAnnotation(getAnnotation(classType, RequiresUser.class));
-        result.addClassAnnotation(getAnnotation(classType, RequiresRoles.class));
-        result.addClassAnnotation(getAnnotation(classType, RequiresPermissions.class));
-        result.addClassAnnotation(getAnnotation(classType, CustomVoterCheck.class));
-        result.addClassAnnotation(getAnnotation(classType, SystemAccount.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, PermitAll.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, RequiresAuthentication.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, RequiresGuest.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, RequiresUser.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, RequiresRoles.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, RequiresPermissions.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, CustomVoterCheck.class));
+        result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, SystemAccount.class));
         if (config.getNamedPermissionCheckClass() != null) {
-            result.addClassAnnotation(getAnnotation(classType, config.getNamedPermissionCheckClass()));
+            result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, config.getNamedPermissionCheckClass()));
         }
         if (config.getNamedRoleCheckClass() != null) {
-            result.addClassAnnotation(getAnnotation(classType, config.getNamedRoleCheckClass()));
+            result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, config.getNamedRoleCheckClass()));
         }
         if (config.getCustomCheckClass() != null) {
-            result.addClassAnnotation(getAnnotation(classType, config.getCustomCheckClass()));
+            result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, config.getCustomCheckClass()));
         }
         for (AnnotationsToFind annotationsToFind : annotationsToFindList) {
             for (Class<? extends Annotation> annotationClass : annotationsToFind.getList()) {
-                result.addClassAnnotation(getAnnotation(classType, annotationClass));
+                result.addClassAnnotation(be.atbash.util.AnnotationUtil.getAnnotation(classType, annotationClass));
             }
         }
 
         return result;
     }
 
-    public static <A extends Annotation> A getAnnotation(Class<?> someClass, Class<A> someAnnotation) {
-        A result = null;
-        if (someClass.isAnnotationPresent(someAnnotation)) {
-            result = someClass.getAnnotation(someAnnotation);
-        } else {
-            if (someClass != Object.class) {
-                result = getAnnotation(someClass.getSuperclass(), someAnnotation);
-            }
-        }
-        return result;
-    }
 
     public static <A extends Annotation> boolean hasAnnotation(Set<?> annotations, Class<A> someAnnotation) {
         return getAnnotation(annotations, someAnnotation) != null;

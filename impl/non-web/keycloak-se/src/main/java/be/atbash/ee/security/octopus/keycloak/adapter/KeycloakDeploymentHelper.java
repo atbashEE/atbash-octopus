@@ -16,8 +16,8 @@
 package be.atbash.ee.security.octopus.keycloak.adapter;
 
 import be.atbash.config.exception.ConfigurationException;
-import be.atbash.config.util.ResourceUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
+import be.atbash.util.resource.ResourceUtil;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
 
@@ -35,10 +35,16 @@ public final class KeycloakDeploymentHelper {
 
     public static KeycloakDeployment loadDeploymentDescriptor(String path) {
 
-        InputStream inputStream = ResourceUtils.getInputStream(path);
-        if (inputStream == null) {
+        if (!ResourceUtil.getInstance().resourceExists(path)) {
             throw new ConfigurationException(String.format("unable to load keycloak deployment configuration from %s", path));
         }
+        InputStream inputStream;
+        try {
+            inputStream = ResourceUtil.getInstance().getStream(path);
+        } catch (IOException e) {
+            throw new AtbashUnexpectedException(e);
+        }
+
         KeycloakDeployment result = KeycloakDeploymentBuilder.build(inputStream);
 
         try {

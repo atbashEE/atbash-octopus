@@ -17,10 +17,11 @@ package be.atbash.ee.security.octopus.web.url;
 
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import be.atbash.ee.security.octopus.util.ResourceUtils;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
 import be.atbash.util.exception.AtbashUnexpectedException;
+import be.atbash.util.resource.ResourceUtil;
+import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -40,6 +41,12 @@ public class SecuredURLReader {
 
     @Inject
     private OctopusWebConfiguration octopusWebConfiguration;
+
+    @Inject
+    private ResourceUtil resourceUtil;
+
+    @Inject
+    private Logger logger;
 
     private Map<String, String> urlPatterns;
 
@@ -70,7 +77,7 @@ public class SecuredURLReader {
         Map<String, String> result = new LinkedHashMap<>();
         try {
 
-            InputStream inStream = ResourceUtils.getInputStream(servletContext, octopusWebConfiguration.getLocationSecuredURLProperties());
+            InputStream inStream = resourceUtil.getStream(octopusWebConfiguration.getLocationSecuredURLProperties(), servletContext);
             if (inStream != null) {
                 List<String> lines = readFile(inStream);
 
@@ -85,6 +92,9 @@ public class SecuredURLReader {
                         }
                     }
                 }
+                inStream.close();
+            } else {
+                logger.warn(String.format("Unable to read contents from %s", octopusWebConfiguration.getLocationSecuredURLProperties()));
             }
         } catch (IOException e) {
             throw new AtbashUnexpectedException(e);

@@ -18,14 +18,18 @@ package be.atbash.ee.security.octopus.web.url;
 import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.BeanManagerFake;
+import be.atbash.util.resource.ResourceUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
+import javax.servlet.ServletContext;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +37,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -47,10 +52,34 @@ public class SecuredURLReaderTest {
     @Mock
     private ProgrammaticURLProtectionProvider urlProviderMock;
 
+    @Mock
+    private ServletContext servletContextMock;
+
+    @Mock
+    private ResourceUtil resourceUtilMock;
+
+    @Mock
+    private Logger loggerMock;
+
     @InjectMocks
     private SecuredURLReader reader;
 
     private BeanManagerFake beanManagerFake;
+
+    private String correctFile = "#Comment\n" +
+            "url1=value1\n" +
+            "\n" +
+            " url2 = value2\n" +
+            "\n" +
+            " # This comment is also ok.\n" +
+            "\n" +
+            "url3 = value with = is supported";
+
+    private String wrongFile = "\n" +
+            "url1";
+
+    @Captor
+    private ArgumentCaptor<String> stringCaptor;
 
     @Before
     public void setup() {
@@ -63,37 +92,41 @@ public class SecuredURLReaderTest {
     }
 
     @Test
-    public void loadData_fileOnly() {
+    public void loadData_fileOnly() throws IOException {
         when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/correct.file");
+        when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(new ByteArrayInputStream(correctFile.getBytes()));
 
         beanManagerFake.endRegistration();
 
-        reader.loadData(null);
+        reader.loadData(servletContextMock);
 
         testURLValues(reader.getUrlPatterns(), "url1", "url2", "url3");
 
         assertThat(reader.getUrlPatterns().get("url3")).isEqualTo("value with = is supported");
 
+        Mockito.verifyNoMoreInteractions(loggerMock);
     }
 
     @Test
-    public void loadData_WrongEntry() {
+    public void loadData_WrongEntry() throws IOException {
         when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/wrong.file");
+        when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(new ByteArrayInputStream(wrongFile.getBytes()));
 
         beanManagerFake.endRegistration();
 
         try {
-            reader.loadData(null);
+            reader.loadData(servletContextMock);
             fail("File contains wrong entry and should throw Exception");
         } catch (ConfigurationException e) {
             assertThat(e.getMessage()).isEqualTo("Wrong line within classpath:be/atbash/ee/security/octopus/web/url/wrong.file file -> url1");
         }
-
+        Mockito.verifyNoMoreInteractions(loggerMock);
     }
 
     @Test
-    public void loadData_fileAndProgrammatic() {
+    public void loadData_fileAndProgrammatic() throws IOException {
         when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/correct.file");
+        when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(new ByteArrayInputStream(correctFile.getBytes()));
 
         LinkedHashMap<String, String> entries = new LinkedHashMap<>();
         entries.put("extra1", "extra value1");
@@ -102,10 +135,23 @@ public class SecuredURLReaderTest {
         beanManagerFake.registerBean(urlProviderMock, ProgrammaticURLProtectionProvider.class);
         beanManagerFake.endRegistration();
 
-        reader.loadData(null);
+        reader.loadData(servletContextMock);
 
         testURLValues(reader.getUrlPatterns(), "extra1", "extra2", "url1", "url2", "url3");
+        Mockito.verifyNoMoreInteractions(loggerMock);
+    }
 
+    @Test
+    public void loadData_unknownFile() throws IOException {
+        when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/unknown.file");
+        when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(null);
+
+        beanManagerFake.endRegistration();
+
+        reader.loadData(servletContextMock);
+
+        Mockito.verify(loggerMock).warn(stringCaptor.capture());
+        assertThat(stringCaptor.getValue()).isEqualTo("Unable to read contents from classpath:be/atbash/ee/security/octopus/web/url/unknown.file");
     }
 
     private void testURLValues(Map<String, String> urlPatterns, String... expectedURLs) {
