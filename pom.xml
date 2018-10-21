@@ -126,7 +126,6 @@
     <modules>
         <module>impl</module>
         <module>examples</module>
-        <module>utilities</module>
     </modules>
 
     <build>
