@@ -153,29 +153,7 @@
                 </executions>
             </plugin-->
 
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!--goal>generateStubs</goal>
-                            <goal>compile</goal>
-                            <goal>testGenerateStubs</goal-->
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>2.4.4</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
+
             <!-- Optional -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

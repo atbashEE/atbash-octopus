@@ -32,6 +32,9 @@ public final class PeriodUtil {
     }
 
     public static int defineSecondsInPeriod(String periodConfig) {
+        if (periodConfig == null) {
+            throw new ConfigurationException(String.format("Period configuration '%s' is not valid, see documentation", periodConfig));
+        }
         Matcher matcher = PERIOD_PATTERN.matcher(periodConfig);
         if (!matcher.matches()) {
             throw new ConfigurationException(String.format("Period configuration '%s' is not valid, see documentation", periodConfig));

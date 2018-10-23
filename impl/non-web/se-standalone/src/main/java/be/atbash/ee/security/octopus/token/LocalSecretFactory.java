@@ -35,7 +35,7 @@ public final class LocalSecretFactory {
     }
 
     /**
-     * Base64 encoded byte array generated using PBKDF key derivation with passPhrase as key and the hardware info as salt.
+     * Byte array generated using PBKDF key derivation with passPhrase as key and the hardware info as salt.
      *
      * @param passPhrase
      * @return
