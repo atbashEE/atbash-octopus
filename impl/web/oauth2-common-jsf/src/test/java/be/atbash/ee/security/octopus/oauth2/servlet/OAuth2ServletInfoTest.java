@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.oauth2.servlet;
 
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.oauth2.config.ProviderSelection;
 import be.atbash.ee.security.octopus.oauth2.config.jsf.OAuth2JSFConfiguration;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaData;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaDataControl;
@@ -66,6 +67,9 @@ public class OAuth2ServletInfoTest {
 
     @Mock
     private HttpServletRequest requestMock;
+
+    @Mock
+    private ProviderSelection providerSelectionMock;
 
     @Captor
     private ArgumentCaptor<String> redirectStringCaptor;
@@ -159,6 +163,8 @@ public class OAuth2ServletInfoTest {
         // Check if a redirect to the original saved request is made
         verify(externalContextMock).redirect(redirectStringCaptor.capture());
         assertThat(redirectStringCaptor.getValue()).isEqualTo("/original");
+
+        verify(providerSelectionMock).setProviderSelection("test1");
     }
 
     @Test(expected = AtbashIllegalActionException.class)

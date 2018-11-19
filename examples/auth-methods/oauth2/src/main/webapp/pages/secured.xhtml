@@ -36,6 +36,8 @@
         <ui:repeat value="#{infoBean.keys}" var="_key">
             #{_key} : #{infoBean.getInfoValue(_key)} <br/>
         </ui:repeat>
+        <br/>
+        OAuth2 Token : #{infoBean.accessToken}
     </ui:define>
 </ui:composition>
 </body>

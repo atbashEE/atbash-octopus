@@ -16,6 +16,8 @@
 package be.atbash.ee.security.octopus.oauth2;
 
 
+import be.atbash.ee.security.octopus.SecurityUtils;
+import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
 import javax.annotation.PostConstruct;
@@ -49,4 +51,14 @@ public class InfoBean {
     public List<Serializable> getKeys() {
         return keys;
     }
+
+    public String getAccessToken() {
+        // Warning, AccessToken should never made public and transferred to browser. This is hust for demo
+        //purposes and to be able to test the Rest endpoint protection based on OAuth2 tokens.
+        Subject subject = SecurityUtils.getSubject();
+        OAuth2UserToken oauth2Token = subject.getPrincipals().oneByType(OAuth2UserToken.class);
+        return oauth2Token.getToken().getRawResponse();
+    }
+
+
 }

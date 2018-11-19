@@ -54,6 +54,10 @@
         <module>oauth2-google-common</module>
         <module>oauth2-google-jsf</module>
         <module>oauth2-google-rest</module>
+
+        <module>oauth2-github-common</module>
+        <module>oauth2-github-jsf</module>
+        <module>oauth2-github-rest</module>
     </modules>
 
 </project>

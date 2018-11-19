@@ -43,7 +43,7 @@ public class CreateOfflineTokenFile {
         permissions.add(new WildcardPermission("demo:offline:*"));
         token.setPermissions(permissions);
 
-        String offlineToken = GenerateOfflineToken.createFor(token, "HYa11xOv6_HOwPpxWYnGSLutwvEk3JgbFTa6YED2TyE");
+        String offlineToken = GenerateOfflineToken.createFor(token, "P5M8XrSnD-n19aG-6lKmqqgnaLLARoQzot7WU1jpxyU");
 
         String fileName = System.getProperty("user.home") + "/octopus.offline.token";
         Writer writer = new FileWriter(fileName);

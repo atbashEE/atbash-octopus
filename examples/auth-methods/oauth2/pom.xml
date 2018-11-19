@@ -52,6 +52,13 @@
 
         </dependency>
 
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-oauth2-github-jsf</artifactId>
+            <version>${project.parent.version}</version>
+
+        </dependency>
+
         <!-- config -->
         <dependency>
             <groupId>be.atbash.config</groupId>

@@ -28,8 +28,8 @@
     <h2>Authenticate</h2>
     <h:form id="login">
         Authentication providers supported :<br/>
-        <ui:repeat value="#{defaultOauth2ServletInfo.providers}" var="_provider">
-            <p:commandLink actionListener="#{defaultOauth2ServletInfo.authenticateWith(_provider)}"
+        <ui:repeat value="#{oauth2ServletInfo.providers}" var="_provider">
+            <p:commandLink actionListener="#{oauth2ServletInfo.authenticateWith(_provider)}"
                            value="#{_provider}"/>
             <br/>
         </ui:repeat>

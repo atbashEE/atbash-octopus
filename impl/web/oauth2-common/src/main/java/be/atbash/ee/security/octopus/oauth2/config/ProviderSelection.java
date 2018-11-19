@@ -24,7 +24,7 @@ public class ProviderSelection {
 
     // This will keep track of which OAuth2 provider will be used
     // From JSF -> It will be set by OAuth2ServletInfo
-    private ThreadLocal<String> providerSelection;
+    private ThreadLocal<String> providerSelection = new ThreadLocal<>();
 
     public String getProvider() {
         String result = providerSelection.get();
@@ -35,5 +35,9 @@ public class ProviderSelection {
             }
         }
         return result;
+    }
+
+    public void setProviderSelection(String selection) {
+        providerSelection.set(selection);
     }
 }

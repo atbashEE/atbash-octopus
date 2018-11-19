@@ -41,7 +41,9 @@ public abstract class OAuth2UserInfoProcessor {
                 if (info instanceof Serializable) {
                     oAuth2User.addUserInfo(key, (Serializable) info);
                 } else {
-                    oAuth2User.addUserInfo(key, info.toString());
+                    if (info != null) {
+                        oAuth2User.addUserInfo(key, info.toString());
+                    }
                 }
             }
         }

@@ -120,7 +120,7 @@ public class HashFactory {
 
     public int getDefaultHashIterations(String hashAlgorithmName) {
         if (algorithmNameHashTypes.get(hashAlgorithmName) == null) {
-            defineRealHashAlgorithmName(hashAlgorithmName);
+            hashAlgorithmName = defineRealHashAlgorithmName(hashAlgorithmName);
         }
         return algorithmNameHashTypes.get(hashAlgorithmName).defaultHashIterations;
     }

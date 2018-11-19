@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.oauth2.servlet;
 
+import be.atbash.ee.security.octopus.authc.event.LogoutEvent;
+import be.atbash.ee.security.octopus.oauth2.config.ProviderSelection;
 import be.atbash.ee.security.octopus.oauth2.config.UserProviderSelection;
 import be.atbash.ee.security.octopus.oauth2.config.jsf.OAuth2JSFConfiguration;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2Provider;
@@ -29,6 +31,7 @@ import be.atbash.util.exception.AtbashUnexpectedException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -45,7 +48,7 @@ import java.util.List;
  *
  */
 @SessionScoped
-@Named
+@Named("oauth2ServletInfo")
 @PublicAPI
 public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
 
@@ -55,9 +58,12 @@ public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
     @Inject
     private OAuth2JSFConfiguration oAuth2Configuration;
 
+    @Inject
+    private ProviderSelection providerSelection;
+
     private String userProviderSelection;
 
-    private List<SelectItem> providerSelection;
+    private List<SelectItem> providerSelectionItems;
     private List<OAuth2ProviderMetaData> providerInfos;
 
     @PostConstruct
@@ -65,9 +71,9 @@ public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
 
         providerInfos = oAuth2ProviderMetaDataControl.getProviderInfos();
 
-        providerSelection = new ArrayList<>();
+        providerSelectionItems = new ArrayList<>();
         for (OAuth2Provider providerInfo : providerInfos) {
-            providerSelection.add(new SelectItem(providerInfo.getName(), providerInfo.getName()));
+            providerSelectionItems.add(new SelectItem(providerInfo.getName(), providerInfo.getName()));
         }
 
     }
@@ -99,6 +105,7 @@ public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
     public void authenticateWith(String userProviderSelection) {
         verifyUserProviderSelection(userProviderSelection);
         this.userProviderSelection = userProviderSelection;
+        providerSelection.setProviderSelection(userProviderSelection);
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         SavedRequest savedRequest = WebUtils.getAndClearSavedRequest((ServletRequest) externalContext
                 .getRequest());
@@ -134,12 +141,12 @@ public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
     }
 
     public List<SelectItem> getProviderSelectItems() {
-        return providerSelection;
+        return providerSelectionItems;
     }
 
     public List<String> getProviders() {
         List<String> result = new ArrayList<>();
-        for (SelectItem selectItem : providerSelection) {
+        for (SelectItem selectItem : providerSelectionItems) {
             result.add(selectItem.getLabel());
         }
         return result;
@@ -157,4 +164,7 @@ public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
         return result.toString();
     }
 
+    public void onLogout(@Observes LogoutEvent logoutEvent) {
+        userProviderSelection = null;
+    }
 }

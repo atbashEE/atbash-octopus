@@ -86,8 +86,8 @@ public class MPJWTTokenBuilderTest {
         assertThat(token.getIat()).isEqualTo(now.getTime());
 
         assertThat(token.getExp()).isGreaterThan(token.getIat() + 2 * 60 * 1000);
-        // 0.1 sec skew
-        assertThat(token.getExp() - 100).isLessThan(token.getIat() + 2 * 60 * 1000);
+        // 0.2 sec skew
+        assertThat(token.getExp() - 200).isLessThan(token.getIat() + 2 * 60 * 1000);
 
         assertThat(token.getSub()).isEqualTo("Subject");
         assertThat(token.getUpn()).isEqualTo("Subject");
