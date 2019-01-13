@@ -28,9 +28,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Support for Github Accesstoken in Authorization Header</name>
+    <name>Support for LinkedIn Accesstoken in Authorization Header</name>
 
-    <artifactId>octopus-oauth2-github-rest</artifactId>
+    <artifactId>octopus-oauth2-linkedin-rest</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -60,14 +60,8 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-oauth2-github-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-oauth2-linkedin-common</artifactId>
-            <version>0.5-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.parent.version}</version>
         </dependency>
 
 

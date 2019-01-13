@@ -70,7 +70,7 @@ default : false
 
 default : *(none)*
 
-Defines the Enum class which enumerates all permissions. Within the demo example it is the class *be.c4j.demo.security.permission.DemoPermission*.
+Defines the Enum class which enumerates all permissions. Within the demo example it is the class *be.atbash.ee.security.octopus.jsf.security.DemoPermission*.
 
 ==== namedPermissionCheck.class
 

@@ -16,11 +16,8 @@
     limitations under the License.
 
 -->
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-web</artifactId>
@@ -28,11 +25,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Support for Github Accesstoken in Authorization Header</name>
-
-    <artifactId>octopus-oauth2-github-rest</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
+
+    <artifactId>octopus-oauth2-linkedin-common</artifactId>
+    <version>0.5-SNAPSHOT</version>
+
+    <name>OAuth2 LinkedIn info provider</name>
 
     <dependencies>
 
@@ -51,30 +50,29 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- other -->
+
+        <!-- Octopus -->
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-oauth2-common-rest</artifactId>
+            <artifactId>octopus-oauth2-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-oauth2-github-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-oauth2-linkedin-common</artifactId>
-            <version>0.5-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
 
         <!-- testing -->
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.org.lidalia</groupId>
+            <artifactId>slf4j-test</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
-    <build>
-
-    </build>
 </project>
