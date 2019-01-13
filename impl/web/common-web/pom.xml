@@ -116,44 +116,6 @@
     <build>
         <plugins>
 
-            <!--plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <header>header_template.tpl</header>
-                    <properties>
-                        <owner>Rudy De Busscher</owner>
-                        <site>www.c4j.be</site>
-                        <year>2017</year>
-                        <aggregate>true</aggregate>
-                    </properties>
-                    <excludes>
-                        <exclude>**/README</exclude>
-                        <exclude>**/LICENSE.txt</exclude>
-                        <exclude>**/NOTICE.txt</exclude>
-                        <exclude>**/NOTICE</exclude>
-                        <exclude>**/asciidoctor.css</exclude>
-                        <exclude>**/QRCode.js</exclude>
-                        <exclude>**/HOTPProvider.java</exclude>
-                        <exclude>**/Base32.java</exclude>
-                        <exclude>**/reflect/**</exclude>
-                    </excludes>
-                    <mapping>
-                        <java>SLASHSTAR_STYLE</java>
-                        <css>SLASHSTAR_STYLE</css>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin-->
-
-
             <!-- Optional -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
