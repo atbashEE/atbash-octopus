@@ -62,6 +62,8 @@
         <module>oauth2-linkedin-common</module>
         <module>oauth2-linkedin-jsf</module>
         <module>oauth2-linkedin-rest</module>
+
+        <module>security-api-adapter</module>
     </modules>
 
 </project>

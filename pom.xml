@@ -59,11 +59,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <atbash-utils.version>0.9.3-SNAPSHOT</atbash-utils.version>
-        <atbash-config.version>0.9.3-SNAPSHOT</atbash-config.version>
+        <atbash-utils.version>0.9.3</atbash-utils.version>
+        <atbash-config.version>0.9.3</atbash-config.version>
         <atbash-json.version>0.9.2-SNAPSHOT</atbash-json.version>
-        <jwt-support.version>0.9.1-SNAPSHOT</jwt-support.version>
-        <atbash-rest-client.version>0.9-SNAPSHOT</atbash-rest-client.version>
+        <jwt-support.version>0.9.1</jwt-support.version>
+        <atbash-rest-client.version>0.5.2-SNAPSHOT</atbash-rest-client.version>
         <slf4j.version>1.7.25</slf4j.version>
 
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>

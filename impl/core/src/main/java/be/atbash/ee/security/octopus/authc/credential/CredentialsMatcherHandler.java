@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class CredentialsMatcherHandler {
             return true;
         }
 
-        if (info.isOneTimeAuthentication() && info.getValidatedToken() != null) {
+        if (info.getValidatedToken() != null) {
             return true;
         }
 

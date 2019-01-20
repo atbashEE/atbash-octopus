@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public class SimpleAuthenticationInfo implements AuthenticationInfo {
 
     protected ValidatedAuthenticationToken token;
 
+    protected boolean oneTime = false;
+
     /**
      * Any salt used in hashing the credentials.
      */
@@ -68,18 +70,33 @@ public class SimpleAuthenticationInfo implements AuthenticationInfo {
      * Constructor that takes in a single 'primary' principal of the account and the token used during authentication
      * (MP token, OAUth2 token, etc ...
      * <p/>
-     * The token is also defined as user info with key -token
+     * The token is also defined as user info with key -token.
+     * The authnetication is also considered as a one time (stateless). In other scenarios use the other constructor which takes an additional boolean.
      *
      * @param principal the 'primary' principal associated with the specified realm.
      * @param token     the token that verify the given principal.
      */
     public SimpleAuthenticationInfo(UserPrincipal principal, ValidatedAuthenticationToken token) {
+        this(principal, token, token != null);
+    }
+
+    /**
+     * Constructor that takes in a single 'primary' principal of the account and the token used during authentication
+     * (MP token, OAUth2 token, etc ...
+     * <p/>
+     * The token is also defined as user info with key -token
+     *
+     * @param principal the 'primary' principal associated with the specified realm.
+     * @param token     the token that verify the given principal.
+     */
+    public SimpleAuthenticationInfo(UserPrincipal principal, ValidatedAuthenticationToken token, boolean oneTime) {
         principals = new PrincipalCollection(principal);
         this.token = token;
+        this.oneTime = oneTime;
         principals.add(token);
 
-        principal.addUserInfo(INFO_KEY_TOKEN, token);
-
+        principal.addUserInfo(INFO_KEY_TOKEN, token); // FIXME This is no longer needed? The token is also as Principal defined.
+        // But getting the principal can only by type and thus not very easy.
     }
 
     /**
@@ -133,9 +150,7 @@ public class SimpleAuthenticationInfo implements AuthenticationInfo {
 
     @Override
     public boolean isOneTimeAuthentication() {
-        // TODO is this always the case, token == onetime (the OfflineToken for Java SE is not, but probably only used only once.
-
-        return token != null;
+        return oneTime;
     }
 
     /**

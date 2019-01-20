@@ -65,3 +65,7 @@ The hash is calculated by the hash method:
 === OAuth2
 
 include::oauth2.adi[]
+
+=== Security API
+
+include::securityAPI.adi[]
