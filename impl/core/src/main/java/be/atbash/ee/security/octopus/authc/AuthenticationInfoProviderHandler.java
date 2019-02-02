@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,20 @@
 package be.atbash.ee.security.octopus.authc;
 
 import be.atbash.ee.security.octopus.config.InfoProviderConfiguration;
+import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.realm.RealmConfigurationException;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.SystemAuthenticationToken;
 import be.atbash.ee.security.octopus.util.order.ProviderComparator;
-import be.atbash.util.AnnotationUtil;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.*;
 
 /**
- * FIXME, just uses the first provider it finds.
+ *
  */
 @ApplicationScoped
 public class AuthenticationInfoProviderHandler {
@@ -41,7 +39,7 @@ public class AuthenticationInfoProviderHandler {
 
     private List<AuthenticationInfoProvider> authenticationInfoProviders;
 
-    private AuthenticationStrategyValue authenticationStrategyValue;
+    private List<AuthenticationStrategy> strategyValuesForProviders;
 
     @PostConstruct
     public void init() {
@@ -53,9 +51,10 @@ public class AuthenticationInfoProviderHandler {
     }
 
     private void defineStrategy() {
+        strategyValuesForProviders = new ArrayList<>();
+        // FIXME Support of multiple AuthenticationStrategy.Required?
         for (AuthenticationInfoProvider authenticationInfoProvider : authenticationInfoProviders) {
-            AuthenticationStrategy strategy = AnnotationUtil.getAnnotation(authenticationInfoProvider.getClass(), AuthenticationStrategy.class);
-            // FIXME
+            strategyValuesForProviders.add(authenticationInfoProvider.getAuthenticationStrategy());
         }
     }
 
@@ -74,10 +73,54 @@ public class AuthenticationInfoProviderHandler {
     }
 
     public AuthenticationInfo retrieveAuthenticationInfo(AuthenticationToken token) {
-        prepareAuthenticationInfoProviders();
+        prepareAuthenticationInfoProviders();  // To support the Java SE case.
 
-        // FIXME
-        return authenticationInfoProviders.get(0).getAuthenticationInfo(token);
+        Iterator<AuthenticationInfoProvider> iterator = authenticationInfoProviders.iterator();
+        AuthenticationInfo result = null;
+        int idx = 0;
+        boolean stopProcess = false;
+        while (iterator.hasNext() && !stopProcess) {
+            AuthenticationInfoProvider authenticationInfoProvider = iterator.next();
+            AuthenticationInfo info = authenticationInfoProvider.getAuthenticationInfo(token);
+
+            if (info != null && token instanceof SystemAuthenticationToken) {
+                stopProcess = true;
+                result = info;
+            }
+
+            if (info == null && strategyValuesForProviders.get(idx) == AuthenticationStrategy.REQUIRED) {
+                // When required and returning null means not valid and thus fail.
+                return null;
+            }
+            if (!stopProcess && info != null && noRequiredProvider(idx + 1)) {
+                stopProcess = true;
+                result = info;
+
+            }
+
+            class Guard {
+            }
+            if (!stopProcess && info != null) {
+                ThreadContext.bindIntermediate(info.getPrincipals().getPrimaryPrincipal(), Guard.class);
+            }
+
+            idx++;
+        }
+
+        return result;
+    }
+
+    private boolean noRequiredProvider(int pos) {
+        if (pos == strategyValuesForProviders.size()) {
+            return true;
+        }
+        boolean result = true;
+        for (int i = pos; i < strategyValuesForProviders.size(); i++) {
+            if (strategyValuesForProviders.get(i) == AuthenticationStrategy.REQUIRED) {
+                result = false;
+            }
+        }
+        return result;
     }
 
     private void prepareAuthenticationInfoProviders() {
@@ -92,7 +135,13 @@ public class AuthenticationInfoProviderHandler {
                 authenticationInfoProviders.add(provider);
             }
 
+            if (authenticationInfoProviders.isEmpty()) {
+                // TODO Is this properly logged ??
+                throw new RealmConfigurationException("Missing configuration for SecurityDataProvider or AuthenticationInfoProvider");
+            }
+
             Collections.sort(authenticationInfoProviders, new ProviderComparator());
+            defineStrategy();
         }
     }
 

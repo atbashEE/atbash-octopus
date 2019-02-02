@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@ package be.atbash.ee.security.octopus.oauth2;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
+import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.util.order.ProviderOrder;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -26,7 +28,8 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @ApplicationScoped
-public class ClientAuthenticationInfoProvider implements AuthenticationInfoProvider {
+@ProviderOrder(-10)
+public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider {
 
     @Override
     public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) {
@@ -44,5 +47,10 @@ public class ClientAuthenticationInfoProvider implements AuthenticationInfoProvi
 
         }
         return null;
+    }
+
+    @Override
+    public AuthenticationStrategy getAuthenticationStrategy() {
+        return AuthenticationStrategy.SUFFICIENT;
     }
 }

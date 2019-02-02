@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -245,7 +245,7 @@ public class OctopusOfflineRealmTest {
 
     }
 
-    public class AllToken implements AuthenticationToken, AuthorizationToken {
+    public class AllToken implements ValidatedAuthenticationToken, AuthorizationToken {
 
         @Override
         public Object getPrincipal() {

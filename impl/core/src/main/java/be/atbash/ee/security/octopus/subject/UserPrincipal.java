@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
+import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
+import be.atbash.ee.security.octopus.util.onlyduring.WrongExecutionContextException;
 import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.enterprise.inject.Typed;
@@ -90,8 +92,11 @@ public class UserPrincipal implements Principal, Serializable {
         return userName;
     }
 
-    // TODO Should we protect the 'Octopus used keys', like Token? But then getInfo() needs to removed!!
+    // TODO Should we protect the 'Octopus used keys', like Token?
     public void addUserInfo(Serializable key, Serializable value) {
+        if (key.toString().startsWith("octopus.") && !TemporaryAuthorizationContextManager.isInAuthentication()) {
+            throw new WrongExecutionContextException();
+        }
         userInfo.put(key, value);
     }
 
@@ -104,7 +109,8 @@ public class UserPrincipal implements Principal, Serializable {
     }
 
     public Map<Serializable, Serializable> getInfo() {
-        return userInfo;
+        // So that we never can change the info from outside this class.
+        return new HashMap<>(userInfo);
     }
 
     public boolean isSystemAccount() {

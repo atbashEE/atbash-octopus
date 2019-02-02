@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,11 @@
 package be.atbash.ee.security.octopus.context;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.authc.AuthenticationInfoProviderHandler;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.util.GuardUtil;
+import be.atbash.ee.security.octopus.util.onlyduring.WrongExecutionContextException;
 import be.atbash.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +51,8 @@ public abstract class ThreadContext {
      */
     private static final Logger log = LoggerFactory.getLogger(ThreadContext.class);
 
-    public static final String SUBJECT_KEY = ThreadContext.class.getName() + "_SUBJECT_KEY";
+    private static final String SUBJECT_KEY = ThreadContext.class.getName() + "_SUBJECT_KEY";
+    private static final String INTERMEDIATE_USER_PRINCIPAL_KEY = ThreadContext.class.getName() + "_INTERMEDIATE_USER_PRINCIPAL_KEY";
 
     private static final ThreadLocal<Map<Object, Object>> resources = new InheritableThreadLocalMap<>();
 
@@ -215,6 +220,21 @@ public abstract class ThreadContext {
         if (subject != null) {
             put(SUBJECT_KEY, subject);
         }
+    }
+
+    public static void bindIntermediate(UserPrincipal userPrincipal, Class<?> guard) {
+
+        if (!GuardUtil.getPrivilegedClassName(guard).equals("be.atbash.ee.security.octopus.authc.AuthenticationInfoProviderHandler")) {
+            throw new WrongExecutionContextException();
+        }
+
+        if (userPrincipal != null) {
+            put(INTERMEDIATE_USER_PRINCIPAL_KEY, userPrincipal);
+        }
+    }
+
+    public static UserPrincipal getIntermediateUserPrincipal() {
+        return (UserPrincipal) get(INTERMEDIATE_USER_PRINCIPAL_KEY);
     }
 
     /**

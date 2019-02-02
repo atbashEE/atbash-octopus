@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ public class AuthenticationInfoBuilder {
     private Object password;
     private ValidatedAuthenticationToken token;
     private ByteSource salt;
+    private UserPrincipal userPrincipal;
     private Map<Serializable, Serializable> userInfo = new HashMap<>();
     private boolean externalPasswordCheck = false;
     private boolean tokenBased = false;
@@ -61,6 +62,11 @@ public class AuthenticationInfoBuilder {
 
     public AuthenticationInfoBuilder userName(String userName) {
         this.userName = userName;
+        return this;
+    }
+
+    public AuthenticationInfoBuilder userPrincipal(UserPrincipal userPrincipal) {
+        this.userPrincipal = userPrincipal;
         return this;
     }
 
@@ -120,9 +126,11 @@ public class AuthenticationInfoBuilder {
     }
 
     public AuthenticationInfo build() {
-        UserPrincipal principal = new UserPrincipal(principalId, userName, name);
-        principal.addUserInfo(userInfo);
-        principal.setRemoteLogoutHandler(remoteLogoutHandler);
+        if (userPrincipal == null) {
+            userPrincipal = new UserPrincipal(principalId, userName, name);
+        }
+        userPrincipal.addUserInfo(userInfo);
+        userPrincipal.setRemoteLogoutHandler(remoteLogoutHandler);
         AuthenticationInfo result;
         // TODO We need to check if developer supplied salt() when octopusConfig.saltLength != 0
         if (salt == null) {
@@ -131,13 +139,13 @@ public class AuthenticationInfoBuilder {
                 result = null; // FIXME
             } else {
                 if (tokenBased) {
-                    result = new SimpleAuthenticationInfo(principal, token);
+                    result = new SimpleAuthenticationInfo(userPrincipal, token);
                 } else {
-                    result = new SimpleAuthenticationInfo(principal, password);
+                    result = new SimpleAuthenticationInfo(userPrincipal, password);
                 }
             }
         } else {
-            result = new SimpleAuthenticationInfo(principal, password, salt);
+            result = new SimpleAuthenticationInfo(userPrincipal, password, salt);
         }
         return result;
     }

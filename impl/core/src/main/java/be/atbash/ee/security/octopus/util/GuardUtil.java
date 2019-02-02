@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.authc;
-
-import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.util.order.RealmProvider;
+package be.atbash.ee.security.octopus.util;
 
 /**
- *
+ * Utility class related to the protection of some methods. We want to be able to restrict the
+ * calling of some methods from within some classes. See TemporaryAuthorizationContextManager.
  */
+public final class GuardUtil {
 
-public abstract class AuthenticationInfoProvider implements RealmProvider {
+    private GuardUtil() {
+    }
 
-    protected abstract AuthenticationInfo getAuthenticationInfo(AuthenticationToken token);
-
-    public AuthenticationStrategy getAuthenticationStrategy() {
-        return AuthenticationStrategy.REQUIRED;
+    public static String getPrivilegedClassName(Class<?> guard) {
+        String result = null;
+        if (guard != null && guard.getEnclosingMethod() != null) {
+            result = guard.getEnclosingMethod().getDeclaringClass().getName();
+        }
+        return result;
     }
 }

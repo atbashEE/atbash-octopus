@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,11 @@
  */
 package be.atbash.ee.security.octopus;
 
+import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.SubjectResolver;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.util.PublicAPI;
 
 import java.util.ServiceLoader;
 
@@ -25,6 +28,7 @@ import java.util.ServiceLoader;
  * We keep this method to have 'backwards' compatibility with the Shiro Octopus version
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.SecurityUtils"})
+@PublicAPI
 public abstract class SecurityUtils {
 
     private static SubjectResolver subjectResolver;
@@ -49,6 +53,11 @@ public abstract class SecurityUtils {
      */
     public static <T extends Subject> T getSubject() {
         return subjectResolver.getSubject();
+    }
+
+
+    public static UserPrincipal getIntermediateUserprincipal() {
+        return ThreadContext.getIntermediateUserPrincipal();
     }
 
 }

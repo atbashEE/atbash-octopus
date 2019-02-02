@@ -1,6 +1,13 @@
 === 0.5
 
 . Integration with OAuth2 providers (Google, GitHub, LinkedIn)
+. Support for IdentityStore from Security API/Soteria
+. Support for multiple AuthenticationInfoProvider
+
+==== Important changes
+
+. AuthenticationInfoProvider and SecurityDataProvider are abstract class and no longer interface.
+. AuthenticationInfoProvider.getAuthenticationStrategy() return REQUIRED by default.
 
 === 0.4
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package be.atbash.ee.security.octopus.authc;
 
-import java.lang.annotation.*;
-
 /**
  *
  */
-@Documented
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface AuthenticationStrategy {
-    AuthenticationStrategyValue value() default AuthenticationStrategyValue.FIRST;
+
+public enum AuthenticationStrategy {
+    SUFFICIENT, REQUIRED
 }

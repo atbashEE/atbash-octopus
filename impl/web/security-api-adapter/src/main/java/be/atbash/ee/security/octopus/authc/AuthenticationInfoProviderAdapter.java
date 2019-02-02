@@ -28,7 +28,7 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 
 @ApplicationScoped
-public class AuthenticationInfoProviderAdapter implements AuthenticationInfoProvider {
+public class AuthenticationInfoProviderAdapter extends AuthenticationInfoProvider {
 
     @Inject
     private IdentityStoreHandler identityStoreHandler;

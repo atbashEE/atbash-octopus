@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,6 +113,23 @@ public class AuthenticationInfoBuilderTest {
         assertThat(userPrincipal.getId()).isEqualTo(2L);
         assertThat(userPrincipal.getUserName()).isEqualTo("JUnit");
         assertThat(userPrincipal.getName()).isEqualTo("Atbash");
+
+    }
+
+    @Test
+    public void build_withPrincipal() {
+        UserPrincipal userPrincipal = new UserPrincipal(12L, "JUnit_x", "Atbash_x");
+        AuthenticationInfo info = new AuthenticationInfoBuilder().principalId(2L)
+                .userName("JUnit").name("Atbash").userPrincipal(userPrincipal).build();
+
+        assertThat(info).isNotNull();
+        assertThat(info.getPrincipals()).isNotEmpty();
+        assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
+
+        UserPrincipal resultPrincipal = info.getPrincipals().getPrimaryPrincipal();
+        assertThat(resultPrincipal.getId()).isEqualTo(12L); // We need to take the values from passed in UserPrincipal
+        assertThat(resultPrincipal.getUserName()).isEqualTo("JUnit_x");
+        assertThat(resultPrincipal.getName()).isEqualTo("Atbash_x");
 
     }
 

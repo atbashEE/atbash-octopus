@@ -13,37 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.events;
+package be.atbash.ee.security.octopus.authc.testclasses;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
-import be.atbash.ee.security.octopus.authz.annotation.OnlyDuringAuthentication;
+import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
+import be.atbash.ee.security.octopus.util.order.ProviderOrder;
 
-import javax.enterprise.context.ApplicationScoped;
+import java.util.Locale;
 
-@ApplicationScoped
-public class AuthenticationData extends AuthenticationInfoProvider {
-
-    private int principalId = 0;
+@ProviderOrder(100)
+public class Sufficient2AuthenticationProvider extends AuthenticationInfoProvider {
 
     @Override
-    @OnlyDuringAuthentication
-    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) {
-
+    protected AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) {
         if (token instanceof UsernamePasswordToken) {
             UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
 
+            String username = usernamePasswordToken.getUsername();
+            String userNameLower = username.toLowerCase(Locale.ENGLISH);
+            if (username.equals(userNameLower)) {
+                return null;
+            }
             AuthenticationInfoBuilder authenticationInfoBuilder = new AuthenticationInfoBuilder();
-            authenticationInfoBuilder.principalId(principalId++).name(token.getPrincipal().toString());
-            // TODO: Change for production. Here we use username as password
+            authenticationInfoBuilder.principalId("Sufficient2AuthenticationProvider").name(token.getPrincipal().toString());
+
             authenticationInfoBuilder.password(usernamePasswordToken.getUsername());
 
             return authenticationInfoBuilder.build();
+
         }
         return null;
+    }
+
+    @Override
+    public AuthenticationStrategy getAuthenticationStrategy() {
+        return AuthenticationStrategy.SUFFICIENT;
     }
 
 }
