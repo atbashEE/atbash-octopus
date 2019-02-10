@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import be.atbash.ee.security.octopus.session.mgt.ServletContainerSessionManager;
 import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.twostep.TwoStepManager;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashIllegalActionException;
@@ -44,6 +45,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+
+import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_TWO_STEP;
 
 /**
  * This interface represents a {@link SecurityManager} implementation that can used in web-enabled applications.
@@ -65,6 +68,9 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     @Inject
     private ServletContainerSessionManager servletContainerSessionManager;
+
+    @Inject
+    private TwoStepManager twoStepManager;
 
     @Override
     public boolean isPermitted(PrincipalCollection principals, String permission) {
@@ -198,12 +204,13 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @param token    the {@code AuthenticationToken} submitted for the successful authentication.
      * @param info     the {@code AuthenticationInfo} of a newly authenticated user.
      * @param existing the existing {@code Subject} instance that initiated the authentication attempt
+     * @param authenticated authenticated false in case when 2step authentication is required.
      * @return the {@code Subject} instance that represents the context and session data for the newly
      * authenticated subject.
      */
-    protected WebSubject createSubject(AuthenticationToken token, AuthenticationInfo info, WebSubject existing) {
+    protected WebSubject createSubject(AuthenticationToken token, AuthenticationInfo info, WebSubject existing, boolean authenticated) {
         WebSubjectContext context = new WebSubjectContext(octopusRealm);
-        context.setAuthenticated(true);
+        context.setAuthenticated(authenticated);
         context.setAuthenticationToken(token);
         context.setAuthenticationInfo(info);
         if (existing != null) {
@@ -416,9 +423,20 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
                 } else {
                 */
-        loggedIn = createSubject(token, info, (WebSubject) webSubject);
 
-        onSuccessfulLogin(token, info, loggedIn);
+        boolean authenticated = true;
+        if (twoStepManager.isTwoStepRequired()) {  // FIXME Let the user decide if (s)he wants Two Step.
+
+            Boolean twoStepDone = userPrincipal.getUserInfo(OCTOPUS_TWO_STEP);
+            authenticated = twoStepDone != null && twoStepDone;
+        }
+        loggedIn = createSubject(token, info, (WebSubject) webSubject, authenticated);
+
+        if (webSubject.isAuthenticated()) {
+            onSuccessfulLogin(token, info, loggedIn);
+        } else {
+            twoStepManager.startSecondStep(loggedIn);
+        }
 
         return loggedIn;
     }
@@ -516,7 +534,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
             throw new AtbashIllegalActionException("(OCT-DEV-051) Subject method argument cannot be null.");
         }
 
-        //beforeLogout(subject); only for RememberMe
+        //beforeLogout(subject); FIXME only for RememberMe
 
         PrincipalCollection principals = subject.getPrincipals();
         // it is possible to have a Subject without PrincipalCollection?

@@ -22,8 +22,6 @@ import be.atbash.ee.security.octopus.util.order.CredentialsMatcherComparator;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -32,23 +30,16 @@ import java.util.*;
 @ApplicationScoped
 public class CredentialsMatcherHandler {
 
-    @Inject
-    private Instance<CredentialsMatcher> credentialsMatcherProvider;
-
     private List<CredentialsMatcher> matchers;
 
     @PostConstruct
     public void initMatchers() {
-        matchers = new ArrayList<>();
-        for (CredentialsMatcher credentialsMatcher : credentialsMatcherProvider.select()) {
-            matchers.add(credentialsMatcher);
-        }
-
-        Collections.sort(matchers, new CredentialsMatcherComparator());
+        // TODO Is this needed since the prepareMatchers is also called when doCredentialsMatch is called!?
+        prepareMatchers();
     }
 
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        prepareMatchers();
+        prepareMatchers();  // For the Java SE version
 
         boolean result = false;
         if (token instanceof ValidatedAuthenticationToken) {
@@ -86,6 +77,7 @@ public class CredentialsMatcherHandler {
             for (CredentialsMatcher credentialsMatcher : ServiceLoader.load(CredentialsMatcher.class)) {
                 matchers.add(credentialsMatcher);
             }
+            Collections.sort(matchers, new CredentialsMatcherComparator());
         }
     }
 

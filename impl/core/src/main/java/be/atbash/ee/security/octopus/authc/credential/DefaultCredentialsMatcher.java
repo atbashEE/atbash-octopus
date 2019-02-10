@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.crypto.hash.SaltHashingUtil;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
+import be.atbash.ee.security.octopus.util.order.CredentialsMatcherOrder;
 import be.atbash.util.codec.CodecSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ import java.util.Arrays;
  * <p/>
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.credential.SimpleCredentialsMatcher", "org.apache.shiro.authc.credential.HashedCredentialsMatcher"})
+@CredentialsMatcherOrder(-100)
 // TODO Do we need protected methods so that we can override
 public class DefaultCredentialsMatcher extends CodecSupport implements CredentialsMatcher {
 
@@ -108,6 +111,9 @@ public class DefaultCredentialsMatcher extends CodecSupport implements Credentia
      * {@code false} otherwise
      */
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
+        if (!(token instanceof UsernamePasswordToken)) {
+            return false;
+        }
         Object tokenCredentials;
         if (info.isHashedPassword()) {
 

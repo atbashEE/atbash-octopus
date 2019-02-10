@@ -3,6 +3,7 @@
 . Integration with OAuth2 providers (Google, GitHub, LinkedIn)
 . Support for IdentityStore from Security API/Soteria
 . Support for multiple AuthenticationInfoProvider
+. Support for two step authentication.
 
 ==== Important changes
 

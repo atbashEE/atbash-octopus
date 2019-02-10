@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ public class WebSubject implements RequestPairSource, Subject {
 
     private PrincipalCollection principals;
     private boolean authenticated;
+    private boolean remembered;
     private String host;
     private Session session;
     private boolean sessionCreationEnabled;
@@ -71,42 +72,46 @@ public class WebSubject implements RequestPairSource, Subject {
     private HttpServletResponse servletResponse;
     private AuthorizingRealm authorizingRealm;
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered,
                       String host, Session session,
                       HttpServletRequest request, HttpServletResponse response,
                       WebSecurityManager securityManager,
                       AuthorizingRealm authorizingRealm) {
-        this(principals, authenticated, host, session, true, request, response, securityManager, authorizingRealm);
+        this(principals, authenticated, remembered, host, session, true, request, response, securityManager, authorizingRealm);
     }
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered,
                       String host, Session session, boolean sessionEnabled,
                       HttpServletRequest request, HttpServletResponse response,
                       WebSecurityManager securityManager,
                       AuthorizingRealm authorizingRealm) {
-        this(principals, authenticated, host, session, sessionEnabled, securityManager);
+        this(principals, authenticated, remembered, host, session, sessionEnabled, securityManager);
         servletRequest = request;
         servletResponse = response;
         this.authorizingRealm = authorizingRealm;
     }
 
     public WebSubject(WebSecurityManager securityManager) {
-        this(null, false, null, null, securityManager);
+        this(null, false, false, null, null, securityManager);
     }
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated, String host,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, String host,
                       Session session, WebSecurityManager securityManager) {
-        this(principals, authenticated, host, session, true, securityManager);
+        this(principals, authenticated, remembered, host, session, true, securityManager);
     }
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated, String host,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, String host,
                       Session session, boolean sessionCreationEnabled, WebSecurityManager securityManager) {
         if (securityManager == null) {
             throw new IllegalArgumentException("SecurityManager argument cannot be null.");
         }
+        if ((authenticated || remembered) && (principals == null || principals.isEmpty())) {
+            throw new IllegalArgumentException("Principal required when authenticated or remembered"); // FIXME Correct error message
+        }
         this.securityManager = securityManager;
         this.principals = principals;
         this.authenticated = authenticated;
+        this.remembered = remembered;
         this.host = host;
         if (session != null) {
             this.session = decorate(session);
@@ -471,7 +476,9 @@ public class WebSubject implements RequestPairSource, Subject {
      * by providing valid credentials matching those known to the system, {@code false} otherwise.
      */
     public boolean isAuthenticated() {
-        return authenticated;
+        PrincipalCollection principals = getPrincipals();
+        return principals != null && !principals.isEmpty() && authenticated;
+
     }
 
     /**
@@ -524,7 +531,7 @@ public class WebSubject implements RequestPairSource, Subject {
      */
     public boolean isRemembered() {
         PrincipalCollection principals = getPrincipals();
-        return principals != null && !principals.isEmpty() && !isAuthenticated();
+        return principals != null && !principals.isEmpty() && remembered;
     }
 
     /**

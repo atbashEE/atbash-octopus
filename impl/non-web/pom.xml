@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
     <modules>
         <module>common-se</module>
         <module>rest-client-provider</module>
+        <module>otp</module>
         <module>keycloak-se</module>
         <module>keycloak-rest-client</module>
         <module>mp-core</module>

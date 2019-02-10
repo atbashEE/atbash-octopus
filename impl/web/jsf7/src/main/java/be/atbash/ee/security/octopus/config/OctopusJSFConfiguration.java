@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     private String loginPage;
 
     @Inject
+    @ConfigProperty(name = "secondStepPage", defaultValue = "/secondStep.xhtml")
+    private String secondStepPage;
+
+    @Inject
     @ConfigProperty(name = "logoutPage", defaultValue = "/")
     private String logoutPage;
 
@@ -71,6 +75,11 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigEntry()
     public String getLoginPage() {
         return loginPage;
+    }
+
+    @ConfigEntry()
+    public String getSecondStepPage() {
+        return secondStepPage;
     }
 
     @ConfigEntry

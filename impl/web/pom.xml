@@ -46,6 +46,9 @@
         <module>jsf7</module>
         <module>rest</module>
         <module>mp</module>
+
+        <module>otp-sender</module>
+
         <module>keycloak</module>
         <module>keycloak-rest</module>
         <module>oauth2-common</module>

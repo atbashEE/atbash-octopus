@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class WebSubjectTest {
         // - authenticated -> false
         UserPrincipal userPrincipal = new UserPrincipal(123L, "Atbash", "Atbash");
         WebSubject subject = new WebSubject(new PrincipalCollection(userPrincipal),
-                true, null, sessionMock, webSecurityManagerMock);
+                true, false, null, sessionMock, webSecurityManagerMock);
 
         assertThat(subject.getPrincipals()).isNotNull();
         assertThat(subject.getSession(false)).isNotNull();
@@ -59,5 +59,6 @@ public class WebSubjectTest {
         assertThat(subject.getPrincipals()).isNull();
         assertThat(subject.getSession(false)).isNull();
         assertThat(subject.isAuthenticated()).isFalse();
+        assertThat(subject.isRemembered()).isFalse();
     }
 }

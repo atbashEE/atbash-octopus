@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
     private LogoutHandler logoutHandler;
 
     @Inject
-    private OctopusJSFConfiguration octopusJSFConfiguration;  // required for 2step authentication.
+    private OctopusJSFConfiguration octopusJSFConfiguration;
 
     public void loginWithRedirect(HttpServletRequest request, ExternalContext externalContext, AuthenticationToken token, String rootUrl) throws IOException {
 
@@ -77,8 +77,8 @@ public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
             UserPrincipal principal = (UserPrincipal) SecurityUtils.getSubject().getPrincipal();
             twoStepProvider.startSecondStep(request, principal);
 
-            externalContext.redirect(request.getContextPath() + octopusConfig.getSecondStepPage());
             */
+            externalContext.redirect(request.getContextPath() + octopusJSFConfiguration.getSecondStepPage());
         }
     }
 

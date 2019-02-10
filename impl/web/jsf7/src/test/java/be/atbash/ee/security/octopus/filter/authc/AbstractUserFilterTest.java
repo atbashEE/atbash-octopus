@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,6 @@ public class AbstractUserFilterTest {
     public void isAccessAllowed_noLoginRequest_anonymousUser() {
         configureIsLoginRequest(false);
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // We just need to return something
         when(subjectMock.isAuthenticated()).thenReturn(false);
 
         boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
@@ -95,7 +94,6 @@ public class AbstractUserFilterTest {
     public void isAccessAllowed_noLoginRequest_authenticatedUser() {
         configureIsLoginRequest(false);
         ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal()); // We just need to return something
         when(subjectMock.isAuthenticated()).thenReturn(true);
 
         boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);

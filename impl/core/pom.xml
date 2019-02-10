@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
+        <asciidoctor.maven.plugin.version>1.5.7.1</asciidoctor.maven.plugin.version>
         <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
     </properties>
 

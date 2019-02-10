@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,9 +62,7 @@ public class AbstractUserFilter extends AccessControlFilter {
             return true;
         } else {
             WebSubject subject = getSubject();
-            // If principal is not null, then the user is known and should be allowed access.
-            // TODO subject.getPrincipal() should not be checked, it is always not null. Verify this after logout for example !!
-            return subject.getPrincipal() != null && (subject.isAuthenticated() || subject.isRemembered());
+            return subject.isAuthenticated() || subject.isRemembered();
         }
     }
 
