@@ -10,6 +10,8 @@ These filters extract information from the request and determine the principal b
 . mpUser -> MicroProfile JWT auth token
 . authcKeycloak -> AccessToken of Keycloak
 . authcGoogle -> AccessToken of Google.
+. authcGithub -> AccessToken of GitHub.
+. authcLinkedIn -> AccessToken of LinkedIn.
 
 When such a filter is available within the chain and the request doesn't define the required and correct information, an response with status 401 is returned.
 
@@ -24,7 +26,8 @@ All these filters extends from +be.atbash.ee.security.octopus.authc.AbstractUser
 
 The predefined filters defined within Octopus are
 
-. user -> redirect to /login.xhtml page or URL defined within config parameter _loginPage_
+. user -> redirect to /login.xhtml page or URL defined within config parameter _loginPage_. Allows Remembered and authenticated users.
+. authenticated -> redirect to /login.xhtml page or URL defined within config parameter _loginPage_. Reject remembered userds.
 . userKeycloak -> redirect to Keycloak Login page (Keycloak integration)
 . userOAuth2 -> Redirect to OAuth2 provider login page (provider defined by configuration)
 

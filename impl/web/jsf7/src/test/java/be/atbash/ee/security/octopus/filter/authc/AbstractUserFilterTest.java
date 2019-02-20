@@ -18,7 +18,6 @@ package be.atbash.ee.security.octopus.filter.authc;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.session.Session;
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.SavedRequest;
@@ -72,33 +71,6 @@ public class AbstractUserFilterTest {
     @InjectMocks
     private TestUserFilter userFilter;
 
-    @Test
-    public void isAccessAllowed_loginRequest() {
-        configureIsLoginRequest(true);
-
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
-        assertThat(allowed).isTrue();
-    }
-
-    @Test
-    public void isAccessAllowed_noLoginRequest_anonymousUser() {
-        configureIsLoginRequest(false);
-        ThreadContext.bind(subjectMock);
-        when(subjectMock.isAuthenticated()).thenReturn(false);
-
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
-        assertThat(allowed).isFalse();
-    }
-
-    @Test
-    public void isAccessAllowed_noLoginRequest_authenticatedUser() {
-        configureIsLoginRequest(false);
-        ThreadContext.bind(subjectMock);
-        when(subjectMock.isAuthenticated()).thenReturn(true);
-
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
-        assertThat(allowed).isTrue();
-    }
 
     @Test
     public void onAccessDenied_GET_NoAjax() throws Exception {
@@ -164,7 +136,7 @@ public class AbstractUserFilterTest {
 
     @Test
     public void isLoginRequest() {
-        configureIsLoginRequest(true);
+        configureIsLoginRequest();
 
         assertThat(userFilter.isPrepareLoginCalled()).isFalse();
 
@@ -173,11 +145,11 @@ public class AbstractUserFilterTest {
         assertThat(userFilter.isPrepareLoginCalled()).isTrue();
     }
 
-    private void configureIsLoginRequest(boolean isLogin) {
+    private void configureIsLoginRequest() {
         when(requestMock.getContextPath()).thenReturn("/test");
         when(requestMock.getRequestURI()).thenReturn("/test/login.xhtml");
 
-        when(patternMatcherMock.matches("/login.xhtml", "/login.xhtml")).thenReturn(isLogin);
+        when(patternMatcherMock.matches("/login.xhtml", "/login.xhtml")).thenReturn(true);
         userFilter.setLoginUrl("/login.xhtml");
     }
 
@@ -195,7 +167,7 @@ public class AbstractUserFilterTest {
             prepareLoginCalled = true;
         }
 
-        public boolean isPrepareLoginCalled() {
+        boolean isPrepareLoginCalled() {
             return prepareLoginCalled;
         }
     }

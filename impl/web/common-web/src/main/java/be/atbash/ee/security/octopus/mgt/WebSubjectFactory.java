@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,11 +60,12 @@ public class WebSubjectFactory {
         boolean sessionEnabled = context.isSessionCreationEnabled();
         PrincipalCollection principals = context.resolvePrincipals();
         boolean authenticated = context.resolveAuthenticated();
+        boolean remembered = context.isRemembered();
         String host = context.resolveHost();
         HttpServletRequest request = context.resolveServletRequest();
         HttpServletResponse response = context.resolveServletResponse();
 
-        return new WebSubject(principals, authenticated, host, session, sessionEnabled,
+        return new WebSubject(principals, authenticated, remembered, host, session, sessionEnabled,
                 request, response, (WebSecurityManager) securityManager, context.getAuthorizingRealm());
     }
 

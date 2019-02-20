@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.session.usage;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.event.LogonEvent;
 import be.atbash.ee.security.octopus.authc.event.LogoutEvent;
+import be.atbash.ee.security.octopus.authc.event.RememberMeLogonEvent;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.session.event.SessionTimeoutEvent;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
@@ -121,6 +122,9 @@ public class ActiveSessionRegistry {
         // What if we use cookie for regular apps (non SSO)?
         // Need the info for the upcoming Session Hijack protection.
         HttpServletRequest httpRequest = getServletRequest();
+        if (httpRequest == null) {
+            return null;
+        }
         remoteHost = httpRequest.getRemoteAddr();
         userAgent = httpRequest.getHeader("User-Agent");
         //}
@@ -129,7 +133,10 @@ public class ActiveSessionRegistry {
     }
 
     private HttpServletRequest getServletRequest() {
-        return ((WebSubject) SecurityUtils.getSubject()).getServletRequest();
+
+        WebSubject webSubject = SecurityUtils.getSubject();
+        // It is possible that we need this info before a Subject is available (Cookie remembered scenario where cookie is found)
+        return webSubject == null ? null : webSubject.getServletRequest();
     }
 
     public void onLogin(@Observes LogonEvent logonEvent) {
@@ -140,15 +147,14 @@ public class ActiveSessionRegistry {
         }
     }
 
-    /* FIXME
     public void onLoginFromRememberMe(@Observes RememberMeLogonEvent event) {
-        HttpServletRequest httpRequest = WebUtils.getHttpRequest(event.getSubject());
+        WebSubject webSubject = (WebSubject) event.getSubject();
+        HttpServletRequest httpRequest = webSubject.getServletRequest();
         // There are also use cases where we have a login() from a REST call with noSessionCreation :)
         if (WebUtils._isSessionCreationEnabled(httpRequest)) {
-            onApplicationUsageEvent(new ApplicationUsageEvent(httpRequest));
+            onApplicationUsageEvent(new SessionRegistryEvent(httpRequest));
         }
     }
-    */
 
     public void onLogout(@Observes LogoutEvent logoutEvent) {
         HttpServletRequest httpRequest = getServletRequest();

@@ -13,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.crypto;
+package be.atbash.ee.security.octopus.realm.remember;
 
 import be.atbash.ee.security.octopus.OctopusException;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.util.PublicAPI;
 
-/**
- * Base exception for problems encountered during cryptographic operations.
- */
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.crypto.CryptoException"})
-@PublicAPI
-public class CryptoException extends OctopusException {
+@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.io.SerializationException"})
+class SerializationException extends OctopusException {
 
-    public CryptoException(String message) {
-        super(message);
-    }
-
-    public CryptoException(Throwable cause) {
-        super(cause);
-    }
-
-    public CryptoException(String message, Throwable cause) {
+    /**
+     * Constructs a new SerializationException.
+     *
+     * @param message the reason for the exception
+     * @param cause   the underlying Throwable that caused this exception to be thrown.
+     */
+    SerializationException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

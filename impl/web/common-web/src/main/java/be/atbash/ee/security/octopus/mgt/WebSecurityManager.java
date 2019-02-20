@@ -19,18 +19,24 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.authc.AfterSuccessfulLoginHandler;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.authc.Authenticator;
+import be.atbash.ee.security.octopus.authc.event.RememberMeLogonEvent;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.Authorizer;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
+import be.atbash.ee.security.octopus.realm.remember.RememberMeManager;
+import be.atbash.ee.security.octopus.realm.remember.RememberMeManagerProvider;
 import be.atbash.ee.security.octopus.session.InvalidSessionException;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionContext;
 import be.atbash.ee.security.octopus.session.SessionKey;
 import be.atbash.ee.security.octopus.session.mgt.ServletContainerSessionManager;
+import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken;
 import be.atbash.ee.security.octopus.twostep.TwoStepManager;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CDIUtils;
@@ -39,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,10 +74,16 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
     private OctopusRealm octopusRealm;
 
     @Inject
+    private RememberMeManagerProvider rememberMeManagerProvider;
+
+    @Inject
     private ServletContainerSessionManager servletContainerSessionManager;
 
     @Inject
     private TwoStepManager twoStepManager;
+
+    @Inject
+    private Event<RememberMeLogonEvent> rememberMeLogonEvent;
 
     @Override
     public boolean isPermitted(PrincipalCollection principals, String permission) {
@@ -158,20 +171,20 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * <ol>
      * <li>Ensures the {@code SubjectContext} is as populated as it can be, using heuristics to acquire
      * data that may not have already been available to it (such as a referenced session or remembered principals).</li>
-     * <li>Calls {@link #doCreateSubject(org.apache.shiro.subject.SubjectContext)} to actually perform the
+     * <li>Calls {@link #doCreateSubject(SubjectContext)} to actually perform the
      * {@code Subject} instance creation.</li>
-     * <li>calls {@link #save(org.apache.shiro.subject.Subject) save(subject)} to ensure the constructed
+     * <li>calls {@link #save(Subject) save(subject)} to ensure the constructed
      * {@code Subject}'s state is accessible for future requests/invocations if necessary.</li>
      * <li>returns the constructed {@code Subject} instance.</li>
      * </ol>
      *
      * @param subjectContext any data needed to direct how the Subject should be constructed.
      * @return the {@code Subject} instance reflecting the specified contextual data.
-     * @see #ensureSecurityManager(org.apache.shiro.subject.SubjectContext)
-     * @see #resolveSession(org.apache.shiro.subject.SubjectContext)
-     * @see #resolvePrincipals(org.apache.shiro.subject.SubjectContext)
-     * @see #doCreateSubject(org.apache.shiro.subject.SubjectContext)
-     * @see #save(org.apache.shiro.subject.Subject)
+     * @see #ensureSecurityManager(SubjectContext)
+     * @see #resolveSession(SubjectContext)
+     * @see #resolvePrincipals(SubjectContext)
+     * @see #doCreateSubject(SubjectContext)
+     * @see #save(Subject)
      */
     public WebSubject createSubject(SubjectContext subjectContext) {
         //create a copy so we don't modify the argument's backing map:
@@ -205,12 +218,14 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @param info     the {@code AuthenticationInfo} of a newly authenticated user.
      * @param existing the existing {@code Subject} instance that initiated the authentication attempt
      * @param authenticated authenticated false in case when 2step authentication is required.
+     * @param remembered defines if the rememberMe flag was set.
      * @return the {@code Subject} instance that represents the context and session data for the newly
      * authenticated subject.
      */
-    protected WebSubject createSubject(AuthenticationToken token, AuthenticationInfo info, WebSubject existing, boolean authenticated) {
+    protected WebSubject createSubject(AuthenticationToken token, AuthenticationInfo info, WebSubject existing, boolean authenticated, boolean remembered) {
         WebSubjectContext context = new WebSubjectContext(octopusRealm);
         context.setAuthenticated(authenticated);
+        context.setRemembered(remembered);
         context.setAuthenticationToken(token);
         context.setAuthenticationInfo(info);
         if (existing != null) {
@@ -304,8 +319,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                         "for subject construction by the SubjectFactory.");
 
                 context.setPrincipals(principals);
-
-                context.setAuthenticated(true);  // If we have Soteria Principal we are authenticated
+                context.setRemembered(true);
 
                 // The following call was removed (commented out) in Shiro 1.2 because it uses the session as an
                 // implementation strategy.  Session use for Shiro's own needs should be controlled in a single place
@@ -323,8 +337,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                 // bindPrincipalsToSession(principals, context);
 
             } else {
-                log.trace("No Soteria identity found.  Returning original context.");
-                // FIXME
+                log.trace("No identity found.  Returning original context.");
             }
 
         }
@@ -333,7 +346,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
     }
 
     protected PrincipalCollection getRememberedIdentity(SubjectContext subjectContext) {
-        /* FIXME
+
         RememberMeManager rmm = getRememberMeManager();
         if (rmm != null) {
             try {
@@ -346,7 +359,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                 }
             }
         }
-        */
+
         return null;
     }
 
@@ -354,13 +367,19 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * Saves the subject's state to a persistent location for future reference if necessary.
      * <p/>
      * This implementation merely delegates to the internal {@link #setSubjectDAO(SubjectDAO) subjectDAO} and calls
-     * {@link SubjectDAO#save(org.apache.shiro.subject.Subject) subjectDAO.save(subject)}.
+     * {@link SubjectDAO#save(Subject) subjectDAO.save(subject)}.
      *
      * @param subject the subject for which state will potentially be persisted
-     * @see SubjectDAO#save(org.apache.shiro.subject.Subject)
+     * @see SubjectDAO#save(Subject)
      */
     protected void save(WebSubject subject) {
         subjectDAO.save(subject);
+        if (subject.isRemembered()) {
+            // Ok, now the DAO has stored the Subject in the Session and thus HttpSession is created.
+            // We now can sent an event (required for example for the ApplicationUsage) that there is a RememberedLogon.
+            rememberMeLogonEvent.fire(new RememberMeLogonEvent(subject));
+        }
+
     }
 
     /**
@@ -373,7 +392,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      *                {@code Subject} instance.
      * @return a {@code Subject} instance reflecting the data in the specified {@code SubjectContext} data map.
      * @see #getSubjectFactory()
-     * @see WebSubjectFactory#createSubject(org.apache.shiro.subject.SubjectContext)
+     * @see WebSubjectFactory#createSubject(SubjectContext)
      */
     protected WebSubject doCreateSubject(WebSubjectContext context) {
 
@@ -430,9 +449,15 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
             Boolean twoStepDone = userPrincipal.getUserInfo(OCTOPUS_TWO_STEP);
             authenticated = twoStepDone != null && twoStepDone;
         }
-        loggedIn = createSubject(token, info, (WebSubject) webSubject, authenticated);
 
-        if (webSubject.isAuthenticated()) {
+        boolean rememberMe = false;
+        if (token instanceof RememberMeAuthenticationToken) {
+            rememberMe = ((RememberMeAuthenticationToken) token).isRememberMe();
+        }
+
+        loggedIn = createSubject(token, info, (WebSubject) webSubject, authenticated, rememberMe);
+
+        if (loggedIn.isAuthenticated() || loggedIn.isRemembered()) {
             onSuccessfulLogin(token, info, loggedIn);
         } else {
             twoStepManager.startSecondStep(loggedIn);
@@ -442,7 +467,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
     }
 
     /**
-     * Delegates to the wrapped {@link org.apache.shiro.authc.Authenticator Authenticator} for authentication.
+     * Delegates to the wrapped {@link Authenticator Authenticator} for authentication.
      */
     public AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
         return octopusRealm.authenticate(token);
@@ -453,7 +478,9 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         for (AfterSuccessfulLoginHandler handler : handlers) {
             handler.onSuccessfulLogin(token, info, subject);
         }
-        rememberMeSuccessfulLogin(token, info, subject); // TODO Convert the rememberMe to AfterSuccessfulLoginHandler
+
+        rememberMeSuccessfulLogin(token, info, subject); // FIXME Convert the rememberMe to AfterSuccessfulLoginHandler?
+        // But getRememberedIdentity need to stay here or we should make that also pluggable with some kind of handlers.
 
     }
 
@@ -469,8 +496,8 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         */
     }
 
-    protected void rememberMeSuccessfulLogin(AuthenticationToken token, AuthenticationInfo info, Subject subject) {
-        /*
+    protected void rememberMeSuccessfulLogin(AuthenticationToken token, AuthenticationInfo info, WebSubject subject) {
+
         RememberMeManager rmm = getRememberMeManager();
         if (rmm != null) {
             try {
@@ -490,11 +517,15 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                         "will not be performed for account [" + info + "].");
             }
         }
-        */
+
+    }
+
+    private RememberMeManager getRememberMeManager() {
+        return rememberMeManagerProvider.getRememberMeManager();
     }
 
     protected void rememberMeFailedLogin(AuthenticationToken token, AuthenticationException ex, Subject subject) {
-        /*
+
         RememberMeManager rmm = getRememberMeManager();
         if (rmm != null) {
             try {
@@ -508,11 +539,11 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                 }
             }
         }
-        */
+
     }
 
     protected void rememberMeLogout(Subject subject) {
-        /*
+
         RememberMeManager rmm = getRememberMeManager();
         if (rmm != null) {
             try {
@@ -526,7 +557,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                 }
             }
         }
-        */
+
     }
 
     public void logout(Subject subject) {
@@ -575,10 +606,10 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * Removes (or 'unbinds') the Subject's state from the application, typically called during {@link #logout}..
      * <p/>
      * This implementation merely delegates to the internal {@link #setSubjectDAO(SubjectDAO) subjectDAO} and calls
-     * {@link SubjectDAO#delete(org.apache.shiro.subject.Subject) delete(subject)}.
+     * {@link SubjectDAO#delete(Subject) delete(subject)}.
      *
      * @param subject the subject for which state will be removed
-     * @see SubjectDAO#delete(org.apache.shiro.subject.Subject)
+     * @see SubjectDAO#delete(Subject)
      */
     protected void delete(WebSubject subject) {
         this.subjectDAO.delete(subject);

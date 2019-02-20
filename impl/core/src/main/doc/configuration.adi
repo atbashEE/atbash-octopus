@@ -170,6 +170,33 @@ Determines the Session Hijack Protection level. It uses the IP Address and User-
 
 The default level _ON_, checks both properties, _PARTIAL_ only the User-Agent header value and _OFF_ disables the protection.
 
+=== Remember me configuration
+
+==== octopus.rememberme.cookie.name
+
+default : *rememberMe*
+
+The name of the Cookie containing the remembered information
+
+==== octopus.rememberme.cookie.maxage"
+
+default : *31536000*  // One Year
+
+The maximum age of the cookie.
+
+==== octopus.rememberme.cookie.secure
+
+default : *false*
+
+Is the remember me cookie only active on secure connections. Although the Remember Me cookie sensitive data, it is not needed that it is used with SSL as the contents is encrypted by default.
+
+==== octopus.rememberme.cipherkey
+
+default : *some automatic generated*
+
+A Base64 encoded (not using the URL safe variant) of a byte array used forthe encryption of the Remember me Cookie value.
+
+
 === OAuth2 configuration (common)
 
 ==== OAuth2.clientId

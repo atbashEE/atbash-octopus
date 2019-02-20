@@ -112,6 +112,15 @@ The following steps are performed during logout.
 
 // TODO When a new HttpSession (just before logon, after logout ?!)
 
+=== Remembered
+
+Octopus has support for remembered authentication. Based on a Cookie containing the PrincipalCollection information (in encrypted format) it creates a Subject. However, this Subject is mlarked as `remembered` but not as `authenticated` so that the developer can make distinguish.
+
+This in only available for JSF based views and you should initiate the Remembered functionality by setting the `loginBean.remembered` property to true.
+When the user explicitly logs out of the application, the Cookie is also removed.
+
+See also the configuration section for setting the cookie properties (like name and max age) and the encryption key.
+
 === Events
 
 There are a few CDI event generated depending on the authentication process.  These events can be used for your own logic (last login, number of invalid attempts, ...)
@@ -143,3 +152,8 @@ The event is thrown just **before** the user is effectively logged out of the sy
 
 . logonEvent.getUserPrincipal() : The _UserPrincipal_ of the user which is in the process of being logged out.
 
+===== RememberMeLogonEvent
+
+This event is thrown when a user is successful allowed to the system through thre Remember Me functionality.
+
+. rememberMeLogonEvent.getSubject() : The _WebSubject_ created for the user in response of the the successful Remember Me action.

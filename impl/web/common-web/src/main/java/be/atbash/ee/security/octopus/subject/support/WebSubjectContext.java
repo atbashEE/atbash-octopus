@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.session.Session;
-import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.SecurityManager;
+import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.MapContext;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
@@ -61,6 +61,7 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
     private static final String SESSION = WebSubjectContext.class.getName() + ".SESSION";
 
     private static final String AUTHENTICATED = WebSubjectContext.class.getName() + ".AUTHENTICATED";
+    private static final String REMEMBERED = WebSubjectContext.class.getName() + ".REMEMBERED";
 
     private static final String HOST = WebSubjectContext.class.getName() + ".HOST";
 
@@ -164,10 +165,13 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
         }
 
         if (OctopusCollectionUtils.isEmpty(principals)) {
+            // FIXME Use the SubjectDAO.read newly to create
             //try the session:
             Session session = resolveSession();
             if (session != null) {
                 principals = (PrincipalCollection) session.getAttribute(PRINCIPALS_SESSION_KEY);
+                // Coming from session is always remembered
+                setRemembered(principals != null);
             }
         }
 
@@ -214,6 +218,17 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
 
     public void setAuthenticated(boolean authc) {
         put(AUTHENTICATED, authc);
+    }
+
+    @Override
+    public boolean isRemembered() {
+        Boolean result = getTypedValue(REMEMBERED, Boolean.class);
+        return result != null && result;
+    }
+
+    @Override
+    public void setRemembered(boolean remember) {
+        put(REMEMBERED, remember);
     }
 
     public boolean resolveAuthenticated() {

@@ -13,28 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.crypto;
+package be.atbash.ee.security.octopus.authc.event;
 
-import be.atbash.ee.security.octopus.OctopusException;
-import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.util.PublicAPI;
+
+import be.atbash.ee.security.octopus.subject.Subject;
 
 /**
- * Base exception for problems encountered during cryptographic operations.
+ *
  */
-@ShiroEquivalent(shiroClassNames = {"org.apache.shiro.crypto.CryptoException"})
-@PublicAPI
-public class CryptoException extends OctopusException {
 
-    public CryptoException(String message) {
-        super(message);
+public class RememberMeLogonEvent {
+
+    private Subject subject;
+
+    public RememberMeLogonEvent(Subject subject) {
+        this.subject = subject;
     }
 
-    public CryptoException(Throwable cause) {
-        super(cause);
-    }
-
-    public CryptoException(String message, Throwable cause) {
-        super(message, cause);
+    public Subject getSubject() {
+        return subject;
     }
 }
