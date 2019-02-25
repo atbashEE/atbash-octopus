@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
 import be.atbash.ee.security.octopus.context.OctopusWebSecurityContext;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
+import be.atbash.ee.security.octopus.systemaccount.internal.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthorizationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
@@ -58,8 +58,7 @@ public class OctopusRealm extends AuthorizingRealm {
         try {
             UserPrincipal userPrincipal = principals.getPrimaryPrincipal();
 
-            if (OctopusWebSecurityContext.isSystemAccount(userPrincipal)) {
-                // No permissions or roles, use @SystemAccount
+            if (userPrincipal.isSystemAccount()) {
                 authorizationInfo = new SimpleAuthorizationInfo();  // TODO
             } else {
                 // FIXME OctopusDefinedAuthorizationInfo usage !!
@@ -76,30 +75,25 @@ public class OctopusRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         AuthenticationInfo authenticationInfo = null;
 
-        if (token instanceof SystemAccountAuthenticationToken) {
-            // FIXME Use the other systems and don't treat SystemAccount differently!
-            // TODO Check about the realm names
-            //authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
-        } else {
-            if (!(token instanceof IncorrectDataToken)) {
-                class Guard {
-                }
-                TemporaryAuthorizationContextManager.startInAuthentication(Guard.class);
+        if (!(token instanceof IncorrectDataToken)) {
+            class Guard {
+            }
+            TemporaryAuthorizationContextManager.startInAuthentication(Guard.class);
 
-                try {
-                    authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
-                    if (authenticationInfo == null) {
-                        String msg = String.format("Realm was unable to find account data for the " +
-                                "submitted AuthenticationToken [%s].", token);
-                        throw new UnknownAccountException(msg);
-                    }
-                    verifyHashEncoding(authenticationInfo);
-                } finally {
-                    // Even in the case of an exception (access not allowed) we need to reset this flag
-                    TemporaryAuthorizationContextManager.stopInAuthentication();
+            try {
+                authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
+                if (authenticationInfo == null) {
+                    String msg = String.format("Realm was unable to find account data for the " +
+                            "submitted AuthenticationToken [%s].", token);
+                    throw new UnknownAccountException(msg);
                 }
+                verifyHashEncoding(authenticationInfo);
+            } finally {
+                // Even in the case of an exception (access not allowed) we need to reset this flag
+                TemporaryAuthorizationContextManager.stopInAuthentication();
             }
         }
+
 
         // FIXME implement the be.c4j.ee.security.realm.OctopusRealmAuthenticator#doSingleRealmAuthentication() logic
         return authenticationInfo;
@@ -145,6 +139,7 @@ public class OctopusRealm extends AuthorizingRealm {
         AuthenticationInfo authenticationInfo = getAuthenticationInfo(authenticationToken);
 
         AuthorizationToken authorizationToken = getAuthorizationToken(authenticationToken, authenticationInfo);
+        // FIXME Indicate case where we need to define authorizationInfo immediately
         if (authorizationToken != null) {
 
             // FIXME Check if the authorizationToken.authorizationProviderClass() is defined as CDI bean

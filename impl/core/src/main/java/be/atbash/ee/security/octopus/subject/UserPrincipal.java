@@ -67,7 +67,7 @@ public class UserPrincipal implements Principal, Serializable {
      *
      * @param systemAccountName The system account name.
      */
-    public UserPrincipal(String systemAccountName) {
+    protected UserPrincipal(String systemAccountName) {
         this(systemAccountName, systemAccountName, systemAccountName);
         systemAccount = true;
     }

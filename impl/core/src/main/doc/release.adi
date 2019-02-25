@@ -5,6 +5,7 @@
 . Support for multiple AuthenticationInfoProvider
 . Support for two step authentication.
 . Support for RememberMe
+. Support for SystemAccount
 
 ==== Important changes
 

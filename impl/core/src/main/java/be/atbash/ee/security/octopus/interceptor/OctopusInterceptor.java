@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,6 @@ public class OctopusInterceptor extends AbstractOctopusInterceptor implements Se
         Class<?> classType = context.getTarget().getClass();
         Method method = context.getMethod();
 
-        supportForAsynchronousEJB(context, method);
-
         AnnotationInfo info = AnnotationUtil.getAllAnnotations(config, classType, method);
 
         OctopusInvocationContext invocationContext = new OctopusInvocationContext(context);
@@ -67,24 +65,6 @@ public class OctopusInterceptor extends AbstractOctopusInterceptor implements Se
 
         checkAuthorization(accessContext, info);
         return context.proceed();
-    }
-
-    private void supportForAsynchronousEJB(InvocationContext context, Method method) {
-        // FIXME How can we support this as the interceptor must be useable in plain CDI
-        /*
-        Asynchronous asynchronous = method.getAnnotation(Asynchronous.class);
-        if (asynchronous != null) {
-            throw new UnsupportedOperationException("FIXME Implement");
-                /*
-            for (Object parameter : context.getParameters()) {
-
-                if (parameter != null && OctopusSecurityContext.class.isAssignableFrom(parameter.getClass())) {
-                    Subject subject = ((OctopusSecurityContext) parameter).getSubject();
-                    ThreadContext.bind(subject);
-                }
-            }
-
-        }*/
     }
 
 }

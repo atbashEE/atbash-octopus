@@ -165,6 +165,14 @@ Now, EJB methods can be secured (authorized) by using
     }
 ----
 
+=== System account
+
+We can define a system account as principal (this in contract to the principal created for an end user using the application) for those situations where we have a process which is not started by an end user.
+Examples for such a process are startup events of the applications, timers, etc...
+System accounts can only be activated when no other user is logged on and needs to be done through the `octopusSecurityContext.activateSystemAccount` method. When another principal is active, a `SystemAccountActivationException` is thrown.
+
+We can protect methods so that they can only be executed by System accounts by using the annotation `@SystemAccount`.
+
 === Custom tags
 
 Custom tags are created to perform declarative authorization on JSF components. These are defined in the namespace

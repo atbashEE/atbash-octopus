@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.systemaccount;
+package be.atbash.ee.security.octopus.systemaccount.internal;
 
-import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
 /**
  *
  */
-public class SystemAccountAuthenticationToken implements AuthenticationToken {
+public class SystemAccountPrincipal extends UserPrincipal {
 
-    private SystemAccountPrincipal principal;
-
-    public SystemAccountAuthenticationToken(SystemAccountPrincipal principal) {
-        this.principal = principal;
+    public SystemAccountPrincipal(String identifier) {
+        super(identifier);
     }
 
-    @Override
-    public Object getPrincipal() {
-        return principal;
-    }
-
-    @Override
-    public Object getCredentials() {
-        return null;
+    public String getIdentifier() {
+        return getUserName();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package be.atbash.ee.security.octopus.authz.checks;
 import be.atbash.ee.security.octopus.authz.violation.SecurityAuthorizationViolationException;
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
 import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.systemaccount.SystemAccountPrincipal;
+import be.atbash.ee.security.octopus.systemaccount.internal.SystemAccountPrincipal;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 
 import javax.enterprise.context.ApplicationScoped;

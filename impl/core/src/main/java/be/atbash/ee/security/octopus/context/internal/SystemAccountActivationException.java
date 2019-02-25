@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.systemaccount;
+package be.atbash.ee.security.octopus.context.internal;
 
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.OctopusException;
 
 /**
  *
  */
-// FIXME Verify usage and if this is correct.
-public class SystemAccountPrincipal extends UserPrincipal {
-
-    private String identifier;
-
-    public SystemAccountPrincipal(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
+public class SystemAccountActivationException extends OctopusException {
 
 }

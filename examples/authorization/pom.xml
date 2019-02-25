@@ -23,46 +23,21 @@
 
     <parent>
         <groupId>be.atbash.ee.security</groupId>
-        <artifactId>octopus-parent</artifactId>
+        <artifactId>octopus-examples</artifactId>
         <version>0.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>octopus-examples</artifactId>
+    <groupId>be.atbash.ee.security.examples</groupId>
+    <artifactId>authorization</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
 
     <modules>
-        <module>local-secret</module>
-        <module>se-cli</module>
-        <module>javafx</module>
-        <module>keycloak-cli</module>
-        <module>mp-cli</module>
-
-        <module>basic</module>
-        <module>login_jsf</module>
-        <module>keycloak-jsf</module>
-        <module>twostep</module>
-        <module>authorization</module>
-
-        <module>events</module>
-        <module>secure-tags</module>
-        <module>authz</module>
-        <module>rest-main</module>
-        <module>rest-mp</module>
-
-        <module>keycloak-rest</module>
-
-        <module>auth-methods</module>
-        <module>soteria</module>
-        <module>rest</module>
+        <module>async-manual</module>
     </modules>
 
-    <properties>
-        <deltaspike.example.version>1.8.1</deltaspike.example.version>
-        <primefaces.example.version>6.1</primefaces.example.version>
-    </properties>
     <build>
         <plugins>
             <!-- don't need to deploy the examples to nexus. -->

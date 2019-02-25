@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.mgt.authz.LookupProviderLoader;
 import be.atbash.ee.security.octopus.realm.mgmt.LookupProvider;
 import be.atbash.ee.security.octopus.realm.mgmt.RoleMapperProvider;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.systemaccount.SystemAccountAuthenticationToken;
+import be.atbash.ee.security.octopus.systemaccount.internal.SystemAccountAuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.AuthorizationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
@@ -59,15 +59,6 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
         TemporaryAuthorizationContextManager.startInAuthorization(Guard.class);
         AuthorizationInfo authorizationInfo;
         try {
-            /*
-            FIXME OctopusWebSecurityContext.isSystemAccount needs to work through the AuthorizationInfoProvider
-            if (OctopusWebSecurityContext.isSystemAccount(primaryPrincipal)) {
-                // No permissions or roles, use @SystemAccount
-                authorizationInfo = new SimpleAuthorizationInfo();
-            } else {
-                //authorizationInfo = securityDataProvider.getAuthorizationInfo(principals);
-            }
-            */
             authorizationInfo = authorizationInfoProviderHandler.retrieveAuthorizationInfo(principals);
         } finally {
             TemporaryAuthorizationContextManager.stopInAuthorization();
@@ -80,28 +71,23 @@ public class OctopusOfflineRealm extends AuthorizingRealm {
 
         AuthenticationInfo authenticationInfo = null;
 
-        if (token instanceof SystemAccountAuthenticationToken) {
-            // TODO Use the authenticationInfoProvider for this.
-            //authenticationInfo = new SimpleAuthenticationInfo(token.getPrincipal(), ""); // FIXME custom constructor
-        } else {
-            if (!(token instanceof IncorrectDataToken)) {
-                class Guard {
-                }
-                TemporaryAuthorizationContextManager.startInAuthentication(Guard.class);
-                try {
+        if (!(token instanceof IncorrectDataToken)) {
+            class Guard {
+            }
+            TemporaryAuthorizationContextManager.startInAuthentication(Guard.class);
+            try {
 
-                    authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
-                    if (authenticationInfo == null) {
-                        String msg = String.format("Realm was unable to find account data for the " +
-                                "submitted AuthenticationToken [%s].", token);
-                        throw new UnknownAccountException(msg);
+                authenticationInfo = authenticationInfoProviderHandler.retrieveAuthenticationInfo(token);
+                if (authenticationInfo == null) {
+                    String msg = String.format("Realm was unable to find account data for the " +
+                            "submitted AuthenticationToken [%s].", token);
+                    throw new UnknownAccountException(msg);
 
-                    }
-                    verifyHashEncoding(authenticationInfo);
-                } finally {
-                    // Even in the case of an exception (access not allowed) we need to reset this flag
-                    TemporaryAuthorizationContextManager.stopInAuthentication();
                 }
+                verifyHashEncoding(authenticationInfo);
+            } finally {
+                // Even in the case of an exception (access not allowed) we need to reset this flag
+                TemporaryAuthorizationContextManager.stopInAuthentication();
             }
         }
 

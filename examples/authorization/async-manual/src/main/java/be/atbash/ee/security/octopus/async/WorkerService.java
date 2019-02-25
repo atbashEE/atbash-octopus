@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.context;
+package be.atbash.ee.security.octopus.async;
 
-import be.atbash.ee.security.octopus.SecurityUtils;
-import be.atbash.ee.security.octopus.subject.Subject;
+
+import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import be.atbash.util.PublicAPI;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.util.concurrent.Future;
 
 /**
  *
  */
-@Dependent
-@PublicAPI
-public class OctopusWebSecurityContext extends OctopusSecurityContext {
+@Stateless
+@RequiresUser
+public class WorkerService {
 
-    private Subject subject;
+    @Inject
+    private UserPrincipal userPrincipal;
 
-    public Subject getSubject() {
-        Subject result = subject;
-        if (subject != null) {
-
-            subject = null;  // So that next calls make a anonymous user or the current Subject associated with the thread.
-        } else {
-            result = SecurityUtils.getSubject();
+    @Asynchronous
+    public Future<String> doInBackground() {
+        try {
+            Thread.sleep(100L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        return result;
+        return new AsyncResult<>("Hello Async World : " + userPrincipal.getName());
     }
-
 }

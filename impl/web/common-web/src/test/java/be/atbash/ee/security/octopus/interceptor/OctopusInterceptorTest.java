@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import be.atbash.ee.security.octopus.interceptor.testclasses.TestPermissionCheck
 import be.atbash.ee.security.octopus.interceptor.testclasses.TestRoleCheck;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import be.atbash.ee.security.octopus.systemaccount.SystemAccountPrincipal;
+import be.atbash.ee.security.octopus.systemaccount.internal.SystemAccountPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;

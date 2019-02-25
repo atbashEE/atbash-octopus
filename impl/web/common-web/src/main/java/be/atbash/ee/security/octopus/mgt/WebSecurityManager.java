@@ -444,7 +444,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                 */
 
         boolean authenticated = true;
-        if (twoStepManager.isTwoStepRequired()) {  // FIXME Let the user decide if (s)he wants Two Step.
+        if (twoStepManager.isTwoStepRequired() && !userPrincipal.isSystemAccount()) {  // FIXME Let the user decide if (s)he wants Two Step.
 
             Boolean twoStepDone = userPrincipal.getUserInfo(OCTOPUS_TWO_STEP);
             authenticated = twoStepDone != null && twoStepDone;
