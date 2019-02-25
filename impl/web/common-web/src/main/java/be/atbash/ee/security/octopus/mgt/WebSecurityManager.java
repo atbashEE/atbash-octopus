@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
@@ -54,6 +55,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_TWO_STEP;
+import static be.atbash.ee.security.octopus.WebConstants.IDENTITY_REMOVED_KEY;
 
 /**
  * This interface represents a {@link SecurityManager} implementation that can used in web-enabled applications.
@@ -560,12 +562,27 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     }
 
+    protected void beforeLogout(Subject subject) {
+        rememberMeLogout(subject);
+        removeRequestIdentity(subject);
+    }
+
+    protected void removeRequestIdentity(Subject subject) {
+        if (subject instanceof WebSubject) {
+            WebSubject webSubject = (WebSubject) subject;
+            ServletRequest request = webSubject.getServletRequest();
+            if (request != null) {
+                request.setAttribute(IDENTITY_REMOVED_KEY, Boolean.TRUE);
+            }
+        }
+    }
+
     public void logout(Subject subject) {
         if (subject == null) {
             throw new AtbashIllegalActionException("(OCT-DEV-051) Subject method argument cannot be null.");
         }
 
-        //beforeLogout(subject); FIXME only for RememberMe
+        beforeLogout(subject);
 
         PrincipalCollection principals = subject.getPrincipals();
         // it is possible to have a Subject without PrincipalCollection?

@@ -34,7 +34,8 @@
     <a href="otherPage.xhtml">Other page</a> <br/>
     <a href="authenticatedPage.xhtml">Authenticated Only users</a> <br/>
     <h:form>
-        <h:commandButton value="Test Authorization" actionListener="#{testBean.testAuthorization}"/>
+        <h:commandButton value="Test Authorization" actionListener="#{testBean.testAuthorization}"/> <br/>
+        <h:commandButton value="logout" actionListener="#{loginBean.logout}"/>
     </h:form>
 </h:body>
 
