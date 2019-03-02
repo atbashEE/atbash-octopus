@@ -62,7 +62,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
                 {AUTHENTICATED, PERMISSION1, NO_CUSTOM_ACCESS, null, null},        //3
                 {AUTHENTICATED, null, CUSTOM_ACCESS, null, null},                   //4
                 {AUTHENTICATED, OCTOPUS1, NO_CUSTOM_ACCESS, null, null},            //5
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null},           //6
+                {NOT_AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null},           //6
                 {AUTHENTICATED, NAMED_OCTOPUS, NO_CUSTOM_ACCESS, null, null},        //7
                 {AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, ROLE1},           //8
         });
