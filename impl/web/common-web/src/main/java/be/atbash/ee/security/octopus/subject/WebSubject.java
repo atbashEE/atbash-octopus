@@ -944,4 +944,17 @@ public class WebSubject implements RequestPairSource, Subject {
         return authorizingRealm.getPermissions(this);
     }
 
+    public void startTwoStepProcess() {
+        principals.add(new TwoStepPrincipal());
+    }
+
+    public void endTwoStepProcess() {
+        TwoStepPrincipal twoStepPrincipal = principals.oneByType(TwoStepPrincipal.class);
+        if (twoStepPrincipal != null) {
+
+            twoStepPrincipal.setTerminated();
+            // FIXME Log when twoStepPrincipal == null
+        }
+    }
+
 }

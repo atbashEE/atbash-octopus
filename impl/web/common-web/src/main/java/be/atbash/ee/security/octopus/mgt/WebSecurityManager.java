@@ -36,6 +36,7 @@ import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.OTPToken;
 import be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken;
 import be.atbash.ee.security.octopus.twostep.TwoStepManager;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
@@ -54,7 +55,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_TWO_STEP;
 import static be.atbash.ee.security.octopus.WebConstants.IDENTITY_REMOVED_KEY;
 
 /**
@@ -254,7 +254,6 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      * @param context the subject context data that may resolve a Session instance.
      * @return The context to use to pass to a {@link WebSubjectFactory} for subject creation.
      */
-    @SuppressWarnings({"unchecked"})
     protected WebSubjectContext resolveSession(WebSubjectContext context) {
         if (context.resolveSession() != null) {
             log.debug("Context already contains a session.  Returning.");
@@ -306,7 +305,6 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      *                {@link PrincipalCollection} identity.
      * @return The Subject context to use to pass to a {@link WebSubjectFactory} for subject creation.
      */
-    @SuppressWarnings({"unchecked"})
     protected WebSubjectContext resolvePrincipals(WebSubjectContext context) {
 
         PrincipalCollection principals = context.resolvePrincipals();
@@ -423,33 +421,12 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         }
 
         WebSubject loggedIn;
-        /*
-        if (info instanceof TwoStepAuthenticationInfo) {
-            // If we have TwoStepAuthenticationInfo, we have fisnished the second step of the authentication.
-            UserPrincipal userPrincipal = (UserPrincipal) subject.getPrincipal();
-            userPrincipal.setNeedsTwoStepAuthentication(false);
 
-            loggedIn = createSubject(token, info, subject);
-
-            onSuccessfulLogin(token, info, loggedIn);
-
-        } else {
-        */
         UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
-
-                /*
-                // TODO Review this, Can it be solved differently?
-                if (userPrincipal.needsTwoStepAuthentication()) {
-                    loggedIn = createTwoStepSubject(token, info, subject);
-
-                } else {
-                */
 
         boolean authenticated = true;
         if (twoStepManager.isTwoStepRequired() && !userPrincipal.isSystemAccount()) {  // FIXME Let the user decide if (s)he wants Two Step.
-
-            Boolean twoStepDone = userPrincipal.getUserInfo(OCTOPUS_TWO_STEP);
-            authenticated = twoStepDone != null && twoStepDone;
+            authenticated = token instanceof OTPToken;
         }
 
         boolean rememberMe = false;
@@ -460,8 +437,10 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         loggedIn = createSubject(token, info, (WebSubject) webSubject, authenticated, rememberMe);
 
         if (loggedIn.isAuthenticated() || loggedIn.isRemembered()) {
+            loggedIn.endTwoStepProcess();
             onSuccessfulLogin(token, info, loggedIn);
         } else {
+            loggedIn.startTwoStepProcess();
             twoStepManager.startSecondStep(loggedIn);
         }
 
@@ -488,14 +467,12 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     protected void onFailedLogin(AuthenticationToken token, AuthenticationException ae, Subject subject) {
         rememberMeFailedLogin(token, ae, subject); // Do the default stuff (with the rememberme manager
-        /*
-        FIXME 2step
-        if (subject instanceof TwoStepSubject) {
+
+        if (token instanceof OTPToken) {
             // There is a failure in the validation of the OTP token
             // log the user out since authentication as a whole failed.
             subject.logout();
         }
-        */
     }
 
     protected void rememberMeSuccessfulLogin(AuthenticationToken token, AuthenticationInfo info, WebSubject subject) {

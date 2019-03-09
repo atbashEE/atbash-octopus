@@ -51,7 +51,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-common-web</artifactId>
@@ -64,6 +63,22 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- Test -->
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-core</artifactId>
+            <version>0.5-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

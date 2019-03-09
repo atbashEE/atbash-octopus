@@ -20,21 +20,22 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
 import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
+import be.atbash.ee.security.octopus.otp.persistence.DefaultOTPUserDataPersistence;
 import be.atbash.ee.security.octopus.otp.persistence.OTPUserDataPersistence;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.OTPToken;
 import be.atbash.ee.security.octopus.twostep.TwoStepProvider;
 import be.atbash.ee.security.octopus.util.order.ProviderOrder;
+import be.atbash.util.CDIUtils;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import static be.atbash.ee.security.octopus.OctopusConstants.OCTOPUS_TWO_STEP;
 
 @ApplicationScoped
 @ProviderOrder(-200)
@@ -43,7 +44,6 @@ public class OTPTwoStepProvider extends AuthenticationInfoProvider implements Tw
     @Inject
     private OTPProviderFactory otpProviderFactory;
 
-    @Inject
     private OTPUserDataPersistence otpUserDataPersistence;
 
     @Inject
@@ -52,6 +52,18 @@ public class OTPTwoStepProvider extends AuthenticationInfoProvider implements Tw
     // TODO Do we need a separate store for this?
     private Map<Serializable, String> otpValues = new HashMap<>();
 
+    @PostConstruct
+    public void init() {
+        otpUserDataPersistence = CDIUtils.retrieveOptionalInstance(OTPUserDataPersistence.class);
+        // Is there a user defined version
+        if (otpUserDataPersistence == null) {
+            // We get the default implementation
+            // FIXME which will not work for totp-web so can we make a distinction?
+            // TODO Any use case for combining 2 ways (QR code and sending the OTP)?
+            otpUserDataPersistence = new DefaultOTPUserDataPersistence();
+        }
+    }
+
     @Override
     public void startSecondStep(HttpServletRequest request, UserPrincipal userPrincipal) {
         OTPProvider provider = otpProviderFactory.retrieveOTPProvider();
@@ -59,7 +71,6 @@ public class OTPTwoStepProvider extends AuthenticationInfoProvider implements Tw
         String otpValue = provider.generate(otpUserDataPersistence.retrieveData(userPrincipal));
         OTPValueSender.sendValue(userPrincipal, otpValue);
         otpValues.put(userPrincipal.getId(), otpValue);
-
     }
 
     @Override
@@ -68,11 +79,9 @@ public class OTPTwoStepProvider extends AuthenticationInfoProvider implements Tw
             UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
             String value = otpValues.get(userPrincipal.getId());
             otpValues.remove(userPrincipal.getId()); // Make sure it can't be retrieved a second time!!
-            // Wo when a wrong value is entered the first time, no second chance.
+            // So when a wrong value is entered the first time, no second chance.
 
-            userPrincipal.addUserInfo(OCTOPUS_TWO_STEP, Boolean.TRUE);
-            return new SimpleAuthenticationInfo(userPrincipal, value);
-
+            return new SimpleAuthenticationInfo(userPrincipal, value, true);
         }
         return null;
     }

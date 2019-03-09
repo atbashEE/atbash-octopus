@@ -44,6 +44,7 @@
         <module>login_jsf</module>
         <module>keycloak-jsf</module>
         <module>twostep</module>
+        <module>twostep-totp</module>
         <module>authorization</module>
 
         <module>events</module>

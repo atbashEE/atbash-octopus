@@ -48,6 +48,7 @@
         <module>mp</module>
 
         <module>otp-sender</module>
+        <module>totp-web</module>
 
         <module>keycloak</module>
         <module>keycloak-rest</module>

@@ -21,6 +21,8 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.codec.ByteSource;
 
+import java.util.Objects;
+
 import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
 
 /**
@@ -57,13 +59,29 @@ public class SimpleAuthenticationInfo implements AuthenticationInfo {
      * <p/>
      * This is a convenience constructor and will construct a {@link PrincipalCollection PrincipalCollection} based
      * on the {@code principal} and {@code realmName} argument.
-     *
+     * authenticationInfo is possibly cached (see logic ???) // TODO
      * @param principal   the 'primary' principal associated with the specified realm.
      * @param credentials the credentials that verify the given principal.
      */
     public SimpleAuthenticationInfo(UserPrincipal principal, Object credentials) {
+        this(principal, credentials, false);
+    }
+
+    /**
+     * Constructor that takes in a single 'primary' principal of the account and its corresponding credentials,
+     * associated with the specified realm.
+     * <p/>
+     * This is a convenience constructor and will construct a {@link PrincipalCollection PrincipalCollection} based
+     * on the {@code principal} and {@code realmName} argument.
+     *
+     * @param principal   the 'primary' principal associated with the specified realm.
+     * @param credentials the credentials that verify the given principal.
+     * @param oneTime     when oneTime set to true, the authenticationInfo will not be cached.
+     */
+    public SimpleAuthenticationInfo(UserPrincipal principal, Object credentials, boolean oneTime) {
         principals = new PrincipalCollection(principal);
         this.credentials = credentials;
+        this.oneTime = oneTime;
     }
 
     /**
@@ -208,12 +226,7 @@ public class SimpleAuthenticationInfo implements AuthenticationInfo {
 
         SimpleAuthenticationInfo that = (SimpleAuthenticationInfo) o;
 
-        //noinspection RedundantIfStatement
-        if (principals != null ? !principals.equals(that.principals) : that.principals != null) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(principals, that.principals);
     }
 
     @Override

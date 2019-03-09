@@ -44,8 +44,6 @@ public final class OctopusConstants {
     public static final String DOMAIN = "domain";
     public static final String OAUTH2_TOKEN = "OAuth2token";
 
-    public static final String OCTOPUS_TWO_STEP = "octopus.twostep";
-
     /**
      * Attribute name on Servlet request indicating message related to violation of permission,  role, ... . Set by the filters and read by the {@code AccessDeniedHandler}.
      */

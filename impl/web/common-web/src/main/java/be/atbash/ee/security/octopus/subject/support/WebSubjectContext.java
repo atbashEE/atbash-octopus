@@ -170,8 +170,11 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
             Session session = resolveSession();
             if (session != null) {
                 principals = (PrincipalCollection) session.getAttribute(PRINCIPALS_SESSION_KEY);
-                // Coming from session is always remembered
-                setRemembered(principals != null);
+                // Coming from session is always remembered when Two step is not in progress
+                if (principals != null) {
+                    TwoStepPrincipal twoStepPrincipal = principals.oneByType(TwoStepPrincipal.class);
+                    setRemembered(principals.getPrimaryPrincipal() != null && (twoStepPrincipal == null || twoStepPrincipal.isTerminated()));
+                }
             }
         }
 

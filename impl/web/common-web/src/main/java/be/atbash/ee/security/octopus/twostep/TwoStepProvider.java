@@ -27,6 +27,4 @@ public interface TwoStepProvider {
 
     void startSecondStep(HttpServletRequest request, UserPrincipal userPrincipal);
 
-    // FIXME , Needed ?
-    //TwoStepAuthenticationInfo defineAuthenticationInfo(AuthenticationToken token, UserPrincipal userPrincipal);
 }
