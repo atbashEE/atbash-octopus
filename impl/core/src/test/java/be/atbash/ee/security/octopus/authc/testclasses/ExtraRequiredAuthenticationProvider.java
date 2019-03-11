@@ -36,7 +36,7 @@ public class ExtraRequiredAuthenticationProvider extends AuthenticationInfoProvi
                 return null;
             }
 
-            UserPrincipal userPrincipal = SecurityUtils.getIntermediateUserprincipal();
+            UserPrincipal userPrincipal = SecurityUtils.getIntermediateUserPrincipal();
             AuthenticationInfoBuilder authenticationInfoBuilder = new AuthenticationInfoBuilder();
             authenticationInfoBuilder.userPrincipal(userPrincipal);
 

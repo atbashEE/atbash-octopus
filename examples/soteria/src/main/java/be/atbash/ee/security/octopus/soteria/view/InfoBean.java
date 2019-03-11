@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.c4j.demo.security.view;
+package be.atbash.ee.security.octopus.soteria.view;
 
 import org.glassfish.soteria.identitystores.annotation.Credentials;
 import org.glassfish.soteria.identitystores.annotation.EmbeddedIdentityStoreDefinition;
@@ -31,7 +31,6 @@ import javax.enterprise.inject.Model;
 
 @Model
 public class InfoBean {
-
     // We just needed a CDI bean where we could place the EmbeddedIdentityStoreDefinition
     // In real world application, it can be on any CDI bean.
 

@@ -22,6 +22,7 @@ import be.atbash.ee.security.octopus.token.OTPToken;
 import be.atbash.ee.security.octopus.util.order.CredentialsMatcherOrder;
 
 @CredentialsMatcherOrder(-50)
+// FIXME Try to combine with the CredentialsMatcher from totp-web
 public class OtpCredentialsMatcher implements CredentialsMatcher {
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {

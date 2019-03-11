@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @ApplicationScoped
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.mgt.DefaultWebSubjectFactory", "FIXME Others"})
-// FIXME Find out which are exactly integrated here.
+// FIXME Find out which classes are exactly integrated here.
 public class WebSubjectFactory {
 
     /**

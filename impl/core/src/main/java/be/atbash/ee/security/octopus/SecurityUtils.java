@@ -56,7 +56,12 @@ public abstract class SecurityUtils {
     }
 
 
-    public static UserPrincipal getIntermediateUserprincipal() {
+    /**
+     * Can be used to retrieve the <strong>current</strong> User Principal information in case we have
+     * multiple Authentication providers.
+     * @return
+     */
+    public static UserPrincipal getIntermediateUserPrincipal() {
         return ThreadContext.getIntermediateUserPrincipal();
     }
 

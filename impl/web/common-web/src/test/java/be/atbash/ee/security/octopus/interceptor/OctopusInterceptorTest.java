@@ -91,7 +91,7 @@ public class OctopusInterceptorTest {
     protected OctopusCoreConfiguration octopusConfigMock;
 
     //@Mock
-    //private TwoStepConfig twoStepConfigConfigMock;
+    //private TwoStepConfig twoStepConfigConfigMock; // FIXME
 
     @Mock
     private SecurityViolationInfoProducer infoProducerMock;
@@ -122,7 +122,7 @@ public class OctopusInterceptorTest {
     protected String role;
 
     public OctopusInterceptorTest(boolean authenticated, String permission, boolean customAccess, String systemAccount, String role) {
-        this.authenticated = authenticated;
+        this.authenticated = authenticated; // FIXME How about remember me
         this.permission = permission;
         this.customAccess = customAccess;
         this.systemAccount = systemAccount;

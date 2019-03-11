@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
                 {AUTHENTICATED, PERMISSION1, NO_CUSTOM_ACCESS, null, null},        //3
                 {AUTHENTICATED, null, CUSTOM_ACCESS, null, null},                   //4
                 {AUTHENTICATED, OCTOPUS1, NO_CUSTOM_ACCESS, null, null},            //5
-                {NOT_AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null},           //6
+                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null},           //6
                 {AUTHENTICATED, NAMED_OCTOPUS, NO_CUSTOM_ACCESS, null, null},        //7
                 {AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, ROLE1},           //8
         });
@@ -119,7 +119,9 @@ public class OctopusInterceptor_MethodLevelTest extends OctopusInterceptorTest {
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_REQUIRES_USER);
 
         } catch (SecurityAuthorizationViolationException e) {
-            assertThat(authenticated).isFalse();
+            if (systemAccount == null) {
+                assertThat(authenticated).isFalse();
+            }
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
         }

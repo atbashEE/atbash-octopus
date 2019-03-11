@@ -26,5 +26,6 @@ public interface OTPUserDataPersistence {
 
     OTPUserData retrieveData(UserPrincipal userPrincipal);
 
+    // FIXME Remove. not used from within Octopus code.
     void storeData(UserPrincipal userPrincipal, OTPUserData otpUserData);
 }

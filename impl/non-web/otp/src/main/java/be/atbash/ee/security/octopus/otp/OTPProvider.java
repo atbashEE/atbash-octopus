@@ -26,7 +26,7 @@ public interface OTPProvider {
 
     void setProperties(int digits, Properties properties);
 
-    boolean supportValidate();
+    boolean supportValidate(); // Fixme usage?
 
     boolean valid(OTPUserData data, int window, String userOTP);
 }
