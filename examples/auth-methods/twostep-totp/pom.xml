@@ -20,13 +20,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
-        <artifactId>octopus-examples</artifactId>
+        <groupId>be.atbash.ee.security.examples</groupId>
+        <artifactId>auth-methods</artifactId>
         <version>0.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>twostep</artifactId>
+    <artifactId>twostep-totp</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -58,7 +58,7 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>otp-sender</artifactId>
+            <artifactId>totp-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -73,6 +73,7 @@
             <groupId>be.atbash.config</groupId>
             <artifactId>atbash-config</artifactId>
             <version>${atbash-config.version}</version>
+
         </dependency>
 
         <dependency>
@@ -90,7 +91,7 @@
     </dependencies>
 
     <build>
-        <finalName>twostep</finalName>
+        <finalName>twostep-totp</finalName>
 
         <plugins>
             <!-- don't need to deploy the examples to nexus. -->
