@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class MPJWTTokenBuilderTest {
         assertThat(token.getAud()).isEqualTo("AUD");
         assertThat(token.getIat()).isEqualTo(now.getTime());
 
-        assertThat(token.getExp()).isGreaterThan(token.getIat() + 2 * 60 * 1000);
+        assertThat(token.getExp()).isGreaterThanOrEqualTo(token.getIat() + 2 * 60 * 1000);
         // 0.2 sec skew
         assertThat(token.getExp() - 200).isLessThan(token.getIat() + 2 * 60 * 1000);
 

@@ -19,6 +19,7 @@ import be.atbash.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.otp.config.OTPConfiguration;
 import be.atbash.ee.security.octopus.otp.provider.DOTPProvider;
 import be.atbash.ee.security.octopus.otp.provider.HOTPProvider;
+import be.atbash.ee.security.octopus.otp.provider.SOTPProvider;
 import be.atbash.ee.security.octopus.otp.provider.TOTPProvider;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -111,7 +112,7 @@ public class OTPProviderFactory {
     }
 
     private OTPProvider createOTPProvider() {
-        OTPProvider result = null;
+        OTPProvider result;
 
         OctopusOTPAlgorithm algorithm = getOctopusOTPAlgorithm();
         if (algorithm != null) {
@@ -127,6 +128,7 @@ public class OTPProviderFactory {
                     result = new DOTPProvider();
                     break;
                 case SOTP:
+                    result = new SOTPProvider();
                     break;
                 default:
                     throw new IllegalArgumentException("Value supported " + algorithm);
