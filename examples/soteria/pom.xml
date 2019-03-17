@@ -71,7 +71,7 @@
         <dependency>
             <groupId>be.atbash.config</groupId>
             <artifactId>geronimo-config</artifactId>
-            <version>0.9.3-SNAPSHOT</version>
+            <version>${atbash-config.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
