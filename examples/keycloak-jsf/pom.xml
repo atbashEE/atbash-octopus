@@ -1,6 +1,6 @@
 <!--
 
-    Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>keycloak-jsf</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
     <packaging>war</packaging>
 
     <properties>

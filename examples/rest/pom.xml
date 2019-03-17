@@ -22,13 +22,13 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>be.atbash.ee.security.examples</groupId>
     <artifactId>rest</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
     <packaging>pom</packaging>
 
 

@@ -24,14 +24,14 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-web</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Time Based One Time Password with QR code</name>
 
     <artifactId>totp-web</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
     <packaging>jar</packaging>
 
     <dependencies>

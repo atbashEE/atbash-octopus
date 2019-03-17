@@ -23,7 +23,7 @@
 
     <groupId>be.atbash.ee.security</groupId>
     <artifactId>octopus-parent</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
     <packaging>pom</packaging>
 
     <name>Atbash Octopus Parent</name>
@@ -126,7 +126,6 @@
     <modules>
         <module>impl</module>
         <module>examples</module>
-        <module>opinionated</module>
     </modules>
 
     <build>

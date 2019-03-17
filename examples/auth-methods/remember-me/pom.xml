@@ -22,12 +22,12 @@
     <parent>
         <groupId>be.atbash.ee.security.examples</groupId>
         <artifactId>auth-methods</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>remember-me</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
     <packaging>war</packaging>
 
     <properties>
