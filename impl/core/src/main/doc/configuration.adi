@@ -132,6 +132,12 @@ default : */*
 
 The page which is shown when the is logged out. Make sure the page is anonymously accessible. By default, it is the page defined as welcome-file in the web.xml
 
+==== secondStepPage
+
+default : */secondStep.xhtml*
+
+The page which is shown when the Two Step authentication is active and a OTP value needs tyo be asked from the user.
+
 ==== allowPostAsSavedRequest
 
 default : *true*
@@ -236,6 +242,26 @@ The page which is shown to the user when multiple OAuth2 providers are found on 
 default : *false*
 
 Is the Google account selection page forced?
+
+=== One Time password Configuration
+
+==== otp.provider
+
+default : *DOTP*
+
+Defines the OTP algorithm. Supported values are DOTP, HOTP, HOTP, and SOTP or any fully qualified classname which implements the **be.atbash.ee.security.octopus.otp.OTPProvider** interface.
+
+==== otp.configFile
+
+default : *(none)*
+
+Refers to the filename containing the configuration of the OTP algorithm. When no value is defined, some defaults are used.
+
+==== otp.length
+
+default : *6*
+
+Defines the length of the One Time Password.
 
 === Keycloak configuration
 

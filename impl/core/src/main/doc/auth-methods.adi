@@ -69,3 +69,7 @@ include::oauth2.adi[]
 === Security API
 
 include::securityAPI.adi[]
+
+=== Two Step Authentication
+
+include::twoStep.adi[]

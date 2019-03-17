@@ -1,0 +1,78 @@
+==== Introduction
+
+When activating the Two Step Authentication, a second step using One Time Password is required. There are various One Time Password types supported.
+
+The first type generates a digit (using DOTP, HOTP, SOTP) which is then send to the user (using SMS or other mobile solution). The actual sending is left to the developer which needs to implement a certain interface.
+
+The second type is based on a Time Based One Time password where the digit is generated using a secret and the time stamp. The secret is passed to the user by using a QR Code which can be read by mobile software like FreeOTP and Google Authenticator. With this type, there is no need to send something to the user in the second step of the authentication but will use this Mobile based software.
+
+
+==== Setup
+
+Depending on the type you want to use, the setup and requirement are a bit different.
+
+Send the OTP.
+
+Add the following dependency to your project POM.xml file.
+
+[source,xml]
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>otp-sender</artifactId>
+        <version>0.5</version>
+    </dependency>
+----
+
+Create a CDI bean which implement the interface _be.atbash.ee.security.octopus.otp.OTPValueSender_. The _sendValue()_ wil be called when the OTP needs to be transferred to the user. The method has 2 parameters, The _UserPrincipal_ holds all information of the user and the String value is the OTP value.
+
+See below for the configuration options of the OTP algorithm
+
+Using Time Based OTP values.
+
+Add the following dependency to your project POM.xml file.
+
+[source,xml]
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>totp-web</artifactId>
+        <version>0.5</version>
+    </dependency>
+----
+
+A JSF component is available which encapsulate the information of the user, applicaiton and the secret which is needed for the mobile applications like FreeOTP and Google Authenticator.
+
+The Component is can be used as follow
+----
+   <totp:totpQR issuer="Octopus" account="#{user.name}" secret="#{user.secret}"/>
+----
+
+where the properties have the following meaning
+- issuer: identification of the application
+- account: identification of the user (like his/her name)
+- secret: The BASE32 encoded secret key (byte array)
+
+This QR code must be show to the user in a secure way of course. Because this QR code contains all the information required for the generation of the OTP. And with this information anyone can generate the OTP value.
+
+The following snippet can be used to generate the BASE32 encoded secret.
+
+----
+    SecureRandom secureRandom = new SecureRandom();
+    byte[] secret = new byte[128];
+    secureRandom.nextBytes(secret);
+
+    String secretEncoded = Base32Codec.encodeToString(secret);
+----
+
+==== OTP Algorithms
+
+There are 4 algorithms supported where the Time based OTP is specifically suited for the use of the Mobile soft.
+
+The configuration of the OTP is done by the config parameters otp.provider, otp.configFile and otp.length which all have sensible default. Have a look at the configuration section (???TODO link) for more information on these.
+
+DOTP : No config needed
+HOTP : truncate_offset and checksum
+SOTP : No config needed
+TOTP : algorithm
+
