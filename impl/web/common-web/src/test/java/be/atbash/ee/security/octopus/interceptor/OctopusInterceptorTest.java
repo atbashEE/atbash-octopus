@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.interceptor;
 
+import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProviderHandler;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
@@ -373,7 +373,7 @@ public class OctopusInterceptorTest {
                     throw new RuntimeException(e);
                 }
                 UserPrincipal userPrincipal = new UserPrincipal("id", "atbash", "Atbash");
-                return new SimpleAuthenticationInfo(userPrincipal, "Credentials");
+                return new AuthenticationInfo(userPrincipal, "Credentials");
 
             }
 

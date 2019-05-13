@@ -19,7 +19,6 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.otp.OTPProviderFactory;
 import be.atbash.ee.security.octopus.otp.OTPUserData;
 import be.atbash.ee.security.octopus.otp.persistence.OTPUserDataPersistence;
@@ -53,7 +52,7 @@ public class TOTPTwoStepProvider extends AuthenticationInfoProvider implements T
             UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
 
             OTPUserData data = otpUserDataPersistence.retrieveData(userPrincipal);
-            return new SimpleAuthenticationInfo(userPrincipal, data);
+            return new AuthenticationInfo(userPrincipal, data);
 
         }
         return null;

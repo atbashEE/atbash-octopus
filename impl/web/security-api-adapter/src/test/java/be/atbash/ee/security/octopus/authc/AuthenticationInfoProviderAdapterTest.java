@@ -56,24 +56,21 @@ public class AuthenticationInfoProviderAdapterTest {
         UsernamePasswordToken token = new UsernamePasswordToken("JUnit", "pass");
         AuthenticationInfo info = adapter.getAuthenticationInfo(token);
 
-        assertThat(info).isInstanceOf(SimpleAuthenticationInfo.class);
 
-        SimpleAuthenticationInfo authenticationInfo = (SimpleAuthenticationInfo) info;
-
-        PrincipalCollection principalCollection = authenticationInfo.getPrincipals();
+        PrincipalCollection principalCollection = info.getPrincipals();
         UserPrincipal userPrincipal = principalCollection.getPrimaryPrincipal();
         assertThat(userPrincipal.getUserName()).isEqualTo("JUnit");
         assertThat(userPrincipal.getId()).isEqualTo("JUnit");
         assertThat(userPrincipal.getName()).isEqualTo("JUnit Caller");
         assertThat(userPrincipal.getInfo()).containsOnlyKeys("token");
 
-        Object credentials = authenticationInfo.getCredentials();
+        Object credentials = info.getCredentials();
         assertThat(credentials).isNull();
 
-        boolean oneTimeAuthentication = authenticationInfo.isOneTimeAuthentication();
+        boolean oneTimeAuthentication = info.isOneTimeAuthentication();
         assertThat(oneTimeAuthentication).isFalse();
 
-        ValidatedAuthenticationToken validatedToken = authenticationInfo.getValidatedToken();
+        ValidatedAuthenticationToken validatedToken = info.getValidatedToken();
         assertThat(validatedToken).isInstanceOf(CredentialValidationResultToken.class);
 
         CredentialValidationResultToken credentialValidationResultToken = (CredentialValidationResultToken) validatedToken;
@@ -93,24 +90,20 @@ public class AuthenticationInfoProviderAdapterTest {
         UsernamePasswordToken token = new UsernamePasswordToken("JUnit", "pass");
         AuthenticationInfo info = adapter.getAuthenticationInfo(token);
 
-        assertThat(info).isInstanceOf(SimpleAuthenticationInfo.class);
-
-        SimpleAuthenticationInfo authenticationInfo = (SimpleAuthenticationInfo) info;
-
-        PrincipalCollection principalCollection = authenticationInfo.getPrincipals();
+        PrincipalCollection principalCollection = info.getPrincipals();
         UserPrincipal userPrincipal = principalCollection.getPrimaryPrincipal();
         assertThat(userPrincipal.getUserName()).isEqualTo("JUnit");
         assertThat(userPrincipal.getId()).isEqualTo("Id");
         assertThat(userPrincipal.getName()).isEqualTo("JUnit Caller");
         assertThat(userPrincipal.getInfo()).containsOnlyKeys("token");
 
-        Object credentials = authenticationInfo.getCredentials();
+        Object credentials = info.getCredentials();
         assertThat(credentials).isNull();
 
-        boolean oneTimeAuthentication = authenticationInfo.isOneTimeAuthentication();
+        boolean oneTimeAuthentication = info.isOneTimeAuthentication();
         assertThat(oneTimeAuthentication).isFalse();
 
-        ValidatedAuthenticationToken validatedToken = authenticationInfo.getValidatedToken();
+        ValidatedAuthenticationToken validatedToken = info.getValidatedToken();
         assertThat(validatedToken).isInstanceOf(CredentialValidationResultToken.class);
 
         CredentialValidationResultToken credentialValidationResultToken = (CredentialValidationResultToken) validatedToken;

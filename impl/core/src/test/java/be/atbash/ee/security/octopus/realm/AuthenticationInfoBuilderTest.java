@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.exception.AtbashIllegalActionException;
@@ -162,13 +161,12 @@ public class AuthenticationInfoBuilderTest {
                 .build();
 
         assertThat(info).isNotNull();
-        assertThat(info).isInstanceOf(SimpleAuthenticationInfo.class);
 
-        SimpleAuthenticationInfo simpleAuthenticationInfo = (SimpleAuthenticationInfo) info;
-        assertThat(simpleAuthenticationInfo.getCredentials()).isEqualTo("topSecret");
-        assertThat(simpleAuthenticationInfo.getCredentialsSalt()).isNull();
-        assertThat(simpleAuthenticationInfo.isOneTimeAuthentication()).isFalse();
-        assertThat(simpleAuthenticationInfo.getValidatedToken()).isNull();
+
+        assertThat(info.getCredentials()).isEqualTo("topSecret");
+        assertThat(info.getCredentialsSalt()).isNull();
+        assertThat(info.isOneTimeAuthentication()).isFalse();
+        assertThat(info.getValidatedToken()).isNull();
     }
 
     @Test
@@ -178,12 +176,10 @@ public class AuthenticationInfoBuilderTest {
                 .build();
 
         assertThat(info).isNotNull();
-        assertThat(info).isInstanceOf(SimpleAuthenticationInfo.class);
 
-        SimpleAuthenticationInfo simpleAuthenticationInfo = (SimpleAuthenticationInfo) info;
-        assertThat(simpleAuthenticationInfo.getCredentials()).isEqualTo(321L);
-        assertThat(simpleAuthenticationInfo.isOneTimeAuthentication()).isFalse();
-        assertThat(simpleAuthenticationInfo.getValidatedToken()).isNull();
+        assertThat(info.getCredentials()).isEqualTo(321L);
+        assertThat(info.isOneTimeAuthentication()).isFalse();
+        assertThat(info.getValidatedToken()).isNull();
     }
 
     @Test
@@ -196,13 +192,11 @@ public class AuthenticationInfoBuilderTest {
                 .build();
 
         assertThat(info).isNotNull();
-        assertThat(info).isInstanceOf(SimpleAuthenticationInfo.class);
 
-        SimpleAuthenticationInfo simpleAuthenticationInfo = (SimpleAuthenticationInfo) info;
-        assertThat(simpleAuthenticationInfo.getCredentials()).isEqualTo("topSecret");
-        assertThat(simpleAuthenticationInfo.getCredentialsSalt().getBytes()).isEqualTo(salt);
-        assertThat(simpleAuthenticationInfo.isOneTimeAuthentication()).isFalse();
-        assertThat(simpleAuthenticationInfo.getValidatedToken()).isNull();
+        assertThat(info.getCredentials()).isEqualTo("topSecret");
+        assertThat(info.getCredentialsSalt().getBytes()).isEqualTo(salt);
+        assertThat(info.isOneTimeAuthentication()).isFalse();
+        assertThat(info.getValidatedToken()).isNull();
     }
 
     @Test
@@ -212,13 +206,11 @@ public class AuthenticationInfoBuilderTest {
                 .build();
 
         assertThat(info).isNotNull();
-        assertThat(info).isInstanceOf(SimpleAuthenticationInfo.class);
 
-        SimpleAuthenticationInfo simpleAuthenticationInfo = (SimpleAuthenticationInfo) info;
-        assertThat(simpleAuthenticationInfo.getCredentials()).isNull();
-        assertThat(simpleAuthenticationInfo.getCredentialsSalt()).isNull();
-        assertThat(simpleAuthenticationInfo.isOneTimeAuthentication()).isTrue();
-        assertThat(simpleAuthenticationInfo.getValidatedToken()).isInstanceOf(SomeValidatedToken.class);
+        assertThat(info.getCredentials()).isNull();
+        assertThat(info.getCredentialsSalt()).isNull();
+        assertThat(info.isOneTimeAuthentication()).isTrue();
+        assertThat(info.getValidatedToken()).isInstanceOf(SomeValidatedToken.class);
     }
 
     private static class SomeValidatedToken implements ValidatedAuthenticationToken {

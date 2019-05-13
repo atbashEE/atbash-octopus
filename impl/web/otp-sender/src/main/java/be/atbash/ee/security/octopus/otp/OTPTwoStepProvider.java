@@ -19,7 +19,6 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.otp.persistence.DefaultOTPUserDataPersistence;
 import be.atbash.ee.security.octopus.otp.persistence.OTPUserDataPersistence;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
@@ -81,7 +80,7 @@ public class OTPTwoStepProvider extends AuthenticationInfoProvider implements Tw
             otpValues.remove(userPrincipal.getId()); // Make sure it can't be retrieved a second time!!
             // So when a wrong value is entered the first time, no second chance.
 
-            return new SimpleAuthenticationInfo(userPrincipal, value, true);
+            return new AuthenticationInfo(userPrincipal, value, true);
         }
         return null;
     }

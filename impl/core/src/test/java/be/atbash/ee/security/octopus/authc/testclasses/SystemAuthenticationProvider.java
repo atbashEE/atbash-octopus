@@ -18,11 +18,8 @@ package be.atbash.ee.security.octopus.authc.testclasses;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
-import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.util.order.ProviderOrder;
 
 @ProviderOrder(-200)
@@ -33,7 +30,7 @@ public class SystemAuthenticationProvider extends AuthenticationInfoProvider {
         if (token instanceof SystemToken) {
 
             UserPrincipal userPrincipal = new UserPrincipal("SystemAuthenticationProvider", "userName", "The Name");
-            return new SimpleAuthenticationInfo(userPrincipal, token);
+            return new AuthenticationInfo(userPrincipal, token);
 
         }
         return null;

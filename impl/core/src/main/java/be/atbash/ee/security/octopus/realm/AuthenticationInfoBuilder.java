@@ -17,7 +17,6 @@ package be.atbash.ee.security.octopus.realm;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.codec.ByteSource;
@@ -139,13 +138,13 @@ public class AuthenticationInfoBuilder {
                 result = null; // FIXME
             } else {
                 if (tokenBased) {
-                    result = new SimpleAuthenticationInfo(userPrincipal, token);
+                    result = new AuthenticationInfo(userPrincipal, token);
                 } else {
-                    result = new SimpleAuthenticationInfo(userPrincipal, password);
+                    result = new AuthenticationInfo(userPrincipal, password);
                 }
             }
         } else {
-            result = new SimpleAuthenticationInfo(userPrincipal, password, salt);
+            result = new AuthenticationInfo(userPrincipal, password, salt);
         }
         return result;
     }

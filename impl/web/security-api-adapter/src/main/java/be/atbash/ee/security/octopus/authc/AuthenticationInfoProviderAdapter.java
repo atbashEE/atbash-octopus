@@ -48,7 +48,7 @@ public class AuthenticationInfoProviderAdapter extends AuthenticationInfoProvide
                 }
                 UserPrincipal userPrincipal = new UserPrincipal(callerUniqueId, usernamePasswordToken.getUsername(), validationResult.getCallerPrincipal().getName());
 
-                return new SimpleAuthenticationInfo(userPrincipal, new CredentialValidationResultToken(validationResult), false);
+                return new AuthenticationInfo(userPrincipal, new CredentialValidationResultToken(validationResult), false);
             }
         }
         return null;

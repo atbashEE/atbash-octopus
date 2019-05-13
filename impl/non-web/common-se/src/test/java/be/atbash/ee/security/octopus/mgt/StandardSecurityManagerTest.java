@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package be.atbash.ee.security.octopus.mgt;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
 import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.support.DelegatingSubject;
@@ -63,7 +62,7 @@ public class StandardSecurityManagerTest {
         when(subjectFactoryMock.createSubject(any(SubjectContext.class))).thenReturn(subject);
 
         AuthenticationToken token = new UsernamePasswordToken("Atbash", "secret");
-        AuthenticationInfo info = new SimpleAuthenticationInfo(new UserPrincipal("id", "atbash", "Atbash"), "credentials");
+        AuthenticationInfo info = new AuthenticationInfo(new UserPrincipal("id", "atbash", "Atbash"), "credentials");
 
         when(octopusRealmMock.authenticate(token)).thenReturn(info);
 

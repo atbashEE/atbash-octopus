@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,14 @@ package be.atbash.ee.security.octopus.subject.support;
 import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.authc.SimpleAuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationException;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.ee.security.octopus.mgt.StandardSecurityManager;
 import be.atbash.ee.security.octopus.realm.AuthorizingRealm;
 import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
-import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.SecurityManager;
+import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import org.junit.After;
 import org.junit.Before;
@@ -113,7 +112,7 @@ public class DefaultSubjectContextTest {
     @Test
     public void resolvePrincipals_fromAuthenticationInfo() {
         UserPrincipal principal = new UserPrincipal("id", "atbash", "Atbash");
-        AuthenticationInfo info = new SimpleAuthenticationInfo(principal, "Credentials");
+        AuthenticationInfo info = new AuthenticationInfo(principal, "Credentials");
         defaultSubjectContext.setAuthenticationInfo(info);
 
         PrincipalCollection principals = defaultSubjectContext.resolvePrincipals();
@@ -156,7 +155,7 @@ public class DefaultSubjectContextTest {
         defaultSubjectContext.setSubject(subject);
 
         UserPrincipal principal3 = new UserPrincipal("id3", "atbash", "Atbash");
-        AuthenticationInfo info = new SimpleAuthenticationInfo(principal3, "Credentials");
+        AuthenticationInfo info = new AuthenticationInfo(principal3, "Credentials");
         defaultSubjectContext.setAuthenticationInfo(info);
 
         PrincipalCollection data = defaultSubjectContext.resolvePrincipals();
@@ -173,7 +172,7 @@ public class DefaultSubjectContextTest {
         defaultSubjectContext.setSubject(subject);
 
         UserPrincipal principal3 = new UserPrincipal("id3", "atbash", "Atbash");
-        AuthenticationInfo info = new SimpleAuthenticationInfo(principal3, "Credentials");
+        AuthenticationInfo info = new AuthenticationInfo(principal3, "Credentials");
         defaultSubjectContext.setAuthenticationInfo(info);
 
         PrincipalCollection data = defaultSubjectContext.resolvePrincipals();
@@ -190,7 +189,7 @@ public class DefaultSubjectContextTest {
     @Test
     public void resolveAuthenticated_fromAuthentication() {
         UserPrincipal principal3 = new UserPrincipal("id", "atbash", "Atbash");
-        AuthenticationInfo info = new SimpleAuthenticationInfo(principal3, "Credentials");
+        AuthenticationInfo info = new AuthenticationInfo(principal3, "Credentials");
         defaultSubjectContext.setAuthenticationInfo(info);
 
         boolean authenticated = defaultSubjectContext.resolveAuthenticated();
