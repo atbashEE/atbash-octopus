@@ -23,7 +23,7 @@
     <parent>
         <groupId>be.atbash.ee.security.examples</groupId>
         <artifactId>auth-methods</artifactId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

@@ -21,7 +21,7 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-web</artifactId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -29,7 +29,7 @@
     <packaging>jar</packaging>
 
     <artifactId>octopus-oauth2-linkedin-common</artifactId>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
 
     <name>OAuth2 LinkedIn info provider</name>
 
