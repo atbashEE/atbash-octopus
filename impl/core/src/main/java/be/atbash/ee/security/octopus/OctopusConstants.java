@@ -49,5 +49,6 @@ public final class OctopusConstants {
      */
     public static final String OCTOPUS_VIOLATION_MESSAGE = "octopus.violation.message";
 
+    public static final String AUTHORIZATION_INFO = "authorizationInfo";
 
 }

@@ -16,9 +16,12 @@
 package be.atbash.ee.security.octopus.authc.credential;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.authc.credential.external.ExternalCredentialsManager;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.ee.security.octopus.util.order.CredentialsMatcherComparator;
+import be.atbash.util.exception.AtbashIllegalActionException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -31,6 +34,8 @@ import java.util.*;
 public class CredentialsMatcherHandler {
 
     private List<CredentialsMatcher> matchers;
+
+    private ExternalCredentialsManager externalCredentialsManager;
 
     @PostConstruct
     public void initMatchers() {
@@ -50,22 +55,20 @@ public class CredentialsMatcherHandler {
             return true;
         }
 
-        Iterator<CredentialsMatcher> iterator = matchers.iterator();
-        while (!result && iterator.hasNext()) {
-            CredentialsMatcher matcher = iterator.next();
-            result = matcher.doCredentialsMatch(token, info);
-        }
+        if (info.isExternalVerification()) {
+            if (token instanceof UsernamePasswordToken) {
+                result = externalCredentialsManager.checkValidCredentials(info, (UsernamePasswordToken) token);
+            } else {
+                throw new AtbashIllegalActionException("(OCT-DEV-012) With external password check, the AuthenticationToken must be of type UsernamePasswordToken");
+            }
+        } else {
+            Iterator<CredentialsMatcher> iterator = matchers.iterator();
+            while (!result && iterator.hasNext()) {
+                CredentialsMatcher matcher = iterator.next();
+                result = matcher.doCredentialsMatch(token, info);
+            }
 
-        /*
-        // FIXME
-        //if (!(info instanceof ExternalPasswordAuthenticationInfo)) {
-        iterator = octopusDefinedMatchers.iterator();
-        while (!result && iterator.hasNext()) {
-            CredentialsMatcher matcher = iterator.next();
-            result = matcher.doCredentialsMatch(token, info);
         }
-        //}
-        */
 
         // True means the user/caller is allowed and there is no way in stopping him/her anymore further on in the code.
         return result;
@@ -78,6 +81,8 @@ public class CredentialsMatcherHandler {
                 matchers.add(credentialsMatcher);
             }
             Collections.sort(matchers, new CredentialsMatcherComparator());
+
+            externalCredentialsManager = new ExternalCredentialsManager();
         }
     }
 

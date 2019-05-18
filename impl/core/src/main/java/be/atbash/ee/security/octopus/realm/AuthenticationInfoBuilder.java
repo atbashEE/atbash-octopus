@@ -19,6 +19,8 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
+import be.atbash.util.PublicAPI;
+import be.atbash.util.StringUtils;
 import be.atbash.util.codec.ByteSource;
 import be.atbash.util.exception.AtbashIllegalActionException;
 
@@ -31,7 +33,7 @@ import java.util.Map;
  *
  */
 @Typed
-//@PublicAPI But need to review the usage of External password verification and the Object hierarchy of AuthenticationInfo
+@PublicAPI //But need to review the usage of External password verification and the Object hierarchy of AuthenticationInfo
 public class AuthenticationInfoBuilder {
 
     private Serializable principalId;
@@ -125,6 +127,12 @@ public class AuthenticationInfoBuilder {
     }
 
     public AuthenticationInfo build() {
+
+        if (externalPasswordCheck) {
+            if (StringUtils.isEmpty(userName)) {
+                throw new AtbashIllegalActionException("(OCT-DEV-011) With external password check, the username is required");
+            }
+        }
         if (userPrincipal == null) {
             userPrincipal = new UserPrincipal(principalId, userName, name);
         }
@@ -134,8 +142,7 @@ public class AuthenticationInfoBuilder {
         // TODO We need to check if developer supplied salt() when octopusConfig.saltLength != 0
         if (salt == null) {
             if (externalPasswordCheck) {
-                //result = new ExternalPasswordAuthenticationInfo(principal);
-                result = null; // FIXME
+                result = new AuthenticationInfo(userPrincipal);
             } else {
                 if (tokenBased) {
                     result = new AuthenticationInfo(userPrincipal, token);

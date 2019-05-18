@@ -1,0 +1,68 @@
+dn: dc=be
+objectclass: top
+objectclass: dcObject
+objectclass: organization
+dc: be
+o: be
+
+dn: dc=atbash,dc=be
+objectclass: top
+objectclass: dcObject
+objectclass: organization
+dc: atbash
+o: atbash
+
+dn: ou=caller,dc=atbash,dc=be
+objectclass: top
+objectclass: organizationalUnit
+ou: caller
+
+dn: uid=rudy,ou=caller,dc=atbash,dc=be
+objectclass: top
+objectclass: uidObject
+objectclass: person
+uid: rudy
+cn: Rudy De Busscher
+sn: Rudy
+userPassword: secret1
+
+dn: uid=user,ou=caller,dc=atbash,dc=be
+objectclass: top
+objectclass: uidObject
+objectclass: person
+uid: user
+cn: Some User
+sn: User
+userPassword: secret2
+
+dn: ou=group,dc=atbash,dc=be
+objectclass: top
+objectclass: organizationalUnit
+ou: group
+
+dn: cn=foo,ou=group,dc=atbash,dc=be
+objectclass: top
+objectclass: groupOfNames
+cn: foo
+member: uid=rudy,ou=caller,dc=atbash,dc=be
+member: uid=user,ou=caller,dc=atbash,dc=be
+
+dn: cn=bar,ou=group,dc=atbash,dc=be
+objectclass: top
+objectclass: groupOfNames
+cn: bar
+member: uid=rudy,ou=caller,dc=atbash,dc=be
+
+dn: ou=admin,dc=atbash,dc=be
+objectclass: top
+objectclass: organizationalUnit
+ou: admin
+
+dn: uid=user,ou=admin,dc=atbash,dc=be
+objectclass: top
+objectclass: uidObject
+objectclass: person
+uid: user
+cn: Administrator
+sn: admin
+userPassword: topsecret

@@ -115,6 +115,14 @@
             <version>2.4.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- LDAP Support -->
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+            <version>4.0.4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

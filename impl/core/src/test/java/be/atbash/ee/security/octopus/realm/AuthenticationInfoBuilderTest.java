@@ -105,6 +105,7 @@ public class AuthenticationInfoBuilderTest {
                 .userName("JUnit").name("Atbash").build();
 
         assertThat(info).isNotNull();
+        assertThat(info.isExternalVerification()).isFalse();
         assertThat(info.getPrincipals()).isNotEmpty();
         assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
 
@@ -211,6 +212,27 @@ public class AuthenticationInfoBuilderTest {
         assertThat(info.getCredentialsSalt()).isNull();
         assertThat(info.isOneTimeAuthentication()).isTrue();
         assertThat(info.getValidatedToken()).isInstanceOf(SomeValidatedToken.class);
+    }
+
+    @Test
+    public void build_external() {
+        AuthenticationInfo info = new AuthenticationInfoBuilder().principalId(2L)
+                .userName("JUnit").name("Atbash").externalPasswordCheck().build();
+
+        assertThat(info).isNotNull();
+        assertThat(info.isExternalVerification()).isTrue();
+
+    }
+
+    @Test
+    public void build_external_usernameRequired() {
+        try {
+            new AuthenticationInfoBuilder().principalId(2L)
+                    .name("Atbash").externalPasswordCheck().build();
+
+        } catch (AtbashIllegalActionException e) {
+            assertThat(e.getMessage()).startsWith("(OCT-DEV-011)");
+        }
     }
 
     private static class SomeValidatedToken implements ValidatedAuthenticationToken {

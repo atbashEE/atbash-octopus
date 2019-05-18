@@ -325,3 +325,70 @@ An alias is defined for a few Providers to make it easier to specify them
 - _mp-authc_ -> Adds authentication and authorization information known within Octopus context to the header as MP JWT Auth token
 - _keycloak-authc_ -> When available, adds the keycloak token as header.
 
+=== LDAP configuration
+
+==== ldap.url
+
+default : *(none)*
+
+URL for the LDAP server used by the _LDAPCredentialsMatcher_.
+
+==== ldap.bindDN
+
+default : *(none)*
+
+The user name (_BindDN_) for the connection with the LDAP server, for ex uid=ldap,ou=caller,dc=atbash,dc=be.
+
+==== ldap.bindCredential
+
+default : *(none)*
+
+The password for the connection with the LDAP server.
+
+==== ldap.caller.filter
+
+default : *(&(uid=%s)(|(objectclass=user)(objectclass=person)(objectclass=inetOrgPerson)(objectclass=organizationalPerson))(!(objectclass=computer)))*
+
+The query used to find a user when user name is specified in the login screen. The %s denotes the location of the username
+
+==== ldap.caller.base
+
+default : **
+
+The _organization_ to which the query for the caller (user) is restricted, for ex dc=atbash,dc=be.
+
+==== ldap.caller.name
+
+default : *cn*
+
+The attribute containing the full name of the person.
+
+==== ldap.groups.loaded
+
+default : *NO*
+
+Does the credentialMatcher load the groups of the user? Valid values are _NO_, _GROUPS_ (searches groups and member attribute) or _CALLER_ (uses memberOf attribute)
+
+==== ldap.group.filters
+
+default : *(&(member=%s)(|(objectclass=group)(objectclass=groupofnames)(objectclass=groupofuniquenames)))*
+
+The query to find all the groups of a user. The %s will be replaces by the DN of the found user.
+
+==== ldap.groups.base
+
+default : **
+
+The _organization_ to which the query for the groups is restricted, for ex ou=groups,dc=atbash,dc=be.
+
+==== ldap.group.name
+
+default : *cn*
+
+The attribute containing the name of the group.
+
+==== ldap.caller.memberof
+
+default : *memberOf*
+
+The attribute containing the group names when the search for groups is performed on the caller node (ldap.groups.loaded == CALLER)
