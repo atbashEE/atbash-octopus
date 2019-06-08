@@ -56,7 +56,7 @@ public class MainProgram {
 
         // The above was to support https without validating certificates.
 
-        AuthenticationToken token = new UsernamePasswordToken("casuser", "Mellonx");
+        AuthenticationToken token = new UsernamePasswordToken("casuser", "Mellon");
         SecurityUtils.getSubject().login(token);
 
         Subject subject = SecurityUtils.getSubject();

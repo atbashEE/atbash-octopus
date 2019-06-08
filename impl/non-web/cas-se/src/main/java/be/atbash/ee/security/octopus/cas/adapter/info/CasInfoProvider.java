@@ -23,6 +23,8 @@ import org.jasig.cas.client.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,7 @@ import java.util.Map;
 /**
  *
  */
+@ApplicationScoped
 public class CasInfoProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CasInfoProvider.class);
@@ -42,22 +45,24 @@ public class CasInfoProvider {
         init();
     }
 
-    private void init() {
-        casConfiguration = OctopusCasConfiguration.getInstance();
+    @PostConstruct
+    public void init() {
+        if (ticketValidator == null ) {
+            casConfiguration = OctopusCasConfiguration.getInstance();
 
-        String urlPrefix = casConfiguration.getSSOServer();
+            String urlPrefix = casConfiguration.getSSOServer();
 
-        switch (casConfiguration.getCASProtocol()) {
+            switch (casConfiguration.getCASProtocol()) {
 
-            case CAS:
-                ticketValidator = new Cas30ServiceTicketValidator(urlPrefix);
-                break;
+                case CAS:
+                    ticketValidator = new Cas30ServiceTicketValidator(urlPrefix);
+                    break;
 
-            case SAML:
-                ticketValidator = new Saml11TicketValidator(urlPrefix);
-                break;
+                case SAML:
+                    ticketValidator = new Saml11TicketValidator(urlPrefix);
+                    break;
+            }
         }
-
     }
 
     public CasUserToken retrieveUserInfo(String ticket) {
@@ -91,4 +96,22 @@ public class CasInfoProvider {
         }
         return result;
     }
+
+    // Java SE Support
+    private static CasInfoProvider INSTANCE;
+
+    private static final Object LOCK = new Object();
+
+    public static CasInfoProvider getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
+                if (INSTANCE == null) {
+                    INSTANCE = new CasInfoProvider();
+                    INSTANCE.init();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
 }

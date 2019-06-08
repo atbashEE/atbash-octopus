@@ -39,6 +39,7 @@ public class CasInfoProviderTest {
         Jadler.initJadler();
         configureParameters();
         infoProvider = new CasInfoProvider();
+        infoProvider.init();
     }
 
     @After

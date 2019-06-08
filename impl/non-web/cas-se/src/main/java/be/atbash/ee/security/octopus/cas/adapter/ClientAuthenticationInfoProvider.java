@@ -43,7 +43,7 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
     public void init() {
         if (requestor == null) {
             requestor = new TicketRequestor();
-            infoProvider = new CasInfoProvider();
+            infoProvider = CasInfoProvider.getInstance();
         }
     }
 

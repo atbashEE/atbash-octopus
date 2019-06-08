@@ -30,7 +30,7 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @ApplicationScoped
-@ModuleConfigName("Octopus Keycloak Configuration")
+@ModuleConfigName("Octopus CAS Configuration")
 public class OctopusCasConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     private String casService;
