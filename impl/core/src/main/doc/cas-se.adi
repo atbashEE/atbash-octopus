@@ -1,0 +1,31 @@
+=== CAS Server SE
+
+Authenticate (by supplying user name and password) against the CAS server from anu Java SE program.
+
+Add the following dependency to the application
+
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-cas-se</artifactId>
+        <version>0.6</version>
+    </dependency>
+----
+
+Define the configuration for CAS, by defining the configuration values for `CAS.SSO.server` and `CAS.service`  (See the Configuration for more info)
+
+
+Authenticate with CAS Server through the Rest API interface of the server (needs to be added when using the overlay method)
+
+----
+    AuthenticationToken token = new UsernamePasswordToken("username", "password");
+    SecurityUtils.getSubject().login(token);
+----
+
+Can be combined in combination with JavaFX out of the box.
+
+When you exit the program, or the user no longer needs to authenticated, make sue you do a logout. It also logs out the user from the CAS server.
+
+----
+   SecurityUtils.getSubject().logout();
+----

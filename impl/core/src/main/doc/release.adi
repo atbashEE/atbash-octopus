@@ -2,6 +2,7 @@
 
 . Support for External Password validation.
 . Support for LDAP as External Password validation.
+. Support for CAS server.
 
 === 0.5
 

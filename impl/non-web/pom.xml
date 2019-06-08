@@ -32,6 +32,9 @@
     <version>0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <jadler.version>1.3.0</jadler.version>
+    </properties>
     <modules>
         <module>common-se</module>
         <module>rest-client-provider</module>
@@ -44,6 +47,7 @@
         <module>se-standalone</module>
         <module>offline-token-generator</module>
         <module>javafx</module>
+        <module>cas-se</module>
     </modules>
     <build>
         <plugins>

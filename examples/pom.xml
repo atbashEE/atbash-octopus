@@ -39,6 +39,7 @@
         <module>javafx</module>
         <module>keycloak-cli</module>
         <module>mp-cli</module>
+        <module>se-cas</module>
 
         <module>basic</module>
         <module>login_jsf</module>

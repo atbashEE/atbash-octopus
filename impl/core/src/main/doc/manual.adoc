@@ -40,9 +40,11 @@ include::keycloak.adi
 
 include::offlineToken.adi[]
 
-include::keycloak-se.adi
+include::keycloak-se.adi[]
 
 include::mp-client-se.adi[]
+
+include::cas-se.adi[]
 
 == Authentication methods
 

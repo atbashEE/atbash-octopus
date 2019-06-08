@@ -34,7 +34,6 @@
 
     <properties>
         <keycloak.version>2.0.0.Final</keycloak.version>
-        <jadler.version>1.3.0</jadler.version>
     </properties>
 
     <dependencies>

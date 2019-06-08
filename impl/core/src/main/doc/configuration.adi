@@ -271,6 +271,32 @@ default : */keycloak.json*
 
 Defines the location of the JSON file for configuration of the Octopus Keycloak integration.
 
+=== CAS configuration
+
+==== CAS.SSO.server
+
+default : *none*
+
+Defines the location of the CAS server URL. Required key
+
+==== CAS.protocol
+
+default : *CAS*
+
+The protocol of the communication between the client and the server. SAML and cas are supported.
+
+==== CAS.service
+
+default : *none*
+
+The Service name which is used when authenticating. For Java SE this needs to be defined, for web it is derived from the deployment. (but can be overridden)
+
+==== CAS.property.email
+
+default : *email*
+
+The name of the CAS attribute containing the email address.
+
 === Octopus MicroProfile JWT Configuration (Core)
 
 ==== mp.iss
