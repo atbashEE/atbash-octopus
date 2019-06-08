@@ -22,9 +22,16 @@ import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.config.logging.StartupLogging;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import be.atbash.util.reflection.CDICheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.net.ssl.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 /**
  *
@@ -32,6 +39,8 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 @ModuleConfigName("Octopus CAS Configuration")
 public class OctopusCasConfiguration extends AbstractConfiguration implements ModuleConfig {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OctopusCasConfiguration.class);
 
     private String casService;
 
@@ -74,6 +83,37 @@ public class OctopusCasConfiguration extends AbstractConfiguration implements Mo
 
     public void setCasService(String casService) {
         this.casService = casService;
+    }
+
+    @ConfigEntry
+    public boolean isSSLCheckDisabled() {
+        // This method will never be called by code. But due to the Logging of config at startup, it gets executed
+        // and as a side effect, the SSL Context gets adapted
+        Boolean sslDisabled = getOptionalValue("CAS.SSL.disabled", Boolean.FALSE, Boolean.class);
+        if (sslDisabled) {
+            disableSSLChecks();
+        }
+        return sslDisabled;
+    }
+
+    private void disableSSLChecks() {
+        try {
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+
+            SSLContext ctx = SSLContext.getInstance("SSL");
+            ctx.init(new KeyManager[0], new TrustManager[]{new NOOPTrustManager()}, new SecureRandom());
+            SSLContext.setDefault(ctx);
+
+            LOGGER.warn("The SSL checks are disabled for CAS access.This means no DNS and Certificate checks are performed when accessing CAS endpoints. This is a huge risk and only acceptable for DEV environment");
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new AtbashUnexpectedException(e);
+        }
+
     }
 
     // Java SE Support
