@@ -68,6 +68,8 @@
         <module>oauth2-linkedin-rest</module>
 
         <module>security-api-adapter</module>
+
+        <module>cas</module>
     </modules>
 
 </project>

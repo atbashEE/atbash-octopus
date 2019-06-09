@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class CasInfoProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CasInfoProvider.class);
 
+    @Inject
     private OctopusCasConfiguration casConfiguration;
 
     private TicketValidator ticketValidator;
@@ -48,7 +50,9 @@ public class CasInfoProvider {
     @PostConstruct
     public void init() {
         if (ticketValidator == null ) {
-            casConfiguration = OctopusCasConfiguration.getInstance();
+            if (casConfiguration == null) {
+                casConfiguration = OctopusCasConfiguration.getInstance();
+            }
 
             String urlPrefix = casConfiguration.getSSOServer();
 

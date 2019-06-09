@@ -64,6 +64,7 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
         }
         if (token instanceof KeycloakUserToken) {
             // For the Web use case
+            // FIXME Should this then moved to the Web artifacts?!
             KeycloakUserToken keycloakUserToken = (KeycloakUserToken) token;
 
             builder.principalId(keycloakUserToken.getId());

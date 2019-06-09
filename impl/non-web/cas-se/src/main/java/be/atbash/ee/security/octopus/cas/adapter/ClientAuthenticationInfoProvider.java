@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.cas.adapter;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
@@ -71,23 +72,22 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
 
             return builder.build();
         }
-        /*
-        FIXME
+
         if (token instanceof CasUserToken) {
             // For the Web use case
+            // FIXME Should this then moved to the Web artifacts?!
             CasUserToken userToken = (CasUserToken) token;
 
-            builder.principalId(userToken.getId());
+            builder.principalId(userToken.getUserName());
 
             builder.name(userToken.getName());
-            //builder.addUserInfo(OctopusConstants.EXTERNAL_SESSION_ID, keycloakUserToken.getClientSession());
+            builder.addUserInfo(OctopusConstants.EXTERNAL_SESSION_ID, userToken.getTicket());
             builder.token(userToken);
 
             return builder.build();
 
         }
 
-         */
         return null;
     }
 

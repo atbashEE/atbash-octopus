@@ -44,6 +44,7 @@
         <module>basic</module>
         <module>login_jsf</module>
         <module>keycloak-jsf</module>
+        <module>cas-jsf</module>
         <module>authorization</module>
 
         <module>events</module>
