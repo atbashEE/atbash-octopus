@@ -50,6 +50,8 @@ public class MainProgram {
             }
         }
 
+        subject.logout();
+
     }
 
 }

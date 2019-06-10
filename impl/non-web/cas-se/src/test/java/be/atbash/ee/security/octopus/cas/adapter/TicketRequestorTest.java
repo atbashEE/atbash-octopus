@@ -32,12 +32,8 @@ public class TicketRequestorTest {
     private TicketRequestor requestor;
 
     @Before
-    public void setup() {
-        requestor = new TicketRequestor();
-    }
-
-    @Before
     public void setUp() {
+        requestor = new TicketRequestor();
         Jadler.initJadler();
     }
 

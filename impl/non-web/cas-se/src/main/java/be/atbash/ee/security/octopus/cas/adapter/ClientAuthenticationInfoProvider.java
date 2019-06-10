@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
 import be.atbash.ee.security.octopus.cas.adapter.info.CasInfoProvider;
+import be.atbash.ee.security.octopus.cas.logout.CasRemoteLogout;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
@@ -55,8 +56,10 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
         if (token instanceof UsernamePasswordToken) {
             // for the Java SE use case
 
-            String grantingTicket = requestor.getGrantingTicket((UsernamePasswordToken) token);
+            UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
+            String grantingTicket = requestor.getGrantingTicket(usernamePasswordToken);
             String serviceTicket = requestor.getServiceTicket(grantingTicket);
+            LOGGER.debug(String.format("Received the service ticket %s for %s", serviceTicket, (usernamePasswordToken).getUsername()));
 
             CasUserToken casUserToken = infoProvider.retrieveUserInfo(serviceTicket);
 
@@ -67,8 +70,7 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
             builder.token(casUserToken);
 
             // In order for the logout with CAS.
-            //builder.withRemoteLogoutHandler(new KeycloakRemoteLogout());
-            // FIXME
+            builder.withRemoteLogoutHandler(new CasRemoteLogout());
 
             return builder.build();
         }

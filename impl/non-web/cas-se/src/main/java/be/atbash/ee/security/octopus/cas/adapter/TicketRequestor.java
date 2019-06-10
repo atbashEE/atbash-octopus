@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.cas.adapter;
 
 import be.atbash.ee.security.octopus.cas.config.OctopusCasConfiguration;
 import be.atbash.ee.security.octopus.cas.exception.CasAuthenticationException;
+import be.atbash.ee.security.octopus.cas.util.CasUtil;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import org.slf4j.Logger;
@@ -29,6 +30,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import static be.atbash.ee.security.octopus.cas.util.CasUtil.V1_TICKETS;
+
 /**
  *
  */
@@ -37,18 +40,20 @@ class TicketRequestor {
 
     private Logger logger = LoggerFactory.getLogger(TicketRequestor.class);
 
-    private static final String V1_TICKETS = "/v1/tickets";
     private static final String UTF_8 = "UTF-8";
+
     private OctopusCasConfiguration configuration;
+    private CasUtil casUtil;
 
     TicketRequestor() {
         configuration = OctopusCasConfiguration.getInstance();
+        casUtil = new CasUtil();
     }
 
-    public String getGrantingTicket(UsernamePasswordToken usernamePasswordToken) {
+    String getGrantingTicket(UsernamePasswordToken usernamePasswordToken) {
         String result = null;
         try {
-            URL casEndpoint = new URL(configuration.getSSOServer() + V1_TICKETS);
+            URL casEndpoint = casUtil.getTicketEndpoint();
             HttpURLConnection connection = (HttpURLConnection) casEndpoint.openConnection();
 
             prepareConnection(connection);
@@ -124,7 +129,7 @@ class TicketRequestor {
     public String getServiceTicket(String grantingTicket) {
         String result = null;
         try {
-            URL casEndpoint = new URL(configuration.getSSOServer() + V1_TICKETS + "/" + grantingTicket);
+            URL casEndpoint = casUtil.getTicketEndpoint(grantingTicket);
             HttpURLConnection connection = (HttpURLConnection) casEndpoint.openConnection();
 
             prepareConnection(connection);
