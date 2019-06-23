@@ -36,6 +36,7 @@ public class MainProgram {
         // The above was to support https without validating certificates.
 
         AuthenticationToken token = new UsernamePasswordToken("casuser", "Mellon");
+        //AuthenticationToken token = new UsernamePasswordToken("rudy", "secret1"); // OpenLDAP
         SecurityUtils.getSubject().login(token);
 
         Subject subject = SecurityUtils.getSubject();
