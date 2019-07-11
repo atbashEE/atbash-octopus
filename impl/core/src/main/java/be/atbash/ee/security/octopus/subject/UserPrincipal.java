@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.subject;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
 import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationContextManager;
 import be.atbash.ee.security.octopus.util.onlyduring.WrongExecutionContextException;
@@ -39,7 +40,7 @@ public class UserPrincipal implements Principal, Serializable {
     private boolean systemAccount = false;
     private RemoteLogoutHandler remoteLogoutHandler;
 
-    private Map<Serializable, Serializable> userInfo = new HashMap<>();
+    private Map<String, Serializable> userInfo = new HashMap<>();
 
     // Weld needs this to make a proxy
     // TODO Try to remove it, because it doesn't set the id and it is used for example within hashCode
@@ -93,22 +94,22 @@ public class UserPrincipal implements Principal, Serializable {
     }
 
     // TODO Should we protect the 'Octopus used keys', like Token?
-    public void addUserInfo(Serializable key, Serializable value) {
+    public void addUserInfo(String key, Serializable value) {
         if (key.toString().startsWith("octopus.") && !TemporaryAuthorizationContextManager.isInAuthentication()) {
             throw new WrongExecutionContextException();
         }
         userInfo.put(key, value);
     }
 
-    public void addUserInfo(Map<? extends Serializable, ? extends Serializable> values) {
+    public void addUserInfo(Map<String, ? extends Serializable> values) {
         userInfo.putAll(values);
     }
 
-    public <T> T getUserInfo(Serializable key) {
+    public <T> T getUserInfo(String key) {
         return (T) userInfo.get(key);
     }
 
-    public Map<Serializable, Serializable> getInfo() {
+    public Map<String, Serializable> getInfo() {
         // So that we never can change the info from outside this class.
         return new HashMap<>(userInfo);
     }
@@ -132,6 +133,22 @@ public class UserPrincipal implements Principal, Serializable {
         if (remoteLogoutHandler != null) {
             remoteLogoutHandler.onLogout(principals);
         }
+    }
+
+    public String getLocalId() {
+        return getUserInfo(OctopusConstants.LOCAL_ID);
+    }
+
+    public String getFirstName() {
+        return getUserInfo(OctopusConstants.FIRST_NAME);
+    }
+
+    public String getLastName() {
+        return getUserInfo(OctopusConstants.LAST_NAME);
+    }
+
+    public String getEmail() {
+        return getUserInfo(OctopusConstants.EMAIL);
     }
 
     @Override

@@ -235,6 +235,27 @@ public class AuthenticationInfoBuilderTest {
         }
     }
 
+    @Test
+    public void build_additional_with_methods() {
+        AuthenticationInfo info = new AuthenticationInfoBuilder().principalId(2L)
+                .withFirstName("first").withLastName("last")
+                .withEMail("email").withLocalID("local").build();
+
+        assertThat(info).isNotNull();
+        assertThat(info.getPrincipals()).isNotNull();
+        assertThat(info.getPrincipals()).isNotEmpty();
+        assertThat(info.getPrincipals().getPrimaryPrincipal()).isNotNull();
+        assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
+
+        UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
+        assertThat(userPrincipal.getFirstName()).isEqualTo("first");
+        assertThat(userPrincipal.getLastName()).isEqualTo("last");
+        assertThat(userPrincipal.getEmail()).isEqualTo("email");
+        assertThat(userPrincipal.getLocalId()).isEqualTo("local");
+
+        assertThat(userPrincipal.getInfo()).hasSize(4);
+    }
+
     private static class SomeValidatedToken implements ValidatedAuthenticationToken {
 
         @Override

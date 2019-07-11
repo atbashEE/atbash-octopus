@@ -23,9 +23,6 @@ import be.atbash.util.Reviewed;
 @Reviewed
 public final class OctopusConstants {
 
-    /**
-     * HTTP Authorization header, equal to <code>Authorization</code>
-     */
     public static final String INFO_KEY_TOKEN = "token";
 
     public static final String EMAIL = "email";
@@ -33,16 +30,15 @@ public final class OctopusConstants {
     public static final String PICTURE = "picture";
     public static final String GENDER = "gender";
     public static final String LOCALE = "locale";
+    public static final String TOKEN = "token";  // FIXME Review usage , same as INFO_KEY_TOKEN
     public static final String UPSTREAM_TOKEN = "upstreamToken";
     public static final String EXTERNAL_SESSION_ID = "externalSession";
 
-    //public static final String MOBILE_NUMBER = "mobileNumber";
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
-    //public static final String FULL_NAME = "fullName";
 
     public static final String DOMAIN = "domain";
-    public static final String OAUTH2_TOKEN = "OAuth2token";
+    public static final String OAUTH2_TOKEN = "OAuth2token"; // FIXME Use INFO_KEY_TOKEN
 
     /**
      * Attribute name on Servlet request indicating message related to violation of permission,  role, ... . Set by the filters and read by the {@code AccessDeniedHandler}.
@@ -50,5 +46,8 @@ public final class OctopusConstants {
     public static final String OCTOPUS_VIOLATION_MESSAGE = "octopus.violation.message";
 
     public static final String AUTHORIZATION_INFO = "authorizationInfo";
+
+    // FIXME Review usage
+    public static final String LOCAL_ID = "localId";
 
 }

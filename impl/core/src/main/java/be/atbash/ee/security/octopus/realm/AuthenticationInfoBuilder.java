@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.realm;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
@@ -43,7 +44,7 @@ public class AuthenticationInfoBuilder {
     private ValidatedAuthenticationToken token;
     private ByteSource salt;
     private UserPrincipal userPrincipal;
-    private Map<Serializable, Serializable> userInfo = new HashMap<>();
+    private Map<String, Serializable> userInfo = new HashMap<>();
     private boolean externalPasswordCheck = false;
     private boolean tokenBased = false;
     private RemoteLogoutHandler remoteLogoutHandler;
@@ -111,18 +112,38 @@ public class AuthenticationInfoBuilder {
         return this;
     }
 
-    public AuthenticationInfoBuilder addUserInfo(Serializable key, Serializable value) {
+    public AuthenticationInfoBuilder addUserInfo(String key, Serializable value) {
         userInfo.put(key, value);
         return this;
     }
 
-    public AuthenticationInfoBuilder addUserInfo(Map<? extends Serializable, ? extends Serializable> values) {
+    public AuthenticationInfoBuilder addUserInfo(Map<String, ? extends Serializable> values) {
         userInfo.putAll(values);
         return this;
     }
 
     public AuthenticationInfoBuilder withRemoteLogoutHandler(RemoteLogoutHandler remoteLogoutHandler) {
         this.remoteLogoutHandler = remoteLogoutHandler;
+        return this;
+    }
+
+    public AuthenticationInfoBuilder withFirstName(String firstName) {
+        userInfo.put(OctopusConstants.FIRST_NAME, firstName);
+        return this;
+    }
+
+    public AuthenticationInfoBuilder withLastName(String lastName) {
+        userInfo.put(OctopusConstants.LAST_NAME, lastName);
+        return this;
+    }
+
+    public AuthenticationInfoBuilder withEMail(String email) {
+        userInfo.put(OctopusConstants.EMAIL, email);
+        return this;
+    }
+
+    public AuthenticationInfoBuilder withLocalID(String localID) {
+        userInfo.put(OctopusConstants.LOCAL_ID, localID);
         return this;
     }
 

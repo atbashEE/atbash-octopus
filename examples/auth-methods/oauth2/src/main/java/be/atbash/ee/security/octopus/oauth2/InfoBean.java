@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class InfoBean {
     @Inject
     private UserPrincipal userPrincipal;
 
-    private List<Serializable> keys;
+    private List<String> keys;
 
     @PostConstruct
     public void init() {
@@ -48,7 +47,7 @@ public class InfoBean {
         return info == null ? "" : info.toString();
     }
 
-    public List<Serializable> getKeys() {
+    public List<String> getKeys() {
         return keys;
     }
 

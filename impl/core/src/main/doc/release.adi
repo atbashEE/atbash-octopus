@@ -3,6 +3,11 @@
 . Support for External Password validation.
 . Support for LDAP as External Password validation.
 . Support for CAS server.
+. Improved usage of UserPrincipal and AuthenticationInfoBuilder.
+
+==== Important changes
+
+. the Map `userInfo` from `UserPrincipal` has now a key of type `java.lang.String`.
 
 === 0.5
 
