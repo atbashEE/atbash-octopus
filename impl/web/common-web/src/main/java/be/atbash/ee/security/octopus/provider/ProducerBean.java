@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class ProducerBean {
 
     @Produces
     @RequestScoped
-    public Subject produceShiroSubject() {
+    public Subject produceSubject() {
         return SecurityUtils.getSubject();
     }
 
@@ -40,19 +40,14 @@ public class ProducerBean {
     @RequestScoped
     @Named("userPrincipal")
     public UserPrincipal producePrincipal() {
-        Object principal = SecurityUtils.getSubject().getPrincipal();
         UserPrincipal result = null;
-        if (principal != null) {
-            result = (UserPrincipal) principal;
+        Subject subject = SecurityUtils.getSubject();
+        if (subject != null) {
+            UserPrincipal principal = subject.getPrincipal();
+            if (principal != null) {
+                result = principal;
+            }
         }
-        /*
-        FIXME
-        if (principal instanceof SystemAccountPrincipal) {
-            SystemAccountPrincipal systemAccountPrincipal = (SystemAccountPrincipal) principal;
-            String identifier = systemAccountPrincipal.getIdentifier();
-            result = new UserPrincipal(identifier);
-        }
-        */
         if (result == null) {
             // FIXME This will result probably in some nullPointer in the hashCode() which uses id.
             result = new UserPrincipal();
@@ -63,11 +58,14 @@ public class ProducerBean {
     @Produces
     @Named("loggedInUser")
     public String produceUser() {
-        Object principal = SecurityUtils.getSubject().getPrincipal();
-        if (principal != null) {
-            return principal.toString();
-        } else {
-            return null;
+        String result = null;
+        Subject subject = SecurityUtils.getSubject();
+        if (subject != null) {
+            UserPrincipal principal = subject.getPrincipal();
+            if (principal != null) {
+                result = principal.getName();
+            }
         }
+        return result;
     }
 }
