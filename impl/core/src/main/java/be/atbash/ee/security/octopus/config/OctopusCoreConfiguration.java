@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -46,6 +48,8 @@ import java.lang.annotation.Annotation;
 public class OctopusCoreConfiguration extends AbstractConfiguration implements ModuleConfig {
 
     private Logger logger = LoggerFactory.getLogger(OctopusCoreConfiguration.class);
+
+    private List<Debug> debugValues;
 
     private Class<? extends Annotation> namedPermissionCheckClass;
 
@@ -209,6 +213,33 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
             }
         }
         return namedRoleClass;
+    }
+
+    // Debug
+
+    @ConfigEntry
+    public List<Debug> showDebugFor() {
+        if (debugValues == null) {
+            // TODO Do we need to make this thread-safe?
+            List<Debug> result = new ArrayList<>();
+            String value = getOptionalValue("show.debug", "", String.class);
+            String[] parts = StringUtils.split(value);
+            if (parts != null) {
+                for (String part : parts) {
+                    String code = part.trim();
+                    if (code.length() > 0) {
+                        try {
+                            Debug debug = Debug.valueOf(code);
+                            result.add(debug);
+                        } catch (IllegalArgumentException e) {
+                            logger.error("Value defined in the show.debug property unknown: {}", part);
+                        }
+                    }
+                }
+            }
+            debugValues = result;
+        }
+        return debugValues;
     }
 
     // Cache

@@ -108,6 +108,18 @@ default : *classpath:octopusInterceptor.config*
 
 File containing the patterns of the fully qualified class names of CDI beans which will be intercepted by the Octopus security interceptor.
 
+==== show.debug
+
+default : *(none)*
+
+Output of additional debug value
+
+SESSION_HIJACKING:
+
+SSO_FLOW:
+
+SSO_REST:
+
 === Web Configuration
 
 ???

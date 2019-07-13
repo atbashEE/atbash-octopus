@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.config.Debug;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.config.SessionHijackingLevel;
 import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
@@ -43,6 +45,9 @@ public class SessionHijackingFilter extends AdviceFilter {
 
     @Inject
     private ActiveSessionRegistry activeSessionRegistry;
+
+    @Inject
+    private OctopusCoreConfiguration octopusCoreConfiguration;
 
     @Inject
     private OctopusJSFConfiguration jsfConfiguration;
@@ -86,13 +91,12 @@ public class SessionHijackingFilter extends AdviceFilter {
 
                 info.getHttpSession().setAttribute(OCTOPUS_SESSION_HIJACKING_ATTEMPT, Boolean.TRUE);
 
-                /*
-                FIXME
-                if (octopusConfig.showDebugFor().contains(Debug.SESSION_HIJACKING)) {
+
+                if (octopusCoreConfiguration.showDebugFor().contains(Debug.SESSION_HIJACKING)) {
                     String remoteHost = request.getRemoteAddr();
                     logger.info(String.format("Refused by the Session Hijacking Protection \nUser agent %s - %s\nRemote host %s  - %s", info.getUserAgent(), userAgent, info.getRemoteHost(), remoteHost));
                 }
-                */
+
             }
         }
 
