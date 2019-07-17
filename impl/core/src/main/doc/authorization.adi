@@ -335,11 +335,17 @@ type :
 
 Limit the number of requests for a certain path.
 
-==== noSessionCreation (rest module)
+==== noSessionCreation
 
 type :
 
-It makes sure that no session will be created by the framework
+It makes sure that no session will be created by the framework.
+
+==== none
+
+type : Authorization
+
+No access allowed. Useful as last entry to disallow access to all but specified URLs.
 
 ==== mpUser (MicroProfile module)
 
