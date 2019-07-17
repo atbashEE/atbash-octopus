@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public class SecuredURLReaderTest {
     }
 
     @Test
-    public void loadData_WrongEntry() throws IOException {
+    public void loadData_wrongEntry() throws IOException {
         when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/wrong.file");
         when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(new ByteArrayInputStream(wrongFile.getBytes()));
 
@@ -142,6 +142,28 @@ public class SecuredURLReaderTest {
     }
 
     @Test
+    public void loadData_fileAndMultipleProgrammatic() throws IOException {
+        when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/correct.file");
+        when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(new ByteArrayInputStream(correctFile.getBytes()));
+
+        LinkedHashMap<String, String> entries = new LinkedHashMap<>();
+        entries.put("extra1", "extra value1");
+        entries.put("extra2", "extra value2");
+        when(urlProviderMock.getURLEntriesToAdd()).thenReturn(entries);
+        beanManagerFake.registerBean(urlProviderMock, ProgrammaticURLProtectionProvider.class);
+
+        beanManagerFake.registerBean(new TestURLProtectionProvider(), ProgrammaticURLProtectionProvider.class);
+
+        beanManagerFake.endRegistration();
+
+        reader.loadData(servletContextMock);
+
+        // the firstx values need to come first as that provider has value 100 and the Mock one no defined when and thus 1000.
+        testURLValues(reader.getUrlPatterns(), "first1", "first2", "extra1", "extra2", "url1", "url2", "url3");
+        Mockito.verifyNoMoreInteractions(loggerMock);
+    }
+
+    @Test
     public void loadData_unknownFile() throws IOException {
         when(octopusWebConfigurationMock.getLocationSecuredURLProperties()).thenReturn("classpath:be/atbash/ee/security/octopus/web/url/unknown.file");
         when(resourceUtilMock.getStream(any(String.class), any(ServletContext.class))).thenReturn(null);
@@ -161,5 +183,18 @@ public class SecuredURLReaderTest {
             urls.add(entry.getKey());
         }
         assertThat(urls).containsExactly(expectedURLs);
+    }
+
+    @URLProtectionProviderOrder(100)
+    private static class TestURLProtectionProvider implements ProgrammaticURLProtectionProvider {
+
+        @Override
+        public LinkedHashMap<String, String> getURLEntriesToAdd() {
+            LinkedHashMap<String, String> entries = new LinkedHashMap<>();
+            entries.put("first1", "first value1");
+            entries.put("first2", "first value2");
+
+            return entries;
+        }
     }
 }

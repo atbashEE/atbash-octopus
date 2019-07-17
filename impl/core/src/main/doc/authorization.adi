@@ -282,6 +282,20 @@ Do all checks need to be pass on the user/subject or is only 1 enough.
 
 === Filter (web based projects)
 
+These filters can be specified in the file _WEB-INF/securedURLs.ini_ file to protect URLs with some authentication and authorization filters.
+
+An example of such a file is
+
+pages/urlCheck.xhtml = user, np[demo]
+pages/** = user
+
+The first part defines the URL or pattern and the second to filters which are applied (in the specified order). Make sure you define the authentication type filters (like _user_, see also ???) first and than any authorization type filter.
+The file is processed for each request from top to bottom and the first match is taken. If no match is found, the _anon_ filter is applied to the request.
+
+You can also add some definitions in a programmatic way. For this, define a CDI bean which implements the _ProgrammaticURLProtectionProvider_ interface.  By implementing the single method, we can specify the URLs as key and filter lsit as value of the Map (It is a LinkedHahsMap since the order of the entries is important)
+
+If you have multiple _ProgrammaticURLProtectionProvider_ implementations, you can order them by applying the _@URLProtectionProviderOrder_ annotation on the class. It defines the order in which the instances are sorted (from low value to high value)
+
 ==== anon
 
 Every one can access the page, no checks performed

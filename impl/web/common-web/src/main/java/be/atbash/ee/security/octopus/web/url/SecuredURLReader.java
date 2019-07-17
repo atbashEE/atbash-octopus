@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,13 +64,20 @@ public class SecuredURLReader {
     private Map<String, String> readPatternsFromCode() {
         Map<String, String> result = new LinkedHashMap<>();
 
-        List<ProgrammaticURLProtectionProvider> urlProtectionProviders = CDIUtils.retrieveInstances(ProgrammaticURLProtectionProvider.class);
+        List<ProgrammaticURLProtectionProvider> urlProtectionProviders = new ArrayList<>(CDIUtils.retrieveInstances(ProgrammaticURLProtectionProvider.class));
+        // new ArrayList to make the list sortable.
+
+        orderURLProtectionProviders(urlProtectionProviders);
 
         for (ProgrammaticURLProtectionProvider urlProtectionProvider : urlProtectionProviders) {
             result.putAll(urlProtectionProvider.getURLEntriesToAdd());
         }
 
         return result;
+    }
+
+    private void orderURLProtectionProviders(List<ProgrammaticURLProtectionProvider> providers) {
+        Collections.sort(providers, new URLProtectionProviderComparator());
     }
 
     private Map<String, String> readPatternsFromFile(ServletContext servletContext) {
