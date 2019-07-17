@@ -49,5 +49,6 @@ public final class OctopusConstants {
 
     // FIXME Review usage
     public static final String LOCAL_ID = "localId";
+    public static final String EXTERNAL_ID = "externalId";
 
 }

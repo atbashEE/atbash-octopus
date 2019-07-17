@@ -24,6 +24,7 @@ import be.atbash.util.exception.AtbashIllegalActionException;
 import javax.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +96,8 @@ public class UserPrincipal implements Principal, Serializable {
 
     // TODO Should we protect the 'Octopus used keys', like Token?
     public void addUserInfo(String key, Serializable value) {
-        if (key.toString().startsWith("octopus.") && !TemporaryAuthorizationContextManager.isInAuthentication()) {
+        // FIXME Check if the internal type of keys start with 'octopus.'
+        if (key.startsWith("octopus.") && !TemporaryAuthorizationContextManager.isInAuthentication()) {
             throw new WrongExecutionContextException();
         }
         userInfo.put(key, value);
@@ -111,7 +113,7 @@ public class UserPrincipal implements Principal, Serializable {
 
     public Map<String, Serializable> getInfo() {
         // So that we never can change the info from outside this class.
-        return new HashMap<>(userInfo);
+        return Collections.unmodifiableMap(userInfo);
     }
 
     public boolean isSystemAccount() {
@@ -137,6 +139,10 @@ public class UserPrincipal implements Principal, Serializable {
 
     public String getLocalId() {
         return getUserInfo(OctopusConstants.LOCAL_ID);
+    }
+
+    public String getExternalId() {
+        return getUserInfo(OctopusConstants.EXTERNAL_ID);
     }
 
     public String getFirstName() {
