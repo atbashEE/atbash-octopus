@@ -77,6 +77,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     @Inject
     private RememberMeManagerProvider rememberMeManagerProvider;
+    // FIXME this gives issue when adding JSF7 and Rest module because they each have their provider?
 
     @Inject
     private ServletContainerSessionManager servletContainerSessionManager;
@@ -455,6 +456,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
     }
 
     protected void onSuccessfulLogin(AuthenticationToken token, AuthenticationInfo info, WebSubject subject) {
+        // TODO Do we need to retrieve this on every login request or should we keep the handlers!
         List<AfterSuccessfulLoginHandler> handlers = CDIUtils.retrieveInstances(AfterSuccessfulLoginHandler.class);
         for (AfterSuccessfulLoginHandler handler : handlers) {
             handler.onSuccessfulLogin(token, info, subject);

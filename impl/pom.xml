@@ -38,6 +38,7 @@
         <module>core</module>
         <module>non-web</module>
         <module>web</module>
+        <module>sso</module>
     </modules>
 
     <properties>

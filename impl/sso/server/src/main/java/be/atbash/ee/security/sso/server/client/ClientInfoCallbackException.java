@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.realm.mocks;
+package be.atbash.ee.security.sso.server.client;
 
-import be.atbash.ee.security.octopus.context.ThreadContext;
-import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.SubjectResolver;
+import be.atbash.util.exception.AtbashIllegalActionException;
 
 /**
  *
  */
 
-public class FakeSubjectResolver implements SubjectResolver {
+public class ClientInfoCallbackException extends AtbashIllegalActionException {
 
-    @Override
-    public <T extends Subject> T getSubject() {
-        return (T) ThreadContext.getSubject();
-
+    public ClientInfoCallbackException() {
+        super("ClientInfo#additionalCallbackURL() can only be called after the main callback URL is set by ClientInfo#setCallbackURL");
     }
 }

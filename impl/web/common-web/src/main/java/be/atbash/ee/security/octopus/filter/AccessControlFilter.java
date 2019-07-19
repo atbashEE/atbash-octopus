@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
      *
      * @return the login URL used to authenticate a user, used when redirecting users if authentication is required.
      */
-    protected String getLoginUrl() {
+    public String getLoginUrl() {
         // TODO Verify, we have no longer a default LoginURL; Do we need to check it here or somewhere else (that we do have one in the case it is used)
         return loginUrl;
     }

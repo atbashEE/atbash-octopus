@@ -86,7 +86,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
      * @return the cookie 'template' that will be used to set all attributes of outgoing rememberMe cookies created by
      * this {@code RememberMeManager}.
      */
-    private Cookie createCookie(String value, HttpServletRequest request) {
+    protected Cookie createCookie(String value, HttpServletRequest request) {
         Cookie cookie = new Cookie(rememberMeConfiguration.getCookieName(), value);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(rememberMeConfiguration.getCookieMaxAge());

@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.context;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.ee.security.octopus.authc.AuthenticationInfoProviderHandler;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.GuardUtil;

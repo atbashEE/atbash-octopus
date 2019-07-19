@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -318,22 +318,21 @@ public class WebUtils {
      * @return {@code true} IFF the specified context has HTTP request/response objects, {@code false} otherwise.
      * @since 1.0
      */
-
-/*
+// FIXME Limit the parameter to actual used parameters when called
     public static ServletRequest getRequest(Object requestPairSource) {
         if (requestPairSource instanceof RequestPairSource) {
             return ((RequestPairSource) requestPairSource).getServletRequest();
         }
         return null;
     }
-
+    // FIXME Limit the parameter to actual used parameters when called
     public static ServletResponse getResponse(Object requestPairSource) {
         if (requestPairSource instanceof RequestPairSource) {
             return ((RequestPairSource) requestPairSource).getServletResponse();
         }
         return null;
     }
-
+    // FIXME Limit the parameter to actual used parameters when called
     public static HttpServletRequest getHttpRequest(Object requestPairSource) {
         ServletRequest request = getRequest(requestPairSource);
         if (request instanceof HttpServletRequest) {
@@ -341,7 +340,7 @@ public class WebUtils {
         }
         return null;
     }
-
+    // FIXME Limit the parameter to actual used parameters when called
     public static HttpServletResponse getHttpResponse(Object requestPairSource) {
         ServletResponse response = getResponse(requestPairSource);
         if (response instanceof HttpServletResponse) {
@@ -349,7 +348,7 @@ public class WebUtils {
         }
         return null;
     }
-
+/*
     private static boolean isWeb(RequestPairSource source) {
         ServletRequest request = source.getServletRequest();
         ServletResponse response = source.getServletResponse();

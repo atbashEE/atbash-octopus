@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public abstract class OncePerRequestFilter extends NameableFilter {
      *
      * @see #getAlreadyFilteredAttributeName
      */
-    private static final String ALREADY_FILTERED_SUFFIX = ".FILTERED";
+    public static final String ALREADY_FILTERED_SUFFIX = ".FILTERED";
 
     /**
      * Determines generally if this filter should execute or let requests fall through to the next chain element.

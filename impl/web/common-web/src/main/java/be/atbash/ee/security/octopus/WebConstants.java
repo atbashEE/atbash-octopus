@@ -38,4 +38,6 @@ public final class WebConstants {
     public static final String BEARER = "Bearer";
 
     public static final String IDENTITY_REMOVED_KEY = "OCTOPUS_IDENTITY_REMOVED_KEY";
+
+    public static final String X_API_KEY = "x-api-key";
 }
