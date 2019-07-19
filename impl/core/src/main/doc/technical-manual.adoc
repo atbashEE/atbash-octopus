@@ -1,6 +1,6 @@
 = Octopus Framework - Technical
 Rudy De Busscher <rdebusscher@gmail.com>
-v0.4, ??/??/2018
+v0.6, ??/??/2019
 
 
 include::tech-violations.adi[]
@@ -8,3 +8,7 @@ include::tech-violations.adi[]
 == Java SE
 
 include::tech-offlineToken.adi[]
+
+== SSO Server
+
+include::tech-ssoServer.adi[]

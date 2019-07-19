@@ -55,6 +55,7 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
     @ConfigEntry
     public String getSSOServer() {
         // FIXME Also support SSO.server. Make same as KeyCloak (verify)
+        // FIXME not used outside this configx
         String result = getOptionalValue("SSO.octopus.server", String.class);
         if (StringUtils.isEmpty(result)) {
             throw new ConfigurationException("A value for 'Octopus.SSO.server' is required.");

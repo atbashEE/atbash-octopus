@@ -1,0 +1,13 @@
+This chapter describes the different steps in the SSO Server functionality
+
+It is built on top of the OpenId Connect / OAuth2 functionality.
+
+When the client application needs authentication/authorization, it redirect to the the SSO Server instance.  This SSO Server instance needs to be created by the developer based on the template prepared by the Octopus Framework.
+
+. Client (filter **userOctopus**) detects anonymous user and redirects to **/octopus** URL.
+. The **be.atbash.ee.security.octopus.sso.servlet.OctopusServlet** determines
+
+   . the rootURL for the callback (optionally through ClientCallbackHelper)
+   . Stores the **OpenIdVariableClientData** in the session of the client
+   . Assembles the URL for the SSO server for a login (with State and Nonce values)
+   . redirect to this login URL.
