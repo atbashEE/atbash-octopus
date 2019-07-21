@@ -40,4 +40,6 @@ public final class WebConstants {
     public static final String IDENTITY_REMOVED_KEY = "OCTOPUS_IDENTITY_REMOVED_KEY";
 
     public static final String X_API_KEY = "x-api-key";
+
+    public static final String SSO_COOKIE_TOKEN = "OCTOPUS_SSO_COOKIE_TOKEN";
 }

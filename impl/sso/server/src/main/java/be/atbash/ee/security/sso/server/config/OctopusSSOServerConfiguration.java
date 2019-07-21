@@ -75,12 +75,12 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
             LOGGER.warn("Invalid configuration value for SSO.cookie.timetolive = " + timeToLive + ". Using default of 10h");
             result = COOKIE_TIME_TO_LIVE;
         }
-        return result;
+        return result * 60 * 60;  // From hours to seconds
     }
 
     @ConfigEntry
-    public String getSSOCookieSecure() {
-        return getOptionalValue("SSO.cookie.secure", "true", String.class);
+    public boolean isSSOCookieSecure() {
+        return Boolean.valueOf(getOptionalValue("SSO.cookie.secure", "true", String.class));
     }
 
     @ConfigEntry

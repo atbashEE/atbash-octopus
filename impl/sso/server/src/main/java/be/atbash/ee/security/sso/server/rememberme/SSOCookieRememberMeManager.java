@@ -15,10 +15,10 @@
  */
 package be.atbash.ee.security.sso.server.rememberme;
 
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.rememberme.CookieRememberMeManager;
-import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.SubjectContext;
@@ -36,6 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
@@ -66,7 +67,6 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
 
     }
 
-
     @Override
     public void onSuccessfulLogin(Subject subject, AuthenticationToken token, AuthenticationInfo info) {
         String clientId = ssoHelper.getSSOClientId(subject);
@@ -80,17 +80,36 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
     @Override
     protected void rememberIdentity(Subject subject, PrincipalCollection accountPrincipals) {
 
-        OctopusSSOToken ssoUser = accountPrincipals.oneByType(OctopusSSOToken.class);
-        if (ssoUser != null) {
+        UserPrincipal userPrincipal = accountPrincipals.getPrimaryPrincipal();
 
-            // This cookieToken is only created the first time, not when authenticated from the cookie itself.
-            String cookieToken = UUID.randomUUID().toString();
-            ssoUser.setCookieToken(cookieToken);
+        // This cookieToken is only created the first time, not when authenticated from the cookie itself.
+        String cookieToken = UUID.randomUUID().toString();
+        userPrincipal.addUserInfo(WebConstants.SSO_COOKIE_TOKEN, cookieToken);
 
-            byte[] bytes = encrypt(cookieToken.getBytes());
-            rememberSerializedIdentity(subject, bytes);
-        }
+        byte[] bytes = encrypt(cookieToken.getBytes());
+        rememberSerializedIdentity(subject, bytes);
 
+    }
+
+    /**
+     * Create cookie based on parameters defined in ssoServerConfiguration.
+     *
+     * @param value
+     * @param request
+     * @return
+     */
+    protected Cookie createCookie(String value, HttpServletRequest request) {
+        Cookie cookie = new Cookie(getCookieName(), value);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(ssoServerConfiguration.getSSOCookieTimeToLive());
+        cookie.setSecure(ssoServerConfiguration.isSSOCookieSecure());
+        cookie.setPath(calculatePath(request));
+
+        return cookie;
+    }
+
+    protected String getCookieName() {
+        return ssoServerConfiguration.getSSOCookieName();
     }
 
     public PrincipalCollection getRememberedPrincipals(SubjectContext subjectContext) {
@@ -108,17 +127,20 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
             //SHIRO-138 - only call convertBytesToPrincipals if bytes exist:
             if (bytes != null && bytes.length > 0) {
 
-                //String cookieToken = decrypt(bytes);
-                // FIXME
-                String cookieToken = "FIXME";
+                String cookieToken;
+                // FIXME cipherService is always != null
+                if (cipherService != null) {
+                    cookieToken = new String(cipherService.decrypt(bytes, getDecryptionCipherKey()).getBytes());
+                } else {
+                    cookieToken = new String(bytes);
+                }
 
-                UserPrincipal ssoUser = retrieveUserFromCookieToken(cookieToken, httpRequest);
+                UserPrincipal userPrincipal = retrieveUserFromCookieToken(cookieToken, httpRequest);
 
-                if (ssoUser != null) {
-                    showDebugInfo(ssoUser);
+                if (userPrincipal != null) {
+                    showDebugInfo(userPrincipal);
 
-                    // FIXME
-                    //principals = new PrincipalCollection(ssoUser);
+                    principals = new PrincipalCollection(userPrincipal);
                 }
             }
         } catch (RuntimeException re) {

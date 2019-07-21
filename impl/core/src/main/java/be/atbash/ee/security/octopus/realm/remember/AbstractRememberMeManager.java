@@ -71,7 +71,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
     /**
      * Cipher to use for encrypting/decrypting serialized byte arrays for added security
      */
-    private CipherService cipherService;
+    protected CipherService cipherService;
 
     /**
      * Cipher encryption key to use with the Cipher when encrypting data
@@ -249,6 +249,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      */
     protected byte[] convertPrincipalsToBytes(PrincipalCollection principals) {
         byte[] bytes = serialize(principals);
+        // FIXME cipherService is always != null
         if (cipherService != null) {
             bytes = encrypt(bytes);
         }
@@ -316,6 +317,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * @return the de-serialized and possibly decrypted principals
      */
     protected PrincipalCollection convertBytesToPrincipals(byte[] bytes, SubjectContext subjectContext) {
+        // FIXME cipherService is always != null
         if (cipherService != null) {
             bytes = decrypt(bytes);
         }
@@ -362,6 +364,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      */
     protected byte[] encrypt(byte[] serialized) {
         byte[] value = serialized;
+        // FIXME cipherService is always != null
         if (cipherService != null) {
             ByteSource byteSource = cipherService.encrypt(serialized, encryptionCipherKey);
             value = byteSource.getBytes();
@@ -377,6 +380,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      */
     protected byte[] decrypt(byte[] encrypted) {
         byte[] serialized = encrypted;
+        // FIXME cipherService is always != null
         if (cipherService != null) {
             ByteSource byteSource = cipherService.decrypt(encrypted, getDecryptionCipherKey());
             serialized = byteSource.getBytes();

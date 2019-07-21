@@ -16,6 +16,7 @@
 package be.atbash.ee.security.sso.server.endpoint;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
@@ -70,7 +71,7 @@ public class AuthenticationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse response) throws ServletException, IOException {
 
         UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
-
+         // Get the info saved bu the oidcFilter
         AuthenticationRequest request = (AuthenticationRequest) httpServletRequest.getAttribute(AbstractRequest.class.getName());
 
         String clientId = request.getClientID().getValue();
@@ -106,9 +107,8 @@ public class AuthenticationServlet extends HttpServlet {
         String userAgent = httpServletRequest.getHeader("User-Agent");
         String remoteHost = httpServletRequest.getRemoteAddr();
 
-        //tokenStore.addLoginFromClient(ssoUser, ssoUser.getCookieToken(), userAgent, remoteHost, oidcStoreData);
-        // FIXME
-        tokenStore.addLoginFromClient(SecurityUtils.getSubject().getPrincipal(), null, userAgent, remoteHost, oidcStoreData);
+        String cookieToken = userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN);
+        tokenStore.addLoginFromClient(SecurityUtils.getSubject().getPrincipal(), cookieToken, userAgent, remoteHost, oidcStoreData);
 
         State state = request.getState();
 

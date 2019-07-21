@@ -87,7 +87,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
      * this {@code RememberMeManager}.
      */
     protected Cookie createCookie(String value, HttpServletRequest request) {
-        Cookie cookie = new Cookie(rememberMeConfiguration.getCookieName(), value);
+        Cookie cookie = new Cookie(getCookieName(), value);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(rememberMeConfiguration.getCookieMaxAge());
         cookie.setSecure(rememberMeConfiguration.isCookieSecureOnly());
@@ -104,7 +104,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
      * @param request the incoming HttpServletRequest
      * @return the path to be used as the path when the cookie is created or removed
      */
-    private String calculatePath(HttpServletRequest request) {
+    protected String calculatePath(HttpServletRequest request) {
 
         String path = StringUtils.clean(request.getContextPath());
 
@@ -145,7 +145,6 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
 
         //base 64 encode it and store as a cookie:
         String base64 = Base64Codec.encodeToString(serialized, true);
-
 
         Cookie cookie = createCookie(base64, request);
         response.addCookie(cookie);
@@ -196,7 +195,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
         HttpServletRequest request = wsc.getServletRequest();
 
         String base64 = null;
-        Cookie cookie = getCookie(request, rememberMeConfiguration.getCookieName());
+        Cookie cookie = getCookie(request, getCookieName());
         if (cookie != null) {
             base64 = cookie.getValue();
         }
@@ -220,6 +219,10 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
             //no cookie set - new site visitor?
             return null;
         }
+    }
+
+    protected String getCookieName() {
+        return rememberMeConfiguration.getCookieName();
     }
 
     /**
