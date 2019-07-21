@@ -11,3 +11,11 @@ When the client application needs authentication/authorization, it redirect to t
    . Stores the **OpenIdVariableClientData** in the session of the client
    . Assembles the URL for the SSO server for a login (with State and Nonce values)
    . redirect to this login URL.
+
+. The login URL is <SSO.octopus.server>/octopus/sso/authenticate and passes first **oidcFilter**
+. **be.atbash.ee.security.sso.server.filter.OIDCEndpointFilter** verifies the query parameters (existence, validity)
+. Since it is also a AccessControlFilter, if passes the request to the loginURL of the AbstractUserFilter (_user_ by default or the additional one which is found)
+
+. Redirect to the login
+. Verification of authentication as normal and redirect to _saved_ request which is <SSO.octopus.server>/octopus/sso/authenticate.
+. Passes again **oidcFilter** but now continues to the **AuthenticationServlet** since a UserPrincipal is present in the Subject.

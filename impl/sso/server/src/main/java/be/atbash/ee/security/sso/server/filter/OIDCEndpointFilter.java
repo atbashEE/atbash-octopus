@@ -69,6 +69,7 @@ import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
 public class OIDCEndpointFilter extends AccessControlFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OIDCEndpointFilter.class);
+    private static List<String> DEFAULT_FILTERS = Arrays.asList("user", "authenticated");
 
     private AbstractUserFilter userFilter;
 
@@ -84,12 +85,28 @@ public class OIDCEndpointFilter extends AccessControlFilter {
     @PostConstruct
     public void init() {
         setName("oidcFilter");
+        userFilter = determineUserFilter();
+    }
 
-        List<AbstractUserFilter> userFilters = CDIUtils.retrieveInstances(AbstractUserFilter.class);
-        if (userFilters.size() != 1) {
-            // FIXME HOW are we going to handle this? config parameter?
+    private AbstractUserFilter determineUserFilter() {
+        List<AbstractUserFilter> filteredList = new ArrayList<>();
+        AbstractUserFilter defaultUserFilter = null;
+
+        for (AbstractUserFilter filter : CDIUtils.retrieveInstances(AbstractUserFilter.class)) {
+            if ("user".equals(filter.getName())) {
+                defaultUserFilter = filter;
+            }
+            if (!DEFAULT_FILTERS.contains(filter.getName())) {
+                filteredList.add(filter);
+            }
         }
-        userFilter = userFilters.get(0);
+
+        if (filteredList.size() > 1) {
+            // FIXME We need a config parameter
+            throw new AtbashUnexpectedException("Unable to determine filter : TODO implement config parameter.");
+        }
+
+        return filteredList.isEmpty() ? defaultUserFilter : filteredList.get(0);
     }
 
     @Override
@@ -102,7 +119,6 @@ public class OIDCEndpointFilter extends AccessControlFilter {
             // Strip off any additional info (like jsessionid encoded in URL)
             requestURI = requestURI.substring(0, requestURI.indexOf(';'));
         }
-
 
         ErrorInfo errorInfo = null;
         EndpointType endpointType = null;
@@ -393,9 +409,13 @@ public class OIDCEndpointFilter extends AccessControlFilter {
         }
 
         private URI getRedirectURI(Map<String, List<String>> queryParameters) {
-            String paramValue = queryParameters.get("redirect_uri").get(0); // FIXME Check .get(0)
-
             URI result = null;
+
+            List<String> redirectURIList = queryParameters.get("redirect_uri");
+            if (redirectURIList == null) {
+                return result;
+            }
+            String paramValue = redirectURIList.get(0); // FIXME Check when multiple items
 
             if (StringUtils.isNotBlank(paramValue)) {
 
