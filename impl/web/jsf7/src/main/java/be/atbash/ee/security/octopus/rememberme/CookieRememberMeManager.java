@@ -52,7 +52,7 @@ import static be.atbash.ee.security.octopus.WebConstants.IDENTITY_REMOVED_KEY;
 @ApplicationScoped
 public class CookieRememberMeManager extends AbstractRememberMeManager {
 
-    private static transient final Logger log = LoggerFactory.getLogger(CookieRememberMeManager.class);
+    private static transient final Logger LOGGER = LoggerFactory.getLogger(CookieRememberMeManager.class);
 
     /**
      * Root path to use when the path hasn't been set and request context root is empty or null.
@@ -63,7 +63,6 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
      * The value of deleted cookie (with the maxAge 0).
      */
     private static final String DELETED_COOKIE_VALUE = "deleteMe";
-
 
     @Inject
     private RememberMeConfiguration rememberMeConfiguration;
@@ -112,7 +111,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
         if (path == null) {
             path = ROOT_PATH;
         }
-        log.trace("calculated path: {}", path);
+        LOGGER.trace("calculated path: {}", path);
         return path;
     }
 
@@ -129,11 +128,11 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
     protected void rememberSerializedIdentity(Subject subject, byte[] serialized) {
 
         if (!(subject instanceof WebSubject)) {
-            if (log.isDebugEnabled()) {
+            if (LOGGER.isDebugEnabled()) {
                 String msg = "Subject argument is not an HTTP-aware instance.  This is required to obtain a servlet " +
                         "request and response in order to set the rememberMe cookie. Returning immediately and " +
                         "ignoring rememberMe operation.";
-                log.debug(msg);
+                LOGGER.debug(msg);
             }
             return;
         }
@@ -170,7 +169,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
      * {@code WebSubjectContext} or that {@code WebSubjectContext} does not have an HTTP Request/Response pair, this
      * implementation returns {@code null}.
      *
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param subjectContext the contextual data that
      *                       is being used to construct a {@link Subject} instance.  To be used to assist with data
      *                       lookup.
      * @return a previously serialized identity byte array or {@code null} if the byte array could not be acquired.
@@ -178,11 +177,11 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
     protected byte[] getRememberedSerializedIdentity(SubjectContext subjectContext) {
 
         if (!(subjectContext instanceof WebSubjectContext)) {
-            if (log.isDebugEnabled()) {
+            if (LOGGER.isDebugEnabled()) {
                 String msg = "SubjectContext argument is not an HTTP-aware instance.  This is required to obtain a " +
                         "servlet request and response in order to retrieve the rememberMe cookie. Returning " +
                         "immediately and ignoring rememberMe operation.";
-                log.debug(msg);
+                LOGGER.debug(msg);
             }
             return null;
         }
@@ -207,12 +206,12 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
 
         if (base64 != null) {
             base64 = ensurePadding(base64);
-            if (log.isTraceEnabled()) {
-                log.trace(String.format("Acquired Base64 encoded identity [%s]", base64));
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace(String.format("Acquired Base64 encoded identity [%s]", base64));
             }
             byte[] decoded = Base64Codec.decode(base64);
-            if (log.isTraceEnabled()) {
-                log.trace(String.format("Base64 decoded byte array length: %s bytes.", decoded.length));
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace(String.format("Base64 decoded byte array length: %s bytes.", decoded.length));
             }
             return decoded;
         } else {
@@ -290,7 +289,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
      * Request/Response pair.  If it is not a {@code WebSubjectContext} or that {@code WebSubjectContext} does not
      * have an HTTP Request/Response pair, this implementation does nothing.
      *
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation
+     * @param subjectContext the contextual data
      */
     public void forgetIdentity(SubjectContext subjectContext) {
         if ((subjectContext instanceof WebSubjectContext)) {

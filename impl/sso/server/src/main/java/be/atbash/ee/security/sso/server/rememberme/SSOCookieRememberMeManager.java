@@ -29,6 +29,7 @@ import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.ee.security.sso.server.store.TokenStoreInfo;
+import be.atbash.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +71,8 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
     @Override
     public void onSuccessfulLogin(Subject subject, AuthenticationToken token, AuthenticationInfo info) {
         String clientId = ssoHelper.getSSOClientId(subject);
-        if (clientId != null && !clientId.trim().isEmpty()) {
-            rememberIdentity(subject, token, info);
+        if (StringUtils.hasText(clientId)) {
+            rememberIdentity(subject, info);
         } else {
             super.onSuccessfulLogin(subject, token, info);
         }
@@ -130,7 +131,7 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
                 String cookieToken;
                 // FIXME cipherService is always != null
                 if (cipherService != null) {
-                    cookieToken = new String(cipherService.decrypt(bytes, getDecryptionCipherKey()).getBytes());
+                    cookieToken = new String(cipherService.decrypt(bytes, decryptionCipherKey).getBytes());
                 } else {
                     cookieToken = new String(bytes);
                 }

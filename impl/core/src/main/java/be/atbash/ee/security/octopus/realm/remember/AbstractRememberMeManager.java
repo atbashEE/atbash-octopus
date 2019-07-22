@@ -76,12 +76,12 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
     /**
      * Cipher encryption key to use with the Cipher when encrypting data
      */
-    private byte[] encryptionCipherKey;
+    protected byte[] encryptionCipherKey;
 
     /**
      * Cipher decryption key to use with the Cipher when decrypting data
      */
-    private byte[] decryptionCipherKey;
+    protected byte[] decryptionCipherKey;
 
     /**
      * Default constructor that initializes a {@link DefaultSerializer} as the serializer and
@@ -99,17 +99,8 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      *
      * @param encryptionCipherKey the encryption key to use for encryption operations.
      */
-    public void setEncryptionCipherKey(byte[] encryptionCipherKey) {
+    protected void setEncryptionCipherKey(byte[] encryptionCipherKey) {
         this.encryptionCipherKey = encryptionCipherKey;
-    }
-
-    /**
-     * Returns the decryption cipher key to use for decryption operations.
-     *
-     * @return the cipher key to use for decryption operations.
-     */
-    public byte[] getDecryptionCipherKey() {
-        return decryptionCipherKey;
     }
 
     /**
@@ -117,7 +108,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      *
      * @param decryptionCipherKey the decryption key to use for decryption operations.
      */
-    public void setDecryptionCipherKey(byte[] decryptionCipherKey) {
+    protected void setDecryptionCipherKey(byte[] decryptionCipherKey) {
         this.decryptionCipherKey = decryptionCipherKey;
     }
 
@@ -135,7 +126,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      *
      * @param cipherKey the symmetric cipher key to use for both encryption and decryption.
      */
-    public void setCipherKey(byte[] cipherKey) {
+    protected void setCipherKey(byte[] cipherKey) {
         //Since this method should only be used in symmetric ciphers
         //(where the enc and dec keys are the same), set it on both:
         setEncryptionCipherKey(cipherKey);
@@ -172,7 +163,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * Reacts to the successful login attempt by first always {@link #forgetIdentity(Subject) forgetting} any previously
      * stored identity.  Then if the {@code token}
      * {@link #isRememberMe(AuthenticationToken) is a RememberMe} token, the associated identity
-     * will be {@link #rememberIdentity(Subject, AuthenticationToken, AuthenticationInfo) remembered}
+     * will be {@link #rememberIdentity(Subject, AuthenticationInfo) remembered}
      * for later retrieval during a new user session.
      *
      * @param subject the subject for which the principals are being remembered.
@@ -185,7 +176,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
 
         //now save the new identity:
         if (isRememberMe(token)) {
-            rememberIdentity(subject, token, info);
+            rememberIdentity(subject, info);
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("AuthenticationToken did not indicate RememberMe is requested.  " +
@@ -195,33 +186,15 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
     }
 
     /**
-     * Remembers a subject-unique identity for retrieval later.  This implementation first
-     * {@link #getIdentityToRemember resolves} the exact
-     * {@link PrincipalCollection principals} to remember.  It then remembers the principals by calling
-     * {@link #rememberIdentity(Subject, PrincipalCollection)}.
-     * <p/>
-     * This implementation ignores the {@link AuthenticationToken} argument, but it is available to subclasses if
-     * necessary for custom logic.
+     * Remembers a subject-unique identity for retrieval later.  This implementation takes the Subject
+     * PrincipalCollection, converts it to a serialized form and remembers this value.
      *
      * @param subject   the subject for which the principals are being remembered.
-     * @param token     the token that resulted in a successful authentication attempt.
-     * @param authcInfo the authentication info resulting from the successful authentication attempt.
+     * @param info the authentication info resulting from the successful authentication attempt.
      */
-    public void rememberIdentity(Subject subject, AuthenticationToken token, AuthenticationInfo authcInfo) {
-        PrincipalCollection principals = getIdentityToRemember(subject, authcInfo);
+    protected void rememberIdentity(Subject subject, AuthenticationInfo info) {
+        PrincipalCollection principals = info.getPrincipals();
         rememberIdentity(subject, principals);
-    }
-
-    /**
-     * Returns {@code info}.{@link AuthenticationInfo#getPrincipals() getPrincipals()} and
-     * ignores the {@link Subject} argument.
-     *
-     * @param subject the subject for which the principals are being remembered.
-     * @param info    the authentication info resulting from the successful authentication attempt.
-     * @return the {@code PrincipalCollection} to remember.
-     */
-    protected PrincipalCollection getIdentityToRemember(Subject subject, AuthenticationInfo info) {
-        return info.getPrincipals();
     }
 
     /**
@@ -382,7 +355,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
         byte[] serialized = encrypted;
         // FIXME cipherService is always != null
         if (cipherService != null) {
-            ByteSource byteSource = cipherService.decrypt(encrypted, getDecryptionCipherKey());
+            ByteSource byteSource = cipherService.decrypt(encrypted, decryptionCipherKey);
             serialized = byteSource.getBytes();
         }
         return serialized;
@@ -395,7 +368,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * @param principals the principal collection to serialize to a byte array
      * @return the serialized principal collection in the form of a byte array
      */
-    protected byte[] serialize(PrincipalCollection principals) {
+    private byte[] serialize(PrincipalCollection principals) {
         return serializer.serialize(principals);
     }
 
@@ -406,7 +379,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * @param serializedIdentity the previously serialized {@code PrincipalCollection} as a byte array
      * @return the de-serialized (reconstituted) {@code PrincipalCollection}
      */
-    protected PrincipalCollection deserialize(byte[] serializedIdentity) {
+    private PrincipalCollection deserialize(byte[] serializedIdentity) {
         return serializer.deserialize(serializedIdentity);
     }
 
