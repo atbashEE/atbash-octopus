@@ -4,6 +4,7 @@
 . Support for LDAP as External Password validation.
 . Support for CAS server.
 . Improved usage of UserPrincipal and AuthenticationInfoBuilder.
+. Added SecretUtil
 
 ==== Important changes
 
