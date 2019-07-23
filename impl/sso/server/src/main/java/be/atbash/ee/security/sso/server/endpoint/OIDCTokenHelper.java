@@ -77,26 +77,6 @@ public class OIDCTokenHelper {
         return claimsSet;
     }
 
-    /*
-        public IDTokenClaimsSet defineIDToken(HttpServletRequest httpServletRequest, OctopusSSOToken ssoUser, ClientID clientId) {
-
-            Issuer iss = new Issuer(urlUtil.determineRoot(httpServletRequest));
-            Subject sub = new Subject(ssoUser.getName());
-            List<Audience> audList;
-            if (clientId == null) {
-                audList = new ArrayList<>();
-            } else {
-
-                audList = new Audience(clientId.getValue()).toSingleAudienceList();
-            }
-
-            Date iat = new Date();
-            Date exp = timeUtil.addSecondsToDate(ssoServerConfiguration.getSSOAccessTokenTimeToLive(), iat); // TODO Verify how we handle expiration when multiple clients are using the server
-
-            return new IDTokenClaimsSet(iss, sub, audList, exp, iat);
-        }
-
-     */
     public SignedJWT signIdToken(String clientId, IDTokenClaimsSet claimsSet) {
         SignedJWT idToken;
         try {

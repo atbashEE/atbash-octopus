@@ -19,3 +19,9 @@ When the client application needs authentication/authorization, it redirect to t
 . Redirect to the login
 . Verification of authentication as normal and redirect to _saved_ request which is <SSO.octopus.server>/octopus/sso/authenticate.
 . Passes again **oidcFilter** but now continues to the **AuthenticationServlet** since a UserPrincipal is present in the Subject.
+
+. The _AuthenticationServlet_ creates and stores the tokens and performs the redirect to the callback URL provided by the client application.
+
+   . OIDCTokenHelper creates the idToken claims
+   . Depending on the flow, Access>Token and/or AuthorizationToken are created
+   . SSOTokenStore keeps the token info for the login.
