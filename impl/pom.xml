@@ -43,6 +43,7 @@
 
     <properties>
         <deltaspike.version>1.0.0</deltaspike.version>
+        <jadler.version>1.3.0</jadler.version>
     </properties>
     <dependencies>
 

@@ -33,3 +33,5 @@ When the client application needs authentication/authorization, it redirect to t
    . Retrieve the user info (the **OctopusSSOToken**) from the SSO server.
    . Perform a login based on this _OctopusSSOToken_
 
+. The exchange of the _AuthenticationCode_ to the _AccessCode_ is performed on the client side by the class _ExchangeForAccessCode_. It creates an authenticated request and verifies the signing of the received JWT containing the AccessCode.
+. On the server side, the **OIDCEndpointFilter** and the **TokenServlet** are handling the request for the AccessCode.

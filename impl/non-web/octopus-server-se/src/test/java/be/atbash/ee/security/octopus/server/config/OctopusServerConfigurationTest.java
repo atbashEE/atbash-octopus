@@ -1,0 +1,119 @@
+/*
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package be.atbash.ee.security.octopus.server.config;
+
+import be.atbash.config.test.TestConfig;
+import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.util.base64.Base64Codec;
+import org.junit.After;
+import org.junit.Test;
+
+import java.util.Random;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class OctopusServerConfigurationTest {
+
+    private OctopusServerConfiguration configuration = new OctopusServerConfiguration();
+
+    private Random random = new Random();
+
+    @After
+    public void tearDown() {
+        TestConfig.resetConfig();
+    }
+
+    @Test
+    public void getSSOClientSecret() {
+        byte[] value = new byte[32];
+        random.nextBytes(value);
+        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString(value, true));
+
+        byte[] secret = configuration.getSSOClientSecret();
+        assertThat(secret).isEqualTo(value);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSSOClientSecret_tooShort() {
+        byte[] value = new byte[31];
+        random.nextBytes(value);
+        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString(value, true));
+
+        configuration.getSSOClientSecret();
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSSOClientSecret_notDefined() {
+        configuration.getSSOClientSecret();
+    }
+
+    @Test
+    public void getSSOClientSecret_withPrefix() {
+        TestConfig.addConfigValue("SSO.application", "test");
+        byte[] value1 = new byte[32];
+        random.nextBytes(value1);
+        TestConfig.addConfigValue("test.SSO.clientSecret", Base64Codec.encodeToString(value1, true));
+
+        byte[] value2 = new byte[32];
+        random.nextBytes(value2);
+        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString(value2, true));
+
+        byte[] secret = configuration.getSSOClientSecret();
+        assertThat(secret).isEqualTo(value1);
+    }
+
+    @Test
+    public void getSSOIdTokenSecret() {
+        byte[] value = new byte[32];
+        random.nextBytes(value);
+        TestConfig.addConfigValue("SSO.idTokenSecret", Base64Codec.encodeToString(value, true));
+
+        byte[] secret = configuration.getSSOIdTokenSecret();
+        assertThat(secret).isEqualTo(value);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSSOIdTokenSecret_tooShort() {
+        byte[] value = new byte[31];
+        random.nextBytes(value);
+        TestConfig.addConfigValue("SSO.idTokenSecret", Base64Codec.encodeToString(value, true));
+
+        configuration.getSSOIdTokenSecret();
+
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSSOIdTokenSecret_notDefined() {
+        configuration.getSSOIdTokenSecret();
+    }
+
+    @Test
+    public void getSSOIdTokenSecret_withPrefix() {
+
+        TestConfig.addConfigValue("SSO.application", "test");
+        byte[] value1 = new byte[32];
+        random.nextBytes(value1);
+        TestConfig.addConfigValue("test.SSO.idTokenSecret", Base64Codec.encodeToString(value1, true));
+
+        byte[] value2 = new byte[32];
+        random.nextBytes(value2);
+        TestConfig.addConfigValue("SSO.idTokenSecret", Base64Codec.encodeToString(value2, true));
+
+        byte[] secret = configuration.getSSOIdTokenSecret();
+        assertThat(secret).isEqualTo(value1);
+    }
+
+}

@@ -85,10 +85,11 @@ public class ExchangeForAccessCode {
         showDebugInfo(authorizationCode.getValue());
 
         try {
-            URI redirectURI = new URI(variableClientData.getRootURL() + "/sso/SSOCallback");
+            URI redirectURI = new URI(variableClientData.getRootURL() + "/sso/SSOCallback"); // FIXME Constant
             AuthorizationCodeGrant grant = new AuthorizationCodeGrant(authorizationCode, redirectURI);
             URI tokenEndPoint = new URI(serverConfiguration.getTokenEndpoint());
 
+            // Token Endpoint is protected by authentication
             ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(serverConfiguration.getSSOClientId())
                     , tokenEndPoint, algorithm, new Secret(new String(serverConfiguration.getSSOClientSecret(), Charset.forName("UTF-8"))));
 
@@ -107,6 +108,7 @@ public class ExchangeForAccessCode {
 
                 verifyJWT(idToken);
 
+                // TODO Seems not related to the AccessCode but with the IdToken. Verify
                 IDTokenClaimsVerifier claimsVerifier = new IDTokenClaimsVerifier(new Issuer(serverConfiguration.getOctopusSSOServer()), new ClientID(serverConfiguration.getSSOClientId()), variableClientData.getNonce(), 0);
                 claimsVerifier.verify(idToken.getJWTClaimsSet(), null);
             } else {
