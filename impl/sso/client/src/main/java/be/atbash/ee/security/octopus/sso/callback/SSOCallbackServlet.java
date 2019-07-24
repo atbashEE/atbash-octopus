@@ -34,7 +34,6 @@ import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 
 import javax.inject.Inject;
@@ -65,7 +64,7 @@ public class SSOCallbackServlet extends HttpServlet {
     private OctopusSSOClientConfiguration ssoClientConfiguration;
 
     @Inject
-    private OctopusCoreConfiguration octopusConfig;
+    private OctopusCoreConfiguration coreConfiguration;
 
     @Inject
     private OctopusServerConfiguration octopusServerConfiguration;
@@ -86,9 +85,7 @@ public class SSOCallbackServlet extends HttpServlet {
 
         CustomUserInfoValidator customUserInfoValidator = CDIUtils.retrieveOptionalInstance(CustomUserInfoValidator.class);
 
-        // FIXME new OctopusSEConfiguration() -> A bit weird, but due to Deltaspike ssoClientConfiguration, it reads from the correct configuration
-        //octopusUserRequestor = new OctopusUserRequestor(new OctopusSEConfiguration(), octopusSSOTokenConverter, userInfoJSONProvider, customUserInfoValidator);
-        octopusUserRequestor = new OctopusUserRequestor(octopusConfig, octopusServerConfiguration, octopusSSOTokenConverter, userInfoJSONProvider, customUserInfoValidator);
+        octopusUserRequestor = new OctopusUserRequestor(coreConfiguration, octopusServerConfiguration, octopusSSOTokenConverter, userInfoJSONProvider, customUserInfoValidator);
     }
 
     @Override
@@ -97,13 +94,13 @@ public class SSOCallbackServlet extends HttpServlet {
         SSOCallbackServletHandler handler = new SSOCallbackServletHandler(httpServletRequest, httpServletResponse, callbackErrorHandler);
 
         // Get the authentication response and do some basic checks about it.
-        AuthenticationResponse authenticationResponse = handler.getAuthenticationResponse();
+        AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
 
-        if (authenticationResponse == null) {
+        if (successResponse == null) {
+            // The call contained an Error Object or some validations failed.
+            // The callbackErrorHandler is already called with the problem and null indicates that there is no successResponse.
             return;
         }
-
-        AuthenticationSuccessResponse successResponse = (AuthenticationSuccessResponse) authenticationResponse;
 
         BearerAccessToken accessToken = null;
 
@@ -129,6 +126,7 @@ public class SSOCallbackServlet extends HttpServlet {
         }
 
         // Retrieve user info from the accessToken
+        // FIXME What if idToken was defined at scope.
         OctopusSSOToken user = handler.retrieveUser(octopusUserRequestor, accessToken);
 
         if (user == null) {

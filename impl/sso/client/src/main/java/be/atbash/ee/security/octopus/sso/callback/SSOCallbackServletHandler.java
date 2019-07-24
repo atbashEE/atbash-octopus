@@ -24,7 +24,6 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
@@ -45,7 +44,7 @@ import java.util.Map;
  *
  */
 
-public class SSOCallbackServletHandler {
+class SSOCallbackServletHandler {
 
 
     private HttpServletRequest httpServletRequest;
@@ -54,13 +53,14 @@ public class SSOCallbackServletHandler {
 
     private OpenIdVariableClientData variableClientData;
 
-    public SSOCallbackServletHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, CallbackErrorHandler callbackErrorHandler) {
+    SSOCallbackServletHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, CallbackErrorHandler callbackErrorHandler) {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
         this.callbackErrorHandler = callbackErrorHandler;
     }
 
-    public AuthenticationResponse getAuthenticationResponse() {
+    AuthenticationSuccessResponse getAuthenticationResponse() {
+        // FIXME variableClientData should be set through constructor.
         HttpSession session = httpServletRequest.getSession(true);
 
         variableClientData = (OpenIdVariableClientData) session.getAttribute(OpenIdVariableClientData.class.getName());
@@ -69,9 +69,10 @@ public class SSOCallbackServletHandler {
 
     }
 
-    private AuthenticationResponse verifyRequestStructural(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, OpenIdVariableClientData variableClientData) {
+    private AuthenticationSuccessResponse verifyRequestStructural(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, OpenIdVariableClientData variableClientData) {
         ErrorObject errorObject = null;
 
+        // FIXME Move this test outside this class before variableClientData set through constructor.
         if (variableClientData == null) {
             errorObject = new ErrorObject("OCT-SSO-CLIENT-012", "Request did not originate from this session");
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
@@ -88,6 +89,7 @@ public class SSOCallbackServletHandler {
         } catch (URISyntaxException e) {
             errorObject = new ErrorObject("OCT-SSO-CLIENT-001", e.getMessage());
         } catch (ParseException e) {
+            // TODO Can only happen with response= in query (When is this generated as it related a JWT reply)
             errorObject = new ErrorObject("OCT-SSO-CLIENT-002", e.getMessage());
         }
 
@@ -100,6 +102,7 @@ public class SSOCallbackServletHandler {
             receivedState = errorResponse.getState();
         } else {
             if (authenticationResponse == null) {
+                // Happens when AuthenticationResponseParser.parse(responseURL); throws Exception
                 receivedState = findStateFromParameters(query);
             } else {
                 receivedState = authenticationResponse.getState();
@@ -114,7 +117,7 @@ public class SSOCallbackServletHandler {
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
             return null;
         }
-        return authenticationResponse;
+        return authenticationResponse.toSuccessResponse();
     }
 
     private State findStateFromParameters(String query) {
@@ -136,11 +139,10 @@ public class SSOCallbackServletHandler {
 
     }
 
-    public BearerAccessToken getAccessTokenFromAuthorizationCode(AuthenticationSuccessResponse successResponse, ExchangeForAccessCode exchangeForAccessCode) {
+    BearerAccessToken getAccessTokenFromAuthorizationCode(AuthenticationSuccessResponse successResponse, ExchangeForAccessCode exchangeForAccessCode) {
         AuthorizationCode authorizationCode = successResponse.getAuthorizationCode();
         // Check if we received an Authorization code.
-        ResponseType responseType = successResponse.impliedResponseType();
-        if (responseType.impliesImplicitFlow()) {
+        if (authorizationCode == null) {
             ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-013", "Missing Authorization code");
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
             return null;
@@ -149,7 +151,7 @@ public class SSOCallbackServletHandler {
         return exchangeForAccessCode.doExchange(httpServletResponse, variableClientData, authorizationCode);
     }
 
-    public OctopusSSOToken retrieveUser(OctopusUserRequestor octopusUserRequestor, BearerAccessToken accessToken) {
+    OctopusSSOToken retrieveUser(OctopusUserRequestor octopusUserRequestor, BearerAccessToken accessToken) {
         OctopusSSOToken result = null;
         try {
             result = octopusUserRequestor.getOctopusSSOUser(variableClientData, accessToken);

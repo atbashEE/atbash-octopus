@@ -25,3 +25,11 @@ When the client application needs authentication/authorization, it redirect to t
    . OIDCTokenHelper creates the idToken claims
    . Depending on the flow, Access>Token and/or AuthorizationToken are created
    . SSOTokenStore keeps the token info for the login.
+
+. The callback from the SSO server is handled by **SSOCallbackServlet** (and **SSOCallbackServletHandler**) the performed steps are
+
+   . validate the callback parameters and use the _OpenIdVariableClientData_ which was stored at the HTTP Session.
+   . When using Authorization code flow, exchange it for the Access code (call to SSO Server by **ExchangeForAccessCode**)
+   . Retrieve the user info (the **OctopusSSOToken**) from the SSO server.
+   . Perform a login based on this _OctopusSSOToken_
+
