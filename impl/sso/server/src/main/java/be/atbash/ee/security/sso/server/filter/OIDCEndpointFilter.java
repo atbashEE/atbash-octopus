@@ -211,8 +211,10 @@ public class OIDCEndpointFilter extends AccessControlFilter {
 
         ErrorInfo result = null;
 
+        boolean clientAuthenticationPerformed = false;
         TokenRequest tokenRequest = null;
         try {
+            // We assemble a httpRequest so that we can use TokenRequest from nimbusds.oauth2.sdk
             HTTPRequest.Method method = HTTPRequest.Method.valueOf(httpServletRequest.getMethod());
             URL url = new URL(httpServletRequest.getRequestURL().toString());
             HTTPRequest httpRequest = new HTTPRequest(method, url);
@@ -227,7 +229,9 @@ public class OIDCEndpointFilter extends AccessControlFilter {
 
             GrantType grantType = tokenRequest.getAuthorizationGrant().getType();
             if (grantType.requiresClientAuthentication() || tokenRequest.getClientAuthentication() != null) {
+                // Verify the client authentication
                 result = checkClientCredentials(tokenRequest, url, httpRequest, grantType);
+                clientAuthenticationPerformed = true;
             }
 
             if (result == null && GrantType.PASSWORD.equals(grantType)) {
@@ -247,7 +251,8 @@ public class OIDCEndpointFilter extends AccessControlFilter {
                     ResourceOwnerPasswordCredentialsGrant passwordGrant = (ResourceOwnerPasswordCredentialsGrant) tokenRequest.getAuthorizationGrant();
                     ClientID username = new ClientID(passwordGrant.getUsername());
                     ClientAuthentication clientAuthentication = new ClientSecretBasic(username, passwordGrant.getPassword());
-                    SecurityUtils.getSubject().login(new OIDCEndpointToken(clientAuthentication));
+                    SecurityUtils.getSubject().login(new OIDCEndpointToken(clientAuthentication.getClientID()));
+                    clientAuthenticationPerformed = true;
                 }
             }
 
@@ -261,6 +266,12 @@ public class OIDCEndpointFilter extends AccessControlFilter {
             result = new ErrorInfo(e.getErrorObject());
         } catch (IOException e) {
             throw new AtbashUnexpectedException(e);
+        }
+
+        if (!clientAuthenticationPerformed && result == null) {
+            //  && result == null do not override another error
+            ErrorObject errorObject = new ErrorObject("OCT-SSO-SERVER-014", "Client authentication required");
+            result = new ErrorInfo(errorObject);
         }
 
         if (result == null) {
@@ -282,7 +293,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
         ErrorInfo result = null;
         ClientAuthentication clientAuthentication = tokenRequest.getClientAuthentication();
 
-        Set<Audience> expectedAudience = new HashSet<Audience>();
+        Set<Audience> expectedAudience = new HashSet<>();
         expectedAudience.add(new Audience(url.toExternalForm()));
 
         ClientAuthenticationVerifier<Object> authenticationVerifier = new ClientAuthenticationVerifier<>(selector, null, expectedAudience);
@@ -307,7 +318,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
                 result = new ErrorInfo(new ErrorObject("OCT-SSO-SERVER-012", "Invalid \"redirect_uri\" parameter: "));
             } else {
 
-                OIDCEndpointToken endpointToken = new OIDCEndpointToken(clientAuthentication);
+                OIDCEndpointToken endpointToken = new OIDCEndpointToken(clientAuthentication.getClientID());
 
                 SecurityUtils.getSubject().login(endpointToken);
 
@@ -386,35 +397,36 @@ public class OIDCEndpointFilter extends AccessControlFilter {
         AUTHENTICATE, TOKEN
     }
 
-    private class ErrorInfo {
+    private static class ErrorInfo {
 
         private URI redirectURI;
         private State state;
         private ErrorObject errorObject;
 
-        public ErrorInfo(Map<String, List<String>> queryParameters, ErrorObject errorObject) {
-            state = State.parse(queryParameters.get("state").get(0));  // FIXME is .get(0) correct
+        ErrorInfo(Map<String, List<String>> queryParameters, ErrorObject errorObject) {
+            state = State.parse(queryParameters.get("state").get(0));  // FIXME is .get(0) correct? MultivaluedMapUtils.getFirstValue()
             redirectURI = getRedirectURI(queryParameters);
             this.errorObject = errorObject;
         }
 
-        public ErrorInfo(AuthenticationRequest request, ErrorObject errorObject) {
+        ErrorInfo(AuthenticationRequest request, ErrorObject errorObject) {
             state = request.getState();
             redirectURI = request.getRedirectionURI();
             this.errorObject = errorObject;
         }
 
-        public ErrorInfo(ErrorObject errorObject) {
+        ErrorInfo(ErrorObject errorObject) {
             this.errorObject = errorObject;
         }
 
         private URI getRedirectURI(Map<String, List<String>> queryParameters) {
-            URI result = null;
 
             List<String> redirectURIList = queryParameters.get("redirect_uri");
             if (redirectURIList == null) {
-                return result;
+                return null;
             }
+
+            URI result = null;
             String paramValue = redirectURIList.get(0); // FIXME Check when multiple items
 
             if (StringUtils.isNotBlank(paramValue)) {

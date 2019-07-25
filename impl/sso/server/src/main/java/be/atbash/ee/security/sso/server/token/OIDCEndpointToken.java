@@ -15,10 +15,8 @@
  */
 package be.atbash.ee.security.sso.server.token;
 
-import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.SystemAuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 
 /**
@@ -27,14 +25,14 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 
 public class OIDCEndpointToken implements ValidatedAuthenticationToken, SystemAuthenticationToken {
 
-    private ClientAuthentication clientAuthentication; // FIXME this is not serializable
+    private ClientID clientId;
 
-    public OIDCEndpointToken(ClientAuthentication clientAuthentication) {
-        this.clientAuthentication = clientAuthentication;
+    public OIDCEndpointToken(ClientID clientId) {
+        this.clientId = clientId;
     }
 
     public ClientID getClientId() {
-        return clientAuthentication.getClientID();
+        return clientId;
     }
 
     @Override

@@ -22,14 +22,16 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.SavedRequest;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.util.BeanManagerFake;
+import be.atbash.util.base64.Base64Codec;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.util.Base64;
 import com.nimbusds.oauth2.sdk.AbstractRequest;
+import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
@@ -58,7 +60,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import static be.atbash.ee.security.octopus.util.WebUtils.SAVED_REQUEST_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -80,7 +81,7 @@ public class OIDCEndpointFilterTest {
     private SSOHelper ssoHelperMock;
 
     @Mock
-    private WebSubject subjectMock;
+    private WebSubject webSubjectMock;
 
     @Mock
     private PrintWriter printWriterMock;
@@ -110,6 +111,12 @@ public class OIDCEndpointFilterTest {
     private OIDCEndpointFilter endpointFilter;
 
     private BeanManagerFake beanManagerFake;
+
+    @Captor
+    private ArgumentCaptor<String> attributeNameCapture;
+
+    @Captor
+    private ArgumentCaptor<Object> attributeValueCapture;
 
     @Before
     public void setup() {
@@ -147,9 +154,9 @@ public class OIDCEndpointFilterTest {
 
         when(httpServletRequestMock.getContextPath()).thenReturn("/oidc");  // The context root of the SSO app
 
-        ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(null);  // No UserPrincipal so that we get a redirect ro getLoginURL of UserFilter
-        when(subjectMock.getSession()).thenReturn(sessionMock);
+        ThreadContext.bind(webSubjectMock);
+        when(webSubjectMock.getPrincipal()).thenReturn(null);  // No UserPrincipal so that we get a redirect ro getLoginURL of UserFilter
+        when(webSubjectMock.getSession()).thenReturn(sessionMock);
 
         ClientInfo clientInfo = new ClientInfo();
         clientInfo.setOctopusClient(true);
@@ -170,7 +177,7 @@ public class OIDCEndpointFilterTest {
         verify(ssoHelperMock).markAsSSOLogin(httpServletRequestMock, "demo-clientId");
 
         verify(sessionMock).setAttribute(stringCapture.capture(), savedRequestCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo(SAVED_REQUEST_KEY);
+        assertThat(stringCapture.getValue()).isEqualTo(WebUtils.SAVED_REQUEST_KEY);
         assertThat(savedRequestCapture.getValue().getRequestUrl()).isEqualTo("/octopus/sso/authenticate?" + queryString);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
@@ -185,8 +192,8 @@ public class OIDCEndpointFilterTest {
 
         when(httpServletRequestMock.getContextPath()).thenReturn("/oidc");  // The context root of the SSO app
 
-        ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal());  // any UserPrincipal so that we get a forward to
+        ThreadContext.bind(webSubjectMock);
+        when(webSubjectMock.getPrincipal()).thenReturn(new UserPrincipal());  // any UserPrincipal so that we get a forward to
 
         ClientInfo clientInfo = new ClientInfo();
         clientInfo.setOctopusClient(true);
@@ -317,11 +324,11 @@ public class OIDCEndpointFilterTest {
 
         // To make the rest of the code happy
         when(httpServletRequestMock.getContextPath()).thenReturn("/oidc");
-        ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal());  // Anything will do as principal
+        ThreadContext.bind(webSubjectMock);  // So that the .login doesn't complain
+        when(webSubjectMock.getPrincipal()).thenReturn(new UserPrincipal());  // Since we have a login performed, we have a UserPrincipal
 
         // Client JWT validation
-        List<Secret> secrets = new ArrayList<Secret>();
+        List<Secret> secrets = new ArrayList<>();
         secrets.add(new Secret(secretString));
         when(clientCredentialsSelectorMock.selectClientSecrets(new ClientID("junit_client_id"), ClientAuthenticationMethod.CLIENT_SECRET_JWT, null)).thenReturn(secrets);
 
@@ -333,17 +340,52 @@ public class OIDCEndpointFilterTest {
         boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
         assertThat(data).isEqualTo(true);
 
-        verify(httpServletRequestMock, times(2)).setAttribute(anyString(), ArgumentMatchers.any());
+        verify(httpServletRequestMock, times(2)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
 
-        // client_assertion=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vLWNsaWVudElkIiwiYXVkIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwODBcL3NlY3VyaXR5XC9vY3RvcHVzXC9zc29cL3Rva2VuIiwiaXNzIjoiZGVtby1jbGllbnRJZCIsImV4cCI6MTQ4OTQ5NzY5NywianRpIjoiOWJXQmRlU3pNdnhCbDJiTmpkc1lrN2NiN2VqU092ZDJWVnpqS2VETFNZcyJ9.2pPH6hqARMyRDpW7kn00qVgeN7y0UF0iDgNeyX-1gkshDJBCKmt7NcqgRPTLUh05VY7az0N98cRS608KzfJ2oQ&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+        assertThat(attributeNameCapture.getAllValues().get(0)).isEqualTo(AbstractRequest.class.getName());
+        Object value1 = attributeValueCapture.getAllValues().get(0);
+        assertThat(value1).isInstanceOf(TokenRequest.class);
 
-        // client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&code=81np_6iMIkw52117lb_YF71seITMdzOGqmyC02se3jY&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fsso-app2%2Foctopus%2Fsso%2FSSOCallback&client_assertion=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vLWNsaWVudElkIiwiYXVkIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwODBcL3NlY3VyaXR5XC9vY3RvcHVzXC9zc29cL3Rva2VuIiwiaXNzIjoiZGVtby1jbGllbnRJZCIsImV4cCI6MTQ4OTQ5NzY5NywianRpIjoiOWJXQmRlU3pNdnhCbDJiTmpkc1lrN2NiN2VqU092ZDJWVnpqS2VETFNZcyJ9.2pPH6hqARMyRDpW7kn00qVgeN7y0UF0iDgNeyX-1gkshDJBCKmt7NcqgRPTLUh05VY7az0N98cRS608KzfJ2oQ
-        // FIXME more checks
+        assertThat(attributeNameCapture.getAllValues().get(1)).isEqualTo("sh.FILTERED");
+        Object value2 = attributeValueCapture.getAllValues().get(1);
+        assertThat(value2).isEqualTo(Boolean.TRUE);
+
+        verify(webSubjectMock).getPrincipal();
+    }
+
+    @Test
+    public void onPreHandle_token_missingClientAuth() throws Exception {
+
+        StringBuffer url = new StringBuffer();
+        url.append("http://some.server/oidc/octopus/sso/token");
+        when(httpServletRequestMock.getRequestURL()).thenReturn(url);
+        when(httpServletRequestMock.getMethod()).thenReturn("POST");
+        when(httpServletRequestMock.getRequestURI()).thenReturn("/octopus/sso/token");
+
+        String body = "client_id=junit-client&code=81np_6iMIkw52117lb_YF71seITMdzOGqmyC02se3jY&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fsso-app2%2Fsso%2FSSOCallback";
+
+        // Read the info from the client
+        BufferedReader readerMock = Mockito.mock(BufferedReader.class);
+        when(readerMock.readLine()).thenReturn(body);
+        when(httpServletRequestMock.getReader()).thenReturn(readerMock);
+
+        when(httpServletResponseMock.getWriter()).thenReturn(printWriterMock);
+
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        assertThat(data).isEqualTo(false);
+
+        verify(httpServletRequestMock, never()).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
+
+        verify(httpServletResponseMock).setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        verify(printWriterMock).println(stringCapture.capture());
+        assertThat(stringCapture.getValue()).isEqualTo("{\"error_description\":\"Client authentication required\",\"error\":\"OCT-SSO-SERVER-014\"}");
+
+        verify(webSubjectMock, never()).getPrincipal();
     }
 
     @Test
     public void onPreHandle_token_happyCase_fromAdditional() throws Exception {
-
+        // Get value from additional_callback_url
         StringBuffer url = new StringBuffer();
         url.append("http://some.server/oidc/octopus/sso/token");
         when(httpServletRequestMock.getRequestURL()).thenReturn(url);
@@ -362,11 +404,11 @@ public class OIDCEndpointFilterTest {
 
         // To make the rest of the code happy
         when(httpServletRequestMock.getContextPath()).thenReturn("/oidc");
-        ThreadContext.bind(subjectMock);
-        when(subjectMock.getPrincipal()).thenReturn(new UserPrincipal());  // Anything will do as principal
+        ThreadContext.bind(webSubjectMock);
+        when(webSubjectMock.getPrincipal()).thenReturn(new UserPrincipal());  // Anything will do as principal
 
         // Client JWT validation
-        List<Secret> secrets = new ArrayList<Secret>();
+        List<Secret> secrets = new ArrayList<>();
         secrets.add(new Secret(secretString));
         when(clientCredentialsSelectorMock.selectClientSecrets(new ClientID("junit_client_id"), ClientAuthenticationMethod.CLIENT_SECRET_JWT, null)).thenReturn(secrets);
 
@@ -379,19 +421,24 @@ public class OIDCEndpointFilterTest {
         boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
         assertThat(data).isEqualTo(true);
 
-        verify(httpServletRequestMock, times(2)).setAttribute(anyString(), ArgumentMatchers.any());
+        verify(httpServletRequestMock, times(2)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
 
-        // client_assertion=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vLWNsaWVudElkIiwiYXVkIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwODBcL3NlY3VyaXR5XC9vY3RvcHVzXC9zc29cL3Rva2VuIiwiaXNzIjoiZGVtby1jbGllbnRJZCIsImV4cCI6MTQ4OTQ5NzY5NywianRpIjoiOWJXQmRlU3pNdnhCbDJiTmpkc1lrN2NiN2VqU092ZDJWVnpqS2VETFNZcyJ9.2pPH6hqARMyRDpW7kn00qVgeN7y0UF0iDgNeyX-1gkshDJBCKmt7NcqgRPTLUh05VY7az0N98cRS608KzfJ2oQ&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+        assertThat(attributeNameCapture.getAllValues().get(0)).isEqualTo(AbstractRequest.class.getName());
+        Object value1 = attributeValueCapture.getAllValues().get(0);
+        assertThat(value1).isInstanceOf(TokenRequest.class);
 
-        // client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&code=81np_6iMIkw52117lb_YF71seITMdzOGqmyC02se3jY&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fsso-app2%2Foctopus%2Fsso%2FSSOCallback&client_assertion=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vLWNsaWVudElkIiwiYXVkIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwODBcL3NlY3VyaXR5XC9vY3RvcHVzXC9zc29cL3Rva2VuIiwiaXNzIjoiZGVtby1jbGllbnRJZCIsImV4cCI6MTQ4OTQ5NzY5NywianRpIjoiOWJXQmRlU3pNdnhCbDJiTmpkc1lrN2NiN2VqU092ZDJWVnpqS2VETFNZcyJ9.2pPH6hqARMyRDpW7kn00qVgeN7y0UF0iDgNeyX-1gkshDJBCKmt7NcqgRPTLUh05VY7az0N98cRS608KzfJ2oQ
-        // FIXME Review when happy case is reviewed
+        assertThat(attributeNameCapture.getAllValues().get(1)).isEqualTo("sh.FILTERED");
+        Object value2 = attributeValueCapture.getAllValues().get(1);
+        assertThat(value2).isEqualTo(Boolean.TRUE);
+
+        verify(webSubjectMock).getPrincipal();
     }
 
     private String generateSecret() {
         byte[] secret = new byte[32];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(secret);
-        return Base64.encode(secret).toString();
+        return Base64Codec.encodeToString(secret, true);
     }
 
     private String generateJWT(String ssoClientId, String ssoClientSecret, URI tokenEndPoint) {
@@ -399,14 +446,13 @@ public class OIDCEndpointFilterTest {
         try {
             httpRequest = new HTTPRequest(HTTPRequest.Method.valueOf("POST"), new URL("http://some.server/oidc"));
             ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(ssoClientId)
-                    , tokenEndPoint, JWSAlgorithm.HS256, new Secret(ssoClientSecret));  // TODO Is the String usage correct?
+                    , tokenEndPoint, JWSAlgorithm.HS256, new Secret(ssoClientSecret)); //ssoClientSecret is actually a Base64 encoded byte Array
+            // When we need to be completely correct, we should use the UTF-8 representation of the ByteArray itself to pass to new Secret()
 
             httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
             clientAuth.applyTo(httpRequest);
 
-        } catch (JOSEException e) {
-            fail(e.getMessage());
-        } catch (MalformedURLException e) {
+        } catch (JOSEException | MalformedURLException e) {
             fail(e.getMessage());
         }
         return httpRequest.getQuery();
@@ -435,7 +481,6 @@ public class OIDCEndpointFilterTest {
         assertThat(stringCapture.getValue()).isEqualTo("{\"error_description\":\"Invalid request: Missing required \\\"client_id\\\" parameter\",\"error\":\"invalid_request\"}");
 
         verify(httpServletRequestMock, never()).setAttribute(anyString(), ArgumentMatchers.any());
-        // FIXME Review when happy case is reviewed
     }
 
     @Test
@@ -461,6 +506,7 @@ public class OIDCEndpointFilterTest {
         assertThat(stringCapture.getValue()).isEqualTo("{\"error_description\":\"Invalid request: Missing or empty \\\"code\\\" parameter\",\"error\":\"invalid_request\"}");
 
         verify(httpServletRequestMock, never()).setAttribute(anyString(), ArgumentMatchers.any());
-        // FIXME Review when happy case is reviewed
     }
+
+    // FIXME, token endpoint with Password grant.
 }

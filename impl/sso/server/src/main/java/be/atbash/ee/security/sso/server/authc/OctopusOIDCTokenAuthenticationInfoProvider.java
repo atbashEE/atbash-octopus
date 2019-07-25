@@ -33,7 +33,7 @@ public class OctopusOIDCTokenAuthenticationInfoProvider extends AuthenticationIn
         if (token instanceof OIDCEndpointToken) {
             OIDCEndpointToken oidcEndpointToken = (OIDCEndpointToken) token;
             AuthenticationInfoBuilder builder = new AuthenticationInfoBuilder();
-            builder.userName(oidcEndpointToken.getClientId().getValue())
+            builder.userName(oidcEndpointToken.getClientId().getValue())  // The client is actual the one who logs in
                     .principalId(oidcEndpointToken.getClientId().getValue());
             return builder.build();
         }
