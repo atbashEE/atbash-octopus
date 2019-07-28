@@ -62,7 +62,8 @@ public class OctopusUserRequestor extends AbstractRequestor {
         this.customUserInfoValidator = customUserInfoValidator;
     }
 
-    public OctopusSSOToken getOctopusSSOUser(OpenIdVariableClientData variableClientData, BearerAccessToken accessToken) throws URISyntaxException, ParseException, JOSEException, java.text.ParseException, OctopusRetrievalException {
+    public OctopusSSOToken getOctopusSSOToken(OpenIdVariableClientData variableClientData, BearerAccessToken accessToken) throws URISyntaxException, ParseException, JOSEException, java.text.ParseException, OctopusRetrievalException {
+        // Create UserInfoRequest instance to send request to Server
         UserInfoRequest infoRequest = new UserInfoRequest(new URI(configuration.getUserInfoEndpoint()), accessToken);
 
         HTTPRequest httpRequest = infoRequest.toHTTPRequest();
@@ -97,6 +98,7 @@ public class OctopusUserRequestor extends AbstractRequestor {
 
         UserInfo userInfo;
         if (successInfoResponse.getUserInfoJWT() != null) {
+            // We have a JWT as response
             SignedJWT signedJWT = (SignedJWT) successInfoResponse.getUserInfoJWT();
 
             // TODO Support for encryption
@@ -110,6 +112,7 @@ public class OctopusUserRequestor extends AbstractRequestor {
 
             userInfo = new UserInfo(signedJWT.getJWTClaimsSet());
         } else {
+            // We have a a JSON as response which are just the claims.
             userInfo = successInfoResponse.getUserInfo();
         }
 
@@ -140,7 +143,7 @@ public class OctopusUserRequestor extends AbstractRequestor {
     }
 
     private List<String> validateUserInfo(UserInfo userInfo, OpenIdVariableClientData variableClientData) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         if (variableClientData.getRootURL() != null) {
             if (!variableClientData.getNonce().equals(Nonce.parse(userInfo.getStringClaim("nonce")))) {

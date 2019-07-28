@@ -35,3 +35,7 @@ When the client application needs authentication/authorization, it redirect to t
 
 . The exchange of the _AuthenticationCode_ to the _AccessCode_ is performed on the client side by the class _ExchangeForAccessCode_. It creates an authenticated request and verifies the signing of the received JWT containing the AccessCode.
 . On the server side, the **OIDCEndpointFilter** and the **TokenServlet** are handling the request for the AccessCode.
+
+. The retrieval of the User (authentication info) is performed by the **OctopusUserRequestor**. it calls the user endpoint and converts to received info (JWT or plain JSON) to a **OctopusSSOToken**.
+. This conversion is done by **OctopusSSOTokenConverter** with the elp of a (customizable) **PrincipalUserInfoJSONProvider**
+. On the server side, the **SSOAuthenticatingFilter** and **OctopusSSOEndpoint** (_/octopus/sso/user_) are handling the request.

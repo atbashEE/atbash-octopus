@@ -154,7 +154,7 @@ class SSOCallbackServletHandler {
     OctopusSSOToken retrieveUser(OctopusUserRequestor octopusUserRequestor, BearerAccessToken accessToken) {
         OctopusSSOToken result = null;
         try {
-            result = octopusUserRequestor.getOctopusSSOUser(variableClientData, accessToken);
+            result = octopusUserRequestor.getOctopusSSOToken(variableClientData, accessToken);
         } catch (OctopusRetrievalException e) {
             callbackErrorHandler.showErrorMessage(httpServletResponse, e.getErrorObject());
 

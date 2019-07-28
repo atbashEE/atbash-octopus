@@ -219,7 +219,7 @@ public class SSOCallbackServletTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
         OctopusSSOToken ssoUser = new OctopusSSOToken();
-        when(octopusUserRequestorMock.getOctopusSSOUser(clientData, accessToken)).thenReturn(ssoUser);
+        when(octopusUserRequestorMock.getOctopusSSOToken(clientData, accessToken)).thenReturn(ssoUser);
 
         ThreadContext.bind(webSubjectMock);
         when(webSubjectMock.getSession(false)).thenReturn(sessionMock);
@@ -254,7 +254,7 @@ public class SSOCallbackServletTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheToken");
         OctopusSSOToken ssoUser = new OctopusSSOToken();
-        when(octopusUserRequestorMock.getOctopusSSOUser(clientData, accessToken)).thenReturn(ssoUser);
+        when(octopusUserRequestorMock.getOctopusSSOToken(clientData, accessToken)).thenReturn(ssoUser);
 
         ThreadContext.bind(webSubjectMock);
         when(webSubjectMock.getSession(false)).thenReturn(sessionMock);

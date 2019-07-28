@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.sso.core.token;
 
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.sso.core.config.OctopusSSOConfiguration;
+import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.rest.reflect.Property;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -29,7 +30,6 @@ import javax.inject.Inject;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.*;
-import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 
 import static be.atbash.ee.security.octopus.OctopusConstants.AUTHORIZATION_INFO;
 
@@ -56,7 +56,6 @@ public class OctopusSSOTokenConverter {
 
     public Map<String, Object> asClaims(UserPrincipal userPrincipal, PrincipalUserInfoJSONProvider jsonProvider) {
         Map<String, Object> result = new HashMap<>();
-
 
         result.put("id", userPrincipal.getId());
         result.put(OctopusConstants.LOCAL_ID, userPrincipal.getLocalId());
@@ -92,7 +91,7 @@ public class OctopusSSOTokenConverter {
     }
 
     private List<String> getKeysToFilter() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         String[] keys = ssoConfiguration.getKeysToFilter().split(",");
         for (String key : keys) {
             result.add(key.trim());
@@ -114,9 +113,7 @@ public class OctopusSSOTokenConverter {
         result.setFullName(userInfo.getName());
         result.setEmail(userInfo.getEmailAddress());
 
-
         Serializable value;
-
 
         JSONObject jsonObject = userInfo.toJSONObject();
         for (String keyName : jsonObject.keySet()) {
@@ -152,11 +149,11 @@ public class OctopusSSOTokenConverter {
             result = (Class<? extends Serializable>) Class.forName(parts[0]);
         } catch (ClassNotFoundException e) {
             // Nothing to do here, we don't have that class on the classpath
-            logger.warn(String.format("Reading serialized userInfo data failed for OctopusSSOUser as class %s can't be located", parts[0]));
+            logger.warn(String.format("Reading serialized userInfo data failed for OctopusSSOToken as class %s can't be located", parts[0]));
         }
 
         if (result != null && !checkDefaultConstructor(result)) {
-            logger.warn(String.format("Reading serialized userInfo data failed for OctopusSSOUser as class %s doesn't have a default constructor", parts[0]));
+            logger.warn(String.format("Reading serialized userInfo data failed for OctopusSSOToken as class %s doesn't have a default constructor", parts[0]));
             result = null;
         }
 
@@ -168,6 +165,7 @@ public class OctopusSSOTokenConverter {
         for (Constructor<?> constructor : aClass.getConstructors()) {
             if (constructor.getParameterTypes().length == 0) {
                 result = true;
+                break;
             }
         }
         return result;

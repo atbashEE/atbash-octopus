@@ -48,7 +48,6 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
 
     private Logger logger = LoggerFactory.getLogger(SSOAuthenticatingFilter.class);
 
-
     @Inject
     private SSOTokenStore tokenStore;
 
@@ -70,10 +69,10 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
         String apiKey = httpServletRequest.getHeader(WebConstants.X_API_KEY);
         String token = httpServletRequest.getHeader(WebConstants.AUTHORIZATION_HEADER);
 
-        return createSSOUser(httpServletRequest, apiKey, token);
+        return createSSOToken(httpServletRequest, apiKey, token);
     }
 
-    private AuthenticationToken createSSOUser(ServletRequest request, String apiKey, String token) {
+    private AuthenticationToken createSSOToken(ServletRequest request, String apiKey, String token) {
 
         if (token == null) {
             // Authorization header parameter is required.
@@ -84,7 +83,6 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
         if (parts.length != 2) {
             return new IncorrectDataToken("Authorization header value incorrect");
         }
-
 
         if (!WebConstants.BEARER.equals(parts[0])) {
             return new IncorrectDataToken("Authorization header value must start with Bearer");
@@ -97,7 +95,6 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
         return octopusToken;
 
     }
-
 
     private OctopusSSOToken createOctopusToken(ServletRequest request, String apiKey, String token) {
         String accessToken = null;
@@ -132,6 +129,10 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
     }
 
     private OctopusSSOToken createSSOToken(UserPrincipal userPrincipal) {
+        if (userPrincipal == null) {
+            // No UserPrincipal known for the Bearer token
+            return null;
+        }
         OctopusSSOToken ssoUser = new OctopusSSOToken();
 
         String externalId = userPrincipal.getExternalId();
@@ -157,14 +158,12 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
 
     }
 
-
     private void showDebugInfo(OctopusSSOToken token) {
         /*
         if (coreConfiguration == null) {
             octopusConfig = BeanProvider.getContextualReference(OctopusConfig.class);
             logger = LoggerFactory.getLogger(SSOAuthenticatingFilter.class);
         }
-
          */
 
         if (coreConfiguration.showDebugFor().contains(Debug.SSO_FLOW)) {
@@ -179,6 +178,7 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
     }
 
     /*
+    FIXME Review is this required to handle incorrect Bearer Token?
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         if (e != null) {
             throw e; // Propagate the error further so that UserRest filter can properly handle it.

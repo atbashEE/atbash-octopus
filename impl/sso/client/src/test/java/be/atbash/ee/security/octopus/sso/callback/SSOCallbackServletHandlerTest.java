@@ -206,7 +206,7 @@ public class SSOCallbackServletHandlerTest {
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
         OctopusSSOToken ssoToken = new OctopusSSOToken();
-        when(octopusUserRequestorMock.getOctopusSSOUser(null, accessToken)).thenReturn(ssoToken);
+        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenReturn(ssoToken);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNotNull();
@@ -223,7 +223,7 @@ public class SSOCallbackServletHandlerTest {
 
         ErrorObject errorObject = new ErrorObject("xyz", "description");
         OctopusRetrievalException octopusRetrievalException = new OctopusRetrievalException(errorObject);
-        when(octopusUserRequestorMock.getOctopusSSOUser(null, accessToken)).thenThrow(octopusRetrievalException);
+        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenThrow(octopusRetrievalException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNull();
@@ -242,7 +242,7 @@ public class SSOCallbackServletHandlerTest {
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
 
         ParseException parseException = new ParseException("Something went wrong", 12);
-        when(octopusUserRequestorMock.getOctopusSSOUser(null, accessToken)).thenThrow(parseException);
+        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenThrow(parseException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNull();
@@ -261,7 +261,7 @@ public class SSOCallbackServletHandlerTest {
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
 
         com.nimbusds.oauth2.sdk.ParseException parseException = new com.nimbusds.oauth2.sdk.ParseException("Something went wrong");
-        when(octopusUserRequestorMock.getOctopusSSOUser(null, accessToken)).thenThrow(parseException);
+        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenThrow(parseException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNull();

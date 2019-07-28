@@ -72,6 +72,14 @@
         <!-- test -->
         <dependency>
             <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
             <artifactId>utils-cdi</artifactId>
             <version>${atbash-utils.version}</version>
             <classifier>tests</classifier>
@@ -85,11 +93,18 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>uk.org.lidalia</groupId>
             <artifactId>slf4j-test</artifactId>
             <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- OctopusSSOEndPointTest -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>2.22.2</version>
             <scope>test</scope>
         </dependency>
 

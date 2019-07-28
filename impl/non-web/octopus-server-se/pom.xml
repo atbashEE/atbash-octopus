@@ -90,12 +90,26 @@
 
         <!-- test -->
         <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>be.atbash.config</groupId>
             <artifactId>atbash-config-test</artifactId>
             <version>${atbash-config.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.jadler</groupId>
+            <artifactId>jadler-all</artifactId>
+            <version>${jadler.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
