@@ -134,4 +134,57 @@ public class OctopusSSOServerConfigurationTest {
         configuration.getOIDCTokenLength();
 
     }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_hours() {
+        TestConfig.addConfigValue("SSO.access.token.timetolive", "8h");
+
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(8 * 60 * 60);
+    }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_minutes() {
+        TestConfig.addConfigValue("SSO.access.token.timetolive", "12m");
+
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(12 * 60);
+    }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_seconds() {
+        TestConfig.addConfigValue("SSO.access.token.timetolive", "1s");
+
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(1);
+    }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_default() {
+
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(3600);
+    }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_wrongValue() {
+        TestConfig.addConfigValue("SSO.access.token.timetolive", "JUnit");
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(3600); // Default Value
+    }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_Zero() {
+        TestConfig.addConfigValue("SSO.access.token.timetolive", "0h");
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(3600); // Default Value
+    }
+
+    @Test
+    public void getSSOAccessTokenTimeToLive_negative() {
+        TestConfig.addConfigValue("SSO.access.token.timetolive", "-1h");
+        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
+        assertThat(ssoCookieTimeToLive).isEqualTo(3600); // Default Value
+    }
+
 }

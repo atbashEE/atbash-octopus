@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.sso.server.endpoint;
+package be.atbash.ee.security.sso.server.endpoint.helper;
 
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;

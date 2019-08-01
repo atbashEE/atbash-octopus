@@ -19,9 +19,9 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
+import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -71,7 +71,7 @@ public class AuthenticationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse response) throws ServletException, IOException {
 
         UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
-         // Get the info saved bu the oidcFilter
+        // Get the info saved by the oidcFilter
         AuthenticationRequest request = (AuthenticationRequest) httpServletRequest.getAttribute(AbstractRequest.class.getName());
 
         String clientId = request.getClientID().getValue();
