@@ -37,5 +37,11 @@ When the client application needs authentication/authorization, it redirect to t
 . On the server side, the **OIDCEndpointFilter** and the **TokenServlet** are handling the request for the AccessCode.
 
 . The retrieval of the User (authentication info) is performed by the **OctopusUserRequestor**. it calls the user endpoint and converts to received info (JWT or plain JSON) to a **OctopusSSOToken**.
-. This conversion is done by **OctopusSSOTokenConverter** with the elp of a (customizable) **PrincipalUserInfoJSONProvider**
+. This conversion is done by **OctopusSSOTokenConverter** with the help of a (customizable) **PrincipalUserInfoJSONProvider**
 . On the server side, the **SSOAuthenticatingFilter** and **OctopusSSOEndpoint** (_/octopus/sso/user_) are handling the request.
+
+Based on this **OctopusSSOToken**, a login is performed. The **SSOAuthenticationInfoBuilder** is responsible for creating the _UserPrincipal_ instance.
+
+The Permissions are also supplied by the SSO Server and supplied through the **OctopusSSOEndpoint** class. There is an endpoint to return all named Permissions for an application and an endpoint for returning the permissions for a user for an application.
+
+The **PermissionRequester** is retrieving this information on the client side.  The _StringPermissionLookup_ and _getAuthorizationInfo_ are the places where it is used (**SSOClientSecurityDataProvider**)

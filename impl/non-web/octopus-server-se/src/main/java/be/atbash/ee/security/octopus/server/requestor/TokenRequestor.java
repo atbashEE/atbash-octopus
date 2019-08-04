@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.server.requestor;
 
 import be.atbash.ee.security.octopus.config.Debug;
-import be.atbash.ee.security.octopus.server.config.CorrelationCounter;
+import be.atbash.ee.security.octopus.server.debug.CorrelationCounter;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
@@ -75,7 +76,7 @@ public class TokenRequestor extends AbstractRequestor {
             TokenRequest tokenRequest;
             if (algorithm != null) {
                 ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(configuration.getSSOClientId())
-                        , tokenEndPoint, algorithm, new Secret(new String(configuration.getSSOClientSecret(), Charset.forName("UTF-8"))));
+                        , tokenEndPoint, algorithm, new Secret(new String(configuration.getSSOClientSecret(), StandardCharsets.UTF_8)));
                 tokenRequest = new TokenRequest(tokenEndPoint, clientAuth, passwordGrant, Scope.parse(configuration.getSSOScopes()));
             } else {
                 tokenRequest = new TokenRequest(tokenEndPoint, passwordGrant, Scope.parse(configuration.getSSOScopes()));

@@ -88,6 +88,14 @@
             <version>${oauth2-oidc-sdk.version}</version>
         </dependency>
 
+        <!-- FIXME Verify POM structures and dependencies for SSO Server -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>be.atbash.utils</groupId>
@@ -110,6 +118,28 @@
             <version>${jadler.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>uk.org.lidalia</groupId>
+            <artifactId>slf4j-test</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

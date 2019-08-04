@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.sso;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
+import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
 import be.atbash.ee.security.octopus.authz.permission.StringPermissionLookup;
 import be.atbash.ee.security.octopus.config.Debug;
@@ -25,6 +26,9 @@ import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.realm.AuthorizationInfoBuilder;
 import be.atbash.ee.security.octopus.realm.SecurityDataProvider;
+import be.atbash.ee.security.octopus.server.client.ClientCustomization;
+import be.atbash.ee.security.octopus.server.config.OctopusServerConfiguration;
+import be.atbash.ee.security.octopus.server.requestor.PermissionRequestor;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
@@ -38,10 +42,12 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import java.util.List;
 
 @ApplicationScoped
 public class SSOClientSecurityDataProvider extends SecurityDataProvider {
     // FIXME must this be in Octopus-se-standalone
+
     @Inject
     private Logger logger;
 
@@ -51,7 +57,10 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
     @Inject
     private OctopusCoreConfiguration coreConfiguration;
 
-    //private PermissionRequestor permissionRequestor;
+    @Inject
+    private OctopusServerConfiguration serverConfiguration;
+
+    private PermissionRequestor permissionRequestor;
 
     @PostConstruct
     public void init() {
@@ -63,15 +72,12 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
             permissionJSONProvider = new PermissionJSONProvider();
         }
 
-        /*
         ClientCustomization clientCustomization = CDIUtils.retrieveOptionalInstance(ClientCustomization.class);
         if (clientCustomization == null) {
-            permissionRequestor = new PermissionRequestor(new OctopusSEConfiguration(), null, null, permissionJSONProvider);
+            permissionRequestor = new PermissionRequestor(coreConfiguration, serverConfiguration, null, null, permissionJSONProvider);
         } else {
-            permissionRequestor = new PermissionRequestor(new OctopusSEConfiguration(), clientCustomization, clientCustomization.getConfiguration(PermissionRequestor.class), permissionJSONProvider);
+            permissionRequestor = new PermissionRequestor(coreConfiguration, serverConfiguration, clientCustomization, clientCustomization.getConfiguration(PermissionRequestor.class), permissionJSONProvider);
         }
-
-         */
 
     }
 
@@ -90,11 +96,11 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
 
         UserPrincipal userPrincipal = principals.getPrimaryPrincipal();
 
-        Object token = userPrincipal.getUserInfo(OctopusConstants.TOKEN);
+        Object token = userPrincipal.getUserInfo(OctopusConstants.INFO_KEY_TOKEN);
         AuthorizationInfoBuilder infoBuilder = new AuthorizationInfoBuilder();
 
         if (!(token instanceof OctopusSSOToken)) {
-            throw new AtbashUnexpectedException("UserPrincipal should be based OctopusSSOUser. Dit you you fakeLogin Module and forget to define Permissions for the fake user?");
+            throw new AtbashUnexpectedException("UserPrincipal should be based OctopusSSOToken. Did you use fakeLogin Module and forget to define Permissions for the fake user?");
         }
         OctopusSSOToken ssoUser = (OctopusSSOToken) token;
 
@@ -104,13 +110,9 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
             logger.info(String.format("(SSO Client) Retrieving authorization info for user %s from Octopus SSO Server", ssoUser.getFullName()));
         }
 
-        /*
-        FIXME
         List<NamedDomainPermission> domainPermissions = permissionRequestor.retrieveUserPermissions(realToken);
         infoBuilder.addPermissions(domainPermissions);
 
-
-         */
         return infoBuilder.build();
     }
 
@@ -123,14 +125,12 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
             logger.info(String.format("(SSO Client) Retrieving all permissions for application %s", config.getSSOApplication()));
         }
 
-        /*
-        FIXME
         List<NamedDomainPermission> permissions = permissionRequestor.retrieveAllPermissions();
 
         if (!permissions.isEmpty()) {
             return new StringPermissionLookup(permissions);
         }
-*/
+
         if (isFakeLoginActive()) {
             // FIXME
             /*

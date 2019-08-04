@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.server.requestor;
 
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.server.config.CorrelationCounter;
+import be.atbash.ee.security.octopus.server.debug.CorrelationCounter;
 import be.atbash.ee.security.octopus.server.config.OctopusServerConfiguration;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
 import be.atbash.ee.security.octopus.sso.core.client.OpenIdVariableClientData;

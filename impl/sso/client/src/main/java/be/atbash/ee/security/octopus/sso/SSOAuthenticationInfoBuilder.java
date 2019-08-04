@@ -27,7 +27,6 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
 public class SSOAuthenticationInfoBuilder {
 
-
     private AuthenticationInfo authenticationInfo;
 
     public SSOAuthenticationInfoBuilder(OctopusSSOToken octopusSSOToken) {
@@ -36,13 +35,12 @@ public class SSOAuthenticationInfoBuilder {
 
     private void buildInfo(OctopusSSOToken octopusSSOToken) {
 
-
         UserPrincipal principal = new UserPrincipal(octopusSSOToken.getId(), octopusSSOToken.getUserName(), octopusSSOToken.getName());
+        principal.addUserInfo(octopusSSOToken.getUserInfo());
         principal.addUserInfo(OctopusConstants.EMAIL, octopusSSOToken.getEmail());  // Make sure the email is within the userInfo
         principal.addUserInfo(OctopusConstants.LOCAL_ID, octopusSSOToken.getLocalId());
-        principal.addUserInfo(octopusSSOToken.getUserInfo());
         // FIXME Verify
-        authenticationInfo = new AuthenticationInfo(principal);
+        authenticationInfo = new AuthenticationInfo(principal, octopusSSOToken, true);
 
     }
 

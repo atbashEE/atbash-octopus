@@ -155,8 +155,10 @@ public class AuthenticationInfo implements Serializable {
         this.oneTime = oneTime;
         principals.add(token);
 
-        principal.addUserInfo(INFO_KEY_TOKEN, token); // FIXME This is no longer needed? The token is also as Principal defined.
+        principal.addUserInfo(INFO_KEY_TOKEN, token); // 05-2019 FIXME This is no longer needed? The token is also as Principal defined.
         // But getting the principal can only by type and thus not very easy.
+        // 08-2019  Used by SSOClientSecurityDataProvider
+        // Verify if every token is a Principal and added to Collection?.
     }
 
     /**

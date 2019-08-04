@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.server.config;
+package be.atbash.ee.security.octopus.server.client;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import be.atbash.util.PublicAPI;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Configuration;
 
 /**
- *
+ * For the customization of the JAX-RS client.
  */
+@PublicAPI
+public interface ClientCustomization {
 
-public class CorrelationCounter {
+    void customize(Client client, Class<?> clientUsageClass);
 
-    public static final AtomicInteger VALUE = new AtomicInteger();
-
+    Configuration getConfiguration(Class<?> clientUsageClass);
 }
