@@ -26,10 +26,10 @@ import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.realm.AuthorizationInfoBuilder;
 import be.atbash.ee.security.octopus.realm.SecurityDataProvider;
-import be.atbash.ee.security.octopus.server.SSOAuthenticationInfoBuilder;
-import be.atbash.ee.security.octopus.server.client.ClientCustomization;
-import be.atbash.ee.security.octopus.server.config.OctopusServerConfiguration;
-import be.atbash.ee.security.octopus.server.requestor.PermissionRequestor;
+import be.atbash.ee.security.octopus.sso.client.SSOAuthenticationInfoBuilder;
+import be.atbash.ee.security.octopus.sso.client.ClientCustomization;
+import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
+import be.atbash.ee.security.octopus.sso.client.requestor.PermissionRequestor;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
@@ -59,7 +59,7 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
     private OctopusCoreConfiguration coreConfiguration;
 
     @Inject
-    private OctopusServerConfiguration serverConfiguration;
+    private OctopusSSOServerClientConfiguration serverConfiguration;
 
     private PermissionRequestor permissionRequestor;
 

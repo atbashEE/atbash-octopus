@@ -28,21 +28,27 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>octopus-oauth2-se</artifactId>
+    <name>Support for Octopus server (Java SE)</name>
+
+    <artifactId>octopus-sso-client-common</artifactId>
     <version>0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <!-- FIXME It is called SE since we want to use the Resource Owner Password Credentials Grant. -->
     <properties>
-
+        <oauth2-oidc-sdk.version>6.13</oauth2-oidc-sdk.version>
+        <nimbus-jose-jwt.version>6.3</nimbus-jose-jwt.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-sso-client-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 
         <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
         <dependency>
@@ -59,9 +65,38 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-se-standalone</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
-        <!-- testing -->
+        <dependency>
+            <groupId>be.atbash.ee.security</groupId>
+            <artifactId>octopus-sso-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>${oauth2-oidc-sdk.version}</version>
+        </dependency>
+
+        <!-- FIXME Verify POM structures and dependencies for SSO Server -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-se</artifactId>
@@ -84,7 +119,30 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>uk.org.lidalia</groupId>
+            <artifactId>slf4j-test</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
     <build>
+
     </build>
 </project>

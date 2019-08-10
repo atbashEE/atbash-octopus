@@ -74,7 +74,7 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-server-se</artifactId>
+            <artifactId>octopus-sso-client-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

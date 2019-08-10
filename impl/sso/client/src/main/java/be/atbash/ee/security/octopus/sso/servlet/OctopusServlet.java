@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.sso.servlet;
 
 import be.atbash.ee.security.octopus.sso.ClientCallbackHelper;
-import be.atbash.ee.security.octopus.sso.core.client.OpenIdVariableClientData;
+import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.util.URLUtil;
 import be.atbash.util.CDIUtils;

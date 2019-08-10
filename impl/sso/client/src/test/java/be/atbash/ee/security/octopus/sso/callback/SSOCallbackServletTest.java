@@ -17,12 +17,12 @@ package be.atbash.ee.security.octopus.sso.callback;
 
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
-import be.atbash.ee.security.octopus.server.requestor.OctopusUserRequestor;
+import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
+import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
-import be.atbash.ee.security.octopus.sso.core.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;

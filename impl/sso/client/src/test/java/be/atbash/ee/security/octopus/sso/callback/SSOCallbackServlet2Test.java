@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
-import be.atbash.ee.security.octopus.server.requestor.CustomUserInfoValidator;
+import be.atbash.ee.security.octopus.sso.client.requestor.CustomUserInfoValidator;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.After;

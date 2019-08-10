@@ -15,9 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
-import be.atbash.ee.security.octopus.server.requestor.OctopusUserRequestor;
+import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
+import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
-import be.atbash.ee.security.octopus.sso.core.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;

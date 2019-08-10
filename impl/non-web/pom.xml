@@ -45,7 +45,7 @@
         <module>offline-token-generator</module>
         <module>javafx</module>
         <module>cas-se</module>
-        <module>octopus-server-se</module>
+        <module>octopus-sso-client-common</module>
     </modules>
     <build>
         <plugins>

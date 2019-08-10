@@ -19,12 +19,11 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.server.SSOAuthenticationInfoBuilder;
-import be.atbash.ee.security.octopus.server.config.OctopusServerConfiguration;
-import be.atbash.ee.security.octopus.server.requestor.OctopusUserRequestor;
-import be.atbash.ee.security.octopus.server.requestor.TokenRequestor;
+import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
+import be.atbash.ee.security.octopus.sso.client.SSOAuthenticationInfoBuilder;
+import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
+import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
-import be.atbash.ee.security.octopus.sso.core.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.core.rest.DefaultPrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
@@ -44,12 +43,12 @@ import java.net.URISyntaxException;
 public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider {
 
     private OctopusCoreConfiguration coreConfiguration;
-    private OctopusServerConfiguration configuration;
+    private OctopusSSOServerClientConfiguration configuration;
 
     private void init() {
         if (coreConfiguration == null) {
             coreConfiguration = OctopusCoreConfiguration.getInstance();
-            configuration = OctopusServerConfiguration.getInstance();
+            configuration = OctopusSSOServerClientConfiguration.getInstance();
         }
     }
 
@@ -90,6 +89,8 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
 
         return null;
     }
+
+    // FIXME Usage of PermissionRequestor to retrieve permissions.
 
     @Override
     public AuthenticationStrategy getAuthenticationStrategy() {

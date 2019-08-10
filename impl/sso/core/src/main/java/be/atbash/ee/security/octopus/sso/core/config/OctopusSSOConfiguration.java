@@ -27,9 +27,8 @@ import javax.enterprise.context.ApplicationScoped;
  * Only for the Server, but since OctopusSSOUserConverter is here in sso-core, we need to have another config.
  * TODO verify above comment
  */
-
 @ApplicationScoped
-@ModuleConfigName("Octopus SSO Client Configuration")
+@ModuleConfigName("Octopus SSO Core Configuration")
 
 @PublicAPI
 public class OctopusSSOConfiguration extends AbstractConfiguration implements ModuleConfig {

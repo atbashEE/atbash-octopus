@@ -18,9 +18,9 @@ package be.atbash.ee.security.octopus.sso.callback;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.server.config.OctopusServerConfiguration;
-import be.atbash.ee.security.octopus.server.requestor.CustomUserInfoValidator;
-import be.atbash.ee.security.octopus.server.requestor.OctopusUserRequestor;
+import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
+import be.atbash.ee.security.octopus.sso.client.requestor.CustomUserInfoValidator;
+import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
@@ -67,7 +67,7 @@ public class SSOCallbackServlet extends HttpServlet {
     private OctopusCoreConfiguration coreConfiguration;
 
     @Inject
-    private OctopusServerConfiguration octopusServerConfiguration;
+    private OctopusSSOServerClientConfiguration octopusSSOServerClientConfiguration;
 
     @Inject
     private SessionUtil sessionUtil;
@@ -85,7 +85,7 @@ public class SSOCallbackServlet extends HttpServlet {
 
         CustomUserInfoValidator customUserInfoValidator = CDIUtils.retrieveOptionalInstance(CustomUserInfoValidator.class);
 
-        octopusUserRequestor = new OctopusUserRequestor(coreConfiguration, octopusServerConfiguration, octopusSSOTokenConverter, userInfoJSONProvider, customUserInfoValidator);
+        octopusUserRequestor = new OctopusUserRequestor(coreConfiguration, octopusSSOServerClientConfiguration, octopusSSOTokenConverter, userInfoJSONProvider, customUserInfoValidator);
     }
 
     @Override
