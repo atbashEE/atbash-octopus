@@ -22,11 +22,11 @@ import be.atbash.ee.security.sso.server.TimeUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
-import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
@@ -82,7 +82,8 @@ public class OIDCTokenHelperTest {
 
         UserPrincipal userPrincipal = new UserPrincipal(1L, "junit", "JUnit test");
 
-        IDTokenClaimsSet claimsSet = oidcTokenHelper.defineIDToken(httpServletRequestMock, userPrincipal, authenticationRequestMock, "JUnit_client");
+        ClientID clientId = new ClientID("JUnit_client");
+        IDTokenClaimsSet claimsSet = oidcTokenHelper.defineIDToken(httpServletRequestMock, userPrincipal, clientId, authenticationRequestMock);
 
         assertThat(claimsSet.getAudience()).containsExactly(new Audience("JUnit_client"));
         assertThat(claimsSet.getIssuer()).isEqualTo(new Issuer("http://some.host/root"));
@@ -106,10 +107,10 @@ public class OIDCTokenHelperTest {
         String idTokenSecret = secretUtil.generateSecretBase64(48);
         clientInfo.setIdTokenSecret(idTokenSecret);
 
-
         when(clientInfoRetrieverMock.retrieveInfo("JUnit_client")).thenReturn(clientInfo);
 
-        SignedJWT signedJWT = oidcTokenHelper.signIdToken("JUnit_client", claimsSet);
+        ClientID clientId = new ClientID("JUnit_client");
+        SignedJWT signedJWT = oidcTokenHelper.signIdToken(clientId, claimsSet);
 
         signedJWT.verify(new MACVerifier(idTokenSecret));
 

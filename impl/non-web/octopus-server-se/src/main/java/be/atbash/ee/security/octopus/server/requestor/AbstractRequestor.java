@@ -34,7 +34,7 @@ public class AbstractRequestor {
 
     protected OctopusCoreConfiguration coreConfiguration;
 
-    protected void init(OctopusCoreConfiguration coreConfiguration, OctopusServerConfiguration configuration) {
+    protected void setConfiguration(OctopusCoreConfiguration coreConfiguration, OctopusServerConfiguration configuration) {
         this.coreConfiguration = coreConfiguration;
         this.configuration = configuration;
     }

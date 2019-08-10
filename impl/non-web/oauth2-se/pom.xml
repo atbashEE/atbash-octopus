@@ -32,7 +32,7 @@
     <version>0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <!-- FIXME It is called SE snce we want to use the Resource Owner Password Credentials Grant. -->
+    <!-- FIXME It is called SE since we want to use the Resource Owner Password Credentials Grant. -->
     <properties>
 
     </properties>
@@ -40,7 +40,7 @@
     <dependencies>
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-common-se</artifactId>
+            <artifactId>octopus-server-se</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -61,7 +61,19 @@
 
 
         <!-- testing -->
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config-test</artifactId>
+            <version>${atbash-config.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>net.jadler</groupId>
+            <artifactId>jadler-all</artifactId>
+            <version>${jadler.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
     <build>

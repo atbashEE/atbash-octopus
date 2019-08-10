@@ -82,7 +82,7 @@ public class OctopusUserRequestorTest {
 
         TestReflectionUtils.injectDependencies(octopusUserRequestor, new OctopusSSOTokenConverter());
 
-        octopusUserRequestor.init(octopusCoreConfigurationMock, octopusServerConfigurationMock);
+        octopusUserRequestor.setConfiguration(octopusCoreConfigurationMock, octopusServerConfigurationMock);
     }
 
     @After

@@ -161,7 +161,8 @@ public class AuthenticationServletTest {
         List<Audience> aud = Audience.create("aud");
         IDTokenClaimsSet expectedClaimSet = new IDTokenClaimsSet(new Issuer("issuer"), new Subject("sub"), aud, new Date(), new Date());
 
-        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, authenticationRequestMock, "JUnit_client"))
+        ClientID clientId = new ClientID("JUnit_client");
+        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, clientId, authenticationRequestMock))
                 .thenReturn(expectedClaimSet);
 
         authenticationServlet.doGet(httpServletRequestMock, httpServletResponseMock);
@@ -220,9 +221,11 @@ public class AuthenticationServletTest {
         String idTokenSecret = "01234567890123456789012345678901234567890";
         clientInfo.setIdTokenSecret(idTokenSecret);
 
+        ClientID clientId = new ClientID("JUnit_client");
+
         List<Audience> aud = Audience.create("aud");
         IDTokenClaimsSet expectedClaimSet = new IDTokenClaimsSet(new Issuer("issuer"), new Subject("sub"), aud, new Date(), new Date());
-        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, authenticationRequestMock, "JUnit_client"))
+        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, clientId, authenticationRequestMock))
                 .thenReturn(expectedClaimSet);
 
         configureTokenSigning(idTokenSecret);
@@ -264,7 +267,7 @@ public class AuthenticationServletTest {
         List<Audience> audList = Audience.create("JUnit_client");
         final IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(iss, sub, audList, new Date(), new Date());
 
-        when(oidcTokenHelperMock.signIdToken(anyString(), any(IDTokenClaimsSet.class))).thenAnswer(new Answer<SignedJWT>() {
+        when(oidcTokenHelperMock.signIdToken(any(ClientID.class), any(IDTokenClaimsSet.class))).thenAnswer(new Answer<SignedJWT>() {
             @Override
             public SignedJWT answer(InvocationOnMock invocation) throws Throwable {
                 SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet.toJWTClaimsSet());
@@ -321,9 +324,10 @@ public class AuthenticationServletTest {
 
         configureTokenSigning(idTokenSecret);
 
+        ClientID clientId = new ClientID("JUnit_client");
         List<Audience> aud = Audience.create("aud");
         IDTokenClaimsSet expectedClaimSet = new IDTokenClaimsSet(new Issuer("issuer"), new Subject("sub"), aud, new Date(), new Date());
-        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, authenticationRequestMock, "JUnit_client"))
+        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, clientId, authenticationRequestMock))
                 .thenReturn(expectedClaimSet);
 
         authenticationServlet.doGet(httpServletRequestMock, httpServletResponseMock);

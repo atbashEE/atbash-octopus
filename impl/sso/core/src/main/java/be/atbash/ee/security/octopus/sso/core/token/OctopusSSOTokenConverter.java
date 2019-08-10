@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.sso.core.config.OctopusSSOConfiguration;
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.rest.reflect.Property;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.util.StringUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import net.minidev.json.JSONObject;
@@ -101,12 +102,16 @@ public class OctopusSSOTokenConverter {
 
     public OctopusSSOToken fromUserInfo(UserInfo userInfo, PrincipalUserInfoJSONProvider jsonProvider) {
         OctopusSSOToken result = new OctopusSSOToken();
-        result.setId(userInfo.getStringClaim("id"));
+
         Object localIdClaim = userInfo.getClaim(OctopusConstants.LOCAL_ID);
         result.setLocalId(localIdClaim == null ? null : localIdClaim.toString());  // Get String returns null for (short) numbers
-        String username = userInfo.getPreferredUsername();
+        String preferredUsername = userInfo.getPreferredUsername();
         // with resourceOwnerPasswordCredentials, username is in "sub"
-        result.setUserName(username == null ? userInfo.getStringClaim("sub") : username);
+        String userName = preferredUsername == null ? userInfo.getStringClaim("sub") : preferredUsername;
+        result.setUserName(userName);
+
+        String id = userInfo.getStringClaim("id");
+        result.setId(StringUtils.isEmpty(id) ? userName : id); //id is required.
 
         result.setLastName(userInfo.getFamilyName());
         result.setFirstName(userInfo.getGivenName());

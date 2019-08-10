@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
@@ -35,6 +36,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.auth.verifier.InvalidClientException;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
@@ -144,16 +146,14 @@ public class TokenServlet extends HttpServlet {
         OIDCStoreData oidcStoreData = new OIDCStoreData(new BearerAccessToken(ssoServerConfiguration.getOIDCTokenLength()
                 , ssoServerConfiguration.getSSOAccessTokenTimeToLive(), tokenRequest.getScope()));
 
-        /*
-        FIXME
-        OctopusSSOUser ssoUser = ssoProducerBean.getOctopusSSOUser();
+        UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
 
         if (tokenRequest.getScope() != null && tokenRequest.getScope().contains("openid")) {
             // TODO Study spec to see if these can be combined and it makes sense to do so?
 
             ClientID clientID = tokenRequest.getClientAuthentication().getClientID();
             // openid scope requires clientId
-            claimsSet = oidcTokenHelper.defineIDToken(httpServletRequest, ssoUser, clientID);
+            claimsSet = oidcTokenHelper.defineIDToken(httpServletRequest, userPrincipal, clientID);
 
             oidcStoreData.setClientId(clientID);
         }
@@ -172,12 +172,17 @@ public class TokenServlet extends HttpServlet {
         String userAgent = httpServletRequest.getHeader("User-Agent");
         String remoteHost = httpServletRequest.getRemoteAddr();
 
+        tokenStore.addLoginFromClient(userPrincipal, null, userAgent, remoteHost, oidcStoreData);
+        /*
+        FIXME
         if (ssoUser.getCookieToken() == null) {
             tokenStore.addLoginFromClient(ssoUser, null, userAgent, remoteHost, oidcStoreData);
         } else {
             throw new AtbashIllegalActionException("Cannot allow password grant when SSO cookie is found");
         }
-        */
+
+         */
+
         return defineResponse(oidcStoreData);
     }
 

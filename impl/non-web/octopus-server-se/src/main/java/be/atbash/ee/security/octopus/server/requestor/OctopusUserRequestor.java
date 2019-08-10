@@ -56,7 +56,7 @@ public class OctopusUserRequestor extends AbstractRequestor {
 
     public OctopusUserRequestor(OctopusCoreConfiguration coreConfiguration, OctopusServerConfiguration configuration, OctopusSSOTokenConverter octopusSSOTokenConverter, PrincipalUserInfoJSONProvider userInfoJSONProvider
             , CustomUserInfoValidator customUserInfoValidator) {
-        init(coreConfiguration, configuration);
+        setConfiguration(coreConfiguration, configuration);
         this.octopusSSOTokenConverter = octopusSSOTokenConverter;
         this.userInfoJSONProvider = userInfoJSONProvider;
         this.customUserInfoValidator = customUserInfoValidator;

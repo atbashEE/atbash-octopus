@@ -31,6 +31,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
@@ -61,27 +62,33 @@ public class OIDCTokenHelper {
     @Inject
     private ClientInfoRetriever clientInfoRetriever;
 
-    public IDTokenClaimsSet defineIDToken(HttpServletRequest httpServletRequest, UserPrincipal userPrincipal, AuthenticationRequest request, String clientId) {
-        Nonce nonce = request.getNonce();
+    public IDTokenClaimsSet defineIDToken(HttpServletRequest httpServletRequest, UserPrincipal userPrincipal, ClientID clientId) {
+        return defineIDToken(httpServletRequest, userPrincipal, clientId, null);
+    }
+
+    public IDTokenClaimsSet defineIDToken(HttpServletRequest httpServletRequest, UserPrincipal userPrincipal, ClientID clientId, AuthenticationRequest request) {
 
         Issuer iss = new Issuer(urlUtil.determineRoot(httpServletRequest));
         Subject sub = new Subject(userPrincipal.getName());
-        List<Audience> audList = new Audience(clientId).toSingleAudienceList();
+        List<Audience> audList = new Audience(clientId.getValue()).toSingleAudienceList();
 
         Date iat = new Date();
         Date exp = timeUtil.addSecondsToDate(ssoServerConfiguration.getSSOAccessTokenTimeToLive(), iat); // TODO Verify how we handle expiration when multiple clients are using the server
 
         IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(iss, sub, audList, exp, iat);
 
-        claimsSet.setNonce(nonce);
+        if (request != null) {
+            Nonce nonce = request.getNonce();
+            claimsSet.setNonce(nonce);
+        }
         return claimsSet;
     }
 
-    public SignedJWT signIdToken(String clientId, IDTokenClaimsSet claimsSet) {
+    public SignedJWT signIdToken(ClientID clientId, IDTokenClaimsSet claimsSet) {
         SignedJWT idToken;
         try {
 
-            ClientInfo clientInfo = clientInfoRetriever.retrieveInfo(clientId);
+            ClientInfo clientInfo = clientInfoRetriever.retrieveInfo(clientId.getValue());
 
             idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet.toJWTClaimsSet());
 

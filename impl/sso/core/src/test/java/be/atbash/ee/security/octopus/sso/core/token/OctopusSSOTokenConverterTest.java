@@ -199,6 +199,29 @@ public class OctopusSSOTokenConverterTest {
     }
 
     @Test
+    public void fromUserInfo_noId() {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+
+        jsonObject.put(UserInfo.PREFERRED_USERNAME_CLAIM_NAME, "UserNameValue");
+
+        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
+        UserInfo userInfo = new UserInfo(jsonObject);
+
+        DomainPermission permission = new DomainPermission();
+        when(jsonProviderMock.readValue("permissionSerialization", DomainPermission.class)).thenReturn(permission);
+
+        OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
+
+        assertThat(ssoToken.getId()).isEqualTo("UserNameValue");
+        assertThat(ssoToken.getLocalId()).isEqualTo("LocalIdValue");
+
+        assertThat(ssoToken.getUserName()).isEqualTo("UserNameValue");
+
+    }
+
+    @Test
     public void fromUserInfo_ForCredentialOwner() {
 
         JSONObject jsonObject = new JSONObject();

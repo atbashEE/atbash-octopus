@@ -29,6 +29,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AbstractRequest;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ResponseMode;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -74,8 +75,8 @@ public class AuthenticationServlet extends HttpServlet {
         // Get the info saved by the oidcFilter
         AuthenticationRequest request = (AuthenticationRequest) httpServletRequest.getAttribute(AbstractRequest.class.getName());
 
-        String clientId = request.getClientID().getValue();
-        IDTokenClaimsSet claimsSet = oidcTokenHelper.defineIDToken(httpServletRequest, userPrincipal, request, clientId);
+        ClientID clientId = request.getClientID();
+        IDTokenClaimsSet claimsSet = oidcTokenHelper.defineIDToken(httpServletRequest, userPrincipal, clientId, request);
 
         OIDCStoreData oidcStoreData = new OIDCStoreData(new BearerAccessToken(ssoServerConfiguration.getOIDCTokenLength()
                 , ssoServerConfiguration.getSSOAccessTokenTimeToLive(), request.getScope()));

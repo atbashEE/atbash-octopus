@@ -1,0 +1,82 @@
+/*
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package be.atbash.ee.security.octopus.oauth2.adapter;
+
+import be.atbash.config.test.TestConfig;
+import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
+import be.atbash.util.base64.Base64Codec;
+import com.nimbusds.jwt.util.DateUtils;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import net.jadler.Jadler;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class ClientAuthenticationInfoProviderTest {
+
+    private ClientAuthenticationInfoProvider provider;
+
+    private String issuer;
+
+    @Before
+    public void setup() {
+        Jadler.initJadler();
+        provider = new ClientAuthenticationInfoProvider();
+        defineDefaultConfigValues();
+    }
+
+    private void defineDefaultConfigValues() {
+
+        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString("NotAGoodSecretButAnywayItIsOKForTesting".getBytes(), true));
+        issuer = "http://localhost:" + Jadler.port() + "/root";
+        TestConfig.addConfigValue("SSO.octopus.server", issuer);
+        TestConfig.addConfigValue("SSO.clientId", "testClientId");
+    }
+
+    @After
+    public void tearDown() {
+        TestConfig.resetConfig();
+        Jadler.resetJadler();
+    }
+
+    @Test
+    public void getAuthenticationInfo() {
+        Jadler.onRequest()
+                .havingPathEqualTo("/root/octopus/sso/token")
+                .respond()
+                .withContentType(CommonContentTypes.APPLICATION_JSON.toString())
+                .withBody("{\"token_type\":\"bearer\", \"access_token\":\"TheAccessCode\"}");
+
+        long exp = DateUtils.toSecondsSinceEpoch(new Date()) + 5; //  5 is window for execution
+        Jadler.onRequest()
+                .havingPathEqualTo("/root/data/octopus/sso/user")
+                .respond()
+                .withContentType(CommonContentTypes.APPLICATION_JSON.toString())
+                .withBody(String.format("{\"sub\":\"JUnit\", \"iss\":\"%s\", \"exp\":%s}", issuer, exp));
+
+        AuthenticationToken token = new UsernamePasswordToken("user", "pw");
+
+        AuthenticationInfo info = provider.getAuthenticationInfo(token);
+        assertThat(info).isNotNull();  // It is enough to know we have something. The rest is already tested with other Unit tests.
+    }
+
+}

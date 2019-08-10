@@ -16,6 +16,8 @@
 package be.atbash.ee.security.octopus.server.requestor;
 
 import be.atbash.ee.security.octopus.config.Debug;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.server.config.OctopusServerConfiguration;
 import be.atbash.ee.security.octopus.server.debug.CorrelationCounter;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -34,19 +36,20 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
- *
+ *  FIXME Move to octopus-oauth2-se ???
+ *  Can it be used with a generic OAuth2 (like keyCloack)??
  */
 
 public class TokenRequestor extends AbstractRequestor {
 
     private JWSAlgorithm algorithm;
 
-    private TokenRequestor() {
+    private TokenRequestor(OctopusCoreConfiguration coreConfiguration, OctopusServerConfiguration configuration) {
+        setConfiguration(coreConfiguration,  configuration);
         init();
     }
 
@@ -125,11 +128,11 @@ public class TokenRequestor extends AbstractRequestor {
 
     private static final Object LOCK = new Object();
 
-    public static TokenRequestor getInstance() {
+    public static TokenRequestor getInstance(OctopusCoreConfiguration coreConfiguration, OctopusServerConfiguration configuration) {
         if (INSTANCE == null) {
             synchronized (LOCK) {
                 if (INSTANCE == null) {
-                    INSTANCE = new TokenRequestor();
+                    INSTANCE = new TokenRequestor(coreConfiguration, configuration);
                 }
             }
         }

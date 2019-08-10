@@ -47,7 +47,7 @@ public class PermissionRequestor extends AbstractRequestor {
     private PermissionJSONProvider permissionJSONProvider;
 
     public PermissionRequestor(OctopusCoreConfiguration coreConfiguration, OctopusServerConfiguration configuration, ClientCustomization clientCustomization, Configuration clientConfiguration, PermissionJSONProvider permissionJSONProvider) {
-        init(coreConfiguration, configuration);
+        setConfiguration(coreConfiguration, configuration);
         this.permissionJSONProvider = permissionJSONProvider;
         init(clientConfiguration, clientCustomization);
     }
