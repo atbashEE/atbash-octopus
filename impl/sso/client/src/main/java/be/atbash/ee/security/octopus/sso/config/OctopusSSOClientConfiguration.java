@@ -20,6 +20,7 @@ import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
 import be.atbash.util.StringUtils;
 import com.nimbusds.jose.util.Base64;
@@ -31,6 +32,9 @@ import javax.inject.Inject;
 @ApplicationScoped
 @ModuleConfigName("Octopus SSO Client Configuration")
 public class OctopusSSOClientConfiguration extends AbstractConfiguration implements ModuleConfig {
+
+    @Inject
+    private OctopusSSOServerClientConfiguration serverClientConfiguration;
 
     @ConfigEntry
     public String getLoginPage() {
@@ -61,11 +65,6 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
             throw new ConfigurationException("A value for 'Octopus.SSO.server' is required.");
         }
         return result;
-    }
-
-    @ConfigEntry
-    public String getSSOApplication() {
-        return getOptionalValue("SSO.application", "", String.class);
     }
 
     @ConfigEntry
@@ -134,7 +133,7 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
     }
 
     private String defineConfigValue(String configParameter) {
-        String configKeyPrefix = getSSOApplication() + getSSOApplicationSuffix();
+        String configKeyPrefix = serverClientConfiguration.getSSOApplication() + getSSOApplicationSuffix();
         String result = getOptionalValue(configKeyPrefix + '.' + configParameter, "", String.class);
         if (result.trim().isEmpty()) {
             result = getOptionalValue(configParameter, "", String.class);

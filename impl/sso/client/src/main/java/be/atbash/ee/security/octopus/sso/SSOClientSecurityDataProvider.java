@@ -36,6 +36,7 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import org.slf4j.Logger;
 
@@ -58,7 +59,7 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
     private OctopusCoreConfiguration coreConfiguration;
 
     @Inject
-    private OctopusSSOServerClientConfiguration serverConfiguration;
+    private OctopusSSOServerClientConfiguration serverClientConfiguration;
 
     private PermissionRequestor permissionRequestor;
 
@@ -74,9 +75,9 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
 
         ClientCustomization clientCustomization = CDIUtils.retrieveOptionalInstance(ClientCustomization.class);
         if (clientCustomization == null) {
-            permissionRequestor = new PermissionRequestor(coreConfiguration, serverConfiguration, null, null, permissionJSONProvider);
+            permissionRequestor = new PermissionRequestor(coreConfiguration, serverClientConfiguration, null, null, permissionJSONProvider);
         } else {
-            permissionRequestor = new PermissionRequestor(coreConfiguration, serverConfiguration, clientCustomization, clientCustomization.getConfiguration(PermissionRequestor.class), permissionJSONProvider);
+            permissionRequestor = new PermissionRequestor(coreConfiguration, serverClientConfiguration, clientCustomization, clientCustomization.getConfiguration(PermissionRequestor.class), permissionJSONProvider);
         }
 
     }
@@ -122,7 +123,7 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
     public StringPermissionLookup createLookup() {
 
         if (coreConfiguration.showDebugFor().contains(Debug.SSO_FLOW)) {
-            logger.info(String.format("(SSO Client) Retrieving all permissions for application %s", config.getSSOApplication()));
+            logger.info(String.format("(SSO Client) Retrieving all permissions for application %s", serverClientConfiguration.getSSOApplication()));
         }
 
         List<NamedDomainPermission> permissions = permissionRequestor.retrieveAllPermissions();
