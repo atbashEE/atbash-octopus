@@ -53,9 +53,6 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
     private Logger logger;
 
     @Inject
-    private OctopusSSOClientConfiguration config;
-
-    @Inject
     private OctopusCoreConfiguration coreConfiguration;
 
     @Inject
@@ -124,6 +121,11 @@ public class SSOClientSecurityDataProvider extends SecurityDataProvider {
 
         if (coreConfiguration.showDebugFor().contains(Debug.SSO_FLOW)) {
             logger.info(String.format("(SSO Client) Retrieving all permissions for application %s", serverClientConfiguration.getSSOApplication()));
+        }
+
+        if (StringUtils.isEmpty(serverClientConfiguration.getSSOApplication())) {
+            // No SSO.application defined in config so we do not need to retrieve the Lookup.
+            return new StringPermissionLookup();
         }
 
         List<NamedDomainPermission> permissions = permissionRequestor.retrieveAllPermissions();
