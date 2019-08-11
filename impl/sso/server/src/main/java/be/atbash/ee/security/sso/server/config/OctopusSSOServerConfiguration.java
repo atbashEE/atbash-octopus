@@ -20,7 +20,6 @@ import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +56,13 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
         if (matcher.matches()) {
 
             if ("h".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.valueOf(matcher.group(1));
+                result = Integer.parseInt(matcher.group(1));
             }
             if ("d".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.valueOf(matcher.group(1)) * 24;
+                result = Integer.parseInt(matcher.group(1)) * 24;
             }
             if ("m".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.valueOf(matcher.group(1)) * 24 * 30;
+                result = Integer.parseInt(matcher.group(1)) * 24 * 30;
             }
 
             if (!(result > 0)) {
@@ -80,7 +79,7 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
 
     @ConfigEntry
     public boolean isSSOCookieSecure() {
-        return Boolean.valueOf(getOptionalValue("SSO.cookie.secure", "true", String.class));
+        return Boolean.parseBoolean(getOptionalValue("SSO.cookie.secure", "true", String.class));
     }
 
     @ConfigEntry
@@ -88,7 +87,7 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
         String propertyValue = getOptionalValue("SSO.token.length", "32", String.class);
         int result;
         try {
-            result = Integer.valueOf(propertyValue);
+            result = Integer.parseInt(propertyValue);
         } catch (NumberFormatException e) {
             throw new ConfigurationException("Configuration parameter value 'SSO.token.length' must be numeric and larger then 31");
         }
@@ -114,13 +113,13 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
         if (matcher.matches()) {
 
             if ("h".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.valueOf(matcher.group(1)) * 60 * 60;
+                result = Integer.parseInt(matcher.group(1)) * 60 * 60;
             }
             if ("m".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.valueOf(matcher.group(1)) * 60;
+                result = Integer.parseInt(matcher.group(1)) * 60;
             }
             if ("s".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.valueOf(matcher.group(1));
+                result = Integer.parseInt(matcher.group(1));
             }
 
             if (!(result > 0)) {

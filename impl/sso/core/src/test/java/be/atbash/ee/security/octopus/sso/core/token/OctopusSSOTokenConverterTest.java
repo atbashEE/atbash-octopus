@@ -209,9 +209,6 @@ public class OctopusSSOTokenConverterTest {
         jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
         UserInfo userInfo = new UserInfo(jsonObject);
 
-        DomainPermission permission = new DomainPermission();
-        when(jsonProviderMock.readValue("permissionSerialization", DomainPermission.class)).thenReturn(permission);
-
         OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
 
         assertThat(ssoToken.getId()).isEqualTo("UserNameValue");

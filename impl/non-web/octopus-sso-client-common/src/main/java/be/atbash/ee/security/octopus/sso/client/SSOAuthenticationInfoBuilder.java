@@ -37,7 +37,7 @@ public class SSOAuthenticationInfoBuilder {
         principal.addUserInfo(octopusSSOToken.getUserInfo());
         principal.addUserInfo(OctopusConstants.EMAIL, octopusSSOToken.getEmail());  // Make sure the email is within the userInfo
         principal.addUserInfo(OctopusConstants.LOCAL_ID, octopusSSOToken.getLocalId());
-        // FIXME Verify
+
         authenticationInfo = new AuthenticationInfo(principal, octopusSSOToken, true);
 
     }

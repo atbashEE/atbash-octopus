@@ -18,7 +18,6 @@ package be.atbash.ee.security.octopus.sso.core.token;
 import be.atbash.ee.security.octopus.token.AbstractOctopusAuthenticationToken;
 import be.atbash.ee.security.octopus.token.SystemAuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import be.atbash.util.PublicAPI;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 import java.io.Serializable;
@@ -29,7 +28,6 @@ import java.io.Serializable;
  * <p>
  *
  */
-@PublicAPI
 public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implements ValidatedAuthenticationToken, SystemAuthenticationToken,  Serializable {
 
     private String id;
@@ -65,10 +63,6 @@ public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implemen
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public BearerAccessToken getBearerAccessToken() {
-        return bearerAccessToken;
     }
 
     public void setBearerAccessToken(BearerAccessToken bearerAccessToken) {
@@ -119,10 +113,6 @@ public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implemen
         this.firstName = firstName;
     }
 
-    public boolean isLoggedOn() {
-        return id != null;
-    }
-
     @Override
     public String toString() {
         return "OctopusSSOToken{" + "id='" + id + '\'' +
@@ -145,8 +135,7 @@ public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implemen
     }
 
     @Override
-    public boolean equals(Object o) {
-        // Can't be final because of CDI
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -164,8 +153,7 @@ public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implemen
     }
 
     @Override
-    public int hashCode() {
-        // Can't be final because of CDI
+    public final int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
         return result;

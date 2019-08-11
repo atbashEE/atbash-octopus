@@ -34,7 +34,6 @@ import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -53,32 +52,20 @@ class SSOCallbackServletHandler {
 
     private OpenIdVariableClientData variableClientData;
 
-    SSOCallbackServletHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, CallbackErrorHandler callbackErrorHandler) {
+    SSOCallbackServletHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, OpenIdVariableClientData variableClientData, CallbackErrorHandler callbackErrorHandler) {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
+        this.variableClientData = variableClientData;
         this.callbackErrorHandler = callbackErrorHandler;
     }
 
     AuthenticationSuccessResponse getAuthenticationResponse() {
-        // FIXME variableClientData should be set through constructor.
-        HttpSession session = httpServletRequest.getSession(true);
-
-        variableClientData = (OpenIdVariableClientData) session.getAttribute(OpenIdVariableClientData.class.getName());
-
         return verifyRequestStructural(httpServletRequest, httpServletResponse, variableClientData);
-
     }
 
     private AuthenticationSuccessResponse verifyRequestStructural(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, OpenIdVariableClientData variableClientData) {
         ErrorObject errorObject = null;
 
-        // FIXME Move this test outside this class before variableClientData set through constructor.
-        if (variableClientData == null) {
-            errorObject = new ErrorObject("OCT-SSO-CLIENT-012", "Request did not originate from this session");
-            callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
-            return null;
-
-        }
         String query = httpServletRequest.getQueryString();
         AuthenticationResponse authenticationResponse = null;
         State receivedState;

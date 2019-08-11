@@ -15,25 +15,22 @@
  */
 package be.atbash.ee.security.sso.server;
 
+import org.junit.Test;
 
-import be.atbash.util.CDIUtils;
-
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Date;
 
-/**
- *
- */
-@ApplicationScoped
-public class TimeUtil {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public Date addSecondsToDate(long seconds, Date beforeTime) {
+public class TimeUtilTest {
+    private TimeUtil timeUtil = new TimeUtil();
 
-        long curTimeInMs = beforeTime.getTime();
-        return new Date(curTimeInMs + (seconds * 1000));
+    @Test
+    public void addSecondsToDate() {
+        Date now = new Date();
+        Date result = timeUtil.addSecondsToDate(5, now);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getTime() - now.getTime()).isEqualTo(5000);
     }
 
-    public static TimeUtil getInstance() {
-        return CDIUtils.retrieveInstance(TimeUtil.class);
-    }
 }

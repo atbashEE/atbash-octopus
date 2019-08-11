@@ -60,6 +60,7 @@ import java.util.List;
 
 import static be.atbash.ee.security.octopus.util.WebUtils.SAVED_REQUEST_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -148,6 +149,18 @@ public class SSOCallbackServletTest {
         assertThat(errorObjectArgumentCaptor.getValue().getCode()).isEqualTo("OCT-SSO-CLIENT-011");
     }
 
+    @Test
+    public void doGet_noOpenIdClientVariables() throws ServletException, IOException {
+        when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
+
+        callbackServlet.doGet(httpServletRequestMock, httpServletResponseMock);
+
+        verify(callbackErrorHandlerMock).showErrorMessage(any(HttpServletResponse.class), errorObjectArgumentCaptor.capture());
+
+        assertThat(errorObjectArgumentCaptor.getValue().getDescription()).isEqualTo("Request did not originate from this session");
+        assertThat(errorObjectArgumentCaptor.getValue().getCode()).isEqualTo("OCT-SSO-CLIENT-012");
+
+    }
 
     @Test
     public void doGet_InvalidRequest_MissingSession() throws ServletException, IOException {
@@ -239,6 +252,18 @@ public class SSOCallbackServletTest {
         verify(callbackErrorHandlerMock, never()).showErrorMessage(any(HttpServletResponse.class), errorObjectArgumentCaptor.capture());
 
     }
+
+    // FIXME A few additional tests
+    //
+    // accessToken = (BearerAccessToken) successResponse.getAccessToken();
+    //       if (accessToken == null) {
+
+
+    //   OctopusSSOToken user = handler.retrieveUser(octopusUserRequestor, accessToken);
+    //   if (user == null) {
+
+    // SecurityUtils.getSubject().login(user);
+    // catch (UnauthorizedException e) {
 
     @Test
     public void doGet_ValidAccessToken() throws ServletException, IOException, java.text.ParseException, JOSEException, OctopusRetrievalException, ParseException, URISyntaxException {

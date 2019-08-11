@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
@@ -37,6 +38,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.util.MultivaluedMapUtils;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import com.nimbusds.openid.connect.sdk.AuthenticationErrorResponse;
@@ -57,10 +59,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-
-//import static be.c4j.ee.security.OctopusConstants.AUTHORIZATION_HEADER;
 
 /**
  * Filter for the Authenticate and token endpoint.
@@ -218,7 +216,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
             HTTPRequest.Method method = HTTPRequest.Method.valueOf(httpServletRequest.getMethod());
             URL url = new URL(httpServletRequest.getRequestURL().toString());
             HTTPRequest httpRequest = new HTTPRequest(method, url);
-            httpRequest.setAuthorization(httpServletRequest.getHeader(AUTHORIZATION_HEADER));
+            httpRequest.setAuthorization(httpServletRequest.getHeader(OctopusConstants.AUTHORIZATION_HEADER));
             httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
             String query = httpServletRequest.getReader().readLine();
@@ -333,7 +331,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
     private boolean checkRedirectURI(HTTPRequest httpRequest, ClientInfo clientInfo, GrantType grantType) {
         boolean result = true;
         if (GrantType.AUTHORIZATION_CODE.equals(grantType) || GrantType.IMPLICIT.equals(grantType)) {
-            String redirectUri = httpRequest.getQueryParameters().get("redirect_uri").get(0);  // FIXME Check .get(0)
+            String redirectUri = MultivaluedMapUtils.getFirstValue(httpRequest.getQueryParameters(), "redirect_uri");
             result = checkCallbackUrl(clientInfo, redirectUri);
         }
         return result;
@@ -404,7 +402,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
         private ErrorObject errorObject;
 
         ErrorInfo(Map<String, List<String>> queryParameters, ErrorObject errorObject) {
-            state = State.parse(queryParameters.get("state").get(0));  // FIXME is .get(0) correct? MultivaluedMapUtils.getFirstValue()
+            state = State.parse(MultivaluedMapUtils.getFirstValue(queryParameters, "state"));
             redirectURI = getRedirectURI(queryParameters);
             this.errorObject = errorObject;
         }
@@ -443,15 +441,15 @@ public class OIDCEndpointFilter extends AccessControlFilter {
 
         }
 
-        public URI getRedirectURI() {
+        URI getRedirectURI() {
             return redirectURI;
         }
 
-        public State getState() {
+        State getState() {
             return state;
         }
 
-        public ErrorObject getErrorObject() {
+        ErrorObject getErrorObject() {
             return errorObject;
         }
     }

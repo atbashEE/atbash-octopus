@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.keycloak.rest;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
 import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
@@ -30,8 +31,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -64,7 +63,7 @@ public class HelloController {
                 = client.target("http://localhost:8080/keycloak_rest/data/hello");
 
         Response response = webTarget.request()
-                .header(AUTHORIZATION_HEADER, BEARER + " " + token)
+                .header(OctopusConstants.AUTHORIZATION_HEADER, OctopusConstants.BEARER + " " + token)
                 .get();
 
         return "cascaded :" + response.readEntity(String.class);

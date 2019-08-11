@@ -51,4 +51,15 @@ public final class OctopusConstants {
     public static final String LOCAL_ID = "localId";
     public static final String EXTERNAL_ID = "externalId";
 
+    // Used by OAuth2/OpenId also in Java SE when using Client, so they need to be in core.
+    /**
+     * HTTP Authorization header, equal to <code>Authorization</code>
+     */
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
+    /**
+     * HTTP Authorization header value, equal to <code>Bearer</code>
+     */
+    public static final String BEARER = "Bearer";
+
 }

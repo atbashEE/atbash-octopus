@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.filter.authc;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
@@ -233,7 +234,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * Determines whether the incoming request is an attempt to log in.
      * <p/>
      * The default implementation obtains the value of the request's
-     * {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER}, and if it is not <code>null</code>, delegates
+     * {@link OctopusConstants.AUTHORIZATION_HEADER AUTHORIZATION_HEADER}, and if it is not <code>null</code>, delegates
      * to {@link #isLoginAttempt(String) isLoginAttempt(authzHeaderValue)}. If the header is <code>null</code>,
      * <code>false</code> is returned.
      *
@@ -254,19 +255,19 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
     }
 
     /**
-     * Returns the {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.
+     * Returns the {@link OctopusConstants.AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.
      * <p/>
      * This implementation merely casts the request to an <code>HttpServletRequest</code> and returns the header:
      * <p/>
      * <code>HttpServletRequest httpRequest = {@link WebUtils#toHttp(javax.servlet.ServletRequest) toHttp(reaquest)};<br/>
-     * return httpRequest.getHeader({@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER});</code>
+     * return httpRequest.getHeader({@link OctopusConstants.AUTHORIZATION_HEADER AUTHORIZATION_HEADER});</code>
      *
      * @param request the incoming <code>ServletRequest</code>
      * @return the <code>Authorization</code> header's value.
      */
     protected String getAuthzHeader(ServletRequest request) {
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
-        return httpRequest.getHeader(WebConstants.AUTHORIZATION_HEADER);
+        return httpRequest.getHeader(OctopusConstants.AUTHORIZATION_HEADER);
     }
 
     /**

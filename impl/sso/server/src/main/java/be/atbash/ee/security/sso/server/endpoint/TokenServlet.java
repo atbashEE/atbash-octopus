@@ -16,6 +16,7 @@
 package be.atbash.ee.security.sso.server.endpoint;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
@@ -28,6 +29,8 @@ import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
 import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
+import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashIllegalActionException;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -59,12 +62,8 @@ import java.io.IOException;
  */
 @WebServlet("/octopus/sso/token")
 public class TokenServlet extends HttpServlet {
-
+    // FIXME unit Test
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenServlet.class);
-
-    // These properties aren't related to any user info, so safe to use here.
-    //@Inject
-    //private SSOProducerBean ssoProducerBean;
 
     @Inject
     private OctopusSSOServerConfiguration ssoServerConfiguration;
@@ -96,7 +95,7 @@ public class TokenServlet extends HttpServlet {
             }
 
             if (grant instanceof ResourceOwnerPasswordCredentialsGrant) {
-                tokenResponse = getResponsePasswordGrant(httpServletRequest, response, tokenRequest, (ResourceOwnerPasswordCredentialsGrant) grant);
+                tokenResponse = getResponsePasswordGrant(httpServletRequest, tokenRequest, (ResourceOwnerPasswordCredentialsGrant) grant);
             }
 
             if (tokenResponse != null) {
@@ -116,7 +115,7 @@ public class TokenServlet extends HttpServlet {
         }
     }
 
-    private TokenResponse getResponsePasswordGrant(HttpServletRequest httpServletRequest, HttpServletResponse response, TokenRequest tokenRequest, ResourceOwnerPasswordCredentialsGrant grant) {
+    private TokenResponse getResponsePasswordGrant(HttpServletRequest httpServletRequest, TokenRequest tokenRequest, ResourceOwnerPasswordCredentialsGrant grant) {
 
         TokenResponse result;
 
@@ -147,6 +146,9 @@ public class TokenServlet extends HttpServlet {
                 , ssoServerConfiguration.getSSOAccessTokenTimeToLive(), tokenRequest.getScope()));
 
         UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
+        if (StringUtils.hasText((String) userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN))) {
+            throw new AtbashIllegalActionException("Cannot allow password grant when SSO cookie is found");
+        }
 
         if (tokenRequest.getScope() != null && tokenRequest.getScope().contains("openid")) {
             // TODO Study spec to see if these can be combined and it makes sense to do so?
@@ -173,15 +175,6 @@ public class TokenServlet extends HttpServlet {
         String remoteHost = httpServletRequest.getRemoteAddr();
 
         tokenStore.addLoginFromClient(userPrincipal, null, userAgent, remoteHost, oidcStoreData);
-        /*
-        FIXME
-        if (ssoUser.getCookieToken() == null) {
-            tokenStore.addLoginFromClient(ssoUser, null, userAgent, remoteHost, oidcStoreData);
-        } else {
-            throw new AtbashIllegalActionException("Cannot allow password grant when SSO cookie is found");
-        }
-
-         */
 
         return defineResponse(oidcStoreData);
     }

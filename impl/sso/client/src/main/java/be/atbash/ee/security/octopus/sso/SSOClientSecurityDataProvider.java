@@ -47,7 +47,6 @@ import java.util.List;
 
 @ApplicationScoped
 public class SSOClientSecurityDataProvider extends SecurityDataProvider {
-    // FIXME must this be in Octopus-se-standalone
 
     @Inject
     private Logger logger;

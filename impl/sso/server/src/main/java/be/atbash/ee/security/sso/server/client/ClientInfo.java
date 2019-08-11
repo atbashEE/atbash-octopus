@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.sso.server.client;
 
+import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.util.PublicAPI;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -45,7 +46,7 @@ public class ClientInfo {
 
     public String getActualCallbackURL() {
         if (octopusClient) {
-            return callbackURL + "/sso/SSOCallback";
+            return callbackURL + SSOConstants.SSO_CALLBACK_PATH;
         } else {
             return callbackURL;
         }
@@ -84,7 +85,7 @@ public class ClientInfo {
         String url = processCallbackURL(callbackURL);
 
         if (octopusClient) {
-            url = url + "/sso/SSOCallback";  // FIXME Constant
+            url = url + SSOConstants.SSO_CALLBACK_PATH;
         }
 
         additionalCallbackURLs.add(url);

@@ -28,6 +28,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,9 @@ public class OctopusClientCredentialsSelector implements ClientCredentialsSelect
         if (clientInfo == null) {
             throw InvalidClientException.BAD_ID;
         }
-        ArrayList<Secret> result = new ArrayList<Secret>();
+        ArrayList<Secret> result = new ArrayList<>();
         // For Octopus SSO, there the secret is a Base64 encoded array
-        result.add(new Secret(new String(clientInfo.getClientSecretByte(), Charset.forName("UTF-8"))));
+        result.add(new Secret(new String(clientInfo.getClientSecretByte(), StandardCharsets.UTF_8)));
         // For Octopus as OAuth2 (like Google) provider replacement. There It is the plain text
         result.add(new Secret(clientInfo.getClientSecret()));  // TODO ? Is this correct
         return result;

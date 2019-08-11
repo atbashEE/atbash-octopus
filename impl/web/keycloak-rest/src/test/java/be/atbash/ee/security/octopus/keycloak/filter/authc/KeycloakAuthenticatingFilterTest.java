@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.keycloak.filter.authc;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.CredentialsException;
 import be.atbash.ee.security.octopus.jwt.JWTEncoding;
 import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
@@ -53,7 +54,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.IOException;
 import java.util.List;
 
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -103,7 +103,7 @@ public class KeycloakAuthenticatingFilterTest {
 
         verify(httpClientMock).execute(httpGetCaptor.capture());
         assertThat(httpGetCaptor.getValue().getURI().toString()).isEqualTo("localhost:8080/auth/realms/demo/protocol/openid-connect/protocol/openid-connect/userinfo");
-        assertThat(httpGetCaptor.getValue().getFirstHeader(AUTHORIZATION_HEADER).getValue()).isEqualTo("Bearer " + token);
+        assertThat(httpGetCaptor.getValue().getFirstHeader(OctopusConstants.AUTHORIZATION_HEADER).getValue()).isEqualTo("Bearer " + token);
     }
 
     @Test(expected = CredentialsException.class)

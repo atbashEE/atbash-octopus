@@ -23,7 +23,7 @@ package be.atbash.ee.security.octopus.sso.core.rest.reflect;
  * @see Property#get(Object)
  * @see Property#set(Object, Object)
  **/
-public class ReflectionException extends RuntimeException {
+class ReflectionException extends RuntimeException {
 
     /**
      * Constructs an {@link ReflectionException} with the
@@ -32,7 +32,7 @@ public class ReflectionException extends RuntimeException {
      * @param message the detail message
      * @param cause   the throwable cause message
      */
-    public ReflectionException(String message, Throwable cause) {
+    ReflectionException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -42,7 +42,7 @@ public class ReflectionException extends RuntimeException {
      *
      * @param message the detail message
      */
-    public ReflectionException(String message) {
+    ReflectionException(String message) {
         super(message);
     }
 }

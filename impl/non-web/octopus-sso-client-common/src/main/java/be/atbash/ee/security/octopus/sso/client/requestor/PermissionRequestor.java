@@ -16,11 +16,11 @@
 package be.atbash.ee.security.octopus.sso.client.requestor;
 
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.sso.client.TempConstants;
 import be.atbash.ee.security.octopus.sso.client.ClientCustomization;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.debug.DebugClientRequestFilter;
@@ -75,7 +75,7 @@ public class PermissionRequestor extends AbstractRequestor {
         WebTarget target = client.target(configuration.getOctopusSSOServer() + "/" + configuration.getSSOEndpointRoot() + "/octopus/sso/user/permissions/" + configuration.getSSOApplication());
 
         Response response = target.request()
-                .header(TempConstants.AUTHORIZATION_HEADER, TempConstants.BEARER + " " + accessToken)
+                .header(OctopusConstants.AUTHORIZATION_HEADER, OctopusConstants.BEARER + " " + accessToken)
                 .accept(MediaType.APPLICATION_JSON)
                 .get();
 

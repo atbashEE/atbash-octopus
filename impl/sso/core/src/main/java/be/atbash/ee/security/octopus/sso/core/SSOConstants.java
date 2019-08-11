@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.sso.client;
+package be.atbash.ee.security.octopus.sso.core;
 
-// FIXME Temp as it needs to be moved together with the values defined in WebConstants
-public class TempConstants {
+public final class SSOConstants {
 
-    /**
-     * HTTP Authorization header, equal to <code>Authorization</code>
-     */
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
-    /**
-     * HTTP Authorization header value, equal to <code>Bearer</code>
-     */
-    public static final String BEARER = "Bearer";
+    public static final String SSO_CALLBACK_PATH = "/sso/SSOCallback";
 }

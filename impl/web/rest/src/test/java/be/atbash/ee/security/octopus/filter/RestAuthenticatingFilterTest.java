@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
 import be.atbash.ee.security.octopus.authc.InvalidCredentialsException;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
@@ -34,8 +35,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
@@ -167,7 +166,7 @@ public class RestAuthenticatingFilterTest {
 
     @Test
     public void createToken() {
-        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER + " Atbash-JUnit-token");
+        when(servletRequestMock.getHeader(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn(OctopusConstants.BEARER + " Atbash-JUnit-token");
 
         AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
 
@@ -178,7 +177,7 @@ public class RestAuthenticatingFilterTest {
 
     @Test
     public void createToken_wrongHeader() {
-        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(null);
+        when(servletRequestMock.getHeader(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn(null);
 
         AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
 
@@ -189,7 +188,7 @@ public class RestAuthenticatingFilterTest {
 
     @Test
     public void createToken_missingSpace() {
-        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER + "Atbash-JUnit-token");
+        when(servletRequestMock.getHeader(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn(OctopusConstants.BEARER + "Atbash-JUnit-token");
 
         AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
 
@@ -200,7 +199,7 @@ public class RestAuthenticatingFilterTest {
 
     @Test
     public void createToken_MissingBearer() {
-        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn("XX Atbash-JUnit-token");
+        when(servletRequestMock.getHeader(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn("XX Atbash-JUnit-token");
 
         AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
 
@@ -210,8 +209,8 @@ public class RestAuthenticatingFilterTest {
     }
 
     @Test
-    public void createToken_WrongNumerOfSpaces() {
-        when(servletRequestMock.getHeader(AUTHORIZATION_HEADER)).thenReturn(BEARER + " Atbash-JUnit-token XX");
+    public void createToken_WrongNumberOfSpaces() {
+        when(servletRequestMock.getHeader(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn(OctopusConstants.BEARER + " Atbash-JUnit-token XX");
 
         AuthenticationToken token = filter.createToken(servletRequestMock, servletResponseMock);
 

@@ -18,11 +18,13 @@ package be.atbash.ee.security.octopus.sso.callback;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.session.SessionUtil;
+import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.requestor.CustomUserInfoValidator;
 import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
-import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
+import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
 import be.atbash.ee.security.octopus.sso.core.rest.DefaultPrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
@@ -48,7 +50,7 @@ import java.io.IOException;
 /**
  *
  */
-@WebServlet("/sso/SSOCallback")
+@WebServlet(SSOConstants.SSO_CALLBACK_PATH)
 public class SSOCallbackServlet extends HttpServlet {
 
     @Inject
@@ -91,7 +93,12 @@ public class SSOCallbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
 
-        SSOCallbackServletHandler handler = new SSOCallbackServletHandler(httpServletRequest, httpServletResponse, callbackErrorHandler);
+        OpenIdVariableClientData variableClientData = getOpenIdVariableClientData(httpServletRequest, httpServletResponse);
+        if (variableClientData == null) {
+            return;
+        }
+
+        SSOCallbackServletHandler handler = new SSOCallbackServletHandler(httpServletRequest, httpServletResponse, variableClientData, callbackErrorHandler);
 
         // Get the authentication response and do some basic checks about it.
         AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
@@ -152,6 +159,19 @@ public class SSOCallbackServlet extends HttpServlet {
             handleException(httpServletRequest, httpServletResponse, e, user);
         }
 
+    }
+
+    private OpenIdVariableClientData getOpenIdVariableClientData(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        HttpSession session = httpServletRequest.getSession(true);
+
+        OpenIdVariableClientData variableClientData = (OpenIdVariableClientData) session.getAttribute(OpenIdVariableClientData.class.getName());
+        // FIXME Move this test outside this class before variableClientData set through constructor.
+        if (variableClientData == null) {
+            ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-012", "Request did not originate from this session");
+            callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
+            return null;
+        }
+        return variableClientData;
     }
 
     private void handleException(HttpServletRequest request, HttpServletResponse resp, Throwable e, OctopusSSOToken user) {

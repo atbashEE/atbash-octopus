@@ -136,8 +136,8 @@ public final class Property implements AnnotatedElement {
         field = findAccessorField(declaringBean.getType(), name, type);
 
         // Annotations
-        Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<Class<? extends Annotation>, Annotation>(4);
-        Map<Class<? extends Annotation>, Annotation> declaredAnnotationsMap = new HashMap<Class<? extends Annotation>, Annotation>(4);
+        Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>(4);
+        Map<Class<? extends Annotation>, Annotation> declaredAnnotationsMap = new HashMap<>(4);
         for (AnnotatedElement element : new AnnotatedElement[]{field, readMethod, writeMethod}) {
             if (element == null) {
                 continue;
@@ -185,7 +185,7 @@ public final class Property implements AnnotatedElement {
      */
     @Override
     public Annotation[] getAnnotations() {
-        return annotations.values().toArray(new Annotation[annotations.size()]);
+        return annotations.values().toArray(new Annotation[0]);
     }
 
     /**
@@ -205,7 +205,7 @@ public final class Property implements AnnotatedElement {
      */
     @Override
     public Annotation[] getDeclaredAnnotations() {
-        return declaredAnnotations.values().toArray(new Annotation[declaredAnnotations.size()]);
+        return declaredAnnotations.values().toArray(new Annotation[0]);
     }
 
     /**
@@ -241,7 +241,6 @@ public final class Property implements AnnotatedElement {
      * collectively and directly present on this element, else {@code null}
      * @throws NullPointerException if the given annotation class is {@code null}
      */
-    @SuppressWarnings("override")// must be disabled to support jdk 6+
     public <T extends Annotation> T getDeclaredAnnotation(Class<T> annotationClass) {
         if (annotationClass == null) {
             throw new NullPointerException("Cannot get a declared annotation with a 'null' annotationClass.");
@@ -412,7 +411,7 @@ public final class Property implements AnnotatedElement {
     public Object get(Object obj) {
         try {
             if (Bean.isPublic(readMethod)) {
-                return readMethod.invoke(obj, null);
+                return readMethod.invoke(obj);
             } else {
                 throw new ReflectionException("Cannot get the value of " + this + ", as it is write-only.");
             }

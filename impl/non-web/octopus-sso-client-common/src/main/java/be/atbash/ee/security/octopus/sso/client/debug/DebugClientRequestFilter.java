@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.sso.client.debug;
 
-import be.atbash.ee.security.octopus.sso.client.TempConstants;
+import be.atbash.ee.security.octopus.OctopusConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +36,7 @@ public class DebugClientRequestFilter implements ClientRequestFilter {
     public void filter(ClientRequestContext requestContext) throws IOException {
 
         URI uri = requestContext.getUri();
-        String authorization = requestContext.getHeaderString(TempConstants.AUTHORIZATION_HEADER);
-        // FIXME AUTHORIZATION_HEADER but this isn't part of web. -> reorganize constants
+        String authorization = requestContext.getHeaderString(OctopusConstants.AUTHORIZATION_HEADER);
         Object entity = requestContext.getEntity();
 
         int correlationId = CorrelationCounter.VALUE.getAndIncrement();

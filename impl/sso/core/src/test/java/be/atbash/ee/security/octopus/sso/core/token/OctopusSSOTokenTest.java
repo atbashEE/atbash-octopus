@@ -23,7 +23,7 @@ public class OctopusSSOTokenTest {
     @Test
     public void testEqualsAndHashCode() {
         EqualsVerifier.forClass(OctopusSSOToken.class)
-                .suppress(Warning.NONFINAL_FIELDS, Warning.STRICT_INHERITANCE)
+                .suppress(Warning.NONFINAL_FIELDS)
                 // Strict_Inheritance because equals/hashcode can't be final due to CDI
                 .verify();
     }

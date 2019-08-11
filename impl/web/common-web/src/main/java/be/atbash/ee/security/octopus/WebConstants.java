@@ -22,24 +22,13 @@ import be.atbash.util.Reviewed;
  */
 @Reviewed
 public final class WebConstants {
-    /**
-     * HTTP Authorization header, equal to <code>Authorization</code>
-     */
-    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * HTTP Authentication header, equal to <code>WWW-Authenticate</code>
      */
     public static final String AUTHENTICATE_HEADER = "WWW-Authenticate";
 
-    /**
-     * HTTP Authorization header value, equal to <code>Bearer</code>
-     */
-    public static final String BEARER = "Bearer";
-
     public static final String IDENTITY_REMOVED_KEY = "OCTOPUS_IDENTITY_REMOVED_KEY";
-
-    public static final String X_API_KEY = "x-api-key";
 
     public static final String SSO_COOKIE_TOKEN = "OCTOPUS_SSO_COOKIE_TOKEN";
 }

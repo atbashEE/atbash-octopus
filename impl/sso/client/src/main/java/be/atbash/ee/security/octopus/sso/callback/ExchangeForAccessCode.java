@@ -17,10 +17,11 @@ package be.atbash.ee.security.octopus.sso.callback;
 
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.sso.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
-import be.atbash.ee.security.octopus.sso.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
+import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -50,7 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -85,13 +86,13 @@ public class ExchangeForAccessCode {
         showDebugInfo(authorizationCode.getValue());
 
         try {
-            URI redirectURI = new URI(variableClientData.getRootURL() + "/sso/SSOCallback"); // FIXME Constant
+            URI redirectURI = new URI(variableClientData.getRootURL() + SSOConstants.SSO_CALLBACK_PATH);
             AuthorizationCodeGrant grant = new AuthorizationCodeGrant(authorizationCode, redirectURI);
             URI tokenEndPoint = new URI(serverConfiguration.getTokenEndpoint());
 
             // Token Endpoint is protected by authentication
             ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(serverConfiguration.getSSOClientId())
-                    , tokenEndPoint, algorithm, new Secret(new String(serverConfiguration.getSSOClientSecret(), Charset.forName("UTF-8"))));
+                    , tokenEndPoint, algorithm, new Secret(new String(serverConfiguration.getSSOClientSecret(), StandardCharsets.UTF_8)));
 
             TokenRequest tokenRequest = new TokenRequest(tokenEndPoint, clientAuth, grant, null);
 

@@ -17,6 +17,7 @@ package be.atbash.ee.security.sso.server.rememberme;
 
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.rememberme.CookieRememberMeManager;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
@@ -65,7 +66,6 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
     @PostConstruct
     public void init() {
         super.init();  // FIXME Required?
-
     }
 
     @Override
@@ -151,8 +151,8 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
         return principals;
     }
 
-    public UserPrincipal retrieveUserFromCookieToken(String realToken, HttpServletRequest request) {
-        // FIXME Verify the usage of UserPrincipal vc SSOUserToken
+    private UserPrincipal retrieveUserFromCookieToken(String realToken, HttpServletRequest request) {
+
         UserPrincipal user = null;
         TokenStoreInfo cookieInfo = tokenStore.getUserByCookieToken(realToken);
 
@@ -181,18 +181,11 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
     }
 
     private void showDebugInfo(UserPrincipal user) {
-        // FIXME
-        /*
-        if (octopusConfig == null) {
-            octopusConfig = BeanProvider.getContextualReference(OctopusConfig.class);
-        }
 
         if (octopusConfig.showDebugFor().contains(Debug.SSO_FLOW)) {
-            logger.info(String.format("(SSO Server) User %s is authenticated from SSO Cookie %s (=cookie token)", user.getFullName(), user.getCookieToken()));
+            logger.info(String.format("(SSO Server) User %s is authenticated from SSO Cookie %s (=cookie token)"
+                    , user.getName(), user.getUserInfo(WebConstants.SSO_COOKIE_TOKEN)));
         }
-
-         */
     }
-
 
 }

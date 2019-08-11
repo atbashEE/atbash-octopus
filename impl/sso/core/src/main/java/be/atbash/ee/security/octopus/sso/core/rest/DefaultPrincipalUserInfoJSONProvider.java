@@ -82,13 +82,7 @@ public class DefaultPrincipalUserInfoJSONProvider implements PrincipalUserInfoJS
                     setPropertyValue(result, value, property);
                 }
             }
-        } catch (InstantiationException e) {
-            LOGGER.warn(e.getMessage());
-            throw new AtbashUnexpectedException(e.getMessage());
-        } catch (IllegalAccessException e) {
-            LOGGER.warn(e.getMessage());
-            throw new AtbashUnexpectedException(e.getMessage());
-        } catch (ParseException e) {
+        } catch (InstantiationException | ParseException | IllegalAccessException e) {
             LOGGER.warn(e.getMessage());
             throw new AtbashUnexpectedException(e.getMessage());
         }

@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see Class#getDeclaredMethods()
  */
 public final class Bean<T> {
-    private static final Map<Class<?>, SoftReference<Bean<?>>> BEANS_CACHE = new ConcurrentHashMap<Class<?>, SoftReference<Bean<?>>>();
+    private static final Map<Class<?>, SoftReference<Bean<?>>> BEANS_CACHE = new ConcurrentHashMap<>();
 
     private final Class<T> type;
     private final Map<String, Property> properties;
@@ -54,14 +54,14 @@ public final class Bean<T> {
         this.type = type;
 
         // Properties
-        Map<String, Property> propertyMap = new HashMap<String, Property>();
+        Map<String, Property> propertyMap = new HashMap<>();
         for (PropertyDescriptor descriptor : getPropertyDescriptors(type.getMethods())) {
             Property property = new Property(this, descriptor.name, descriptor.readMethod, descriptor.writeMethod);
             propertyMap.put(property.getName(), property);
         }
 
         // Declared Properties
-        Map<String, Property> declaredPropertyMap = new HashMap<String, Property>();
+        Map<String, Property> declaredPropertyMap = new HashMap<>();
         for (PropertyDescriptor descriptor : getPropertyDescriptors(type.getDeclaredMethods())) {
             Property declaredProperty = new Property(this, descriptor.name, descriptor.readMethod, descriptor.writeMethod);
 
@@ -92,7 +92,7 @@ public final class Bean<T> {
      * @return all the property descriptors found
      */
     private static Collection<PropertyDescriptor> getPropertyDescriptors(Method[] methods) {
-        List<PropertyDescriptor> desciptorsHolder = new ArrayList<PropertyDescriptor>();
+        List<PropertyDescriptor> desciptorsHolder = new ArrayList<>();
 
         // Collects writeMetod and readMethod
         for (Method method : methods) {
@@ -131,7 +131,7 @@ public final class Bean<T> {
         }
 
         // Merges descriptors with the same name into a single entity
-        Map<String, PropertyDescriptor> descriptors = new HashMap<String, PropertyDescriptor>();
+        Map<String, PropertyDescriptor> descriptors = new HashMap<>();
 
         for (PropertyDescriptor descriptor : desciptorsHolder) {
             PropertyDescriptor instance = descriptors.get(descriptor.name);
@@ -274,7 +274,7 @@ public final class Bean<T> {
      * @return an array with a shallow copy of all the public properties of this bean
      */
     public Property[] getProperties() {
-        return properties.values().toArray(new Property[properties.size()]);
+        return properties.values().toArray(new Property[0]);
     }
 
     /**
@@ -294,7 +294,7 @@ public final class Bean<T> {
      * @return an array with a shallow copy of all the declared properties of this bean
      */
     public Property[] getDeclaredProperties() {
-        return declaredProperties.values().toArray(new Property[declaredProperties.size()]);
+        return declaredProperties.values().toArray(new Property[0]);
     }
 
     /**

@@ -17,6 +17,7 @@ package be.atbash.ee.security.sso.server.endpoint;
 
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.SecurityUtils;
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
@@ -66,7 +67,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
 import java.util.*;
 
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
 import static com.nimbusds.openid.connect.sdk.claims.UserInfo.SUB_CLAIM_NAME;
 
 /**
@@ -135,14 +135,14 @@ public class OctopusSSOEndpoint {
     @Path("/user")
     @POST
     @RequiresUser
-    public Response getUserInfoPost(@HeaderParam(AUTHORIZATION_HEADER) String authorizationHeader, @Context UriInfo uriDetails) {
+    public Response getUserInfoPost(@HeaderParam(OctopusConstants.AUTHORIZATION_HEADER) String authorizationHeader, @Context UriInfo uriDetails) {
         return getUserInfo(authorizationHeader, uriDetails);
     }
 
     @Path("/user")
     @GET
     @RequiresUser
-    public Response getUserInfo(@HeaderParam(AUTHORIZATION_HEADER) String authorizationHeader, @Context UriInfo uriDetails) {
+    public Response getUserInfo(@HeaderParam(OctopusConstants.AUTHORIZATION_HEADER) String authorizationHeader, @Context UriInfo uriDetails) {
 
         UserPrincipal userPrincipal = getUserPrincipal();
         //When scope contains octopus -> always signed or encrypted. and not JSON by default !!!
@@ -159,7 +159,8 @@ public class OctopusSSOEndpoint {
         OIDCStoreData oidcStoreData = tokenStore.getOIDCDataByAccessToken(accessToken);
         if (oidcStoreData == null) {
             // TODO is this possible? ssoFilter makes sure that the access token is allowed and valid.
-            // Could we have an issue here with the tokenStore (and clustered envionments?
+            // Could we have an issue here with the tokenStore (and clustered environments)?
+            throw new AtbashUnexpectedException("OIDCStoreData is null for accessToken");
         }
         IDTokenClaimsSet idTokenClaimsSet = oidcStoreData.getIdTokenClaimsSet();
 
@@ -286,7 +287,7 @@ public class OctopusSSOEndpoint {
     private void showDebugInfo(UserPrincipal user) {
 
         if (coreConfiguration.showDebugFor().contains(Debug.SSO_FLOW)) {
-            logger.info(String.format("Returning user info for  %s (cookie token = %s)", user.getName(), ""/* FIXME user.getCookieToken()*/));
+            logger.info(String.format("Returning user info for  %s (cookie token = %s)", user.getName(), user.getUserInfo(WebConstants.SSO_COOKIE_TOKEN)));
         }
     }
 

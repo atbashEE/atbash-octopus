@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.octopus.sso.client.debug;
 
-import be.atbash.ee.security.octopus.sso.client.TempConstants;
+import be.atbash.ee.security.octopus.OctopusConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +89,7 @@ public class DebugClientRequestFilterTest {
 
         URI uri = new URI("http://some.host/root");
         when(clientRequestContextMock.getUri()).thenReturn(uri);
-        when(clientRequestContextMock.getHeaderString(TempConstants.AUTHORIZATION_HEADER)).thenReturn("Authorization header");
+        when(clientRequestContextMock.getHeaderString(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn("Authorization header");
 
         filter.filter(clientRequestContextMock);
 
@@ -105,7 +105,7 @@ public class DebugClientRequestFilterTest {
 
         URI uri = new URI("http://some.host/root");
         when(clientRequestContextMock.getUri()).thenReturn(uri);
-        when(clientRequestContextMock.getHeaderString(TempConstants.AUTHORIZATION_HEADER)).thenReturn("Authorization header");
+        when(clientRequestContextMock.getHeaderString(OctopusConstants.AUTHORIZATION_HEADER)).thenReturn("Authorization header");
         when(clientRequestContextMock.getEntity()).thenReturn("The Entity Value");
 
         filter.filter(clientRequestContextMock);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
 import be.atbash.ee.security.octopus.authc.InvalidCredentialsException;
@@ -33,9 +34,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -103,7 +101,7 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
 
     protected String getAuthzHeader(ServletRequest request) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        return httpServletRequest.getHeader(AUTHORIZATION_HEADER);
+        return httpServletRequest.getHeader(OctopusConstants.AUTHORIZATION_HEADER);
     }
 
     @Override
@@ -119,7 +117,7 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
         if (parts.length != 2) {
             return new IncorrectDataToken("Authorization header value incorrect");
         }
-        if (!BEARER.equals(parts[0])) {
+        if (!OctopusConstants.BEARER.equals(parts[0])) {
             return new IncorrectDataToken("Authorization header value must start with Bearer");
         }
 

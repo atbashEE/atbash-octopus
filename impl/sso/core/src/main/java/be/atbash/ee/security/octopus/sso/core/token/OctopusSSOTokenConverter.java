@@ -150,7 +150,8 @@ public class OctopusSSOTokenConverter {
         Class<? extends Serializable> result = null;
         String[] parts = keyValue.split("@@", 2);
         try {
-            // FIXME What if not serializable
+            // asClaims() starts from a Serializable class, so this should always we ok.
+            // TODO This needs to be reviewed when octopus-oauth2-se is against against other types then Octopus SSO Server.
             result = (Class<? extends Serializable>) Class.forName(parts[0]);
         } catch (ClassNotFoundException e) {
             // Nothing to do here, we don't have that class on the classpath
@@ -175,7 +176,6 @@ public class OctopusSSOTokenConverter {
         }
         return result;
     }
-
 
     private static String getString(JSONObject jsonObject, String key) {
         Object keyValue = jsonObject.get(key);

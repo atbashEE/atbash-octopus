@@ -27,6 +27,7 @@ import net.minidev.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  *
@@ -113,7 +114,7 @@ public class OIDCStoreData implements Serializable {
 
         OIDCStoreData that = (OIDCStoreData) o;
 
-        return clientId != null ? clientId.equals(that.clientId) : that.clientId == null;
+        return Objects.equals(clientId, that.clientId);
     }
 
     @Override

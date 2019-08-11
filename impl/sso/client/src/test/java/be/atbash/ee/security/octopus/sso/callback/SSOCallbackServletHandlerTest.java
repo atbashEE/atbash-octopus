@@ -34,7 +34,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -58,9 +57,6 @@ public class SSOCallbackServletHandlerTest {
     private SSOCallbackServletHandler handler;
 
     @Mock
-    private HttpSession sessionMock;
-
-    @Mock
     private ExchangeForAccessCode exchangeForAccessCodeMock;
 
     @Mock
@@ -69,19 +65,19 @@ public class SSOCallbackServletHandlerTest {
     @Captor
     private ArgumentCaptor<ErrorObject> errorObjectArgumentCapture;
 
+    private OpenIdVariableClientData variableClientData;
+
     @Before
     public void setup() {
-        handler = new SSOCallbackServletHandler(httpServletRequestMock, httpServletResponseMock, callbackErrorHandlerMock);
+        variableClientData = new OpenIdVariableClientData("app1");
+
+        handler = new SSOCallbackServletHandler(httpServletRequestMock, httpServletResponseMock, variableClientData, callbackErrorHandlerMock);
     }
 
     @Test
     public void getAuthenticationResponse_happyCase() {
-        when(httpServletRequestMock.getSession(true)).thenReturn(sessionMock);
-        OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("app1");
 
         when(httpServletRequestMock.getQueryString()).thenReturn("code=authenticationCode&state=" + variableClientData.getState().getValue());
-
-        when(sessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(variableClientData);
 
         AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
         verify(callbackErrorHandlerMock, never()).showErrorMessage(any(HttpServletResponse.class), any(ErrorObject.class));
@@ -96,12 +92,7 @@ public class SSOCallbackServletHandlerTest {
 
     @Test
     public void getAuthenticationResponse_wrongState() {
-        when(httpServletRequestMock.getSession(true)).thenReturn(sessionMock);
-        OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("app1");
-
         when(httpServletRequestMock.getQueryString()).thenReturn("code=authenticationCode&state=someValue");
-
-        when(sessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(variableClientData);
 
         AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
 
@@ -115,12 +106,7 @@ public class SSOCallbackServletHandlerTest {
 
     @Test
     public void getAuthenticationResponse_errorResponse() {
-        when(httpServletRequestMock.getSession(true)).thenReturn(sessionMock);
-        OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("app1");
-
         when(httpServletRequestMock.getQueryString()).thenReturn("error=xyz&error_description=testError&state=" + variableClientData.getState().getValue());
-
-        when(sessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(variableClientData);
 
         AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
 
@@ -133,29 +119,8 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void getAuthenticationResponse_noVariableClientData() {
-        when(httpServletRequestMock.getSession(true)).thenReturn(sessionMock);
-
-        when(sessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(null);
-
-        AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
-
-        verify(callbackErrorHandlerMock).showErrorMessage(any(HttpServletResponse.class), errorObjectArgumentCapture.capture());
-        ErrorObject error = errorObjectArgumentCapture.getValue();
-        assertThat(error.getCode()).isEqualTo("OCT-SSO-CLIENT-012");
-        assertThat(error.getDescription()).isEqualTo("Request did not originate from this session");
-
-        assertThat(successResponse).isNull();
-    }
-
-    @Test
     public void getAuthenticationResponse_onlyState() {
-        when(httpServletRequestMock.getSession(true)).thenReturn(sessionMock);
-        OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("app1");
-
         when(httpServletRequestMock.getQueryString()).thenReturn("some=query&parameters=which&have=nothing@todo=with&openid=connect&state=" + variableClientData.getState().getValue());
-
-        when(sessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(variableClientData);
 
         AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
 
@@ -175,7 +140,7 @@ public class SSOCallbackServletHandlerTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
-        when(exchangeForAccessCodeMock.doExchange(httpServletResponseMock, null, authorizationCode)).thenReturn(accessToken);
+        when(exchangeForAccessCodeMock.doExchange(httpServletResponseMock, variableClientData, authorizationCode)).thenReturn(accessToken);
 
         BearerAccessToken result = handler.getAccessTokenFromAuthorizationCode(successResponse, exchangeForAccessCodeMock);
         assertThat(result).isNotNull();
@@ -206,7 +171,7 @@ public class SSOCallbackServletHandlerTest {
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
         OctopusSSOToken ssoToken = new OctopusSSOToken();
-        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenReturn(ssoToken);
+        when(octopusUserRequestorMock.getOctopusSSOToken(variableClientData, accessToken)).thenReturn(ssoToken);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNotNull();
@@ -223,7 +188,7 @@ public class SSOCallbackServletHandlerTest {
 
         ErrorObject errorObject = new ErrorObject("xyz", "description");
         OctopusRetrievalException octopusRetrievalException = new OctopusRetrievalException(errorObject);
-        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenThrow(octopusRetrievalException);
+        when(octopusUserRequestorMock.getOctopusSSOToken(variableClientData, accessToken)).thenThrow(octopusRetrievalException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNull();
@@ -242,7 +207,7 @@ public class SSOCallbackServletHandlerTest {
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
 
         ParseException parseException = new ParseException("Something went wrong", 12);
-        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenThrow(parseException);
+        when(octopusUserRequestorMock.getOctopusSSOToken(variableClientData, accessToken)).thenThrow(parseException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNull();
@@ -261,7 +226,7 @@ public class SSOCallbackServletHandlerTest {
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
 
         com.nimbusds.oauth2.sdk.ParseException parseException = new com.nimbusds.oauth2.sdk.ParseException("Something went wrong");
-        when(octopusUserRequestorMock.getOctopusSSOToken(null, accessToken)).thenThrow(parseException);
+        when(octopusUserRequestorMock.getOctopusSSOToken(variableClientData, accessToken)).thenThrow(parseException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);
         assertThat(result).isNull();

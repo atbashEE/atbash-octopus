@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.keycloak.filter.authc;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.CredentialsException;
 import be.atbash.ee.security.octopus.filter.RestAuthenticatingFilter;
 import be.atbash.ee.security.octopus.keycloak.adapter.AccessTokenHandler;
@@ -41,8 +42,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import static be.atbash.ee.security.octopus.WebConstants.AUTHORIZATION_HEADER;
-import static be.atbash.ee.security.octopus.WebConstants.BEARER;
 
 /**
  *
@@ -70,7 +69,7 @@ public class KeycloakAuthenticatingFilter extends RestAuthenticatingFilter {
         HttpGet get = new HttpGet(url);
 
         // add request header
-        get.addHeader(AUTHORIZATION_HEADER, BEARER + " " + token);
+        get.addHeader(OctopusConstants.AUTHORIZATION_HEADER, OctopusConstants.BEARER + " " + token);
         get.addHeader("Accept", "application/json");
 
         KeycloakUserToken result;

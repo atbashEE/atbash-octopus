@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
 import be.atbash.ee.security.octopus.config.Debug;
@@ -37,7 +38,6 @@ import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * TODO User endpoint must use https. Config parameter to disable this check (as sometime OIDC based server used purely internally.)
@@ -66,13 +66,12 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String apiKey = httpServletRequest.getHeader(WebConstants.X_API_KEY);
-        String token = httpServletRequest.getHeader(WebConstants.AUTHORIZATION_HEADER);
+        String token = httpServletRequest.getHeader(OctopusConstants.AUTHORIZATION_HEADER);
 
-        return createSSOToken(httpServletRequest, apiKey, token);
+        return createSSOToken(httpServletRequest, token);
     }
 
-    private AuthenticationToken createSSOToken(ServletRequest request, String apiKey, String token) {
+    private AuthenticationToken createSSOToken(ServletRequest request, String token) {
 
         if (token == null) {
             // Authorization header parameter is required.
@@ -84,11 +83,11 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
             return new IncorrectDataToken("Authorization header value incorrect");
         }
 
-        if (!WebConstants.BEARER.equals(parts[0])) {
+        if (!OctopusConstants.BEARER.equals(parts[0])) {
             return new IncorrectDataToken("Authorization header value must start with Bearer");
         }
 
-        OctopusSSOToken octopusToken = createOctopusToken(request, apiKey, parts[1]);
+        OctopusSSOToken octopusToken = createOctopusToken(request, parts[1]);
         if (octopusToken == null) {
             return new IncorrectDataToken("Authentication failed");
         }
@@ -96,7 +95,7 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
 
     }
 
-    private OctopusSSOToken createOctopusToken(ServletRequest request, String apiKey, String token) {
+    private OctopusSSOToken createOctopusToken(ServletRequest request, String token) {
         String accessToken = null;
 
         String realToken;
@@ -152,7 +151,8 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
         ssoUser.setLastName(userPrincipal.getLastName());
         ssoUser.setEmail(userPrincipal.getEmail());
         ssoUser.setUserName(userPrincipal.getUserName());
-
+        // FIXME Verify if authenticated from SSO Cookie
+        ssoUser.setCookieToken((String) userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN));
         ssoUser.addUserInfo(userPrincipal.getInfo());
         return ssoUser;
 

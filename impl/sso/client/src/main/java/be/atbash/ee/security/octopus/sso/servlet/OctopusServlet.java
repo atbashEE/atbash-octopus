@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.sso.servlet;
 import be.atbash.ee.security.octopus.sso.ClientCallbackHelper;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
+import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.ee.security.octopus.util.URLUtil;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -89,7 +90,7 @@ public class OctopusServlet extends HttpServlet {
 
         AuthenticationRequest req;
         try {
-            URI callback = new URI(variableClientData.getRootURL() + "/sso/SSOCallback");
+            URI callback = new URI(variableClientData.getRootURL() + SSOConstants.SSO_CALLBACK_PATH);
             ClientID clientId = new ClientID(octopusSSOClientConfiguration.getSSOClientId());
             req = new AuthenticationRequest(
                     new URI(partialLoginURL),
