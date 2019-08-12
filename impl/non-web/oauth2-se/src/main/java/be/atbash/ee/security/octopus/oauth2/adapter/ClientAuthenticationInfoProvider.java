@@ -15,41 +15,98 @@
  */
 package be.atbash.ee.security.octopus.oauth2.adapter;
 
+import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
+import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
+import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
+import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
+import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.realm.AuthorizationInfoBuilder;
+import be.atbash.ee.security.octopus.realm.SecurityDataProvider;
+import be.atbash.ee.security.octopus.sso.client.ClientCustomization;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.SSOAuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
+import be.atbash.ee.security.octopus.sso.client.requestor.PermissionRequestor;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
 import be.atbash.ee.security.octopus.sso.core.rest.DefaultPrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
+import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.TokenResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  *
  */
-public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider {
+public class ClientAuthenticationInfoProvider extends SecurityDataProvider {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientAuthenticationInfoProvider.class.getName());
+
+    private OctopusSSOServerClientConfiguration serverClientConfiguration;
     private OctopusCoreConfiguration coreConfiguration;
     private OctopusSSOServerClientConfiguration configuration;
+    private PermissionRequestor permissionRequestor;
 
     private void init() {
         if (coreConfiguration == null) {
             coreConfiguration = OctopusCoreConfiguration.getInstance();
             configuration = OctopusSSOServerClientConfiguration.getInstance();
+            serverClientConfiguration = OctopusSSOServerClientConfiguration.getInstance();
+
+            PermissionJSONProvider permissionJSONProvider = getPermissionJSONProvider();
+
+            ClientCustomization clientCustomization = getClientCustomization();
+
+            if (clientCustomization == null) {
+                permissionRequestor = new PermissionRequestor(coreConfiguration, serverClientConfiguration, null, null, permissionJSONProvider);
+            } else {
+                permissionRequestor = new PermissionRequestor(coreConfiguration, serverClientConfiguration, clientCustomization, clientCustomization.getConfiguration(PermissionRequestor.class), permissionJSONProvider);
+            }
         }
+    }
+
+    private ClientCustomization getClientCustomization() {
+        ClientCustomization clientCustomization = null;
+        ServiceLoader<ClientCustomization> clientCustomizations = ServiceLoader.load(ClientCustomization.class);
+
+        for (ClientCustomization customization : clientCustomizations) {
+            clientCustomization = customization;
+            break;
+        }
+        return clientCustomization;
+    }
+
+    private PermissionJSONProvider getPermissionJSONProvider() {
+        // Allow the developer to define a PermissionJSONProvider through the service mechanism
+        PermissionJSONProvider permissionJSONProvider = null;
+
+        ServiceLoader<PermissionJSONProvider> providers = ServiceLoader.load(PermissionJSONProvider.class);
+        for (PermissionJSONProvider provider : providers) {
+            permissionJSONProvider = provider;
+            break;
+        }
+
+        if (permissionJSONProvider == null) {
+            permissionJSONProvider = new PermissionJSONProvider();
+        }
+        return permissionJSONProvider;
     }
 
     @Override
@@ -90,7 +147,30 @@ public class ClientAuthenticationInfoProvider extends AuthenticationInfoProvider
         return null;
     }
 
-    // FIXME Usage of PermissionRequestor to retrieve permissions.
+    public AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
+        init();
+
+        UserPrincipal userPrincipal = principals.getPrimaryPrincipal();
+
+        Object token = userPrincipal.getUserInfo(OctopusConstants.INFO_KEY_TOKEN);
+        if (!(token instanceof OctopusSSOToken)) {
+            throw new AtbashUnexpectedException("UserPrincipal should be based on OctopusSSOToken. Did you use fakeLogin Module and forget to define Permissions for the fake user?");
+        }
+
+        OctopusSSOToken ssoUser = (OctopusSSOToken) token;
+        String realToken = ssoUser.getAccessToken();
+
+        if (coreConfiguration.showDebugFor().contains(Debug.SSO_FLOW)) {
+            LOGGER.info(String.format("(SSO Client) Retrieving authorization info for user %s from Octopus SSO Server", ssoUser.getFullName()));
+        }
+
+        List<NamedDomainPermission> domainPermissions = permissionRequestor.retrieveUserPermissions(realToken);
+
+        AuthorizationInfoBuilder infoBuilder = new AuthorizationInfoBuilder();
+        infoBuilder.addPermissions(domainPermissions);
+
+        return infoBuilder.build();
+    }
 
     @Override
     public AuthenticationStrategy getAuthenticationStrategy() {
