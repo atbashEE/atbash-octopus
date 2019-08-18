@@ -51,6 +51,7 @@
             <groupId>be.atbash.config</groupId>
             <artifactId>geronimo-config</artifactId>
             <version>${atbash-config.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>

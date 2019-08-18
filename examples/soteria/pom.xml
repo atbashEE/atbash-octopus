@@ -69,12 +69,6 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.config</groupId>
-            <artifactId>geronimo-config</artifactId>
-            <version>${atbash-config.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <!-- core-api is defined as provided at top level, so we have to overrule it here -->
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
@@ -134,4 +128,17 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>mpConfig</id>
+            <dependencies>
+                <dependency>
+                    <groupId>be.atbash.config</groupId>
+                    <artifactId>geronimo-config</artifactId>
+                    <version>${atbash-config.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

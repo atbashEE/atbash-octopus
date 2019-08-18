@@ -56,12 +56,6 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.config</groupId>
-            <artifactId>geronimo-config</artifactId>
-            <version>${atbash-config.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <version>${deltaspike.example.version}</version>
@@ -100,5 +94,17 @@
 
     </build>
 
-
+    <profiles>
+        <profile>
+            <id>mpConfig</id>
+            <dependencies>
+                <dependency>
+                    <groupId>be.atbash.config</groupId>
+                    <artifactId>geronimo-config</artifactId>
+                    <version>${atbash-config.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
