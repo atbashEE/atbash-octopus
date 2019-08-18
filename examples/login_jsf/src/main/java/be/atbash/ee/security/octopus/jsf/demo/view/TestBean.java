@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.jsf.view;
+package be.atbash.ee.security.octopus.jsf.demo.view;
 
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.jsf.demo.boundary.TestBoundary;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
@@ -24,12 +24,17 @@ import javax.inject.Inject;
  *
  */
 @Model
-public class UserBean {
+public class TestBean {
 
     @Inject
-    private UserPrincipal userPrincipal;
+    private TestBoundary testBoundary;
 
-    public String getName() {
-        return userPrincipal.getName();
+    @Inject
+    private InterceptedBean interceptedBean;
+
+    public void testAuthorization() {
+        //testBoundary.doSomething();
+        interceptedBean.executeWithRequiredUser();
+        interceptedBean.executeWithPermission();
     }
 }
