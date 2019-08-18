@@ -6,6 +6,10 @@
 . Improved usage of UserPrincipal and AuthenticationInfoBuilder.
 . Added SecretUtil
 
+==== Bugs fixed
+
+. Deployment issues regarding dependencies of GenericPermissionVoter and GenericRoleVoter on certain environments.
+
 ==== Important changes
 
 . the Map `userInfo` from `UserPrincipal` has now a key of type `java.lang.String`.

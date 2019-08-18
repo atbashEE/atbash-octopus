@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.inject.Typed;
+import javax.enterprise.inject.Vetoed;
 import javax.inject.Inject;
 import java.util.Set;
 
@@ -56,7 +57,6 @@ import java.util.Set;
 @Reviewed
 public class GenericPermissionVoter extends AbstractAccessDecisionVoter {
 
-    @Inject
     private Subject subject;
 
     private NamedDomainPermission namedPermission;
@@ -83,8 +83,8 @@ public class GenericPermissionVoter extends AbstractAccessDecisionVoter {
             throw new AtbashIllegalActionException("(OCT-DEV-006) namedPermission can't be null");
         }
         if (subject == null) {
-            // In the case the developer created a voter manually by calling new GenericPermissionVoter(), although .createInstance() is preferred.
             // TODO Investigate if the extension can be updated so that the creation of the CDI bean for a GenericPermission voter can be different (so not needing the setNamedPermission()
+            // FIXME Review as in some environments the @Inject is validated during deployment although it is defined as @Typed or @Vetoed
 
             subject = CDIUtils.retrieveInstance(Subject.class);
         }
