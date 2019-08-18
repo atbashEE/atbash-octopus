@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,17 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "securedURLs.file", defaultValue = "/WEB-INF/securedURLs.ini")
     private String securedURLsFile;
 
+    @Inject
+    @ConfigProperty(name = "single.session", defaultValue = "false")
+    private boolean singleSession;
+
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
         return securedURLsFile;
     }
 
+    @ConfigEntry
+    public boolean isSingleSession() {
+        return singleSession;
+    }
 }

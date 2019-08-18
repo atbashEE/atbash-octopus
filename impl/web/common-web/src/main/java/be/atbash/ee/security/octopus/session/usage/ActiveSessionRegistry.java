@@ -19,7 +19,7 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.event.LogonEvent;
 import be.atbash.ee.security.octopus.authc.event.LogoutEvent;
 import be.atbash.ee.security.octopus.authc.event.RememberMeLogonEvent;
-import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
+import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.session.event.SessionTimeoutEvent;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
@@ -40,14 +40,11 @@ import java.util.*;
 @ApplicationScoped
 public class ActiveSessionRegistry {
 
-    //@Inject
-    //private OctopusJSFConfig octopusJSFConfig;
-
     @Inject
     private Logger logger;
 
     @Inject
-    private WebSecurityManager securityManager;
+    private OctopusWebConfiguration webConfiguration;
 
     private Map<String, SessionInfo> sessionRegistry = new HashMap<>();
     // sessionId
@@ -56,17 +53,19 @@ public class ActiveSessionRegistry {
     private Event<SessionTimeoutEvent> sessionTimeoutEvent;
 
     public void onApplicationUsageEvent(@Observes SessionRegistryEvent event) {
+
+        traceUsage(event);
+
         switch (event.getUserAction()) {
 
             case FIRST_ACCESS:
                 sessionRegistry.put(event.getSessionId(), newApplicationUsageInfo(event.getSession()));
                 break;
             case LOGON:
-                /* FIXME
-                if (octopusJSFConfig.getSingleSession()) {
+                if (webConfiguration.isSingleSession()) {
                     logoutOtherSessions(event.getUserPrincipal(), event.getSessionId());
                 }
-                */
+
                 SessionInfo sessionInfo = sessionRegistry.get(event.getSessionId());
                 sessionInfo.setAuthenticationToken(event.getAuthenticationToken());
                 sessionInfo.setUserPrincipal(event.getUserPrincipal());
@@ -98,6 +97,25 @@ public class ActiveSessionRegistry {
                 break;
             default:
                 throw new IllegalArgumentException("UserAction " + event.getUserAction() + " not supported");
+        }
+    }
+
+    private void traceUsage(@Observes SessionRegistryEvent event) {
+        String userName = "(anonymous))";
+        UserPrincipal userPrincipal = event.getUserPrincipal();
+        if (userPrincipal != null) {
+            userName = userPrincipal.getUserName();
+        }
+        logger.trace(String.format("(%s) New action %s for Session Registry on application %s for user %s", event.getSessionId(), event.getUserAction(), getContextRoot(event.getHttpServletRequest()), userName));
+    }
+
+    private String getContextRoot(HttpServletRequest httpServletRequest) {
+
+        HttpServletRequest request = httpServletRequest == null ? getServletRequest() : httpServletRequest;
+        if (request != null) {
+            return request.getContextPath();
+        } else {
+            return "(unknown)";
         }
     }
 

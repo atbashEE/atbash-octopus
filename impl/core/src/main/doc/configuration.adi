@@ -168,6 +168,12 @@ default : *false*
 
 When the user has used some authentication mechanism which supports SSO (like Keycloak, OAuth2, ...) should a logout from the application mean also a logout from the SSO?
 
+==== single.session
+
+default : *false*
+
+When activated, the other session from the user is ended when (s)he authenticates into the application from another browser.
+
 ==== unauthorizedExceptionPage
 
 default : */unauthorized.xhtml*
