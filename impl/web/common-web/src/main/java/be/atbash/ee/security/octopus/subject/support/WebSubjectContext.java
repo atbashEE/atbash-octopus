@@ -61,7 +61,10 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
     private static final String SESSION = WebSubjectContext.class.getName() + ".SESSION";
 
     private static final String AUTHENTICATED = WebSubjectContext.class.getName() + ".AUTHENTICATED";
+    // Was this subject once created from a Remember identity.
     private static final String REMEMBERED = WebSubjectContext.class.getName() + ".REMEMBERED";
+    // Was this subject now created from a Remember identity. (because we need to emit RememberedLogon Event in that case
+    private static final String FROM_REMEMBERED_IDENTITY = WebSubjectContext.class.getName() + ".REMEMBERED_IDENTITY";
 
     private static final String HOST = WebSubjectContext.class.getName() + ".HOST";
 
@@ -124,10 +127,6 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
         return getTypedValue(SESSION_ID, Serializable.class);
     }
 
-    public void setSessionId(Serializable sessionId) {
-        nullSafePut(SESSION_ID, sessionId);
-    }
-
     public WebSubject getSubject() {
         return getTypedValue(SUBJECT, WebSubject.class);
     }
@@ -170,14 +169,15 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
             Session session = resolveSession();
             if (session != null) {
                 principals = (PrincipalCollection) session.getAttribute(PRINCIPALS_SESSION_KEY);
-                // Coming from session is always remembered when Two step is not in progress
+                Boolean authenticatedPrincipals = (Boolean) session.getAttribute(AUTHENTICATED_SESSION_KEY);
                 if (principals != null) {
                     TwoStepPrincipal twoStepPrincipal = principals.oneByType(TwoStepPrincipal.class);
-                    setRemembered(principals.getPrimaryPrincipal() != null && (twoStepPrincipal == null || twoStepPrincipal.isTerminated()));
+                    setRemembered(authenticatedPrincipals == null && principals.getPrimaryPrincipal() != null && (twoStepPrincipal == null || twoStepPrincipal.isTerminated()));
+                    // authenticatedPrincipals == null  -> session key was coming from rememberMe logon
+                    // principals.getPrimaryPrincipal() != null -> there actually was an authenticated user at that time.
                 }
             }
         }
-
         setPrincipals(principals); // Keep for future usage when we try to do resolvePrincipals again.
 
         return principals;
@@ -376,5 +376,16 @@ public class WebSubjectContext extends MapContext implements SubjectContext, Req
     @Override
     public AuthorizingRealm getAuthorizingRealm() {
         return authorizingRealm;
+    }
+
+    public void setFromRememberedIdentify() {
+        put(FROM_REMEMBERED_IDENTITY, true);
+        setRemembered(true);
+    }
+
+    public boolean isFromRememberedIdentify() {
+        Boolean result = getTypedValue(FROM_REMEMBERED_IDENTITY, Boolean.class);
+        return result != null && result;
+
     }
 }

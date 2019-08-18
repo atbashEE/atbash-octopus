@@ -6,6 +6,8 @@
 . Improved usage of UserPrincipal and AuthenticationInfoBuilder.
 . Added SecretUtil
 
+. Improved handling of Remembered Identities.
+
 ==== Bugs fixed
 
 . Deployment issues regarding dependencies of GenericPermissionVoter and GenericRoleVoter on certain environments.

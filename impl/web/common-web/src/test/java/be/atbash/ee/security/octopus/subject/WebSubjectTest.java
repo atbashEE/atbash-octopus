@@ -46,7 +46,32 @@ public class WebSubjectTest {
         // - authenticated -> false
         UserPrincipal userPrincipal = new UserPrincipal(123L, "Atbash", "Atbash");
         WebSubject subject = new WebSubject(new PrincipalCollection(userPrincipal),
-                true, false, null, sessionMock, webSecurityManagerMock);
+                true, false, false, null, sessionMock, webSecurityManagerMock);
+
+        assertThat(subject.getPrincipals()).isNotNull();
+        assertThat(subject.getSession(false)).isNotNull();
+        assertThat(subject.isAuthenticated()).isTrue();
+
+        subject.logout();
+
+        verify(webSecurityManagerMock).logout(subject);
+
+        assertThat(subject.getPrincipals()).isNull();
+        assertThat(subject.getSession(false)).isNull();
+        assertThat(subject.isAuthenticated()).isFalse();
+        assertThat(subject.isRemembered()).isFalse();
+    }
+
+    @Test
+    public void logout_rememberedMe() {
+        // Test that logout performs
+        // - logout on WebSecurityManager
+        // - sets null to PrincipalCollection
+        // - Session
+        // - remembered -> false
+        UserPrincipal userPrincipal = new UserPrincipal(123L, "Atbash", "Atbash");
+        WebSubject subject = new WebSubject(new PrincipalCollection(userPrincipal),
+                true, true, false, null, sessionMock, webSecurityManagerMock);
 
         assertThat(subject.getPrincipals()).isNotNull();
         assertThat(subject.getSession(false)).isNotNull();

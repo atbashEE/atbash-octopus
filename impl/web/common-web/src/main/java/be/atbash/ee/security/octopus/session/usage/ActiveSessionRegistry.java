@@ -74,7 +74,6 @@ public class ActiveSessionRegistry {
                 break;
             case REMEMBER_ME_LOGON:
                 HttpSession session = event.getHttpServletRequest().getSession();
-                String sessionId = session.getId();
 
                 String remoteHost = event.getHttpServletRequest().getRemoteAddr();
                 String userAgent = event.getHttpServletRequest().getHeader("User-Agent");
@@ -82,7 +81,7 @@ public class ActiveSessionRegistry {
                 // OK, not ideal but we overwrite now the existing information we have.
                 // Mainly because the session was created at a time where we don't have access to the ServletRequest (without using some ThreadLocal hacks)
 
-                sessionRegistry.put(sessionId, new SessionInfo(session, remoteHost, userAgent));
+                sessionRegistry.put(event.getSessionId(), new SessionInfo(session, remoteHost, userAgent));
 
                 break;
             case LOGOUT:
@@ -152,7 +151,7 @@ public class ActiveSessionRegistry {
         HttpServletRequest httpRequest = webSubject.getServletRequest();
         // There are also use cases where we have a login() from a REST call with noSessionCreation :)
         if (WebUtils._isSessionCreationEnabled(httpRequest)) {
-            onApplicationUsageEvent(new SessionRegistryEvent(httpRequest));
+            onApplicationUsageEvent(new SessionRegistryEvent(httpRequest, webSubject.getPrincipal()));
         }
     }
 

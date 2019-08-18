@@ -62,6 +62,7 @@ public class WebSubject implements RequestPairSource, Subject {
     private PrincipalCollection principals;
     private boolean authenticated;
     private boolean remembered;
+    private boolean fromRememberedIdentity;
     private String host;
     private Session session;
     private boolean sessionCreationEnabled;
@@ -72,35 +73,35 @@ public class WebSubject implements RequestPairSource, Subject {
     private HttpServletResponse servletResponse;
     private AuthorizingRealm authorizingRealm;
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, boolean fromRememberedIdentity,
                       String host, Session session,
                       HttpServletRequest request, HttpServletResponse response,
                       WebSecurityManager securityManager,
                       AuthorizingRealm authorizingRealm) {
-        this(principals, authenticated, remembered, host, session, true, request, response, securityManager, authorizingRealm);
+        this(principals, authenticated, remembered, fromRememberedIdentity, host, session, true, request, response, securityManager, authorizingRealm);
     }
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, boolean fromRememberedIdentity,
                       String host, Session session, boolean sessionEnabled,
                       HttpServletRequest request, HttpServletResponse response,
                       WebSecurityManager securityManager,
                       AuthorizingRealm authorizingRealm) {
-        this(principals, authenticated, remembered, host, session, sessionEnabled, securityManager);
+        this(principals, authenticated, remembered, fromRememberedIdentity, host, session, sessionEnabled, securityManager);
         servletRequest = request;
         servletResponse = response;
         this.authorizingRealm = authorizingRealm;
     }
 
     public WebSubject(WebSecurityManager securityManager) {
-        this(null, false, false, null, null, securityManager);
+        this(null, false, false, false, null, null, securityManager);
     }
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, String host,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, boolean fromRememberedIdentity, String host,
                       Session session, WebSecurityManager securityManager) {
-        this(principals, authenticated, remembered, host, session, true, securityManager);
+        this(principals, authenticated, remembered, fromRememberedIdentity, host, session, true, securityManager);
     }
 
-    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, String host,
+    public WebSubject(PrincipalCollection principals, boolean authenticated, boolean remembered, boolean fromRememberedIdentity, String host,
                       Session session, boolean sessionCreationEnabled, WebSecurityManager securityManager) {
         if (securityManager == null) {
             throw new IllegalArgumentException("SecurityManager argument cannot be null.");
@@ -112,6 +113,7 @@ public class WebSubject implements RequestPairSource, Subject {
         this.principals = principals;
         this.authenticated = authenticated;
         this.remembered = remembered;
+        this.fromRememberedIdentity = fromRememberedIdentity;
         this.host = host;
         if (session != null) {
             this.session = decorate(session);
@@ -535,6 +537,15 @@ public class WebSubject implements RequestPairSource, Subject {
     }
 
     /**
+     * Is this Subject created from a Remembered Identify directly.
+     *
+     * @return
+     */
+    public boolean isFromRememberedIdentity() {
+        return fromRememberedIdentity;
+    }
+
+    /**
      * Returns {@code true} if this Subject is allowed to create sessions, {@code false} otherwise.
      *
      * @return {@code true} if this Subject is allowed to create sessions, {@code false} otherwise.
@@ -640,6 +651,7 @@ public class WebSubject implements RequestPairSource, Subject {
             session = null;
             principals = null;
             authenticated = false;
+            remembered = false;
             //Don't set securityManager to null here - the Subject can still be
             //used, it is just considered anonymous at this point.  The SecurityManager instance is
             //necessary if the subject would log in again or acquire a new session.  This is in response to

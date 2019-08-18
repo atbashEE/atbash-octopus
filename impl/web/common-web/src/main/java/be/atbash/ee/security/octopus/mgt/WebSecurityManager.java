@@ -280,7 +280,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
         if (key != null) {
             return getSession(key);
         }
-        return null;
+        return servletContainerSessionManager.getSession(key);
 
     }
 
@@ -320,7 +320,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
                         "for subject construction by the SubjectFactory.");
 
                 context.setPrincipals(principals);
-                context.setRemembered(true);
+                context.setFromRememberedIdentify();
 
                 // The following call was removed (commented out) in Shiro 1.2 because it uses the session as an
                 // implementation strategy.  Session use for Shiro's own needs should be controlled in a single place
@@ -375,7 +375,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      */
     protected void save(WebSubject subject) {
         subjectDAO.save(subject);
-        if (subject.isRemembered()) {
+        if (subject.isFromRememberedIdentity() && subject.isRemembered()) {
             // Ok, now the DAO has stored the Subject in the Session and thus HttpSession is created.
             // We now can sent an event (required for example for the ApplicationUsage) that there is a RememberedLogon.
             rememberMeLogonEvent.fire(new RememberMeLogonEvent(subject));

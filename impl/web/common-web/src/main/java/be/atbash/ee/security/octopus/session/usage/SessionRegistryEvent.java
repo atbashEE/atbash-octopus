@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,12 @@ public class SessionRegistryEvent {
     private AuthenticationToken authenticationToken;
     private HttpServletRequest httpServletRequest;
 
+    /**
+     * Defines the specified UserAction (LogOn, LogOut, ...) for that Session
+     *
+     * @param session    The HttpSession the user has when UserAction is performed
+     * @param userAction The UserAction (LogOn, LogOut, ...) which is performed
+     */
     public SessionRegistryEvent(HttpSession session, UserAction userAction) {
         this.session = session;
         this.userAction = userAction;
@@ -42,6 +48,12 @@ public class SessionRegistryEvent {
         sessionId = session.getId();
     }
 
+    /**
+     * Performs a LogOn for the sessionId for the user (identified by UserPrincipal and AuthenticationToken which is sued for the logon)
+     * @param sessionId the sessionId the user has when UserAction is performed
+     * @param userPrincipal UserPrincipal identifying the user.
+     * @param authenticationToken AuthenticationToken used for the authentication for logon.
+     */
     public SessionRegistryEvent(String sessionId, UserPrincipal userPrincipal, AuthenticationToken authenticationToken) {
         this.sessionId = sessionId;
         this.userPrincipal = userPrincipal;
@@ -49,18 +61,23 @@ public class SessionRegistryEvent {
         userAction = UserAction.LOGON;
     }
 
+    /**
+     * Defines a LogOut of the session.
+     * @param sessionId the sessionId from the session who has logged out.
+     */
     public SessionRegistryEvent(String sessionId) {
         this.sessionId = sessionId;
         userAction = UserAction.LOGOUT;
     }
 
-    public SessionRegistryEvent(HttpServletRequest httpServletRequest) {
+    public SessionRegistryEvent(HttpServletRequest httpServletRequest, UserPrincipal userPrincipal) {
         this.httpServletRequest = httpServletRequest;
+        this.userPrincipal = userPrincipal;
         userAction = UserAction.REMEMBER_ME_LOGON;
     }
 
     public String getSessionId() {
-        return sessionId;
+        return sessionId == null ? httpServletRequest.getSession().getId() : sessionId;
     }
 
     public HttpSession getSession() {

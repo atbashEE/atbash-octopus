@@ -61,11 +61,12 @@ public class WebSubjectFactory {
         PrincipalCollection principals = context.resolvePrincipals();
         boolean authenticated = context.resolveAuthenticated();
         boolean remembered = context.isRemembered();
+        boolean fromRememberedIdentity = context.isFromRememberedIdentify();
         String host = context.resolveHost();
         HttpServletRequest request = context.resolveServletRequest();
         HttpServletResponse response = context.resolveServletResponse();
 
-        return new WebSubject(principals, authenticated, remembered, host, session, sessionEnabled,
+        return new WebSubject(principals, authenticated, remembered, fromRememberedIdentity, host, session, sessionEnabled,
                 request, response, (WebSecurityManager) securityManager, context.getAuthorizingRealm());
     }
 
