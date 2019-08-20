@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.util.PublicAPI;
 
 /**
- * Use this logout handler when we need to lgout the subject from an external system, like Keycloak, in those scenarios
+ * Use this logout handler when we need to logout the subject from an external system, like Keycloak, in those scenarios
  * where we do not have a browser and thus can perform a redirect to the logout URL.
  * It is used for example by the Keycloak SE integration to log out the user in that case.
- * You can se the logic which needs to be perofrmed by calling {@link AuthenticationInfoBuilder#withRemoteLogoutHandler(be.atbash.ee.security.octopus.authc.RemoteLogoutHandler) AuthenticationInfoBuilder.withRemoteLogoutHandler}.
+ * You can set the logic which needs to be performed by calling {@link AuthenticationInfoBuilder#withRemoteLogoutHandler(be.atbash.ee.security.octopus.authc.RemoteLogoutHandler) AuthenticationInfoBuilder.withRemoteLogoutHandler}.
  */
 @PublicAPI
 public interface RemoteLogoutHandler {

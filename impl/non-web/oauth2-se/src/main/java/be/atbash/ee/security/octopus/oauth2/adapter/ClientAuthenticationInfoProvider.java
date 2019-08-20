@@ -59,7 +59,6 @@ public class ClientAuthenticationInfoProvider extends SecurityDataProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientAuthenticationInfoProvider.class.getName());
 
-    private OctopusSSOServerClientConfiguration serverClientConfiguration;
     private OctopusCoreConfiguration coreConfiguration;
     private OctopusSSOServerClientConfiguration configuration;
     private PermissionRequestor permissionRequestor;
@@ -68,7 +67,7 @@ public class ClientAuthenticationInfoProvider extends SecurityDataProvider {
         if (coreConfiguration == null) {
             coreConfiguration = OctopusCoreConfiguration.getInstance();
             configuration = OctopusSSOServerClientConfiguration.getInstance();
-            serverClientConfiguration = OctopusSSOServerClientConfiguration.getInstance();
+            OctopusSSOServerClientConfiguration serverClientConfiguration = OctopusSSOServerClientConfiguration.getInstance();
 
             PermissionJSONProvider permissionJSONProvider = getPermissionJSONProvider();
 
@@ -141,6 +140,7 @@ public class ClientAuthenticationInfoProvider extends SecurityDataProvider {
                 return null;
             }
 
+            octopusSSOToken.setLogoutHandlerAsRequired();
             return new SSOAuthenticationInfoBuilder(octopusSSOToken).getAuthenticationInfo();
         }
 

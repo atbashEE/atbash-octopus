@@ -84,14 +84,16 @@ public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
 
     @Reviewed
     public void logout() {
-        super.logout();
 
+        // LogoutHandler requires access to the Principals. So only logout after the redirect.
         try {
             WebSubject subject = SecurityUtils.getSubject();
             WebUtils.issueRedirect(subject.getServletRequest(), subject.getServletResponse(), logoutHandler.getLogoutPage(), null, false, false);
         } catch (IOException e) {
             throw new AtbashUnexpectedException(e);
         }
+
+        super.logout();
     }
 
 }

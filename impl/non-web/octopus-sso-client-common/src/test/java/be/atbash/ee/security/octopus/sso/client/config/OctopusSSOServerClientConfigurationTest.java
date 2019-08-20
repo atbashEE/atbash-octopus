@@ -116,4 +116,16 @@ public class OctopusSSOServerClientConfigurationTest {
         assertThat(secret).isEqualTo(value1);
     }
 
+    @Test
+    public void getSSOServer() {
+        TestConfig.addConfigValue("SSO.octopus.server", "http://sso.server.org/root");
+
+        assertThat(configuration.getOctopusSSOServer()).isEqualTo("http://sso.server.org/root");
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSSOServer_missing() {
+
+        configuration.getOctopusSSOServer();
+    }
 }

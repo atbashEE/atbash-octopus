@@ -25,6 +25,8 @@ import javax.inject.Inject;
 
 /**
  * TODO Remove the Name Web later on? when this has moved to his own artifact.
+ *  singleSession and singleLogout are typical for JSF (I don't think it is possible to use with Rest)
+ *  But they are here since ActiveSessionRegistry/LogoutHandler is in common-web. Maybe that needs to be moved to JSF.
  */
 @ApplicationScoped
 @ModuleConfigName("Octopus Web Configuration")

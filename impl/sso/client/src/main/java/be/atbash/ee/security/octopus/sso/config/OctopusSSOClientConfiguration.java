@@ -38,12 +38,7 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
 
     @ConfigEntry
     public String getLoginPage() {
-        return getSSOServer() + "/octopus/sso/authenticate";
-    }
-
-    @ConfigEntry
-    public String getLogoutPage() {
-        return getSSOServer() + "/octopus/sso/logout";
+        return serverClientConfiguration.getOctopusSSOServer() + "/octopus/sso/authenticate";
     }
 
     @Inject
@@ -55,17 +50,6 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
         return unauthorizedPage;
     }
     // TODO The above parameter is duplicated, Can this be avoided?
-
-    @ConfigEntry
-    public String getSSOServer() {
-        // FIXME Also support SSO.server. Make same as KeyCloak (verify)
-        // FIXME not used outside this configx
-        String result = getOptionalValue("SSO.octopus.server", String.class);
-        if (StringUtils.isEmpty(result)) {
-            throw new ConfigurationException("A value for 'Octopus.SSO.server' is required.");
-        }
-        return result;
-    }
 
     @ConfigEntry
     public String getSSOApplicationSuffix() {

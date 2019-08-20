@@ -29,8 +29,8 @@ import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.ee.security.octopus.util.URLUtil;
-import be.atbash.ee.security.sso.server.TimeUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.sso.server;
+package be.atbash.ee.security.octopus.util;
 
-
-import be.atbash.util.CDIUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Date;
@@ -33,7 +31,19 @@ public class TimeUtil {
         return new Date(curTimeInMs + (seconds * 1000));
     }
 
+    // Java SE Support
+    private static TimeUtil INSTANCE;
+
+    private static final Object LOCK = new Object();
+
     public static TimeUtil getInstance() {
-        return CDIUtils.retrieveInstance(TimeUtil.class);
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
+                if (INSTANCE == null) {
+                    INSTANCE = new TimeUtil();
+                }
+            }
+        }
+        return INSTANCE;
     }
 }

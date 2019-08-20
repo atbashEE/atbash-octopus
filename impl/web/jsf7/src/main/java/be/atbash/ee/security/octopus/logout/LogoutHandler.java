@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.logout;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
+import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
@@ -58,7 +59,8 @@ public class LogoutHandler {
             }
         }
 
-        LogoutParameters parameters = new LogoutParameters(octopusJSFConfiguration.isSingleLogout());
+        Subject subject = SecurityUtils.getSubject();
+        LogoutParameters parameters = new LogoutParameters(octopusJSFConfiguration.isSingleLogout(), subject.getPrincipals());
 
         for (LogoutURLProcessor processor : logoutURLProcessors) {
             logoutUrl = processor.postProcessLogoutUrl(logoutUrl, parameters);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.sso;
+package be.atbash.ee.security.octopus.sso.client;
 
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -48,5 +48,21 @@ public class JWSAlgorithmFactory {
             throw new AtbashUnexpectedException("Secret is too short for any JWS algorythm.");
         }
         return result;
+    }
+
+    // for the Java SE case
+    private static JWSAlgorithmFactory INSTANCE;
+
+    private static final Object LOCK = new Object();
+
+    public static JWSAlgorithmFactory getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
+                if (INSTANCE == null) {
+                    INSTANCE = new JWSAlgorithmFactory();
+                }
+            }
+        }
+        return INSTANCE;
     }
 }

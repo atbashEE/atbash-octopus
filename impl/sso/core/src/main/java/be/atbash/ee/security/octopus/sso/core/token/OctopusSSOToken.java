@@ -41,6 +41,8 @@ public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implemen
 
     private String email;
 
+    private boolean logoutHandlerNeeded;
+
     public String getId() {
         return id;
     }
@@ -111,6 +113,14 @@ public class OctopusSSOToken extends AbstractOctopusAuthenticationToken implemen
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public void setLogoutHandlerAsRequired() {
+        logoutHandlerNeeded = true;
+    }
+
+    public boolean isLogoutHandlerNeeded() {
+        return logoutHandlerNeeded;
     }
 
     @Override

@@ -17,8 +17,8 @@ package be.atbash.ee.security.sso.server.endpoint.helper;
 
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.SecretUtil;
+import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.ee.security.octopus.util.URLUtil;
-import be.atbash.ee.security.sso.server.TimeUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;

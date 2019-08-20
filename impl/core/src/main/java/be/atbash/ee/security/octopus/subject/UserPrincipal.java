@@ -121,11 +121,11 @@ public class UserPrincipal implements Principal, Serializable {
     }
 
     /**
-     * Stores the {@code AuthenticationListener} which needs to be executed when this userPrincipal
-     * is logged out. Used in specific scenarios to notify the original authenticator (Keycloak in the Java SE case)
+     * Stores the {@code RemoteLogoutHandler} which needs to be executed when this userPrincipal
+     * is logged out. Used in specific scenarios to notify the original authenticator (Keycloak in the Java SE case, for example)
      * that user is logged out.
      *
-     * @param logoutListener
+     * @param remoteLogoutHandler
      */
     public void setRemoteLogoutHandler(RemoteLogoutHandler remoteLogoutHandler) {
         this.remoteLogoutHandler = remoteLogoutHandler;

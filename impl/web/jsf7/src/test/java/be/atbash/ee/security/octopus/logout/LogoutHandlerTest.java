@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.logout;
 
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
+import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.util.BeanManagerFake;
@@ -40,6 +41,9 @@ public class LogoutHandlerTest {
 
     @Mock
     private OctopusJSFConfiguration jsfConfigurationMock;
+
+    @Mock
+    private OctopusWebConfiguration webConfigurationMock;
 
     @Mock
     private WebSubject webSubjectMock;

@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.sso.client;
 
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
+import be.atbash.ee.security.octopus.sso.client.logout.OctopusLogoutHandler;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
@@ -38,6 +39,10 @@ public class SSOAuthenticationInfoBuilder {
         principal.addUserInfo(OctopusConstants.EMAIL, octopusSSOToken.getEmail());  // Make sure the email is within the userInfo
         principal.addUserInfo(OctopusConstants.LOCAL_ID, octopusSSOToken.getLocalId());
 
+        if (octopusSSOToken.isLogoutHandlerNeeded()) {
+            // In order for the logout with SSO Server.
+            principal.setRemoteLogoutHandler(new OctopusLogoutHandler());
+        }
         authenticationInfo = new AuthenticationInfo(principal, octopusSSOToken, true);
 
     }

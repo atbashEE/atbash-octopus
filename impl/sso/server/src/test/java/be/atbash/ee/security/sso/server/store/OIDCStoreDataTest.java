@@ -15,7 +15,7 @@
  */
 package be.atbash.ee.security.sso.server.store;
 
-import be.atbash.ee.security.sso.server.TimeUtil;
+import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.BeanManagerFake;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.id.Audience;

@@ -58,5 +58,40 @@ public class SSOAuthenticationInfoBuilderTest {
         OctopusSSOToken ssoToken = primaryPrincipal.getUserInfo(OctopusConstants.INFO_KEY_TOKEN);
         assertThat(ssoToken).isSameAs(token);
 
+        assertThat(ssoToken.isLogoutHandlerNeeded()).isFalse();
+    }
+
+    @Test
+    public void getAuthenticationInfo_withHandler() {
+        OctopusSSOToken token = new OctopusSSOToken();
+        token.setId("id");
+        token.setUserName("userName");
+        token.setFullName("fullName");
+        token.setLocalId("localId");
+        token.setEmail("email");
+
+        token.addUserInfo("key", "value");
+        token.setLogoutHandlerAsRequired();
+        builder = new SSOAuthenticationInfoBuilder(token);
+
+        AuthenticationInfo info = builder.getAuthenticationInfo();
+
+        assertThat(info).isNotNull();
+        assertThat(info.isOneTimeAuthentication()).isTrue();
+
+        assertThat(info.getPrincipals()).isNotNull();
+
+        UserPrincipal primaryPrincipal = info.getPrincipals().getPrimaryPrincipal();
+        assertThat(primaryPrincipal).isNotNull();
+
+        assertThat(primaryPrincipal.getId()).isEqualTo("id");
+        assertThat(primaryPrincipal.getUserName()).isEqualTo("userName");
+        assertThat(primaryPrincipal.getName()).isEqualTo("fullName");
+        assertThat(primaryPrincipal.getInfo()).containsKeys(OctopusConstants.EMAIL, OctopusConstants.LOCAL_ID, OctopusConstants.INFO_KEY_TOKEN, "key");
+
+        OctopusSSOToken ssoToken = primaryPrincipal.getUserInfo(OctopusConstants.INFO_KEY_TOKEN);
+        assertThat(ssoToken).isSameAs(token);
+
+        assertThat(ssoToken.isLogoutHandlerNeeded()).isTrue();
     }
 }

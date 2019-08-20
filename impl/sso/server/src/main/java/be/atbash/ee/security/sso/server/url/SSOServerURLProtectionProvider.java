@@ -22,7 +22,6 @@ import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  *
@@ -39,10 +38,10 @@ public class SSOServerURLProtectionProvider implements ProgrammaticURLProtection
         LinkedHashMap<String, String> result = new LinkedHashMap<>();  // Keep order of insertion
         // For the rest endpoints retrieving user info / permissions
         result.put("/" + configuration.getSSOEndpointRoot() + "/octopus/sso/permissions/*", "noSessionCreation, anon");
-        result.put("/" + configuration.getSSOEndpointRoot() + "/octopus/**", "noSessionCreation, ssoFilter");
+        result.put("/" + configuration.getSSOEndpointRoot() + "/octopus/**", "noSessionCreation, ssoFilter"); // FIXME Is this correct and not to 'wide' (see also last pattern)
 
         // URL related to OpenId Connect
-        result.put("/octopus/sso/logout", "userRequired");  // So we need a user (from cookie) to be able to logout
+        result.put("/octopus/sso/logout", "ssoLogout");  // So we need a user (from cookie) or accessToken, to be able to logout
 
         result.put("/octopus/sso/authenticate", "oidcFilter");
         result.put("/octopus/sso/token", String.format("rate[%s], oidcFilter", configuration.getOIDCEndpointRateLimit()));

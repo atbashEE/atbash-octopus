@@ -52,6 +52,7 @@ public class OctopusSSOServerClientConfiguration extends AbstractConfiguration i
     public String getOctopusSSOServer() {
         String result = getOptionalValue("SSO.octopus.server", "", String.class);
         // TODO Remove trailing / as it will result in Unexpected Issuer
+        // FIXME Also support SSO.server. Make same as KeyCloak (verify)
         if (result == null || result.trim().isEmpty()) {
             throw new ConfigurationException("Value for SSO.octopus.server parameter is empty.");
         }
@@ -62,6 +63,11 @@ public class OctopusSSOServerClientConfiguration extends AbstractConfiguration i
     public String getUserInfoEndpoint() {
         return getOctopusSSOServer() + "/" + getSSOEndpointRoot() + "/octopus/sso/user";
 
+    }
+
+    @ConfigEntry
+    public String getLogoutPage() {
+        return getOctopusSSOServer() + "/octopus/sso/logout";
     }
 
     @ConfigEntry

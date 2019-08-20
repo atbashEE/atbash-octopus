@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.sso;
+package be.atbash.ee.security.octopus.sso.client;
 
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -24,6 +24,7 @@ import java.security.SecureRandom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JWSAlgorithmFactoryTest {
+
     private JWSAlgorithmFactory factory = new JWSAlgorithmFactory();
 
     @Test
@@ -65,5 +66,6 @@ public class JWSAlgorithmFactoryTest {
 
         return bytes;
     }
+
 
 }

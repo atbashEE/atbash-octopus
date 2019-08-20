@@ -15,39 +15,30 @@
  */
 package be.atbash.ee.security.octopus.sso.config;
 
-import be.atbash.config.test.TestConfig;
-import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import org.junit.After;
+import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OctopusSSOClientConfigurationTest {
 
-    private OctopusSSOClientConfiguration configuration = new OctopusSSOClientConfiguration();
+    @Mock
+    private OctopusSSOServerClientConfiguration serverClientConfigurationMock;
 
-    @After
-    public void teardown() {
-        TestConfig.resetConfig();
-    }
+    @InjectMocks
+    private OctopusSSOClientConfiguration configuration;
 
     @Test
     public void getLoginPage() {
-        TestConfig.addConfigValue("SSO.octopus.server", "http://sso.server.org/root");
+        when(serverClientConfigurationMock.getOctopusSSOServer()).thenReturn("http://sso.server.org/root");
 
         assertThat(configuration.getLoginPage()).isEqualTo("http://sso.server.org/root/octopus/sso/authenticate");
     }
 
-    @Test
-    public void getSSOServer() {
-        TestConfig.addConfigValue("SSO.octopus.server", "http://sso.server.org/root");
-
-        assertThat(configuration.getSSOServer()).isEqualTo("http://sso.server.org/root");
-    }
-
-    @Test(expected = ConfigurationException.class)
-    public void getSSOServer_missing() {
-
-        configuration.getSSOServer();
-    }
 }
