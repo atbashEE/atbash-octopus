@@ -26,7 +26,6 @@ import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -58,8 +57,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URI;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -67,7 +64,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -89,9 +85,6 @@ public class LogoutServletTest {
     private SSOTokenStore tokenStoreMock;
 
     @Mock
-    private OctopusJSFConfiguration octopusJSFConfigMock;
-
-    @Mock
     private OctopusCoreConfiguration octopusCoreConfigurationMock;
 
     @Mock
@@ -109,7 +102,7 @@ public class LogoutServletTest {
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
-        beanManagerFake.registerBean(new TimeUtil(), TimeUtil.class);
+        beanManagerFake.registerBean(TimeUtil.getInstance(), TimeUtil.class);
         beanManagerFake.endRegistration();
     }
 
@@ -128,16 +121,12 @@ public class LogoutServletTest {
 
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
 
-        ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
-        when(clientInfoRetrieverMock.retrieveInfo(clientId)).thenReturn(clientInfo);
-
         List<OIDCStoreData> storeDatas = new ArrayList<>();
         storeDatas.add(newOIDCStoreData("anotherClient"));
         storeDatas.add(newOIDCStoreData(clientId));
         when(tokenStoreMock.getLoggedInClients(userPrincipalMock)).thenReturn(storeDatas);
 
-        clientInfo = new ClientInfo();
+        ClientInfo clientInfo = new ClientInfo();
         clientInfo.setCallbackURL("other.client.org");
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("anotherClient")).thenReturn(clientInfo);
@@ -159,7 +148,6 @@ public class LogoutServletTest {
 
         assertThat(storeDatas).hasSize(1); // The doGet did a remove on the iterator effectively removing an entry!
 
-        verify(octopusJSFConfigMock, never()).getLogoutPage();  // Do not request te JSF Logout page but it comes from logoutRequest
         verify(httpServletResponseMock).sendRedirect(stringArgumentCaptor.capture());
         assertThat(stringArgumentCaptor.getValue()).isEqualTo("http://some.server/logout");
     }
@@ -173,16 +161,12 @@ public class LogoutServletTest {
 
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, null));
 
-        ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
-        when(clientInfoRetrieverMock.retrieveInfo(clientId)).thenReturn(clientInfo);
-
         List<OIDCStoreData> storeDatas = new ArrayList<>();
         storeDatas.add(newOIDCStoreData("anotherClient"));
         storeDatas.add(newOIDCStoreData(clientId));
         when(tokenStoreMock.getLoggedInClients(userPrincipalMock)).thenReturn(storeDatas);
 
-        clientInfo = new ClientInfo();
+        ClientInfo clientInfo = new ClientInfo();
         clientInfo.setCallbackURL("other.client.org");
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("anotherClient")).thenReturn(clientInfo);
@@ -204,103 +188,8 @@ public class LogoutServletTest {
 
         assertThat(storeDatas).hasSize(1); // The doGet did a remove on the iterator effectively removing an entry!
 
-        verify(octopusJSFConfigMock, never()).getLogoutPage();  // Do not request the JSF Logout page but it comes from logoutRequest
         verify(httpServletResponseMock, never()).sendRedirect(anyString());
     }
-
-    @Test
-    public void doGet_NoRequestParameters() throws ServletException, IOException {
-        TestLogger logger = TestLoggerFactory.getTestLogger(LogoutServlet.class);
-
-        when(httpServletRequestMock.getQueryString()).thenReturn("");
-
-        when(httpServletResponseMock.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-
-        logoutServlet.doGet(httpServletRequestMock, httpServletResponseMock);
-
-        verify(tokenStoreMock, never()).removeUser(userPrincipalMock);
-
-        assertThat(logger.getLoggingEvents()).isEmpty();
-        verify(httpServletResponseMock).getWriter();
-        verify(httpServletResponseMock, never()).sendRedirect(anyString());
-    }
-
-    @Test
-    public void doGet_unknownClientId() throws ServletException, IOException {
-        TestLogger logger = TestLoggerFactory.getTestLogger(LogoutServlet.class);
-
-        byte[] secret = defineSecret(256 / 8 + 1);
-        String clientId = "clientId";
-
-        when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
-
-        when(clientInfoRetrieverMock.retrieveInfo(clientId)).thenReturn(null);
-
-        when(httpServletResponseMock.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-
-        logoutServlet.doGet(httpServletRequestMock, httpServletResponseMock);
-
-        verify(tokenStoreMock, never()).removeUser(userPrincipalMock);
-
-        assertThat(logger.getLoggingEvents()).isEmpty();
-        verify(httpServletResponseMock).getWriter();
-        verify(httpServletResponseMock, never()).sendRedirect(anyString());
-    }
-
-    @Test
-    public void doGet_signatureVerificationIssue() throws ServletException, IOException {
-        TestLogger logger = TestLoggerFactory.getTestLogger(LogoutServlet.class);
-
-        byte[] secret = defineSecret(256 / 8 + 1);
-        String clientId = "clientId";
-
-        when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
-
-        ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(defineSecret(256 / 8 + 1), true));  // We use another secret here
-        when(clientInfoRetrieverMock.retrieveInfo(clientId)).thenReturn(clientInfo);
-
-        when(httpServletResponseMock.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-
-        logoutServlet.doGet(httpServletRequestMock, httpServletResponseMock);
-
-        verify(tokenStoreMock, never()).removeUser(userPrincipalMock);
-
-        assertThat(logger.getLoggingEvents()).isEmpty();
-        verify(httpServletResponseMock).getWriter();
-        verify(httpServletResponseMock, never()).sendRedirect(anyString());
-    }
-
-    @Test
-    public void doGet_timeOutExpirationDate() throws ServletException, IOException {
-        TestLogger logger = TestLoggerFactory.getTestLogger(LogoutServlet.class);
-
-        byte[] secret = defineSecret(256 / 8 + 1);
-        String clientId = "clientId";
-
-        when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
-
-        ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
-        when(clientInfoRetrieverMock.retrieveInfo(clientId)).thenReturn(clientInfo);
-
-        when(httpServletResponseMock.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-
-        try {
-            Thread.sleep(2100); // By default there is a sec timeToLive
-        } catch (InterruptedException e) {
-            fail(e.getMessage());
-        }
-
-        logoutServlet.doGet(httpServletRequestMock, httpServletResponseMock);
-
-        verify(tokenStoreMock, never()).removeUser(userPrincipalMock);
-
-        assertThat(logger.getLoggingEvents()).isEmpty();
-        verify(httpServletResponseMock).getWriter();
-        verify(httpServletResponseMock, never()).sendRedirect(anyString());
-    }
-
 
     private OIDCStoreData newOIDCStoreData(String clientId) {
         BearerAccessToken accessToken = new BearerAccessToken();

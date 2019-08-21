@@ -20,11 +20,20 @@ import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.filter.authz.AuthorizationFilter;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.sso.server.client.ClientInfo;
+import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.ee.security.sso.server.token.UserPrincipalToken;
+import be.atbash.util.exception.AtbashUnexpectedException;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.util.Base64;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.LogoutRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -32,6 +41,7 @@ import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * Special filter for LogoutServlet.
@@ -39,8 +49,13 @@ import javax.servlet.http.HttpServletRequest;
 @ApplicationScoped
 public class SSOLogoutFilter extends AuthorizationFilter {
 
+    private Logger logger = LoggerFactory.getLogger(SSOLogoutFilter.class);
+
     @Inject
     private SSOTokenStore tokenStore;
+
+    @Inject
+    private ClientInfoRetriever clientInfoRetriever;
 
     @PostConstruct
     public void initInstance() {
@@ -51,33 +66,73 @@ public class SSOLogoutFilter extends AuthorizationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         WebSubject subject = getSubject();
         // If principal is not null, then the user is known and should be allowed access.
-        boolean result = subject.getPrincipal() != null;
-        if (!result) {
-            result = checkFromRequest((HttpServletRequest) request);  // from Java SE logout
-        }
-        return result;
+        boolean alreadyAuthenticated = subject.getPrincipal() != null;
 
-    }
-
-    private boolean checkFromRequest(HttpServletRequest request) {
         boolean result = false;
-        try {
-            LogoutRequest logoutRequest = LogoutRequest.parse(request.getQueryString());
-            // FIXME Validation of the JWT!!!!
-            JWTClaimsSet claimsSet = logoutRequest.getIDTokenHint().getJWTClaimsSet();
-            UserPrincipal userPrincipal = tokenStore.getUserByAccessCode(claimsSet.getSubject());
 
-            try {
-                SecurityUtils.getSubject().login(new UserPrincipalToken(userPrincipal));
-                result = true;
-            } catch (UnauthenticatedException e) {
-                e.printStackTrace();
+        HttpServletRequest servletRequest = (HttpServletRequest) request;
+        try {
+            LogoutRequest logoutRequest = LogoutRequest.parse(servletRequest.getQueryString());
+
+            result = validate((SignedJWT) logoutRequest.getIDTokenHint());
+            if (!result) {
+                // Not valid, access is not allowed and we need to return true
+                return result;
+            }
+            if (!alreadyAuthenticated) {
+                // The Java SE case, in the web scenario we use the cookie to get user.
+                JWTClaimsSet claimsSet = logoutRequest.getIDTokenHint().getJWTClaimsSet();
+                UserPrincipal userPrincipal = tokenStore.getUserByAccessCode(claimsSet.getSubject());
+
+                try {
+                    SecurityUtils.getSubject().login(new UserPrincipalToken(userPrincipal));
+                    result = true;
+                } catch (UnauthenticatedException e) {
+                    // .login() should never fail since UserPrincipalToken is SystemAuthenticationToken and ValidatedAuthenticationToken
+                    throw new AtbashUnexpectedException(e);
+                }
             }
         } catch (ParseException | java.text.ParseException e) {
-            e.printStackTrace();
+            // TODO Add error codes
+            logger.warn(String.format("SSOLogoutFilter: Parsing of the id_token_hint failed %s", request.getParameter("id_token_hint")));
         }
 
         return result;
     }
 
+    private boolean validate(SignedJWT idTokenHint) {
+        if (idTokenHint == null) {
+            // TODO Add error codes
+            logger.warn("SSOLogoutFilter: no query parameters found");
+            return false;
+        }
+
+        try {
+            String clientId = idTokenHint.getHeader().getCustomParam("clientId").toString();
+            ClientInfo clientInfo = clientInfoRetriever.retrieveInfo(clientId);
+            if (clientInfo == null) {
+                // TODO Add error codes
+                logger.warn(String.format("SSOLogoutFilter: unknown clientId : %s", clientId));
+                return false;
+            }
+
+            byte[] clientSecret = new Base64(clientInfo.getClientSecret()).decode();
+            MACVerifier verifier = new MACVerifier(clientSecret);
+            if (!idTokenHint.verify(verifier)) {
+                // TODO Add error codes
+                logger.warn(String.format("SSOLogoutFilter: JWT Signing verification failed : %s", idTokenHint.serialize()));
+                return false;
+            }
+
+            boolean before = idTokenHint.getJWTClaimsSet().getExpirationTime().before(new Date());
+            if (before) {
+                // TODO Add error codes
+                logger.warn(String.format("SSOLogoutFilter: JWT expired : %s", idTokenHint.serialize()));
+            }
+            return !before;
+        } catch (JOSEException | java.text.ParseException e) {
+            // No Exception to throw, MACVerifier failed or BASE64Decode failed
+            return false;
+        }
+    }
 }

@@ -19,18 +19,13 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jose.util.Base64;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.LogoutRequest;
 import org.slf4j.Logger;
@@ -45,7 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,10 +51,6 @@ import java.util.List;
 public class LogoutServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogoutServlet.class);
-
-    // These properties aren't related to any user info, so safe to use here.
-    @Inject
-    private OctopusJSFConfiguration jsfConfiguration;
 
     @Inject
     private OctopusCoreConfiguration octopusCoreConfiguration;
@@ -82,11 +72,7 @@ public class LogoutServlet extends HttpServlet {
             // TODO What should we return (check spec)
         }
 
-        if (!validRequest((SignedJWT) logoutRequest.getIDTokenHint())) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().println("Invalid Octopus SSO Logout Request");
-            return; // Just ignore when an invalid requests comes in.
-        }
+        // We do not need to verify the JWT as this is already done by SSOLogoutFilter
         String clientId = getClientId(logoutRequest.getIDTokenHint());
 
         UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
@@ -113,31 +99,6 @@ public class LogoutServlet extends HttpServlet {
         return idTokenHint.getHeader().getCustomParam("clientId").toString();
     }
 
-    private boolean validRequest(SignedJWT idTokenHint) {
-        if (idTokenHint == null) {
-            return false;
-        }
-
-        try {
-            String clientId = idTokenHint.getHeader().getCustomParam("clientId").toString();
-            ClientInfo clientInfo = clientInfoRetriever.retrieveInfo(clientId);
-            if (clientInfo == null) {
-                return false;
-            }
-
-            byte[] clientSecret = new Base64(clientInfo.getClientSecret()).decode();
-            MACVerifier verifier = new MACVerifier(clientSecret);
-            if (!idTokenHint.verify(verifier)) {
-                return false;
-            }
-
-            return !idTokenHint.getJWTClaimsSet().getExpirationTime().before(new Date());
-        } catch (JOSEException | java.text.ParseException e) {
-            // No Exception to throw, MACVerifier failed or  BASE64Decode failed
-            return false;
-
-        }
-    }
 
     private void doSingleLogout(UserPrincipal userPrincipal, String clientId) {
         List<OIDCStoreData> loggedInClients = tokenStore.getLoggedInClients(userPrincipal);
@@ -152,7 +113,7 @@ public class LogoutServlet extends HttpServlet {
 
                 ClientInfo clientInfo = clientInfoRetriever.retrieveInfo(loggedInClient.getClientId().getValue());
                 if (clientInfo.isOctopusClient()) {
-                    // TODO When it is not an Onctopus client, we don't know the URL. forsee this in a future release
+                    // TODO When it is not an Octopus client, we don't know the URL. forsee this in a future release
                     String url = clientInfo.getCallbackURL() + "/octopus/sso/SSOLogoutCallback?access_token=" + loggedInClient.getAccessToken().getValue();
                     sendLogoutRequestToClient(url);
                 }
