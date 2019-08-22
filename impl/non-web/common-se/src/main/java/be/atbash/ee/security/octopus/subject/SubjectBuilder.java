@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,16 +31,16 @@ public class SubjectBuilder {
      * <p/>
      * <b>NOTE</b>: This is provided for framework development support only and should typically never be used by
      * application developers.  {@code Subject} instances should generally be acquired by using
-     * <code>SecurityUtils.{@link SecurityUtils#getSubject() getSubject()}</code>
+     * <code>SecurityUtils.{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()}</code>
      * <h4>Usage</h4>
      * The simplest usage of this builder is to construct an anonymous, session-less {@code Subject} instance:
      * <pre>
      * Subject subject = new Subject.{@link #Builder() Builder}().{@link #buildSubject() buildSubject()};</pre>
      * The default, no-arg {@code Subject.Builder()} constructor shown above will use the application's
      * currently accessible {@code SecurityManager} via
-     * <code>SecurityUtils.{@link SecurityUtils#getSecurityManager() getSecurityManager()}</code>.  You may also
+     * <code>SecurityUtils.{@link be.atbash.ee.security.octopus.SecurityUtils#getSecurityManager() getSecurityManager()}</code>.  You may also
      * specify the exact {@code SecurityManager} instance to be used by the additional
-     * <code>Subject.{@link #Builder(org.apache.shiro.mgt.SecurityManager) Builder(securityManager)}</code>
+     * <code>Subject.{@link #Builder(SecurityManager) Builder(securityManager)}</code>
      * constructor if desired.
      * <p/>
      * All other methods may be called before the {@link #buildSubject() buildSubject()} method to
@@ -56,7 +56,7 @@ public class SubjectBuilder {
      * <p/>
      * <b>Note*</b> that the returned {@code Subject} instance is <b>not</b> automatically bound to the application (thread)
      * for further use.  That is,
-     * {@link org.apache.shiro.SecurityUtils SecurityUtils}.{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}
+     * {@link be.atbash.ee.security.octopus.SecurityUtils SecurityUtils}.{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()}
      * will not automatically return the same instance as what is returned by the builder.  It is up to the framework
      * developer to bind the built {@code Subject} for continued use if desired.
      */
@@ -104,7 +104,7 @@ public class SubjectBuilder {
      * was named &quot;{@code myRealm}&quot;, you might create the '{@code jsmith} {@code Subject} instance this
      * way:
      * <pre>
-     * PrincipalCollection identity = new {@link org.apache.shiro.subject.SimplePrincipalCollection#SimplePrincipalCollection(Object, String) SimplePrincipalCollection}(&quot;jsmith&quot;, &quot;myRealm&quot;);
+     * PrincipalCollection identity = new {@link PrincipalCollection#PrincipalCollection(Object, String) SimplePrincipalCollection}(&quot;jsmith&quot;, &quot;myRealm&quot;);
      * Subject jsmith = new Subject.Builder().principals(identity).buildSubject();</pre>
      * <p/>
      * Similarly, if your application's unique identifier for users is a {@code long} value (such as might be used
@@ -113,7 +113,7 @@ public class SubjectBuilder {
      * instance this way:
      * <pre>
      * long userId = //get user ID from somewhere
-     * PrincipalCollection userIdentity = new {@link org.apache.shiro.subject.SimplePrincipalCollection#SimplePrincipalCollection(Object, String) SimplePrincipalCollection}(<em>userId</em>, &quot;jdbcRealm&quot;);
+     * PrincipalCollection userIdentity = new {@link PrincipalCollection#PrincipalCollection(Object, String) SimplePrincipalCollection}(<em>userId</em>, &quot;jdbcRealm&quot;);
      * Subject user = new Subject.Builder().principals(identity).buildSubject();</pre>
      *
      * @param principals the principals to use as the {@code Subject}'s identity.
@@ -128,14 +128,14 @@ public class SubjectBuilder {
 
     /**
      * Ensures the {@code Subject} being built will be considered
-     * {@link org.apache.shiro.subject.Subject#isAuthenticated() authenticated}.  Per the
-     * {@link org.apache.shiro.subject.Subject#isAuthenticated() isAuthenticated()} JavaDoc, be careful
+     * {@link Subject#isAuthenticated() authenticated}.  Per the
+     * {@link Subject#isAuthenticated() isAuthenticated()} JavaDoc, be careful
      * when specifying {@code true} - you should know what you are doing and have a good reason for ignoring Shiro's
      * default authentication state mechanisms.
      *
      * @param authenticated whether or not the built {@code Subject} will be considered authenticated.
      * @return this {@code Builder} instance for method chaining.
-     * @see org.apache.shiro.subject.Subject#isAuthenticated()
+     * @see Subject#isAuthenticated()
      */
     public SubjectBuilder authenticated(boolean authenticated) {
         this.subjectContext.setAuthenticated(authenticated);
@@ -153,7 +153,7 @@ public class SubjectBuilder {
      * <p/>
      * <b>Note</b> that the returned {@code Subject} instance is <b>not</b> automatically bound to the application
      * (thread) for further use.  That is,
-     * {@link org.apache.shiro.SecurityUtils SecurityUtils}.{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}
+     * {@link be.atbash.ee.security.octopus.SecurityUtils SecurityUtils}.{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()}
      * will not automatically return the same instance as what is returned by the builder.  It is up to the
      * framework developer to bind the returned {@code Subject} for continued use if desired.
      *

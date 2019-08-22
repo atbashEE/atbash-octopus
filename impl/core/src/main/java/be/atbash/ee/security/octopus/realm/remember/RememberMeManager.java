@@ -34,10 +34,9 @@ public interface RememberMeManager {
      * Based on the specified subject context map being used to build a Subject instance, returns any previously
      * remembered principals for the subject for automatic identity association (aka 'Remember Me').
      * <p/>
-     * The context map is usually populated by a {@link Subject.Builder} implementation.
      * See the {@link SubjectFactory} class constants for Shiro's known map keys.
      *
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param subjectContext the contextual data that
      *                       is being used to construct a {@link Subject} instance.
      * @return he remembered principals or {@code null} if none could be acquired.
      */
@@ -46,10 +45,9 @@ public interface RememberMeManager {
     /**
      * Forgets any remembered identity corresponding to the subject context map being used to build a subject instance.
      * <p/>
-     * The context map is usually populated by a {@link Subject.Builder} implementation.
      * See the {@link SubjectFactory} class constants for Shiro's known map keys.
      *
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param subjectContext the contextual data that
      *                       is being used to construct a {@link Subject} instance.
      */
     void forgetIdentity(SubjectContext subjectContext);

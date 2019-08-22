@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ public class Hash extends CodecSupport implements Serializable {
     /**
      * Acquires the specified {@code source} argument's bytes and returns them in the form of a {@code ByteSource} instance.
      * <p/>
-     * This implementation merely delegates to the convenience {@link ByteSource.creator.bytes((Object)} method for generic
+     * This implementation merely delegates to the convenience {@link ByteSourceCreator.bytes((Object)} method for generic
      * conversion.  Can be overridden by subclasses for source-specific conversion.
      *
      * @param source the source object to be hashed.
@@ -146,7 +146,7 @@ public class Hash extends CodecSupport implements Serializable {
     /**
      * Acquires the specified {@code salt} argument's bytes and returns them in the form of a {@code ByteSource} instance.
      * <p/>
-     * This implementation merely delegates to the convenience {@link ByteSource.creator.bytes(Object)} method for generic
+     * This implementation merely delegates to the convenience {@link ByteSourceCreator.bytes(Object)} method for generic
      * conversion.
      *
      * @param salt the salt to be use for the hash.

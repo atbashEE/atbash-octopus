@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import java.io.Serializable;
  * <p>An <tt>AuthenticationToken</tt> is a consolidation of an account's principals and supporting
  * credentials submitted by a user during an authentication attempt.
  * <p/>
- * <p>The token is submitted to an {@link Authenticator Authenticator} via the
- * {@link Authenticator#authenticate(AuthenticationToken) authenticate(token)} method.  The
+ * <p>The token is submitted to an {@link be.atbash.ee.security.octopus.authc.Authenticator Authenticator} via the
+ * {@link be.atbash.ee.security.octopus.authc.Authenticator#authenticate(AuthenticationToken) authenticate(token)} method.  The
  * Authenticator then executes the authentication/log-in process.
  * <p/>
  * <p>Common implementations of an <tt>AuthenticationToken</tt> would have username/password
  * pairs, X.509 Certificate, PGP key, or anything else you can think of.  The token can be
- * anything needed by an {@link Authenticator} to authenticate properly.
+ * anything needed by an {@link be.atbash.ee.security.octopus.authc.Authenticator} to authenticate properly.
  * <p/>
  * <p>Because applications represent user data and credentials in different ways, implementations
  * of this interface are application-specific.  You are free to acquire a user's principals and

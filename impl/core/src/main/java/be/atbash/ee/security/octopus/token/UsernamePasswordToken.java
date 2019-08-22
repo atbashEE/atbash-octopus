@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import be.atbash.util.PublicAPI;
  * <p>A simple username/password authentication token to support the most widely-used authentication mechanism.  This
  * class also implements the {@link RememberMeAuthenticationToken RememberMeAuthenticationToken} interface to support
  * &quot;Remember Me&quot; services across user sessions as well as the
- * {@link org.apache.shiro.authc.HostAuthenticationToken HostAuthenticationToken} interface to retain the host name
+ * {@link HostAuthenticationToken HostAuthenticationToken} interface to retain the host name
  * or IP address location from where the authentication attempt is occuring.</p>
  * <p/>
  * <p>&quot;Remember Me&quot; authentications are disabled by default, but if the application developer wishes to allow

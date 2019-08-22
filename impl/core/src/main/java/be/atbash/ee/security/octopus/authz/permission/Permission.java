@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ import be.atbash.json.parser.MappedBy;
  * <p/>
  * A benefit to Shiro is that, although it assumes most systems are based on these types of static role or
  * dynamic role w/ permission schemes, it does not require a system to model their security data this way - all
- * Permission checks are relegated to {@link org.apache.shiro.realm.Realm} implementations, and only those
+ * Permission checks are relegated to {@link Realm} implementations, and only those
  * implementations really determine how a user 'has' a permission or not.  The Realm could use the semantics described
  * here, or it could utilize some other mechanism entirely - it is always up to the application developer.
  * <p/>

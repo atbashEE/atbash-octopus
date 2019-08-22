@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,16 +35,16 @@ public class RateLimitConfig {
         }
 
         FixedBucket result = new FixedBucket();
-        result.setAllowedRequests(Integer.valueOf(matcher.group(1)));
+        result.setAllowedRequests(Integer.parseInt(matcher.group(1)));
         String timeUnit = matcher.group(3);
         if ("s".equals(timeUnit)) {
-            result.setDuration(Integer.valueOf(matcher.group(2)));
+            result.setDuration(Integer.parseInt(matcher.group(2)));
         }
         if ("m".equals(timeUnit)) {
-            result.setDuration(Integer.valueOf(matcher.group(2)) * 60);
+            result.setDuration(Integer.parseInt(matcher.group(2)) * 60);
         }
         if ("h".equals(timeUnit)) {
-            result.setDuration(Integer.valueOf(matcher.group(2)) * 3600);
+            result.setDuration(Integer.parseInt(matcher.group(2)) * 3600);
         }
 
         result.setTokenStore(new HashMapTokenStore());

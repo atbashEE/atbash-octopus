@@ -167,7 +167,7 @@ public abstract class AccessControlFilter extends PathMatchingFilter {
     /**
      * Convenience method for subclasses to use when a login redirect is required.
      * <p/>
-     * This implementation simply calls {@link WebUtils.saveRequest(ServletRequest) saveRequest(request)}
+     * This implementation simply calls {@link WebUtils#saveRequest(ServletRequest) saveRequest(request)}
      * and then {@link #redirectToLogin(ServletRequest, ServletResponse) redirectToLogin(request,response)}.
      *
      * @param request  the incoming <code>ServletRequest</code>

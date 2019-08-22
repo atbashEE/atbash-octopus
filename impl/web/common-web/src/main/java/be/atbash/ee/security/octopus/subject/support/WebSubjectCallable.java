@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
 /**
  * A {@code SubjectCallable} associates a {@link Subject Subject} with a target/delegate
  * {@link Callable Callable} to ensure proper {@code Subject} thread-state management when the {@code Callable} executes.
- * This ensures that any calls to {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()}
+ * This ensures that any calls to {@code SecurityUtils.}{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()}
  * during the target {@code Callable}'s execution still work correctly even if the {@code Callable} executes on a
  * different thread than the one that created it.  This allows {@code Subject} access during asynchronous operations.
  * <p/>
@@ -48,11 +48,11 @@ import java.util.concurrent.Callable;
  * an instance of this class.
  * <p/>
  * An even more convenient alternative is to use a
- * {@link org.apache.shiro.concurrent.SubjectAwareExecutorService SubjectAwareExecutorService}, which
+ * {@link SubjectAwareExecutorService SubjectAwareExecutorService}, which
  * transparently uses instances of this class.
  *
  * @see Subject#associateWith(Callable)
- * @see org.apache.shiro.concurrent.SubjectAwareExecutorService SubjectAwareExecutorService
+ * @see SubjectAwareExecutorService SubjectAwareExecutorService
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.subject.support.SubjectCallable"})
 public class WebSubjectCallable<V> implements Callable<V> {

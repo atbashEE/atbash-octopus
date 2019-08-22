@@ -21,7 +21,6 @@ import com.nimbusds.oauth2.sdk.GeneralException;
 /**
  *
  */
-
 public class OctopusRetrievalException extends GeneralException {
 
     public OctopusRetrievalException(ErrorObject error) {

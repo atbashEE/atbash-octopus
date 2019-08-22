@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ public interface Session {
      * is explicitly stopped by application code by calling this method directly, it could clear out any
      * authentication state that might exist, thereby effectively &quot;unauthenticating&quot; the {@code Subject}.
      * <p/>
-     * As such, you might consider {@link org.apache.shiro.subject.Subject#logout logging-out} the 'owning'
+     * As such, you might consider {@link be.atbash.ee.security.octopus.subject.Subject#logout logging-out} the 'owning'
      * {@code Subject} instead of manually calling this method, as a log out is expected to stop the
      * corresponding session automatically, and also allows framework code to execute additional cleanup logic.
      *

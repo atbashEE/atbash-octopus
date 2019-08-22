@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ import java.util.List;
  * a {@link Permission Permission} if desired.  Most implementations of this interface will simply convert these
  * String values to {@link Permission Permission} instances and then just call the corresponding type-safe method.
  * (Shiro's default implementations do String-to-Permission conversion for these methods using
- * {@link org.apache.shiro.authz.permission.PermissionResolver PermissionResolver}s.)
+ * {@link be.atbash.ee.security.octopus.authz.permission.PermissionResolver PermissionResolver}s.)
  * <p>
- * <p>These overloaded *Permission methods <em>do</em> forego type-saftey for the benefit of convenience and simplicity,
+ * <p>These overloaded *Permission methods <em>do</em> forego type-safety for the benefit of convenience and simplicity,
  * so you should choose which ones to use based on your preferences and needs.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authz.Authorizer"})
@@ -248,7 +248,7 @@ public interface Authorizer {
     void checkRoles(PrincipalCollection subjectPrincipal, Collection<String> roleIdentifiers) throws AuthorizationException;
 
     /**
-     * Same as {@link #checkRoles(org.apache.shiro.subject.PrincipalCollection, Collection)
+     * Same as {@link #checkRoles(PrincipalCollection, Collection)
      * checkRoles(PrincipalCollection subjectPrincipal, Collection&lt;String&gt; roleIdentifiers)} but doesn't require a collection
      * as an argument.
      * Asserts the corresponding Subject/user has all of the specified roles by returning quietly if they do or

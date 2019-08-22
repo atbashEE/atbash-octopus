@@ -27,7 +27,6 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.util.ArrayList;

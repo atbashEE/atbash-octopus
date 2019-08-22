@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  * <p/>
  * Note however that when a new session is created for the corresponding user, that user's identity would be
  * remembered, but they are <em>NOT</em> considered authenticated.  Please see the
- * {@link org.apache.shiro.subject.Subject#isRemembered()} JavaDoc for an in-depth explanation of the semantic
+ * {@link be.atbash.ee.security.octopus.subject.Subject#isRemembered()} JavaDoc for an in-depth explanation of the semantic
  * differences of what it means to be remembered vs. authenticated.
  *
- * @see org.apache.shiro.subject.Subject#isRemembered()
+ * @see be.atbash.ee.security.octopus.subject.Subject#isRemembered()
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.RememberMeAuthenticationToken"})
 public interface RememberMeAuthenticationToken extends AuthenticationToken {

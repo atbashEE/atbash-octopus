@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 /**
- * A {@code SessionKey} is a key that allows look-up of any particular {@link org.apache.shiro.session.Session Session}
+ * A {@code SessionKey} is a key that allows look-up of any particular {@link Session Session}
  * instance.  This is not to be confused what is probably better recognized as a session <em>attribute</em> key - a key
  * that is used to acquire a session attribute via the
- * {@link org.apache.shiro.session.Session#getAttribute(Object) Session.getAttribute} method.  A {@code SessionKey}
+ * {@link Session#getAttribute(Object) Session.getAttribute} method.  A {@code SessionKey}
  * looks up a Session object directly.
  * <p/>
  * While a {@code SessionKey} allows lookup of <em>any</em> Session that might exist, this is not something in practice
  * done too often by most Shiro end-users.  Instead, it is usually more convenient to acquire the currently executing
- * {@code Subject}'s session via the {@link org.apache.shiro.subject.Subject#getSession} method.  This interface and
+ * {@code Subject}'s session via the {@link be.atbash.ee.security.octopus.subject.Subject#getSession} method.  This interface and
  * its usages are best suited for framework development.
  */
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.session.mgt.SessionKey")

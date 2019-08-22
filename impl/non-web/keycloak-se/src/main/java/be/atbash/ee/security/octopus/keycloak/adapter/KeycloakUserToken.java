@@ -27,10 +27,7 @@ import org.keycloak.representations.IDToken;
 
 import javax.security.auth.Subject;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -259,7 +256,7 @@ public class KeycloakUserToken extends AbstractOctopusAuthenticationToken implem
             if (!id.equals(that.id)) {
                 return false;
             }
-            return email != null ? email.equals(that.email) : that.email == null;
+            return Objects.equals(email, that.email);
         }
 
         @Override

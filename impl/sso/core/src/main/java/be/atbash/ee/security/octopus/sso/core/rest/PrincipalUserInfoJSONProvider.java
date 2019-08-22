@@ -20,7 +20,6 @@ import java.io.Serializable;
 /**
  *
  */
-
 public interface PrincipalUserInfoJSONProvider extends Serializable {
 
     String writeValue(Object data);

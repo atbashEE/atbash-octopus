@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public abstract class AuthenticationFilter extends AccessControlFilter {
      * <p/>
      * The default implementation {@link #getSubject(ServletRequest, ServletResponse) acquires}
      * the currently executing Subject and then returns
-     * {@link org.apache.shiro.subject.Subject#isAuthenticated() subject.isAuthenticated()};
+     * {@link Subject#isAuthenticated() subject.isAuthenticated()};
      *
      * @return true if the subject is authenticated; false if the subject is unauthenticated
      */
@@ -80,7 +80,7 @@ public abstract class AuthenticationFilter extends AccessControlFilter {
 
     /**
      * Redirects to user to the previously attempted URL after a successful login.  This implementation simply calls
-     * <code>{@link org.apache.shiro.web.util.WebUtils WebUtils}.{@link WebUtils#redirectToSavedRequest(ServletRequest, ServletResponse, String) redirectToSavedRequest}</code>
+     * <code>{@link WebUtils WebUtils}.{@link WebUtils#redirectToSavedRequest(ServletRequest, ServletResponse, String) redirectToSavedRequest}</code>
      * using the {@link #getSuccessUrl() successUrl} as the {@code fallbackUrl} argument to that call.
      *
      * @param request  the incoming request

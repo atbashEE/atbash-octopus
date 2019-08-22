@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
      * Notifies any registered {@link AuthenticationListener AuthenticationListener}s that a
      * {@code Subject} has logged-out.  This implementation merely
      * iterates over the internal {@code listeners} collection and calls
-     * {@link AuthenticationListener#onLogout(org.apache.shiro.subject.PrincipalCollection) onLogout}
+     * {@link AuthenticationListener#onLogout(PrincipalCollection) onLogout}
      * for each.
      *
      * @param principals the identifying principals of the {@code Subject}/account logging out.
@@ -144,7 +144,7 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
 
     /**
      * This implementation merely calls
-     * {@link #notifyLogout(org.apache.shiro.subject.PrincipalCollection) notifyLogout} to allow any registered listeners
+     * {@link #notifyLogout(PrincipalCollection) notifyLogout} to allow any registered listeners
      * to react to the logout.
      *
      * @param principals the identifying principals of the {@code Subject}/account logging out.

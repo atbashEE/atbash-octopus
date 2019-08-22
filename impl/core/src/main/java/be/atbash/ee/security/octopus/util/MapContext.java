@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ import java.util.*;
  * A {@code MapContext} provides a common base for context-based data storage in a {@link Map}.  Type-safe attribute
  * retrieval is provided for subclasses with the {@link #getTypedValue(String, Class)} method.
  *
- * @see org.apache.shiro.subject.SubjectContext SubjectContext
- * @see org.apache.shiro.session.mgt.SessionContext SessionContext
+ * @see  be.atbash.ee.security.octopus.subject.SubjectContext SubjectContext
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.util.MapContext"})
 public class MapContext implements Map<String, Object>, Serializable {

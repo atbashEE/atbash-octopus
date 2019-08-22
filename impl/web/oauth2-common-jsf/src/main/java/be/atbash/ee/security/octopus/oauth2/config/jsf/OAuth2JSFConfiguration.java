@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,9 @@ import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
-import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2Provider;
-import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaDataControl;
-import be.atbash.ee.security.octopus.oauth2.servlet.OAuth2ServletInfo;
-import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
-import be.atbash.util.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 /**
  *

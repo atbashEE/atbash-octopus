@@ -248,7 +248,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * is called to allow any necessary post-processing (such as immediately removing any previously remembered
      * values for safety).
      *
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param subjectContext the contextual data that
      *                       is being used to construct a {@link Subject} instance.
      * @return the remembered principals or {@code null} if none could be acquired.
      */
@@ -269,10 +269,9 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
 
     /**
      * Based on the given subject context data, retrieves the previously persisted serialized identity, or
-     * {@code null} if there is no available data.  The context map is usually populated by a {@link Subject.Builder}
-     * implementation.  See the {@link SubjectFactory} class constants for Shiro's known map keys.
+     * {@code null} if there is no available data.  See the {@link SubjectFactory} class constants for Shiro's known map keys.
      *
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param subjectContext the contextual data that
      *                       is being used to construct a {@link Subject} instance.  To be used to assist with data
      *                       lookup.
      * @return the previously persisted serialized identity, or {@code null} if there is no available data for the
@@ -285,7 +284,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * Then the bytes are then {@link #deserialize(byte[]) deserialized} and then returned.
      *
      * @param bytes          the bytes to decrypt if necessary and then deserialize.
-     * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param subjectContext the contextual data that
      *                       is being used to construct a {@link Subject} instance.
      * @return the de-serialized and possibly decrypted principals
      */
@@ -310,7 +309,7 @@ public abstract class AbstractRememberMeManager implements RememberMeManager {
      * been encrypted with the previous key.
      *
      * @param e       the exception that was thrown.
-     * @param context the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+     * @param context the contextual data that
      *                is being used to construct a {@link Subject} instance.
      * @return nothing - the original {@code RuntimeException} is propagated in all cases.
      */

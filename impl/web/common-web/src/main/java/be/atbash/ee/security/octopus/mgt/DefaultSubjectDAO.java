@@ -31,7 +31,7 @@ import javax.inject.Inject;
  * Default {@code SubjectDAO} implementation that stores Subject state in the Subject's Session by default (but this
  * can be disabled - see below).  The Subject instance
  * can be re-created at a later time by first acquiring the associated Session (typically from a
- * {@link org.apache.shiro.session.mgt.SessionManager SessionManager}) via a session ID or session key and then
+ * {@link be.atbash.ee.security.octopus.session.SessionManager SessionManager}) via a session ID or session key and then
  * building a {@code Subject} instance from {@code Session} attributes.
  * <h2>Controlling how Sessions are used</h2>
  * Whether or not a {@code Subject}'s {@code Session} is used or not to persist its own state is controlled on a
@@ -72,7 +72,7 @@ import javax.inject.Inject;
  * Unless overridden, the default evaluator is a {@link DefaultSessionStorageEvaluator}, which enables session usage for
  * Subject state by default.
  *
- * @see #isSessionStorageEnabled(org.apache.shiro.subject.Subject)
+ * @see #isSessionStorageEnabled(be.atbash.ee.security.octopus.subject.Subject)
  * @see SessionStorageEvaluator
  * @see DefaultSessionStorageEvaluator
  */
@@ -104,7 +104,7 @@ public class DefaultSubjectDAO {
     }
 
     /**
-     * Saves the subject's state to the subject's {@link org.apache.shiro.subject.Subject#getSession() session} only
+     * Saves the subject's state to the subject's {@link be.atbash.ee.security.octopus.subject.Subject#getSession() session} only
      * if {@link #isSessionStorageEnabled(Subject) sessionStorageEnabled(subject)}.  If session storage is not enabled
      * for the specific {@code Subject}, this method does nothing.
      * <p/>
@@ -127,8 +127,8 @@ public class DefaultSubjectDAO {
 
     /**
      * Saves the subject's state (it's principals and authentication state) to its
-     * {@link org.apache.shiro.subject.Subject#getSession() session}.  The session can be retrieved at a later time
-     * (typically from a {@link org.apache.shiro.session.mgt.SessionManager SessionManager} to be used to recreate
+     * {@link be.atbash.ee.security.octopus.subject.Subject#getSession() session}.  The session can be retrieved at a later time
+     * (typically from a {@link be.atbash.ee.security.octopus.session.SessionManager SessionManager} to be used to recreate
      * the {@code Subject} instance.
      *
      * @param subject the subject for which state will be persisted to its session.
@@ -140,7 +140,7 @@ public class DefaultSubjectDAO {
     }
 
     /**
-     * Merges the Subject's current {@link org.apache.shiro.subject.Subject#getPrincipals()} with whatever may be in
+     * Merges the Subject's current {@link be.atbash.ee.security.octopus.subject.Subject#getPrincipals()} with whatever may be in
      * any available session.  Only updates the Subject's session if the session does not match the current principals
      * state.
      *

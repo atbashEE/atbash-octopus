@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Implementation of the {@code Subject} interface that delegates
- * method calls to an underlying {@link org.apache.shiro.mgt.SecurityManager SecurityManager} instance for security checks.
+ * method calls to an underlying {@link SecurityManager SecurityManager} instance for security checks.
  * It is essentially a {@code SecurityManager} proxy.
  * <p/>
  * This implementation does not maintain state such as roles and permissions (only {@code Subject}

@@ -19,11 +19,6 @@ import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 
 /**

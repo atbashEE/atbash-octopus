@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 
 /**
  * A SessionManager manages the creation, maintenance, and clean-up of all application
- * {@link org.apache.shiro.session.Session Session}s.
+ * {@link Session Session}s.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.session.mgt.SessionManager"})
 public interface SessionManager {
@@ -30,7 +30,7 @@ public interface SessionManager {
      * <p/>
      * This method is mainly used in framework development, as the implementation will often relay the argument
      * to an underlying {@link SessionFactory} which could use the context to construct the internal Session
-     * instance in a specific manner.  This allows pluggable {@link org.apache.shiro.session.Session Session} creation
+     * instance in a specific manner.  This allows pluggable {@link Session Session} creation
      * logic by simply injecting a {@code SessionFactory} into the {@code SessionManager} instance.
      *
      * @param context the contextual initialization data that can be used by the implementation or underlying

@@ -234,7 +234,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * Determines whether the incoming request is an attempt to log in.
      * <p/>
      * The default implementation obtains the value of the request's
-     * {@link OctopusConstants.AUTHORIZATION_HEADER AUTHORIZATION_HEADER}, and if it is not <code>null</code>, delegates
+     * {@link OctopusConstants#AUTHORIZATION_HEADER AUTHORIZATION_HEADER}, and if it is not <code>null</code>, delegates
      * to {@link #isLoginAttempt(String) isLoginAttempt(authzHeaderValue)}. If the header is <code>null</code>,
      * <code>false</code> is returned.
      *
@@ -255,12 +255,12 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
     }
 
     /**
-     * Returns the {@link OctopusConstants.AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.
+     * Returns the {@link OctopusConstants#AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.
      * <p/>
      * This implementation merely casts the request to an <code>HttpServletRequest</code> and returns the header:
      * <p/>
      * <code>HttpServletRequest httpRequest = {@link WebUtils#toHttp(javax.servlet.ServletRequest) toHttp(reaquest)};<br/>
-     * return httpRequest.getHeader({@link OctopusConstants.AUTHORIZATION_HEADER AUTHORIZATION_HEADER});</code>
+     * return httpRequest.getHeader({@link OctopusConstants#AUTHORIZATION_HEADER AUTHORIZATION_HEADER});</code>
      *
      * @param request the incoming <code>ServletRequest</code>
      * @return the <code>Authorization</code> header's value.
@@ -293,7 +293,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
 
     /**
      * Builds the challenge for authorization by setting a HTTP <code>401</code> (Unauthorized) status as well as the
-     * response's {@link #AUTHENTICATE_HEADER AUTHENTICATE_HEADER}.
+     * response's {@link OctopusConstants#AUTHENTICATE_HEADER AUTHENTICATE_HEADER}.
      * <p/>
      * The header value constructed is equal to:
      * <p/>

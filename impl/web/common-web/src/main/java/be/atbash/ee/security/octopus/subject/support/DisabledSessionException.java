@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.session.SessionException;
 
 /**
  * Exception thrown if attempting to create a new {@code Subject}
- * {@link org.apache.shiro.subject.Subject#getSession() session}, but that {@code Subject}'s sessions are disabled.
+ * {@link be.atbash.ee.security.octopus.subject.Subject#getSession() session}, but that {@code Subject}'s sessions are disabled.
  * <p/>
  * Note that this exception represents an invalid API usage scenario - where Shiro has been configured to disable
  * sessions for a particular subject, but a developer is attempting to use that Subject's session.

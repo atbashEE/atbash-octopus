@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class StandardSecurityManager implements Authorizer, SecurityManager {
     }
 
     /**
-     * Delegates to the wrapped {@link org.apache.shiro.authc.Authenticator Authenticator} for authentication.
+     * Delegates to the wrapped {@link Authenticator Authenticator} for authentication.
      */
     public AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
         return octopusRealm.authenticate(token);
@@ -132,14 +132,14 @@ public class StandardSecurityManager implements Authorizer, SecurityManager {
      * <ol>
      * <li>Ensures the {@code SubjectContext} is as populated as it can be, using heuristics to acquire
      * data that may not have already been available to it (such as a referenced session or remembered principals).</li>
-     * <li>Calls {@link #doCreateSubject(org.apache.shiro.subject.SubjectContext)} to actually perform the
+     * <li>Calls {@link #doCreateSubject(SubjectContext)} to actually perform the
      * {@code Subject} instance creation.</li>
      * <li>returns the constructed {@code Subject} instance.</li>
      * </ol>
      *
      * @param subjectContext any data needed to direct how the Subject should be constructed.
      * @return the {@code Subject} instance reflecting the specified contextual data.
-     * @see #doCreateSubject(org.apache.shiro.subject.SubjectContext)
+     * @see #doCreateSubject(SubjectContext)
      */
     public Subject createSubject(SubjectContext subjectContext) {
         //create a copy so we don't modify the argument's backing map:
@@ -158,7 +158,7 @@ public class StandardSecurityManager implements Authorizer, SecurityManager {
      *                {@code Subject} instance.
      * @return a {@code Subject} instance reflecting the data in the specified {@code SubjectContext} data map.
      * @see #getSubjectFactory()
-     * @see SubjectFactory#createSubject(org.apache.shiro.subject.SubjectContext)
+     * @see SubjectFactory#createSubject(SubjectContext)
      */
     private Subject doCreateSubject(SubjectContext context) {
         return subjectFactory.createSubject(context);

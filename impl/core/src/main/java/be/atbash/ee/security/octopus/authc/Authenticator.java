@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,14 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
  * Although not a requirement, there is usually a single 'master' Authenticator configured for
  * an application.  Enabling Pluggable Authentication Module (PAM) behavior
  * (Two Phase Commit, etc.) is usually achieved by the single {@code Authenticator} coordinating
- * and interacting with an application-configured set of {@link org.apache.shiro.realm.Realm Realm}s.
+ * and interacting with an application-configured set of {@link Realm Realm}s.
  * <p/>
  * Note that most Shiro users will not interact with an {@code Authenticator} instance directly.
  * Shiro's default architecture is based on an overall {@code SecurityManager} which typically
  * wraps an {@code Authenticator} instance.
  *
- * @see org.apache.shiro.mgt.SecurityManager
+ * @see SecurityManager
  * @see AbstractAuthenticator AbstractAuthenticator
- * @see org.apache.shiro.authc.pam.ModularRealmAuthenticator ModularRealmAuthenticator
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.Authenticator"})
 public interface Authenticator {
@@ -55,11 +54,7 @@ public interface Authenticator {
      *                                 appropriate manner why the authentication attempt failed.  Realize an
      *                                 implementation of this interface may or may not throw those listed or may
      *                                 throw other AuthenticationExceptions, but the list shows the most common ones.
-     * @see ExpiredCredentialsException
      * @see IncorrectCredentialsException
-     * @see ExcessiveAttemptsException
-     * @see LockedAccountException
-     * @see ConcurrentAccessException
      * @see UnknownAccountException
      */
     AuthenticationInfo authenticate(AuthenticationToken authenticationToken)

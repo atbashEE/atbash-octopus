@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.sso.client.logout;
 
 import be.atbash.ee.security.octopus.authc.RemoteLogoutHandler;
-import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.util.exception.AtbashUnexpectedException;

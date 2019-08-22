@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * This annotation is the logical inverse of the {@link RequiresUser RequiresUser} annotation. That is,
  * <code>RequiresUser == !RequiresGuest</code>, or more accurately,
  * <p/>
- * <code>RequiresGuest === subject.{@link org.apache.shiro.subject.Subject#getPrincipal() getPrincipal()} == null</code>.
+ * <code>RequiresGuest === subject.{@link be.atbash.ee.security.octopus.subject.Subject#getPrincipal() getPrincipal()} == null</code>.
  *
  * @see RequiresAuthentication
  * @see RequiresUser

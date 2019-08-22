@@ -41,9 +41,6 @@ public abstract class SecurityUtils {
      * Returns the currently accessible {@code Subject} available to the calling code depending on
      * runtime environment.
      * <p/>
-     * This method is provided as a way of obtaining a {@code Subject} without having to resort to
-     * implementation-specific methods.  It also allows the Shiro team to change the underlying implementation of
-     * this method in the future depending on requirements/updates without affecting your code that uses it.
      *
      * @return the currently accessible {@code Subject} accessible to the calling code.
      * @throws IllegalStateException if no {@link Subject Subject} instance or

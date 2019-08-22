@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.List;
  * a {@link Permission Permission} if desired.  The underlying Authorization subsystem implementations will usually
  * simply convert these String values to {@link Permission Permission} instances and then just call the corresponding
  * type-safe method.  (Shiro's default implementations do String-to-Permission conversion for these methods using
- * {@link org.apache.shiro.authz.permission.PermissionResolver PermissionResolver}s.)
+ * {@link be.atbash.ee.security.octopus.authz.permission.PermissionResolver PermissionResolver}s.)
  * <p/>
  * These overloaded *Permission methods forgo type-saftey for the benefit of convenience and simplicity,
  * so you should choose which ones to use based on your preferences and needs.
@@ -65,10 +65,10 @@ public interface Subject {
      * or any other similar suitable unique mechanism valuable to your application.
      * <p/>
      * Most implementations will simply return
-     * <code>{@link #getPrincipals()}.{@link org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal() getPrimaryPrincipal()}</code>
+     * <code>{@link #getPrincipals()}.{@link PrincipalCollection#getPrimaryPrincipal() getPrimaryPrincipal()}</code>
      *
      * @return this Subject's application-specific unique identity.
-     * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()
+     * @see PrincipalCollection#getPrimaryPrincipal()
      */
     UserPrincipal getPrincipal();
 
@@ -84,7 +84,7 @@ public interface Subject {
      *
      * @param token the token encapsulating the subject's principals and credentials to be passed to the
      *              Authentication subsystem for verification.
-     * @throws org.apache.shiro.authc.AuthenticationException if the authentication attempt fails.
+     * @throws be.atbash.ee.security.octopus.authc.AuthenticationException if the authentication attempt fails.
      */
     void login(AuthenticationToken token);
 
@@ -99,7 +99,7 @@ public interface Subject {
      *
      * @return all of this Subject's principals (identifying attributes).
      * @see #getPrincipal()
-     * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()
+     * @see PrincipalCollection#getPrimaryPrincipal()
      */
     PrincipalCollection getPrincipals();
 
@@ -165,7 +165,7 @@ public interface Subject {
     /**
      * Returns {@code true} if this Subject implies all of the specified permission strings, {@code false} otherwise.
      * <p/>
-     * This is an overloaded method for the corresponding type-safe {@link org.apache.shiro.authz.Permission Permission}
+     * This is an overloaded method for the corresponding type-safe {@link Permission Permission}
      * variant.  Please see the class-level JavaDoc for more information on these String-based permission methods.
      *
      * @param permissions the String representations of the Permissions that are being checked.
@@ -189,13 +189,13 @@ public interface Subject {
      * Ensures this Subject implies the specified permission String.
      * <p/>
      * If this subject's existing associated permissions do not {@link Permission#implies(Permission)} imply}
-     * the given permission, an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * the given permission, an {@link AuthorizationException} will be thrown.
      * <p/>
      * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.
      * Please see the class-level JavaDoc for more information on these String-based permission methods.
      *
      * @param permission the String representation of the Permission to check.
-     * @throws org.apache.shiro.authz.AuthorizationException if the user does not have the permission.
+     * @throws AuthorizationException if the user does not have the permission.
      */
     void checkPermission(String permission) throws AuthorizationException;
 
@@ -203,21 +203,21 @@ public interface Subject {
      * Ensures this Subject {@link Permission#implies(Permission) implies} the specified {@code Permission}.
      * <p/>
      * If this subject's existing associated permissions do not {@link Permission#implies(Permission) imply}
-     * the given permission, an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * the given permission, an {@link AuthorizationException} will be thrown.
      *
      * @param permission the Permission to check.
-     * @throws org.apache.shiro.authz.AuthorizationException if this Subject does not have the permission.
+     * @throws AuthorizationException if this Subject does not have the permission.
      */
     void checkPermission(Permission permission) throws AuthorizationException;
 
     /**
      * Ensures this Subject
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) implies} all of the
+     * {@link Permission#implies(Permission) implies} all of the
      * specified permission strings.
      * <p/>
      * If this subject's existing associated permissions do not
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) imply} all of the given permissions,
-     * an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * {@link Permission#implies(Permission) imply} all of the given permissions,
+     * an {@link AuthorizationException} will be thrown.
      * <p/>
      * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.
      * Please see the class-level JavaDoc for more information on these String-based permission methods.
@@ -229,12 +229,12 @@ public interface Subject {
 
     /**
      * Ensures this Subject
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) implies} all of the
+     * {@link Permission#implies(Permission) implies} all of the
      * specified permission strings.
      * <p/>
      * If this subject's existing associated permissions do not
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) imply} all of the given permissions,
-     * an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * {@link Permission#implies(Permission) imply} all of the given permissions,
+     * an {@link AuthorizationException} will be thrown.
      *
      * @param permissions the Permissions to check.
      * @throws AuthorizationException if this Subject does not have all of the given permissions.
@@ -273,19 +273,19 @@ public interface Subject {
 
     /**
      * Asserts this Subject has the specified role by returning quietly if they do or throwing an
-     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
+     * {@link AuthorizationException} if they do not.
      *
      * @param roleIdentifier the application-specific role identifier (usually a role id or role name ).
-     * @throws org.apache.shiro.authz.AuthorizationException if this Subject does not have the role.
+     * @throws AuthorizationException if this Subject does not have the role.
      */
     void checkRole(String roleIdentifier) throws AuthorizationException;
 
     /**
      * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an
-     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
+     * {@link AuthorizationException} if they do not.
      *
      * @param roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).
-     * @throws org.apache.shiro.authz.AuthorizationException if this Subject does not have all of the specified roles.
+     * @throws AuthorizationException if this Subject does not have all of the specified roles.
      */
     void checkRoles(Collection<String> roleIdentifiers) throws AuthorizationException;
 
@@ -293,10 +293,10 @@ public interface Subject {
      * Same as {@link #checkRoles(Collection < String > roleIdentifiers) checkRoles(Collection<String> roleIdentifiers)} but
      * doesn't require a collection as a an argument.
      * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an
-     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
+     * {@link AuthorizationException} if they do not.
      *
      * @param roleIdentifiers roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).
-     * @throws AuthorizationException org.apache.shiro.authz.AuthorizationException
+     * @throws AuthorizationException AuthorizationException
      *                                if this Subject does not have all of the specified roles.
      */
     void checkRoles(String... roleIdentifiers) throws AuthorizationException;

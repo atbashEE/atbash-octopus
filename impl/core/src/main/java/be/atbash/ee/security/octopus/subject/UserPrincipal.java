@@ -107,7 +107,7 @@ public class UserPrincipal implements Principal, Serializable {
         userInfo.putAll(values);
     }
 
-    public <T> T getUserInfo(String key) {
+    public <T extends Serializable> T getUserInfo(String key) {
         return (T) userInfo.get(key);
     }
 

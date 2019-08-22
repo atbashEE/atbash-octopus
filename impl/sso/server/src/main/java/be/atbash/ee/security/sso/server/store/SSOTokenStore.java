@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.sso.server.store;
 
-import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.id.ClientID;

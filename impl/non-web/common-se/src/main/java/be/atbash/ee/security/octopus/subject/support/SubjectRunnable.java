@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.util.ThreadState;
 
 /**
  * A {@code SubjectRunnable} ensures that a target/delegate {@link Runnable Runnable} will execute such that any
- * call to {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()} during the
+ * call to {@code SecurityUtils.}{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()} during the
  * {@code Runnable}'s execution will return the associated {@code Subject} instance.  The {@code SubjectRunnable}
  * instance can be run on any thread (the current thread or asynchronously on another thread) and the
  * {@code SecurityUtils.getSubject()} call will still work properly.  This implementation also guarantees that Shiro's
@@ -44,11 +44,11 @@ import be.atbash.ee.security.octopus.util.ThreadState;
  * necessary association logic.
  * <p/>
  * An even more convenient alternative is to use a
- * {@link org.apache.shiro.concurrent.SubjectAwareExecutor SubjectAwareExecutor}, which transparently uses
+ * {@link SubjectAwareExecutor SubjectAwareExecutor}, which transparently uses
  * instances of this class but does not require referencing Shiro's API at all.
  *
  * @see Subject#associateWith(Runnable)
- * @see org.apache.shiro.concurrent.SubjectAwareExecutor SubjectAwareExecutor
+ * @see SubjectAwareExecutor SubjectAwareExecutor
  */
 public class SubjectRunnable implements Runnable {
 

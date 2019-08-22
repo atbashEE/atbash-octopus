@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import be.atbash.util.exception.AtbashUnexpectedException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -50,7 +51,7 @@ public class SecretKeyHash extends Hash {
 
         int keySizeBytes = 32; // TODO Config or calculated (should be related to the SHA version in use.)
 
-        String text = new String(bytes, Charset.forName("UTF-8"));
+        String text = new String(bytes, StandardCharsets.UTF_8);
         char[] chars = text.toCharArray();
 
         byte[] encoded;

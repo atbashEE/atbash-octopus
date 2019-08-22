@@ -175,10 +175,10 @@ public class WebSubject implements RequestPairSource, Subject {
      * or any other similar suitable unique mechanism valuable to your application.
      * <p/>
      * Most implementations will simply return
-     * <code>{@link #getPrincipals()}.{@link org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal() getPrimaryPrincipal()}</code>
+     * <code>{@link #getPrincipals()}.{@link PrincipalCollection#getPrimaryPrincipal() getPrimaryPrincipal()}</code>
      *
      * @return this Subject's application-specific unique identity.
-     * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()
+     * @see PrincipalCollection#getPrimaryPrincipal()
      */
     public UserPrincipal getPrincipal() {
         // ToDO update rest of methods so that we always have a primaryPrincipal (never null)
@@ -196,7 +196,7 @@ public class WebSubject implements RequestPairSource, Subject {
      *
      * @return all of this Subject's principals (identifying attributes).
      * @see #getPrincipal()
-     * @see org.apache.shiro.subject.PrincipalCollection#getPrimaryPrincipal()
+     * @see PrincipalCollection#getPrimaryPrincipal()
      */
     public PrincipalCollection getPrincipals() {
         List<PrincipalCollection> runAsPrincipals = getRunAsPrincipalsStack();
@@ -281,7 +281,7 @@ public class WebSubject implements RequestPairSource, Subject {
     /**
      * Returns {@code true} if this Subject implies all of the specified permission strings, {@code false} otherwise.
      * <p/>
-     * This is an overloaded method for the corresponding type-safe {@link org.apache.shiro.authz.Permission Permission}
+     * This is an overloaded method for the corresponding type-safe {@link Permission Permission}
      * variant.  Please see the class-level JavaDoc for more information on these String-based permission methods.
      *
      * @param permissions the String representations of the Permissions that are being checked.
@@ -323,13 +323,13 @@ public class WebSubject implements RequestPairSource, Subject {
      * Ensures this Subject implies the specified permission String.
      * <p/>
      * If this subject's existing associated permissions do not {@link Permission#implies(Permission)} imply}
-     * the given permission, an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * the given permission, an {@link AuthorizationException} will be thrown.
      * <p/>
      * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.
      * Please see the class-level JavaDoc for more information on these String-based permission methods.
      *
      * @param permission the String representation of the Permission to check.
-     * @throws org.apache.shiro.authz.AuthorizationException if the user does not have the permission.
+     * @throws AuthorizationException if the user does not have the permission.
      */
     public void checkPermission(String permission) throws AuthorizationException {
         assertAuthzCheckPossible();
@@ -340,10 +340,10 @@ public class WebSubject implements RequestPairSource, Subject {
      * Ensures this Subject {@link Permission#implies(Permission) implies} the specified {@code Permission}.
      * <p/>
      * If this subject's existing associated permissions do not {@link Permission#implies(Permission) imply}
-     * the given permission, an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * the given permission, an {@link AuthorizationException} will be thrown.
      *
      * @param permission the Permission to check.
-     * @throws org.apache.shiro.authz.AuthorizationException if this Subject does not have the permission.
+     * @throws AuthorizationException if this Subject does not have the permission.
      */
     public void checkPermission(Permission permission) throws AuthorizationException {
         assertAuthzCheckPossible();
@@ -352,12 +352,12 @@ public class WebSubject implements RequestPairSource, Subject {
 
     /**
      * Ensures this Subject
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) implies} all of the
+     * {@link Permission#implies(Permission) implies} all of the
      * specified permission strings.
      * <p/>
      * If this subject's existing associated permissions do not
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) imply} all of the given permissions,
-     * an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * {@link Permission#implies(Permission) imply} all of the given permissions,
+     * an {@link AuthorizationException} will be thrown.
      * <p/>
      * This is an overloaded method for the corresponding type-safe {@link Permission Permission} variant.
      * Please see the class-level JavaDoc for more information on these String-based permission methods.
@@ -372,12 +372,12 @@ public class WebSubject implements RequestPairSource, Subject {
 
     /**
      * Ensures this Subject
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) implies} all of the
+     * {@link Permission#implies(Permission) implies} all of the
      * specified permission strings.
      * <p/>
      * If this subject's existing associated permissions do not
-     * {@link org.apache.shiro.authz.Permission#implies(org.apache.shiro.authz.Permission) imply} all of the given permissions,
-     * an {@link org.apache.shiro.authz.AuthorizationException} will be thrown.
+     * {@link Permission#implies(Permission) imply} all of the given permissions,
+     * an {@link AuthorizationException} will be thrown.
      *
      * @param permissions the Permissions to check.
      * @throws AuthorizationException if this Subject does not have all of the given permissions.
@@ -429,10 +429,10 @@ public class WebSubject implements RequestPairSource, Subject {
 
     /**
      * Asserts this Subject has the specified role by returning quietly if they do or throwing an
-     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
+     * {@link AuthorizationException} if they do not.
      *
-     * @param roleIdentifier the application-specific role identifier (usually a role id or role name ).
-     * @throws org.apache.shiro.authz.AuthorizationException if this Subject does not have the role.
+     * @param role the application-specific role identifier (usually a role id or role name ).
+     * @throws AuthorizationException if this Subject does not have the role.
      */
     public void checkRole(String role) throws AuthorizationException {
         assertAuthzCheckPossible();
@@ -440,26 +440,26 @@ public class WebSubject implements RequestPairSource, Subject {
     }
 
     /**
-     * Same as {@link #checkRoles(Collection < String > roleIdentifiers) checkRoles(Collection<String> roleIdentifiers)} but
+     * Same as {@link #checkRoles(Collection < String > role) checkRoles(Collection<String> roleIdentifiers)} but
      * doesn't require a collection as a an argument.
      * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an
-     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
+     * {@link AuthorizationException} if they do not.
      *
-     * @param roleIdentifiers roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).
-     * @throws AuthorizationException org.apache.shiro.authz.AuthorizationException
+     * @param roles roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).
+     * @throws AuthorizationException AuthorizationException
      *                                if this Subject does not have all of the specified roles.
      */
-    public void checkRoles(String... roleIdentifiers) throws AuthorizationException {
+    public void checkRoles(String... roles) throws AuthorizationException {
         assertAuthzCheckPossible();
-        securityManager.checkRoles(getPrincipals(), roleIdentifiers);
+        securityManager.checkRoles(getPrincipals(), roles);
     }
 
     /**
      * Asserts this Subject has all of the specified roles by returning quietly if they do or throwing an
-     * {@link org.apache.shiro.authz.AuthorizationException} if they do not.
+     * {@link AuthorizationException} if they do not.
      *
-     * @param roleIdentifiers the application-specific role identifiers to check (usually role ids or role names).
-     * @throws org.apache.shiro.authz.AuthorizationException if this Subject does not have all of the specified roles.
+     * @param roles the application-specific role identifiers to check (usually role ids or role names).
+     * @throws AuthorizationException if this Subject does not have all of the specified roles.
      */
     public void checkRoles(Collection<String> roles) throws AuthorizationException {
         assertAuthzCheckPossible();

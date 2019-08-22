@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * during their current session, and asked the system to remember them.</li>
  * </ul>
  * <p/>
- * See the {@link org.apache.shiro.authc.RememberMeAuthenticationToken RememberMeAuthenticationToken} JavaDoc for an
+ * See the {@link be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken RememberMeAuthenticationToken} JavaDoc for an
  * explaination of why these two states are considered different.
  *
  * @see RequiresAuthentication

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashIllegalActionException;
+
+import java.util.Objects;
 
 /**
  * A permission that act as a role where only the name is important (no domain concepts like the
@@ -73,7 +75,7 @@ public class RolePermission implements Permission, NamedPermission {
 
         RolePermission that = (RolePermission) o;
 
-        return roleName != null ? roleName.equals(that.roleName) : that.roleName == null;
+        return Objects.equals(roleName, that.roleName);
     }
 
     @Override

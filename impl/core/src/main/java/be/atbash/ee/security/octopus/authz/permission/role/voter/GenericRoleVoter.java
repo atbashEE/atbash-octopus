@@ -30,7 +30,6 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.enterprise.inject.Typed;
-import javax.inject.Inject;
 import java.util.Set;
 
 /**

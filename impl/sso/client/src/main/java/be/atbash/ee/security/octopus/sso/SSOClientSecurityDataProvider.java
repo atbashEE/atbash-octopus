@@ -30,7 +30,6 @@ import be.atbash.ee.security.octopus.sso.client.SSOAuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.sso.client.ClientCustomization;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.requestor.PermissionRequestor;
-import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;

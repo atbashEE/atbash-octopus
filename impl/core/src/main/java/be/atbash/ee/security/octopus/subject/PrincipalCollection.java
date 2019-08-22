@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public class PrincipalCollection implements Iterable, Serializable {
      * @return a Collection of principals that are assignable from the specified type, or
      * an empty Collection if no principals of this type are associated.
      */
-    public <T> Collection<T> byType(Class<T> type) {
+    public <T> Set<T> byType(Class<T> type) {
         if (CollectionUtils.isEmpty(principals)) {
             return Collections.EMPTY_SET;
         }
@@ -250,7 +250,7 @@ public class PrincipalCollection implements Iterable, Serializable {
 
         PrincipalCollection that = (PrincipalCollection) o;
 
-        return principals != null ? principals.equals(that.principals) : that.principals == null;
+        return Objects.equals(principals, that.principals);
     }
 
     @Override

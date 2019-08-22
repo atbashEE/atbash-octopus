@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,13 @@ import javax.inject.Inject;
  * disable session access.
  * <p/>
  * This implementation usually works in conjunction with the
- * {@link org.apache.shiro.web.filter.session.NoSessionCreationFilter}:  If the {@code NoSessionCreationFilter}
+ * {@link be.atbash.ee.security.octopus.filter.NoSessionCreationFilter}:  If the {@code NoSessionCreationFilter}
  * is configured in a filter chain, that filter will set a specific
  * {@code ServletRequest} {@link javax.servlet.ServletRequest#setAttribute attribute} indicating that session creation
  * should be disabled.
  * <p/>
  * This {@code DefaultSessionStorageEvaluator} will then inspect this attribute, and if it has been set, will return
- * {@code false} from {@link #isSessionStorageEnabled(org.apache.shiro.subject.Subject)} method, thereby preventing
+ * {@code false} from {@link #isSessionStorageEnabled(be.atbash.ee.security.octopus.subject.Subject)} method, thereby preventing
  * Shiro from creating a session for the purpose of storing subject state.
  * <p/>
  * If the request attribute has

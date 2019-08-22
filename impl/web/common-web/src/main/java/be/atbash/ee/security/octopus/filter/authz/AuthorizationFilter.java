@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@ package be.atbash.ee.security.octopus.filter.authz;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
-import be.atbash.ee.security.octopus.subject.WebSubject;
 
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -39,32 +37,15 @@ public abstract class AuthorizationFilter extends AccessControlFilter {
     private AccessDeniedHandler accessDeniedHandler;
 
     /**
-     * Handles the response when access has been denied.  It behaves as follows:
-     * <ul>
-     * <li>If the {@code Subject} is unknown<sup><a href="#known">[1]</a></sup>:
-     * <ol><li>The incoming request will be saved and they will be redirected to the login page for authentication
-     * (via the {@link #saveRequestAndRedirectToLogin(ServletRequest, ServletResponse)}
-     * method).</li>
-     * <li>Once successfully authenticated, they will be redirected back to the originally attempted page.</li></ol>
-     * </li>
-     * <li>If the Subject is known:</li>
-     * <ol>
-     * <li>The HTTP {@link HttpServletResponse#SC_UNAUTHORIZED} header will be set (401 Unauthorized)</li>
-     * <li>If the {@link #getUnauthorizedUrl() unauthorizedUrl} has been configured, a redirect will be issued to that
-     * URL.  Otherwise the 401 response is rendered normally</li>
-     * </ul>
-     * <code><a name="known">[1]</a></code>: A {@code Subject} is 'known' when
-     * <code>subject.{@link WebSubject#getPrincipal() getPrincipal()}</code> is not {@code null},
-     * which implicitly means that the subject is either currently authenticated or they have been remembered via
-     * 'remember me' services.
+     * Handles the response when access has been denied.
      *
      * @param request  the incoming <code>ServletRequest</code>
      * @param response the outgoing <code>ServletResponse</code>
-     * @return {@code false} always for this implementation.
+     * @return {@code false} always so that filter chain stops.
      * @throws IOException if there is any servlet error.
      */
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
-
+        // FIXME Review AuthorizationFilter subclasses if this doesn't need to be overwritten.
         return accessDeniedHandler.onAccessDenied(request, response);
     }
 

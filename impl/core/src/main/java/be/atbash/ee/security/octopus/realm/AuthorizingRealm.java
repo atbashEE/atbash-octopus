@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,17 +45,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p/>
  * This implementation will perform all role and permission checks automatically (and subclasses do not have to
  * write this logic) as long as the
- * {@link #getAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)} method returns an
+ * {@link #getAuthorizationInfo(PrincipalCollection)} method returns an
  * {@link AuthorizationInfo}.  Please see that method's JavaDoc for an in-depth explanation.
  * <p/>
  * If you find that you do not want to utilize the {@link AuthorizationInfo AuthorizationInfo} construct,
  * you are of course free to subclass the {@link AuthenticatingRealm AuthenticatingRealm} directly instead and
  * implement the remaining Realm interface methods directly.  You might do this if you want have better control
  * over how the Role and Permission checks occur for your specific data source.  However, using AuthorizationInfo
- * (and its default implementation {@link org.apache.shiro.authz.SimpleAuthorizationInfo SimpleAuthorizationInfo}) is sufficient in the large
+ * (and its default implementation {@link be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo SimpleAuthorizationInfo}) is sufficient in the large
  * majority of Realm cases.
  *
- * @see org.apache.shiro.authz.SimpleAuthorizationInfo
+ * @see be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.realm.AuthorizingRealm"})
 public abstract class AuthorizingRealm extends AuthenticatingRealm {
@@ -159,7 +159,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
 
     /**
      * Returns {@code true} if authorization caching should be utilized if a {@link CacheManager} has been
-     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager) configured}, {@code false} otherwise.
+     * {@link #setCacheManager(CacheManager) configured}, {@code false} otherwise.
      * <p/>
      * The default value is {@code true}.
      *
@@ -171,7 +171,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
 
     /**
      * Sets whether or not authorization caching should be utilized if a {@link CacheManager} has been
-     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager) configured}, {@code false} otherwise.
+     * {@link #setCacheManager(CacheManager) configured}, {@code false} otherwise.
      * <p/>
      * The default value is {@code true}.
      *
@@ -203,8 +203,8 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
      * the {@link #setCacheManager cacheManager} property will be checked.
      * If a {@code cacheManager} has been set, it will be used to create an authorization
      * {@code cache}, and this newly created cache which will be used as specified in #1.</li>
-     * <li>If neither the {@link #setAuthorizationCache (org.apache.shiro.cache.Cache) cache}
-     * or {@link #setCacheManager(org.apache.shiro.cache.CacheManager) cacheManager}
+     * <li>If neither the {@link #setAuthorizationCache (Cache) cache}
+     * or {@link #setCacheManager(CacheManager) cacheManager}
      * properties are set, caching will be disabled and authorization look-ups will be delegated to
      * subclass implementations for each authorization check.</li>
      * </ol>
@@ -265,11 +265,11 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
      * <p/>
      * This implementation obtains the actual {@code AuthorizationInfo} object from the subclass's
      * implementation of
-     * {@link #doGetAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection) doGetAuthorizationInfo}, and then
+     * {@link #doGetAuthorizationInfo(PrincipalCollection) doGetAuthorizationInfo}, and then
      * caches it for efficient reuse if caching is enabled (see below).
      * <p/>
      * Invocations of this method should be thought of as completely orthogonal to acquiring
-     * {@link #getAuthenticationInfo(org.apache.shiro.authc.AuthenticationToken) authenticationInfo}, since either could
+     * {@link #getAuthenticationInfo(be.atbash.ee.security.octopus.token.AuthenticationToken) authenticationInfo}, since either could
      * occur in any order.
      * <p/>
      * For example, in &quot;Remember Me&quot; scenarios, the user identity is remembered (and
@@ -286,13 +286,13 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
      * If caching is enabled, the authorization cache will be checked first and if found, will return the cached
      * {@code AuthorizationInfo} immediately.  If caching is disabled, or there is a cache miss, the authorization
      * info will be looked up from the underlying data store via the
-     * {@link #doGetAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)} method, which must be implemented
+     * {@link #doGetAuthorizationInfo(PrincipalCollection)} method, which must be implemented
      * by subclasses.
      * <h4>Changed Data</h4>
      * If caching is enabled and if any authorization data for an account is changed at
      * runtime, such as adding or removing roles and/or permissions, the subclass implementation should clear the
      * cached AuthorizationInfo for that account via the
-     * {@link #clearCachedAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection) clearCachedAuthorizationInfo}
+     * {@link #clearCachedAuthorizationInfo(PrincipalCollection) clearCachedAuthorizationInfo}
      * method.  This ensures that the next call to {@code getAuthorizationInfo(PrincipalCollection)} will
      * acquire the account's fresh authorization data, where it will then be cached for efficient reuse.  This
      * ensures that stale authorization data will not be reused.
@@ -388,11 +388,11 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
      * subsequent authorization operations don't used the (old) cached value if account data changes.
      * <p/>
      * After this method is called, the next authorization check for that same account will result in a call to
-     * {@link #getAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection) getAuthorizationInfo}, and the
+     * {@link #getAuthorizationInfo(PrincipalCollection) getAuthorizationInfo}, and the
      * resulting return value will be cached before being returned so it can be reused for later authorization checks.
      * <p/>
      * If you wish to clear out all associated cached data (and not just authorization data), use the
-     * {@link #clearCache(org.apache.shiro.subject.PrincipalCollection)} method instead (which will in turn call this
+     * {@link #clearCache(PrincipalCollection)} method instead (which will in turn call this
      * method by default).
      *
      * @param principals the principals of the account for which to clear the cached AuthorizationInfo.
@@ -413,11 +413,11 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
     /**
      * Retrieves the AuthorizationInfo for the given principals from the underlying data store.  When returning
      * an instance from this method, you might want to consider using an instance of
-     * {@link org.apache.shiro.authz.SimpleAuthorizationInfo SimpleAuthorizationInfo}, as it is suitable in most cases.
+     * {@link be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo SimpleAuthorizationInfo}, as it is suitable in most cases.
      *
      * @param principals the primary identifying principals of the AuthorizationInfo that should be retrieved.
      * @return the AuthorizationInfo associated with this principals.
-     * @see org.apache.shiro.authz.SimpleAuthorizationInfo
+     * @see be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo
      */
     protected abstract AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals);
 
@@ -690,7 +690,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm {
 
     /**
      * Calls {@code super.doClearCache} to ensure any cached authentication data is removed and then calls
-     * {@link #clearCachedAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)} to remove any cached
+     * {@link #clearCachedAuthorizationInfo(PrincipalCollection)} to remove any cached
      * authorization data.
      * <p/>
      * If overriding in a subclass, be sure to call {@code super.doClearCache} to ensure this behavior is maintained.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import java.lang.annotation.Target;
  * {@link RequiresUser RequiresUser} annotation.
  * <p/>
  * This annotation basically ensures that
- * <code>{@link org.apache.shiro.subject.Subject subject}.{@link org.apache.shiro.subject.Subject#isAuthenticated() isAuthenticated()} === true</code>
+ * <code>{@link be.atbash.ee.security.octopus.subject.Subject subject}.{@link be.atbash.ee.security.octopus.subject.Subject#isAuthenticated() isAuthenticated()} === true</code>
  * <p/>
  * See the {@link RequiresUser RequiresUser} and
- * {@link org.apache.shiro.authc.RememberMeAuthenticationToken RememberMeAuthenticationToken} JavaDoc for an
+ * {@link be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken RememberMeAuthenticationToken} JavaDoc for an
  * explaination of why these two states are considered different.
  *
  * @see RequiresUser

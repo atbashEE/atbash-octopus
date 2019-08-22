@@ -31,8 +31,8 @@ import javax.servlet.ServletResponse;
  * This filter enables the following behavior:
  * <ol>
  * <li>If a {@code Subject} does not yet have a Session by the time this filter is called, this filter effectively
- * disables all calls to {@code subject}.{@link Subject#getSession() getSession()} and
- * {@code subject}.{@link Subject#getSession(boolean) getSession(true)}.  If either are called
+ * disables all calls to {@code subject}.{@link be.atbash.ee.security.octopus.subject.Subject#getSession() getSession()} and
+ * {@code subject}.{@link be.atbash.ee.security.octopus.subject.Subject#getSession(boolean) getSession(true)}.  If either are called
  * during the request, an exception will be thrown.</li>
  * <li>
  * However, if the {@code Subject} already has an associated session before this filter is invoked, either because it

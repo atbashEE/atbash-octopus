@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 /**
  * Requires the currently executing {@link be.atbash.ee.security.octopus.subject.Subject Subject} to have one of the
  * specified roles. If they do not have the role(s), the method will not be executed and
- * an TODO which exception {@link org.apache.shiro.authz.AuthorizationException AuthorizationException} is thrown.
+ * an TODO which exception {@link be.atbash.ee.security.octopus.authz.AuthorizationException AuthorizationException} is thrown.
  * <p/>
  * For example,
  * <p/>

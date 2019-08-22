@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import be.atbash.ee.security.octopus.subject.SecurityManager;
 
 /**
  * Shiro support of a {@link SecurityManager} class hierarchy that delegates all
- * {@link org.apache.shiro.session.Session session} operations to a wrapped
- * {@link org.apache.shiro.session.mgt.SessionManager SessionManager} instance.  That is, this class implements the
- * methods in the {@link SessionManager SessionManager} interface, but in reality, those methods are merely
+ * {@link Session session} operations to a wrapped
+ * {@link be.atbash.ee.security.octopus.session.SessionManager SessionManager} instance.  That is, this class implements the
+ * methods in the {@link be.atbash.ee.security.octopus.session.SessionManager SessionManager} interface, but in reality, those methods are merely
  * passthrough calls to the underlying 'real' {@code SessionManager} instance.
  * <p/>
  * The remaining {@code SecurityManager} methods not implemented by this class or its parents are left to be
@@ -45,7 +45,7 @@ public abstract class SessionsSecurityManager implements SecurityManager {
     private ServletContainerSessionManager sessionManager;
 
     /**
-     * Default no-arg constructor, internally creates a suitable default {@link SessionManager SessionManager} delegate
+     * Default no-arg constructor, internally creates a suitable default {@link be.atbash.ee.security.octopus.session.SessionManager SessionManager} delegate
      * instance.
      */
     public SessionsSecurityManager() {
@@ -60,7 +60,7 @@ public abstract class SessionsSecurityManager implements SecurityManager {
     }
 
     /**
-     * Calls {@link org.apache.shiro.mgt.AuthorizingSecurityManager#afterCacheManagerSet() super.afterCacheManagerSet()} and then immediately calls
+     * Calls {@link AuthorizingSecurityManager#afterCacheManagerSet() super.afterCacheManagerSet()} and then immediately calls
      * {@link #applyCacheManagerToSessionManager() applyCacheManagerToSessionManager()} to ensure the
      * <code>CacheManager</code> is applied to the SessionManager as necessary.
      */

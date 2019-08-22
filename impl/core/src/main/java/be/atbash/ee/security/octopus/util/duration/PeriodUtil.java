@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,13 @@ public final class PeriodUtil {
         String timeUnit = matcher.group(2);
         int result = -1;
         if ("s".equals(timeUnit)) {
-            result = Integer.valueOf(matcher.group(1));
+            result = Integer.parseInt(matcher.group(1));
         }
         if ("m".equals(timeUnit)) {
-            result = Integer.valueOf(matcher.group(1)) * 60;
+            result = Integer.parseInt(matcher.group(1)) * 60;
         }
         if ("h".equals(timeUnit)) {
-            result = Integer.valueOf(matcher.group(1)) * 3600;
+            result = Integer.parseInt(matcher.group(1)) * 3600;
         }
 
         return result;

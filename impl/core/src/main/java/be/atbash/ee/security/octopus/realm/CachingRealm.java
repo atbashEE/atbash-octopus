@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,14 +37,14 @@ import javax.enterprise.context.ApplicationScoped;
  * A very basic abstract extension point for the {@link Realm} interface that provides caching support for subclasses.
  * <p/>
  * It also provides a convenience method,
- * {@link #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)}, which is useful across all
+ * {@link #getAvailablePrincipal(PrincipalCollection)}, which is useful across all
  * realm subclasses for obtaining a realm-specific principal/identity.
  * <p/>
  * All actual Realm method implementations are left to subclasses.
  *
- * @see #clearCache(org.apache.shiro.subject.PrincipalCollection)
- * @see #onLogout(org.apache.shiro.subject.PrincipalCollection)
- * @see #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)
+ * @see #clearCache(PrincipalCollection)
+ * @see #onLogout(PrincipalCollection)
+ * @see #getAvailablePrincipal(PrincipalCollection)
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.realm.CachingRealm"})
 public abstract class CachingRealm extends AbstractAuthenticator implements AuthorizerDataProvider, Nameable, LogoutAware {
@@ -110,7 +110,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
 
     /**
      * Sets whether or not caching should be used if a {@link CacheManager} has been
-     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager) configured}.
+     * {@link #setCacheManager(CacheManager) configured}.
      *
      * @param cachingEnabled whether or not to globally enable caching for this realm.
      */
@@ -121,7 +121,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
     /**
      * Template method that may be implemented by subclasses should they wish to react to a
      * {@link CacheManager} instance being set on the realm instance via the
-     * {@link #setCacheManager(org.apache.shiro.cache.CacheManager)} mutator.
+     * {@link #setCacheManager(CacheManager)} mutator.
      */
     protected void afterCacheManagerSet() {
     }
@@ -130,11 +130,10 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      * If caching is enabled, this will clear any cached data associated with the specified account identity.
      * Subclasses are free to override for additional behavior, but be sure to call {@code super.onLogout} first.
      * <p/>
-     * This default implementation merely calls {@link #clearCache(org.apache.shiro.subject.PrincipalCollection)}.
+     * This default implementation merely calls {@link #clearCache(PrincipalCollection)}.
      *
      * @param principals the application-specific Subject/user identifier that is logging out.
-     * @see #clearCache(org.apache.shiro.subject.PrincipalCollection)
-     * @see #getAvailablePrincipal(org.apache.shiro.subject.PrincipalCollection)
+     * @see #clearCache(PrincipalCollection)
      */
     public void onLogout(PrincipalCollection principals) {
         super.onLogout(principals);
@@ -145,7 +144,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      * Clears out any cached data associated with the specified account identity/identities.
      * <p/>
      * This implementation will return quietly if the principals argument is null or empty.  Otherwise it delegates
-     * to {@link #doClearCache(org.apache.shiro.subject.PrincipalCollection)}.
+     * to {@link #doClearCache(PrincipalCollection)}.
      *
      * @param principals the principals of the account for which to clear any cached data.
      */

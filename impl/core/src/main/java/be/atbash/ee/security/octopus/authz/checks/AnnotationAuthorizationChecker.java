@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,13 @@ public class AnnotationAuthorizationChecker {
     @Inject
     private SecurityCheckDataFactory securityCheckDataFactory;
 
+    /**
+     * @param annotations   The annotations found on item (method, class, ...)
+     * @param accessContext The context for the access check
+     * @return true : Access is allowed (some annotations are found and checks are successful
+     * false: No Annotations found and no checks performed
+     * UnauthorizedException: Annotations found but uses doesn't has the required permissions/roles/...
+     */
     public boolean checkAccess(Set<Annotation> annotations, AccessDecisionVoterContext accessContext) {
         checkDependencies();
         UnauthorizedException exception = null;
@@ -74,6 +81,7 @@ public class AnnotationAuthorizationChecker {
                 }
             }
             if (!accessAllowed && exception != null) {
+                // FIXME Config to disable this logging.
                 logger.warn(exception.getLogMessage());
                 throw exception;
             }

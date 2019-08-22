@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import java.util.Map;
 
 /**
  * Manages thread-state for {@link Subject Subject} access (supporting
- * {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()} calls)
+ * {@code SecurityUtils.}{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()} calls)
  * during a thread's execution.
  * <p/>
  * The {@link #bind bind} method will bind a {@link Subject} and a
- * {@link org.apache.shiro.mgt.SecurityManager SecurityManager} to the {@link WebThreadContext} so they can be retrieved
+ * {@link SecurityManager SecurityManager} to the {@link WebThreadContext} so they can be retrieved
  * from the {@code ThreadContext} later by any
- * {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()} calls that might occur during
+ * {@code SecurityUtils.}{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()} calls that might occur during
  * the thread's execution.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.subject.support.SubjectThreadState"})
@@ -74,9 +74,9 @@ public class WebSubjectThreadState implements ThreadState {
     }
 
     /**
-     * Binds a {@link Subject} and {@link org.apache.shiro.mgt.SecurityManager SecurityManager} to the
+     * Binds a {@link Subject} and {@link SecurityManager SecurityManager} to the
      * {@link WebThreadContext} so they can be retrieved later by any
-     * {@code SecurityUtils.}{@link org.apache.shiro.SecurityUtils#getSubject() getSubject()} calls that might occur
+     * {@code SecurityUtils.}{@link be.atbash.ee.security.octopus.SecurityUtils#getSubject() getSubject()} calls that might occur
      * during the thread's execution.
      * <p/>
      * Prior to binding, the {@code ThreadContext}'s existing {@link WebThreadContext#getResources() resources} are

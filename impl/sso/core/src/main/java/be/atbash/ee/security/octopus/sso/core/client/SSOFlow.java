@@ -21,7 +21,6 @@ import com.nimbusds.oauth2.sdk.ResponseType;
 /**
  * This are the OAuth2 flows
  */
-
 public enum SSOFlow {
     IMPLICIT("token"), AUTHORIZATION_CODE("code");
 

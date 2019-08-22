@@ -20,7 +20,6 @@ import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfoProviderHandler;
 import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
-import be.atbash.ee.security.octopus.context.OctopusWebSecurityContext;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.systemaccount.internal.SystemAccountAuthenticationToken;

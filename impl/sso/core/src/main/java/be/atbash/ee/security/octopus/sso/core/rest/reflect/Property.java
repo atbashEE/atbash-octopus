@@ -21,10 +21,7 @@ package be.atbash.ee.security.octopus.sso.core.rest.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A {@link Property} provides instrospected information about, and dynamic
@@ -472,10 +469,10 @@ public final class Property implements AnnotatedElement {
         if (!name.equals(other.name)) {
             return false;
         }
-        if (readMethod != null ? !readMethod.equals(other.readMethod) : other.readMethod != null) {
+        if (!Objects.equals(readMethod, other.readMethod)) {
             return false;
         }
-        if (writeMethod != null ? !writeMethod.equals(other.writeMethod) : other.writeMethod != null) {
+        if (!Objects.equals(writeMethod, other.writeMethod)) {
             return false;
         }
 

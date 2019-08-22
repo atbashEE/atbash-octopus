@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.github.scribejava.core.model.Token;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * FIXME Must this be split off in something common between JSF and Rest support for OAuth2??
@@ -240,7 +241,7 @@ public class OAuth2UserToken extends AbstractOctopusAuthenticationToken implemen
 
             OAuth2Principal that = (OAuth2Principal) o;
 
-            return id != null ? id.equals(that.id) : that.id == null;
+            return Objects.equals(id, that.id);
         }
 
         @Override

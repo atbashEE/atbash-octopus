@@ -17,7 +17,6 @@ package be.atbash.ee.security.octopus.context;
 
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.util.PublicAPI;
 
 import javax.enterprise.context.Dependent;

@@ -43,7 +43,7 @@ import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
  * authorization process that references access control data such as roles and permissions.
  * <p/>
  * TODO
- * But because many if not most {@link org.apache.shiro.realm.Realm Realm}s store both sets of data for a Subject, it might be
+ * But because many if not most {@link Realm Realm}s store both sets of data for a Subject, it might be
  * convenient for a <code>Realm</code> implementation to utilize an implementation of the {@link Account Account}
  * interface instead, which is a convenience interface that combines both <code>AuthenticationInfo</code> and
  * <code>AuthorizationInfo</code>.  Whether you choose to implement these two interfaces separately or implement the one
@@ -56,7 +56,6 @@ import static be.atbash.ee.security.octopus.OctopusConstants.INFO_KEY_TOKEN;
  * out for any reason.</p>
  *
  * @see be.atbash.ee.security.octopus.authz.AuthorizationInfo AuthorizationInfo
- * @see Account
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.AuthenticationInfo", "org.apache.shiro.authc.SaltedAuthenticationInfo", "org.apache.shiro.authc.SimpleAuthenticationInfo"})
 public class AuthenticationInfo implements Serializable {
@@ -171,8 +170,6 @@ public class AuthenticationInfo implements Serializable {
      * @param principal         the 'primary' principal associated with the specified realm.
      * @param hashedCredentials the hashed credentials that verify the given principal.
      * @param credentialsSalt   the salt used when hashing the given hashedCredentials
-     * @param realmName         the realm from where the principal and credentials were acquired.
-     * @see org.apache.shiro.authc.credential.HashedCredentialsMatcher HashedCredentialsMatcher
      */
     public AuthenticationInfo(UserPrincipal principal, Object hashedCredentials, ByteSource credentialsSalt) {
         principals = new PrincipalCollection(principal);

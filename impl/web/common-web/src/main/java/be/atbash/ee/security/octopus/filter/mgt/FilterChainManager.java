@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,7 +176,7 @@ public class FilterChainManager {
      * where
      * <ol>
      * <li>{@code filterN} is the name of a filter previously
-     * {@link #addFilter(String, AbstractFilter) registered} with the manager, and</li>
+     * {@link #addFilter(String, be.atbash.ee.security.octopus.web.servlet.AbstractFilter) registered} with the manager, and</li>
      * <li>{@code [optional_configN]} is an optional bracketed string that has meaning for that particular filter for
      * <em>this particular chain</em></li>
      * </ol>
