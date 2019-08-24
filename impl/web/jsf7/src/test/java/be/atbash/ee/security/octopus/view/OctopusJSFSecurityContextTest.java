@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +49,9 @@ public class OctopusJSFSecurityContextTest {
     @Mock
     private HttpServletResponse servletResponseMock;
 
+    @Mock
+    private HttpServletRequest servletRequestMock;
+
     @InjectMocks
     private OctopusJSFSecurityContext securityContext;
 
@@ -56,13 +63,21 @@ public class OctopusJSFSecurityContextTest {
 
         ThreadContext.bind(webSubjectMock);
         when(webSubjectMock.getServletResponse()).thenReturn(servletResponseMock);
+        when(webSubjectMock.getServletRequest()).thenReturn(servletRequestMock);
 
         when(logoutHandlerMock.getLogoutPage()).thenReturn("logoutPage");
+
+        when(servletResponseMock.encodeRedirectURL(anyString())).thenAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return invocationOnMock.getArgument(0);
+            }
+        });
 
         securityContext.logout();
 
         verify(webSubjectMock).logout();
-        verify(servletResponseMock).setStatus(303);
+        verify(servletResponseMock).sendRedirect("logoutPage");
     }
 
 }

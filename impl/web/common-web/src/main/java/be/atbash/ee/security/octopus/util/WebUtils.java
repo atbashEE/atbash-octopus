@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.util;
 
+import be.atbash.ee.security.octopus.RedirectHelper;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
@@ -34,7 +35,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.Map;
+
+import static be.atbash.ee.security.octopus.WebConstants.REDIRECT_CONTEXT_RELATIVE;
 
 /**
  * Simple utility class for operations used across multiple class hierarchies in the web framework code.
@@ -438,22 +440,6 @@ public class WebUtils {
     }
 
     /**
-     * Redirects the current request to a new URL based on the given parameters.
-     *
-     * @param request          the servlet request.
-     * @param response         the servlet response.
-     * @param url              the URL to redirect the user to.
-     * @param queryParams      a map of parameters that should be set as request parameters for the new request.
-     * @param contextRelative  true if the URL is relative to the servlet context path, or false if the URL is absolute.
-     * @param http10Compatible whether to stay compatible with HTTP 1.0 clients.
-     * @throws IOException if thrown by response methods.
-     */
-    public static void issueRedirect(ServletRequest request, ServletResponse response, String url, Map queryParams, boolean contextRelative, boolean http10Compatible) throws IOException {
-        RedirectView view = new RedirectView(url, contextRelative, http10Compatible);
-        view.renderMergedOutputModel(queryParams, toHttp(request), toHttp(response));
-    }
-
-    /**
      * Redirects the current request to a new URL based on the given parameters and default values
      * for unspecified parameters.
      *
@@ -463,36 +449,7 @@ public class WebUtils {
      * @throws IOException if thrown by response methods.
      */
     public static void issueRedirect(ServletRequest request, ServletResponse response, String url) throws IOException {
-        issueRedirect(request, response, url, null, true, true);
-    }
-
-    /**
-     * Redirects the current request to a new URL based on the given parameters and default values
-     * for unspecified parameters.
-     *
-     * @param request     the servlet request.
-     * @param response    the servlet response.
-     * @param url         the URL to redirect the user to.
-     * @param queryParams a map of parameters that should be set as request parameters for the new request.
-     * @throws IOException if thrown by response methods.
-     */
-    public static void issueRedirect(ServletRequest request, ServletResponse response, String url, Map queryParams) throws IOException {
-        issueRedirect(request, response, url, queryParams, true, true);
-    }
-
-    /**
-     * Redirects the current request to a new URL based on the given parameters and default values
-     * for unspecified parameters.
-     *
-     * @param request         the servlet request.
-     * @param response        the servlet response.
-     * @param url             the URL to redirect the user to.
-     * @param queryParams     a map of parameters that should be set as request parameters for the new request.
-     * @param contextRelative true if the URL is relative to the servlet context path, or false if the URL is absolute.
-     * @throws IOException if thrown by response methods.
-     */
-    public static void issueRedirect(ServletRequest request, ServletResponse response, String url, Map queryParams, boolean contextRelative) throws IOException {
-        issueRedirect(request, response, url, queryParams, contextRelative, true);
+        RedirectHelper.getInstance().sendRedirect(toHttp(request), toHttp(response), url);
     }
 
     /**
@@ -599,7 +556,8 @@ public class WebUtils {
                     "issueSuccessRedirect() to work.");
         }
 
-        WebUtils.issueRedirect(request, response, successUrl, null, contextRelative);
+        request.setAttribute(REDIRECT_CONTEXT_RELATIVE, contextRelative);
+        WebUtils.issueRedirect(request, response, successUrl);
     }
 
     public static String determineRoot(HttpServletRequest req) {

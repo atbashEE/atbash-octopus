@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class SaltHashingUtilTest {
     public void teardown() throws NoSuchFieldException {
         TestConfig.resetConfig();
         // Reset SaltHashingUtil so that initialization happens again.
-        TestReflectionUtils.setFieldValue(SaltHashingUtil.class, "INSTANCE", null);
+        TestReflectionUtils.resetOf(SaltHashingUtil.class, "INSTANCE");
     }
 
     @Test

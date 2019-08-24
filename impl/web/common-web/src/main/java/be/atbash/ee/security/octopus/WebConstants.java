@@ -31,4 +31,14 @@ public final class WebConstants {
     public static final String IDENTITY_REMOVED_KEY = "OCTOPUS_IDENTITY_REMOVED_KEY";
 
     public static final String SSO_COOKIE_TOKEN = "OCTOPUS_SSO_COOKIE_TOKEN";
+
+    /**
+     * Attribute on ServletRequest to define contextRelative flag of RedirectHelper
+     */
+    public static final String REDIRECT_CONTEXT_RELATIVE = "REDIRECT_CONTEXT_RELATIVE";
+
+    /**
+     * Attribute on ServletRequest to define HTTP 1.0  compatible flag of RedirectHelper
+     */
+    public static final String REDIRECT_HTTP10_COMPATIBLE = "REDIRECT_HTTP10_COMPATIBLE";
 }

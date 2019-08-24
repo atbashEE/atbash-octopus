@@ -1,0 +1,9 @@
+=== Send Redirect
+
+By default, a HTTP 1.0 compatible redirect is send uto the browser using the status code 302.
+
+if needed, a HTTP 1.1 redirect type can be configured by defining the `redirect.http10.compatible` configuration parameter with value `false`. This will result in a status of 303.
+
+Redirects to login and logout pages for example start by default with a forward slash and are handled with the 'contextRelative' flag to `true`` This means that the context root is prepended to the URL so that the browser handles them correctly.
+
+You can define the parameters for the HTTP 1.0 compatibility and 'contextRelative' flag for each request separately. The values specified on the HttpServletRequest have priority above the config or default ones. By setting the attributes `WebConstants.REDIRECT_HTTP10_COMPATIBLE` and `WebConstants.REDIRECT_CONTEXT_RELATIVE` you can set the values for Http 1.0 compatibility and 'contextRelative'.  When implementing a `AdviceFilter` those attributes can be set based on the browser performing the request. Your custom filter, set the attributes, can be added by implementing a `GlobalFilterProvider`.

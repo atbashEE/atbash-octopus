@@ -61,3 +61,7 @@ include::security.adi[]
 == Custom
 
 include::custom-filters.adi[]
+
+== Advanced Configuration
+
+include::send-redirect.adi[]
