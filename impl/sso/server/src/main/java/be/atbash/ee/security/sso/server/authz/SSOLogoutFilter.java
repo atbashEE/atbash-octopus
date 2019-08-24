@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.filter.authz.AuthorizationFilter;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
@@ -41,6 +42,8 @@ import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -134,5 +137,11 @@ public class SSOLogoutFilter extends AuthorizationFilter {
             // No Exception to throw, MACVerifier failed or BASE64Decode failed
             return false;
         }
+    }
+
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
+        WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        return false;
     }
 }
