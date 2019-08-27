@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 package be.atbash.ee.security.octopus.authz;
 
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.util.PublicAPI;
 
 /**
  * Provider of AuthorizationInfo. It allows to specify permission and role information for the user.
  */
-//@PublicAPI TODO after we have defined if we need PrincipalCollection
+@PublicAPI
 public interface AuthorizationInfoProvider {
 
     AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals);

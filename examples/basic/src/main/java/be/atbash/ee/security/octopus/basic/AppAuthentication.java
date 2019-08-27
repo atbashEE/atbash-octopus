@@ -16,18 +16,16 @@
 package be.atbash.ee.security.octopus.basic;
 
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
-import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
-import be.atbash.ee.security.octopus.authz.SimpleAuthorizationInfo;
+import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.realm.SecurityDataProvider;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class AppAuthentication extends SecurityDataProvider {
+public class AppAuthentication extends AuthenticationInfoProvider {
 
     private int principalId = 0;
 
@@ -46,12 +44,4 @@ public class AppAuthentication extends SecurityDataProvider {
         }
         return null;
     }
-
-    @Override
-    public AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
-
-        // TODO: Change for production. Principal has no assigned no permission not roles.
-        return new SimpleAuthorizationInfo();
-    }
-
 }
