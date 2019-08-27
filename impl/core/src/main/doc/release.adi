@@ -7,6 +7,7 @@
 . Added SecretUtil
 . Single Session support for JSF
 . Advanced sendRedirect configuration
+. Support for multiple AuthorizationInfo
 
 . Improved handling of Remembered Identities.
 

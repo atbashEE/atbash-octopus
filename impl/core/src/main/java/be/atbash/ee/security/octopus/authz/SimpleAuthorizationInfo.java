@@ -36,32 +36,17 @@ public class SimpleAuthorizationInfo implements AuthorizationInfo {
     /**
      * The internal roles collection.
      */
-    protected Set<String> roles;
+    protected Set<String> roles = new HashSet<>();
 
     /**
      * Collection of all string-based permissions associated with the account.
      */
-    protected Set<String> stringPermissions;
+    protected Set<String> stringPermissions = new HashSet<>();
 
     /**
-     * Collection of all object-based permissions associaed with the account.
+     * Collection of all object-based permissions associated with the account.
      */
-    protected Set<Permission> objectPermissions;
-
-    /**
-     * Default no-argument constructor.
-     */
-    public SimpleAuthorizationInfo() {
-    }
-
-    /**
-     * Creates a new instance with the specified roles and no permissions.
-     *
-     * @param roles the roles assigned to the realm account.
-     */
-    public SimpleAuthorizationInfo(Set<String> roles) {
-        this.roles = roles;
-    }
+    protected Set<Permission> objectPermissions = new HashSet<>();
 
     public Set<String> getRoles() {
         return roles;

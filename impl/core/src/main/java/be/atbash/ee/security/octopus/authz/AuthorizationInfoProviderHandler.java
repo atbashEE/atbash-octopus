@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * FIXME, just uses the first provider it finds.
+ *
  */
 @ApplicationScoped
 public class AuthorizationInfoProviderHandler {
@@ -62,14 +62,15 @@ public class AuthorizationInfoProviderHandler {
     public AuthorizationInfo retrieveAuthorizationInfo(PrincipalCollection principals) {
         prepareAuthorizationInfoProviders();
 
-        // FIXME
-        if (authorizationInfoProviders.size() > 1) {
-            throw new UnsupportedOperationException("TODO Implement support for multiple providers");
-        }
         if (authorizationInfoProviders.isEmpty()) {
             return new SimpleAuthorizationInfo();
         } else {
-            return authorizationInfoProviders.get(0).getAuthorizationInfo(principals);
+            MergeableAuthorizationInfo result = new MergeableAuthorizationInfo();
+            for (AuthorizationInfoProvider provider : authorizationInfoProviders) {
+                AuthorizationInfo authorizationInfo = provider.getAuthorizationInfo(principals);
+                result.merge(authorizationInfo);
+            }
+            return result;
         }
     }
 
