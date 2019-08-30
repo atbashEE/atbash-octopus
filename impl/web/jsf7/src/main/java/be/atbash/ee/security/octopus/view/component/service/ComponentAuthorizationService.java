@@ -26,15 +26,14 @@ import be.atbash.ee.security.octopus.interceptor.CustomAccessDecisionVoterContex
 import be.atbash.ee.security.octopus.view.component.secured.SecuredComponentData;
 import be.atbash.ee.security.octopus.view.component.secured.SecuredComponentDataParameter;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.JsfUtils;
 import org.apache.deltaspike.security.api.authorization.AbstractAccessDecisionVoter;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.el.ValueExpression;
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -107,7 +106,7 @@ public class ComponentAuthorizationService {
         int idx = 0;
         for (SecuredComponentDataParameter parameter : secureComponentData.getParameters()) {
             if (parameter.isAtRuntime()) {
-                result[idx++] = evaluateExpression((String) parameter.getParameterData());
+                result[idx++] = JsfUtils.evaluateExpression((String) parameter.getParameterData());
             } else {
                 result[idx++] = parameter.getParameterData();
             }
@@ -151,15 +150,6 @@ public class ComponentAuthorizationService {
             }
         }
         return result;
-    }
-
-    private static Object evaluateExpression(String valueExpression) {
-        // FIXME Move to JSF Utils
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ValueExpression expression = facesContext.getApplication().getExpressionFactory()
-                .createValueExpression(facesContext
-                        .getELContext(), valueExpression, Object.class);
-        return expression.getValue(facesContext.getELContext());
     }
 
 }

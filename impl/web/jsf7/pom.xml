@@ -93,6 +93,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Force lastest since jerry is still using an older version -->
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-jsf</artifactId>
+            <version>0.9.3.2-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>be.atbash.ee.jsf</groupId>
             <artifactId>jerry</artifactId>
