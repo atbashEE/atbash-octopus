@@ -57,7 +57,7 @@ public class AbstractUserFilter extends AccessControlFilter {
      * is authenticated or remembered,, <code>false</code> otherwise.
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) {
         if (isLoginRequest(request)) {
             return true;
         } else {

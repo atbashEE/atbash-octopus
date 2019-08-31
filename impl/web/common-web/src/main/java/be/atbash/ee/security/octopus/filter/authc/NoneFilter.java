@@ -36,7 +36,7 @@ public class NoneFilter extends AuthenticatingFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) {
         return false;
     }
 

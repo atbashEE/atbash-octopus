@@ -66,7 +66,7 @@ public class SSOLogoutFilter extends AuthorizationFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws Exception {
         WebSubject subject = getSubject();
         // If principal is not null, then the user is known and should be allowed access.
         boolean alreadyAuthenticated = subject.getPrincipal() != null;

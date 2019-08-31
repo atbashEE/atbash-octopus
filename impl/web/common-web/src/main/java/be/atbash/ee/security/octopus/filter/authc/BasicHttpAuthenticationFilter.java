@@ -185,18 +185,20 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * </pre>
      * then a GET request would not required authentication but a POST would.
      *
-     * @param request     The current HTTP servlet request.
-     * @param response    The current HTTP servlet response.
-     * @param mappedValue The array of configured HTTP methods as strings. This is empty if no methods are configured.
+     * @param request    The current HTTP servlet request.
+     * @param response   The current HTTP servlet response.
      */
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    @Override
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
         String httpMethod = httpRequest.getMethod();
 
+        // pathConfig The array of configured HTTP methods as strings. This is empty if no methods are configured.
         // Check whether the current request's method requires authentication.
         // If no methods have been configured, then all of them require auth,
         // otherwise only the declared ones need authentication.
-        String[] methods = (String[]) (mappedValue == null ? new String[0] : mappedValue);
+        String[] pathConfig = getPathConfig(request);
+        String[] methods = pathConfig == null ? new String[0] : pathConfig;
         boolean authcRequired = methods.length == 0;
         for (String m : methods) {
             if (httpMethod.equalsIgnoreCase(m)) {
@@ -206,7 +208,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
         }
 
         if (authcRequired) {
-            return super.isAccessAllowed(request, response, mappedValue);
+            return super.isAccessAllowed(request, response);
         } else {
             return true;
         }
@@ -219,6 +221,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * @param response outgoing ServletResponse
      * @return true if the request should be processed; false if the request should not continue to be processed
      */
+    @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         boolean loggedIn = false; //false by default or we wouldn't be in this method
         if (isLoginAttempt(request)) {
@@ -247,7 +250,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
     }
 
     /**
-     * Delegates to {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse) isLoginAttempt}.
+     * Delegates to {@link #isLoginAttempt(javax.servlet.ServletRequest) isLoginAttempt}.
      */
     @Override
     protected final boolean isLoginRequest(ServletRequest request) {
@@ -281,7 +284,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * return authzHeader.toLowerCase().startsWith(authzScheme);</code>
      *
      * @param authzHeader the 'Authorization' header value (guaranteed to be non-null if the
-     *                    {@link #isLoginAttempt(javax.servlet.ServletRequest, javax.servlet.ServletResponse)} method is not overriden).
+     *                    {@link #isLoginAttempt(javax.servlet.ServletRequest)} method is not overriden).
      * @return <code>true</code> if the authzHeader value matches that configured as defined by
      * the {@link #getAuthzScheme() authzScheme}.
      */

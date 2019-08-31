@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,7 @@ public class CustomVoterFilter extends AuthorizationFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-
-        String[] voters = (String[]) mappedValue;
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws Exception {
 
         String url = ((HttpServletRequest) request).getRequestURL().toString();
 
@@ -50,7 +48,8 @@ public class CustomVoterFilter extends AuthorizationFilter {
 
         boolean permitted = true;
 
-        for (String voter : voters) {
+        String[] pathConfig = getPathConfig(request);
+        for (String voter : pathConfig) {
             AbstractGenericVoter voterObj = CDIUtils.retrieveInstanceByName(voter, AbstractGenericVoter.class);
             if (!voterObj.verify(context)) {
                 permitted = false;

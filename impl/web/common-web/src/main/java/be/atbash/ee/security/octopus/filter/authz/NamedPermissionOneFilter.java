@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,13 +37,14 @@ public class NamedPermissionOneFilter extends AuthorizationFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws
             Exception {
         WebSubject subject = getSubject();
-        String[] permissions = (String[]) mappedValue;
+
+        String[] pathConfig = getPathConfig(request);
 
         boolean permitted = false;
-        for (String permissionName : permissions) {
+        for (String permissionName : pathConfig) {
             if (subject.isPermitted(permissionResolver.resolvePermission(permissionName))) {
                 permitted = true;
             }

@@ -42,7 +42,7 @@ public class NoneFilterTest {
     @Test
     public void isAccessAllowed() {
         // null parameter here ok as nothing used
-        boolean allowed = filter.isAccessAllowed(null, null, null);
+        boolean allowed = filter.isAccessAllowed(null, null);
         assertThat(allowed).isFalse();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedTypeSafe_Allowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{PERMISSION1.name()});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{PERMISSION1.name()});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isTrue();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -102,7 +104,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedTypeSafe_NotAllowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{PERMISSION3.name()});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{PERMISSION3.name()});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
 
         assertThat(accessAllowed).isFalse();
 
@@ -123,7 +127,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedTypeSafe_Multiple_Found() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{PERMISSION1.name(), PERMISSION2.name()});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{PERMISSION1.name(), PERMISSION2.name()});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isTrue();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -149,7 +155,9 @@ public class NamedPermissionFilterTest {
             }
         });
 
-        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{PERMISSION1.name(), PERMISSION2.name()});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{PERMISSION1.name(), PERMISSION2.name()});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isFalse();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -174,7 +182,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedStrings_Allowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{"permission1"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"permission1"});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isTrue();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -188,7 +198,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedString_NotAllowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"permission3"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"permission3"});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
 
         assertThat(accessAllowed).isFalse();
 
@@ -209,7 +221,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_NamedString_Multiple_Found() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{"permission1", "permission2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"permission1", "permission2"});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isTrue();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -235,7 +249,9 @@ public class NamedPermissionFilterTest {
             }
         });
 
-        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"permission1", "permission2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"permission1", "permission2"});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isFalse();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -260,7 +276,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_Wildcard_Allowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean accessAllowed = filter.isAccessAllowed(null, null, new String[]{"junit:permission:1"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"junit:permission:1"});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isTrue();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -274,7 +292,9 @@ public class NamedPermissionFilterTest {
     public void isAccessAllowed_Simple_NotAllowed() throws Exception {
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"junit"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"junit"});
+
+        boolean accessAllowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(accessAllowed).isFalse();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());

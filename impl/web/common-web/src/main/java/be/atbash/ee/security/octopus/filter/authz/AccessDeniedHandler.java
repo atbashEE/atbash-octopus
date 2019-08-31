@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public interface AccessDeniedHandler {
 
     /**
      * Processes requests where the subject was denied access as determined by the
-     * {@link be.atbash.ee.security.octopus.filter.AccessControlFilter.isAccessAllowed(ServletRequest, ServletResponse, Object) isAccessAllowed}
+     * {@link be.atbash.ee.security.octopus.filter.AccessControlFilter.isAccessAllowed(ServletRequest, ServletResponse, String[]) isAccessAllowed}
      * method.
      *
      * @param request  the incoming <code>ServletRequest</code>
@@ -39,5 +39,4 @@ public interface AccessDeniedHandler {
      * @throws Exception if there is an error processing the request.
      */
     boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException;
-    // TODO Support for MappedValue ??
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class AnonymousFilter extends PathMatchingFilter {
      * @return <code>true</code> always, allowing unchecked access to the underlying path or resource.
      */
     @Override
-    protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) {
+    protected boolean onPreHandle(ServletRequest request, ServletResponse response) {
         // Always return true since we allow access to anyone
         return true;
     }

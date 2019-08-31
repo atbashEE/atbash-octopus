@@ -166,7 +166,7 @@ public class OIDCEndpointFilterTest {
         when(abstractUserFilterMock.getLoginUrl()).thenReturn("http://localhost:8080/sso");
         when(patternMatcherMock.matches(anyString(), anyString())).thenReturn(false); // isLoginRequest() -> False since /octopus/sso/authenticate is not the loginRequest for the app.
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletRequestMock).setAttribute(stringCapture.capture(), authenticationRequestCapture.capture());
@@ -203,7 +203,7 @@ public class OIDCEndpointFilterTest {
         when(abstractUserFilterMock.getLoginUrl()).thenReturn("http://localhost:8080/sso");
         when(patternMatcherMock.matches(anyString(), anyString())).thenReturn(false); // isLoginRequest() -> False since /octopus/sso/authenticate is not the loginRequest for the app.
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(true);
 
         verify(httpServletRequestMock).setAttribute(stringCapture.capture(), authenticationRequestCapture.capture());
@@ -224,7 +224,7 @@ public class OIDCEndpointFilterTest {
         when(httpServletRequestMock.getRequestURI()).thenReturn("/octopus/sso/authenticate");
         when(httpServletRequestMock.getQueryString()).thenReturn("response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fsso-app2%2Fsso%2FSSOCallback&scope=openid&state=stateCode&nonce=nonceCode");
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
@@ -239,7 +239,7 @@ public class OIDCEndpointFilterTest {
         when(httpServletRequestMock.getRequestURI()).thenReturn("/octopus/sso/authenticate");
         when(httpServletRequestMock.getQueryString()).thenReturn("response_type=code&redirect_uri=sso-app2&scope=openid&state=stateCode&nonce=nonceCode");
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
@@ -255,7 +255,7 @@ public class OIDCEndpointFilterTest {
 
         when(httpServletResponseMock.getWriter()).thenReturn(printWriterMock);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(printWriterMock).println(stringCapture.capture());
@@ -270,7 +270,7 @@ public class OIDCEndpointFilterTest {
 
         when(clientInfoRetrieverMock.retrieveInfo("demo-clientId")).thenReturn(null);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
@@ -292,7 +292,7 @@ public class OIDCEndpointFilterTest {
         clientInfo.setCallbackURL("http://localhost:8080/sso-app1");
         when(clientInfoRetrieverMock.retrieveInfo("demo-clientId")).thenReturn(clientInfo);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
@@ -337,7 +337,7 @@ public class OIDCEndpointFilterTest {
         clientInfo.setCallbackURL("http://localhost:8080/sso-app2");
         when(clientInfoRetrieverMock.retrieveInfo("junit_client_id")).thenReturn(clientInfo);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(true);
 
         verify(httpServletRequestMock, times(2)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
@@ -371,7 +371,7 @@ public class OIDCEndpointFilterTest {
 
         when(httpServletResponseMock.getWriter()).thenReturn(printWriterMock);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletRequestMock, never()).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
@@ -418,7 +418,7 @@ public class OIDCEndpointFilterTest {
         clientInfo.additionalCallbackURL("http://alias/sso-app2");
         when(clientInfoRetrieverMock.retrieveInfo("junit_client_id")).thenReturn(clientInfo);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(true);
 
         verify(httpServletRequestMock, times(2)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
@@ -473,7 +473,7 @@ public class OIDCEndpointFilterTest {
 
         when(httpServletResponseMock.getWriter()).thenReturn(printWriterMock);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -498,7 +498,7 @@ public class OIDCEndpointFilterTest {
 
         when(httpServletResponseMock.getWriter()).thenReturn(printWriterMock);
 
-        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock, null);
+        boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).setStatus(HttpServletResponse.SC_BAD_REQUEST);

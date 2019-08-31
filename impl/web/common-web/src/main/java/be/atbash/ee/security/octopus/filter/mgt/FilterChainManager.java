@@ -19,7 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import be.atbash.ee.security.octopus.filter.GlobalFilterProvider;
-import be.atbash.ee.security.octopus.filter.PathConfigProcessor;
+import be.atbash.ee.security.octopus.filter.PathMatchingFilter;
 import be.atbash.ee.security.octopus.util.order.ProviderComparator;
 import be.atbash.ee.security.octopus.web.url.SecuredURLReader;
 import be.atbash.util.CDIUtils;
@@ -376,7 +376,7 @@ public class FilterChainManager {
      * with the given name, a new one is created and the filter will be the first in the chain.
      * <p/>
      * Note that the chainSpecificFilterConfig argument expects the associated filter to be an instance of
-     * a {@link PathConfigProcessor PathConfigProcessor} to accept per-chain configuration.
+     * a {@link be.atbash.ee.security.octopus.filter.PathMatchingFilter PathMatchingFilter} to accept per-chain configuration.
      * If it is not, a {@link ConfigurationException} will be thrown.
      *
      * @param chainName                 the name of the chain where the filter will be appended.
@@ -420,15 +420,15 @@ public class FilterChainManager {
             log.debug("Attempting to apply path [" + chainName + "] to filter [" + filter + "] " +
                     "with config [" + chainSpecificFilterConfig + "]");
         }
-        if (filter instanceof PathConfigProcessor) {
-            ((PathConfigProcessor) filter).processPathConfig(chainName, chainSpecificFilterConfig);
+        if (filter instanceof PathMatchingFilter) {
+            ((PathMatchingFilter) filter).processPathConfig(chainName, chainSpecificFilterConfig);
         } else {
             if (StringUtils.hasText(chainSpecificFilterConfig)) {
                 //they specified a filter configuration, but the Filter doesn't implement PathConfigProcessor
                 //this is an erroneous config:
                 String msg = String.format("(E0012) Error : chainSpecificFilterConfig was specified for filter '%s', but this " +
                         "Filter not an 'instanceof' %s.  This is required if the filter is to accept " +
-                        "chain-specific configuration.", filter.getClass().getName(), PathConfigProcessor.class.getName());
+                        "chain-specific configuration.", filter.getClass().getName(), PathMatchingFilter.class.getName());
                 throw new ConfigurationException(msg);
             }
         }

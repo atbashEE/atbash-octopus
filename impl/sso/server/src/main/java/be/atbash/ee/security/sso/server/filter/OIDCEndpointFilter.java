@@ -108,7 +108,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
     }
 
     @Override
-    public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+    public boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
@@ -141,7 +141,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
         } else {
 
             // Here we do the default login, including a redirect to login if needed or authenticate from cookie.
-            result = super.onPreHandle(request, response, mappedValue);
+            result = super.onPreHandle(request, response);
         }
         return result;
     }
@@ -186,7 +186,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws Exception {
         // FIXME Is the check for isLoginRequest() and getSubject().getPrincipal() correct?
         if (isLoginRequest(request)) {
             return true;

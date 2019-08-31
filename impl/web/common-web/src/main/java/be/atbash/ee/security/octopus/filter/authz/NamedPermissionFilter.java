@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,14 +43,15 @@ public class NamedPermissionFilter extends AuthorizationFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws
             Exception {
         WebSubject subject = getSubject();
-        String[] permissions = (String[]) mappedValue;  // Fixme What does Octopus give as as we don't specify value like np[]
+
+        String[] pathConfig = getPathConfig(request);
 
         boolean permitted = true;
         List<Permission> violatedPermissions = new ArrayList<>();
-        for (String permissionName : permissions) {
+        for (String permissionName : pathConfig) {
 
             Permission permission = permissionResolver.resolvePermission(permissionName);
             if (!subject.isPermitted(permission)) {

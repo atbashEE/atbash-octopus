@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,14 +48,15 @@ public class NamedRoleFilter extends AuthorizationFilter {
     }
 
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws
             Exception {
         Subject subject = getSubject();
-        String[] roles = (String[]) mappedValue;
+
+        String[] pathConfig = getPathConfig(request);
 
         boolean permitted = true;
         List<String> violatedRoles = new ArrayList<>();
-        for (String role : roles) {
+        for (String role : pathConfig) {
             if (!subject.isPermitted(getRolePermission(role))) {
                 permitted = false;
                 violatedRoles.add(role);

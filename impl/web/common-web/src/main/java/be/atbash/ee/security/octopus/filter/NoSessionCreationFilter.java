@@ -53,7 +53,7 @@ public class NoSessionCreationFilter extends PathMatchingFilter {
     }
 
     @Override
-    protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+    protected boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
         request.setAttribute(WebSubjectContext.SESSION_CREATION_ENABLED, Boolean.FALSE);
         return true;
     }

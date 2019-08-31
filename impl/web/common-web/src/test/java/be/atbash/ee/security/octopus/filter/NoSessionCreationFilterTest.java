@@ -36,7 +36,7 @@ public class NoSessionCreationFilterTest {
 
     @Test
     public void onPreHandle() throws Exception {
-        filter.onPreHandle(servletRequestMock, null, null);
+        filter.onPreHandle(servletRequestMock, null);
 
         verify(servletRequestMock).setAttribute(WebSubjectContext.SESSION_CREATION_ENABLED, Boolean.FALSE);
     }

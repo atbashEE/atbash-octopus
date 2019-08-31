@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.nio.file.PathMatcher;
 
 import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -59,7 +60,7 @@ public class PathMatchingFilterTest {
 
         boolean value = filter.preHandle(servletRequestMock, null);
         assertThat(value).isTrue(); // matched the value set by setOnPreHandleResult()
-        assertThat(filter.getMappedValue()).isNull();
+        assertThat(filter.getPathConfig()).isNull();
     }
 
     @Test
@@ -70,7 +71,7 @@ public class PathMatchingFilterTest {
 
         boolean value = filter.preHandle(servletRequestMock, null);
         assertThat(value).isTrue(); // matched the value set by setOnPreHandleResult()
-        assertThat(filter.getMappedValue()).isNull();
+        assertThat(filter.getPathConfig()).isNull();
     }
 
     @Test
@@ -84,7 +85,7 @@ public class PathMatchingFilterTest {
 
         boolean value = filter.preHandle(servletRequestMock, null);
         assertThat(value).isTrue(); // matched the value set by setOnPreHandleResult()
-        assertThat(filter.getMappedValue()).isEqualTo(new String[]{"value1"});
+        verify(servletRequestMock).setAttribute("octopus.pathConfig", new String[]{"value1"});
     }
 
     @Test
@@ -98,7 +99,7 @@ public class PathMatchingFilterTest {
 
         boolean value = filter.preHandle(servletRequestMock, null);
         assertThat(value).isFalse(); // matched the value set by setOnPreHandleResult()
-        assertThat(filter.getMappedValue()).isEqualTo(new String[]{"value2"});
+        verify(servletRequestMock).setAttribute("octopus.pathConfig", new String[]{"value2"});
     }
 
     @Test
@@ -108,7 +109,7 @@ public class PathMatchingFilterTest {
 
         boolean value = filter.preHandle(servletRequestMock, null);
         assertThat(value).isTrue(); // always
-        assertThat(filter.getMappedValue()).isEqualTo("DefaultUnsetValue");
+        assertThat(filter.getPathConfig()).isEqualTo(new String[]{"DefaultUnsetValue"});
     }
 
     @Test
@@ -122,23 +123,23 @@ public class PathMatchingFilterTest {
 
         boolean value = filter.preHandle(servletRequestMock, null);
         assertThat(value).isTrue(); // always
-        assertThat(filter.getMappedValue()).isEqualTo("DefaultUnsetValue");
+        assertThat(filter.getPathConfig()).isEqualTo(new String[]{"DefaultUnsetValue"});
     }
 
     private static class TestPathMatchingFilter extends PathMatchingFilter {
 
         private boolean onPreHandleResult;
-        private Object mappedValue = "DefaultUnsetValue";
+        private String[] pathConfig = new String[]{"DefaultUnsetValue"};
         private boolean isEnabledResult = true;
 
         @Override
-        protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-            this.mappedValue = mappedValue;
+        protected boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
+            this.pathConfig = getPathConfig(request);
             return onPreHandleResult;
         }
 
         @Override
-        protected boolean isEnabled(ServletRequest request, ServletResponse response, String path, Object mappedValue) throws Exception {
+        protected boolean isEnabled(ServletRequest request, ServletResponse response, String path) throws Exception {
             return isEnabledResult;
         }
 
@@ -150,8 +151,8 @@ public class PathMatchingFilterTest {
             isEnabledResult = false;
         }
 
-        Object getMappedValue() {
-            return mappedValue;
+        Object getPathConfig() {
+            return pathConfig;
         }
     }
 }

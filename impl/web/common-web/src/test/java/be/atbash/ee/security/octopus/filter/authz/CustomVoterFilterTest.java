@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,9 @@ public class CustomVoterFilterTest {
 
         when(genericVoter1Mock.verify(any(AccessDecisionVoterContext.class))).thenReturn(true);
 
-        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"custom1"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom1"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
 
         assertThat(allowed).isTrue();
 
@@ -102,7 +104,9 @@ public class CustomVoterFilterTest {
 
         when(genericVoter1Mock.verify(any(AccessDecisionVoterContext.class))).thenReturn(false);
 
-        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"custom1"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom1"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
 
         assertThat(allowed).isFalse();
 
@@ -122,7 +126,9 @@ public class CustomVoterFilterTest {
     public void isAccessAllowed_nonExistent() throws Exception {
 
         try {
-            filter.isAccessAllowed(servletRequestMock, null, new String[]{"custom3"});
+            when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom3"});
+
+            filter.isAccessAllowed(servletRequestMock, null);
         } finally {
             verify(genericVoter1Mock, never()).verify(any(AccessDecisionVoterContext.class));
             verify(genericVoter2Mock, never()).verify(any(AccessDecisionVoterContext.class));
@@ -136,7 +142,9 @@ public class CustomVoterFilterTest {
         when(genericVoter1Mock.verify(any(AccessDecisionVoterContext.class))).thenReturn(true);
         when(genericVoter2Mock.verify(any(AccessDecisionVoterContext.class))).thenReturn(true);
 
-        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"custom1", "custom2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom1", "custom2"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
 
         assertThat(allowed).isTrue();
 
@@ -158,7 +166,9 @@ public class CustomVoterFilterTest {
         when(genericVoter1Mock.verify(any(AccessDecisionVoterContext.class))).thenReturn(true);
         when(genericVoter2Mock.verify(any(AccessDecisionVoterContext.class))).thenReturn(false);
 
-        boolean allowed = filter.isAccessAllowed(servletRequestMock, null, new String[]{"custom1", "custom2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom1", "custom2"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
 
         assertThat(allowed).isFalse();
 

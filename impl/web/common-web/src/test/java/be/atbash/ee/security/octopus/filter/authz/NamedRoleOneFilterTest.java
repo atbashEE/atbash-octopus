@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import javax.servlet.ServletRequest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,6 +52,9 @@ public class NamedRoleOneFilterTest {
 
     @Mock
     private RoleLookup<? extends NamedRole> roleLookupMock;
+
+    @Mock
+    private ServletRequest servletRequestMock;
 
     private NamedRoleOneFilter filter;
 
@@ -77,7 +81,9 @@ public class NamedRoleOneFilterTest {
         filter.initInstance();
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role1"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isTrue();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -94,7 +100,9 @@ public class NamedRoleOneFilterTest {
         filter.initInstance();
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role3"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role3"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isFalse();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -111,7 +119,9 @@ public class NamedRoleOneFilterTest {
         filter.initInstance();
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1", "role2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role1", "role2"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isTrue();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -140,7 +150,9 @@ public class NamedRoleOneFilterTest {
                     }
                 }
         );
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1", "role2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role1", "role2"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isTrue();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -164,7 +176,9 @@ public class NamedRoleOneFilterTest {
         when(roleLookupMock.getRole("role1")).thenReturn(new RolePermission("mappedRole1"));
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role1"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isTrue();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -184,7 +198,9 @@ public class NamedRoleOneFilterTest {
         when(roleLookupMock.getRole("role3")).thenReturn(new RolePermission("mappedRole3"));
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(false);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role3"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role3"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isFalse();
 
         verify(subjectMock).isPermitted(permissionArgumentCaptor.capture());
@@ -205,7 +221,9 @@ public class NamedRoleOneFilterTest {
         when(roleLookupMock.getRole("role2")).thenReturn(new RolePermission("mappedRole2"));
 
         when(subjectMock.isPermitted(any(Permission.class))).thenReturn(true);
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1", "role2"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role1", "role2"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isTrue();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());
@@ -239,7 +257,9 @@ public class NamedRoleOneFilterTest {
                 }
         );
 
-        boolean allowed = filter.isAccessAllowed(null, null, new String[]{"role1", "role3"});
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"role1", "role3"});
+
+        boolean allowed = filter.isAccessAllowed(servletRequestMock, null);
         assertThat(allowed).isTrue();
 
         verify(subjectMock, times(2)).isPermitted(permissionArgumentCaptor.capture());

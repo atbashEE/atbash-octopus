@@ -18,6 +18,7 @@
 ==== Important changes
 
 . the Map `userInfo` from `UserPrincipal` has now a key of type `java.lang.String`.
+. All `PathMatchingFilter` have now the parameter `Object mappedValue` removed. If you need pathConfig, use getPathConfig(ServletRequest).
 
 === 0.5
 

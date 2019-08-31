@@ -25,10 +25,10 @@ import java.io.IOException;
 
 /**
  * Superclass for authorization-related filters.  If an request is unauthorized, response handling is delegated to the
- * {@link #onAccessDenied(ServletRequest, ServletResponse) onAccessDenied} method, which
+ * {@link #onAccessDenied(ServletRequest, ServletResponse, String[]) onAccessDenied} method, which
  * provides reasonable handling for most applications.
  *
- * @see #onAccessDenied(ServletRequest, ServletResponse)
+ * @see #onAccessDenied(ServletRequest, ServletResponse, String[])
  */
 @ShiroEquivalent(shiroClassNames = "org.apache.shiro.web.filter.authz.AuthorizationFilter")
 public abstract class AuthorizationFilter extends AccessControlFilter {
@@ -44,6 +44,7 @@ public abstract class AuthorizationFilter extends AccessControlFilter {
      * @return {@code false} always so that filter chain stops.
      * @throws IOException if there is any servlet error.
      */
+    @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
         // FIXME Review AuthorizationFilter subclasses if this doesn't need to be overwritten.
         return accessDeniedHandler.onAccessDenied(request, response);

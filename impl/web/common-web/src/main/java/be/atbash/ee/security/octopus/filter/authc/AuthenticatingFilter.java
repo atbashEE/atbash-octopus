@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,20 +120,21 @@ public abstract class AuthenticatingFilter extends AuthenticationFilter {
      * @return <code>true</code> if request should be allowed access
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        return super.isAccessAllowed(request, response, mappedValue) ||
-                (!isLoginRequest(request) && isPermissive(mappedValue));
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) {
+        String[] pathConfig = getPathConfig(request);
+        return super.isAccessAllowed(request, response) ||
+                (!isLoginRequest(request) && isPermissive(pathConfig));
     }
 
     /**
-     * Returns <code>true</code> if the mappedValue contains the {@link #PERMISSIVE} qualifier.
+     * Returns <code>true</code> if the pathConfig contains the {@link #PERMISSIVE} qualifier.
+     * FIXME Review this functionality
      *
      * @return <code>true</code> if this filter should be permissive
      */
-    protected boolean isPermissive(Object mappedValue) {
-        if (mappedValue != null) {
-            String[] values = (String[]) mappedValue;
-            return Arrays.binarySearch(values, PERMISSIVE) >= 0;
+    protected boolean isPermissive(String[] pathConfig) {
+        if (pathConfig != null) {
+            return Arrays.binarySearch(pathConfig, PERMISSIVE) >= 0;
         }
         return false;
     }

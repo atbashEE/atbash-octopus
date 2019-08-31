@@ -105,7 +105,7 @@ public class SSOLogoutFilterTest {
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
 
-        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock, null);
+        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
         assertThat(accessAllowed).isTrue();
 
         assertThat(logger.getLoggingEvents()).isEmpty();
@@ -133,7 +133,7 @@ public class SSOLogoutFilterTest {
 
         when(tokenStoreMock.getUserByAccessCode("theAccessCode")).thenReturn(userPrincipalMock);
 
-        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock, null);
+        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
 
         assertThat(accessAllowed).isTrue();
 
@@ -157,7 +157,7 @@ public class SSOLogoutFilterTest {
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(null);
 
 
-        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock, null);
+        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
         assertThat(accessAllowed).isFalse();
 
         assertThat(logger.getLoggingEvents()).hasSize(1);
@@ -175,7 +175,7 @@ public class SSOLogoutFilterTest {
 
         when(httpServletRequestMock.getQueryString()).thenReturn("");
 
-        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock, null);
+        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
         assertThat(accessAllowed).isFalse();
 
         assertThat(logger.getLoggingEvents()).hasSize(1);
@@ -203,7 +203,7 @@ public class SSOLogoutFilterTest {
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
 
-        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock, null);
+        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
         assertThat(accessAllowed).isFalse();
 
         assertThat(logger.getLoggingEvents()).hasSize(1);
@@ -237,7 +237,7 @@ public class SSOLogoutFilterTest {
             Assert.fail(e.getMessage());
         }
 
-        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock, null);
+        boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
         assertThat(accessAllowed).isFalse();
 
         assertThat(logger.getLoggingEvents()).hasSize(1);

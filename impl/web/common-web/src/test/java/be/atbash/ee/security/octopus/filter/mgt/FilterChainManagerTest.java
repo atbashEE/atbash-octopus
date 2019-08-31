@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package be.atbash.ee.security.octopus.filter.mgt;
 
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import be.atbash.ee.security.octopus.filter.GlobalFilterProvider;
-import be.atbash.ee.security.octopus.filter.PathConfigProcessor;
+import be.atbash.ee.security.octopus.filter.PathMatchingFilter;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
 
@@ -108,7 +108,7 @@ public class FilterChainManagerTest {
         TestReflectionUtils.injectDependencies(filterChainManager, filters);
     }
 
-    private class TestFilter extends AdviceFilter implements PathConfigProcessor {
+    private class TestFilter extends PathMatchingFilter {
 
         private String config;
 

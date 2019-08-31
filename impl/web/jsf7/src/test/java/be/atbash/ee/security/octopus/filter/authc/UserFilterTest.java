@@ -52,7 +52,7 @@ public class UserFilterTest {
     public void isAccessAllowed_loginRequest() {
         configureIsLoginRequest(true);
 
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
+        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock);
         assertThat(allowed).isTrue();
     }
 
@@ -63,7 +63,7 @@ public class UserFilterTest {
         when(subjectMock.isAuthenticated()).thenReturn(false);
         when(subjectMock.isRemembered()).thenReturn(false);
 
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
+        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock);
         assertThat(allowed).isFalse();
     }
 
@@ -73,7 +73,7 @@ public class UserFilterTest {
         ThreadContext.bind(subjectMock);
         when(subjectMock.isAuthenticated()).thenReturn(true);
 
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
+        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock);
         assertThat(allowed).isTrue();
     }
 
@@ -84,7 +84,7 @@ public class UserFilterTest {
         when(subjectMock.isAuthenticated()).thenReturn(false);
         when(subjectMock.isRemembered()).thenReturn(true);
 
-        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock, null);
+        boolean allowed = userFilter.isAccessAllowed(requestMock, responseMock);
         assertThat(allowed).isTrue();
     }
 
