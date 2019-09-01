@@ -1,8 +1,10 @@
 === Custom Filters
 
-Only filters which are descendant of +be.atbash.ee.security.octopus.filter.AdviceFilter+ can be by Octopus (like from within the _securedURLs.ini_ file).
+Only filters which are descendant of +be.atbash.ee.security.octopus.filter.AdviceFilter+ can be used by Octopus (like from within the _securedURLs.ini_ file).
 
 When you need to create a custom filter (first check the documentation about filters to see if the filter you need isn't available) you can start from some base classes. These classes are also used in the standard octopus filters.
+
+If your filter requires a path configuration defined by the developer, like the permission name with +np[permission1]+, override the +requiresPathConfiguration()+ (defined within PathMatchingFilter) and return `true`.
 
 Filters are a Web only concept, and thus are always dependent on the module _octopus-common-web_.
 

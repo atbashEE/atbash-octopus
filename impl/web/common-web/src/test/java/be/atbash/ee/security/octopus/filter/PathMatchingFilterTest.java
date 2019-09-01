@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -126,11 +127,65 @@ public class PathMatchingFilterTest {
         assertThat(filter.getPathConfig()).isEqualTo(new String[]{"DefaultUnsetValue"});
     }
 
+    @Test
+    public void processPathConfig_singleConfigValue() {
+        filter.processPathConfig("/test", "config");
+        assertThat(filter.appliedPaths).hasSize(1);
+        assertThat(filter.appliedPaths.get("/test")).containsExactly("config");
+    }
+
+    @Test
+    public void processPathConfig_multiConfigValue() {
+        filter.processPathConfig("/test", "config1,config2");
+        assertThat(filter.appliedPaths).hasSize(1);
+        assertThat(filter.appliedPaths.get("/test")).containsExactly("config1", "config2");
+    }
+
+    @Test
+    public void processPathConfig_noConfigValue_noRequired() {
+        filter.processPathConfig("/test", null);
+        assertThat(filter.appliedPaths).hasSize(1);
+        assertThat(filter.appliedPaths.get("/test")).isNullOrEmpty();
+    }
+
+    @Test
+    public void processPathConfig_emptyConfigValue_noRequired() {
+        filter.processPathConfig("/test", "");
+        assertThat(filter.appliedPaths).hasSize(1);
+        assertThat(filter.appliedPaths.get("/test")).isNullOrEmpty();
+    }
+
+    @Test
+    public void processPathConfig_spacesConfigValue_noRequired() {
+        filter.processPathConfig("/test", "    ");
+        assertThat(filter.appliedPaths).hasSize(1);
+        assertThat(filter.appliedPaths.get("/test")).isNullOrEmpty();
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void processPathConfig_noConfigValue_required() {
+        filter.setRequiresPathConfiguration(true);
+        filter.processPathConfig("/test", null);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void processPathConfig_emptyConfigValue_required() {
+        filter.setRequiresPathConfiguration(true);
+        filter.processPathConfig("/test", "");
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void processPathConfig_spacesConfigValue_required() {
+        filter.setRequiresPathConfiguration(true);
+        filter.processPathConfig("/test", "    ");
+    }
+
     private static class TestPathMatchingFilter extends PathMatchingFilter {
 
         private boolean onPreHandleResult;
         private String[] pathConfig = new String[]{"DefaultUnsetValue"};
         private boolean isEnabledResult = true;
+        private boolean requiresPathConfiguration = false;
 
         @Override
         protected boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
@@ -149,6 +204,15 @@ public class PathMatchingFilterTest {
 
         void setNotEnabled() {
             isEnabledResult = false;
+        }
+
+        public void setRequiresPathConfiguration(boolean requiresPathConfiguration) {
+            this.requiresPathConfiguration = requiresPathConfiguration;
+        }
+
+        @Override
+        protected boolean requiresPathConfiguration() {
+            return requiresPathConfiguration;
         }
 
         Object getPathConfig() {

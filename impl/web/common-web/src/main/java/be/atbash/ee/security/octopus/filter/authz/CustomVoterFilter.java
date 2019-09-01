@@ -58,4 +58,9 @@ public class CustomVoterFilter extends AuthorizationFilter {
         }
         return permitted;
     }
+
+    @Override
+    protected boolean requiresPathConfiguration() {
+        return true;
+    }
 }

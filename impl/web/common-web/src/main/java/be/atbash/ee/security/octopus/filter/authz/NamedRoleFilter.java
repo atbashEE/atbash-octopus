@@ -99,4 +99,9 @@ public class NamedRoleFilter extends AuthorizationFilter {
         request.setAttribute(OCTOPUS_VIOLATION_MESSAGE, violations.toString());
     }
 
+    @Override
+    protected boolean requiresPathConfiguration() {
+        return true;
+    }
+
 }

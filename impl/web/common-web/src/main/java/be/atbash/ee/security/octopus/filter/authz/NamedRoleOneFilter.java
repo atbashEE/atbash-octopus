@@ -71,4 +71,9 @@ public class NamedRoleOneFilter extends AuthorizationFilter {
         return result;
     }
 
+    @Override
+    protected boolean requiresPathConfiguration() {
+        return true;
+    }
+
 }

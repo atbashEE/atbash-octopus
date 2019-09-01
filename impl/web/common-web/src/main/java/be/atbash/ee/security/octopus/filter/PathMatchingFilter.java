@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.filter;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.StringUtils;
@@ -88,6 +89,11 @@ public abstract class PathMatchingFilter extends AdviceFilter {
             values = StringUtils.split(config);
         }
 
+        if (requiresPathConfiguration() && (values == null || values.length == 0)) {
+            String msg = String.format("(E0013) Error : chainSpecificFilterConfig iss required for filter '%s'", this.getClass().getName());
+            throw new ConfigurationException(msg);
+
+        }
         appliedPaths.put(path, values);
         return this;
     }
@@ -183,10 +189,10 @@ public abstract class PathMatchingFilter extends AdviceFilter {
     protected String[] getPathConfig(ServletRequest request) {
         return (String[]) request.getAttribute(PATH_CONFIG);
     }
+
     /**
-     * Simple method to abstract out logic from the preHandle implementation - it was getting a bit unruly.
+     * Simple method to abstract out logic from the preHandle implementation.
      */
-    @SuppressWarnings({"JavaDoc"})
     private boolean isFilterChainContinued(ServletRequest request, ServletResponse response,
                                            String path) throws Exception {
 
@@ -251,5 +257,15 @@ public abstract class PathMatchingFilter extends AdviceFilter {
     protected boolean isEnabled(ServletRequest request, ServletResponse response, String path)
             throws Exception {
         return isEnabled(request, response);
+    }
+
+    /**
+     * Determines if the filter requires some Path Configuration like for example `NamedPermission[permission1]`. Since without
+     * the brackets, or empty value in between, the filter can't do much.
+     *
+     * @return false by default but can be overridden by descendant classes.
+     */
+    protected boolean requiresPathConfiguration() {
+        return false;
     }
 }

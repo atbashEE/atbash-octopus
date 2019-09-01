@@ -28,7 +28,9 @@ Filter configuration was specified for a Filter but the Filter doesn't accept it
 
 In the example above, the xyz is a Custom defined Filter which does not implement the _PathConfigProcessor_ and hence this Exception will be thrown.
 
+* E00013
 
+Filter configuration requires a path config (like `np[permission1]`) but no [] are specified or no value between the brackets.
 
 * OCT-DEV-001
 
