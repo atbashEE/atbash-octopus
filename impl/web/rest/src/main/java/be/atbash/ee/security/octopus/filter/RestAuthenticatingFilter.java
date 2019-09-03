@@ -24,6 +24,7 @@ import be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter;
 import be.atbash.ee.security.octopus.filter.mgt.ErrorInfo;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.ExceptionUtil;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
@@ -58,7 +59,7 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
         if (ExceptionUtil.isUnauthorizedException(unwrappedException) || ExceptionUtil.isUnauthenticatedException(unwrappedException)) {
             try {
 
-                HttpServletResponse servletResponse = (HttpServletResponse) response;
+                HttpServletResponse servletResponse = WebUtils.toHttp(response);
                 servletResponse.reset();
 
                 servletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -73,7 +74,7 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
         }
 
         if (unwrappedException instanceof InvalidCredentialsException) {
-            HttpServletResponse servletResponse = (HttpServletResponse) response;
+            HttpServletResponse servletResponse = WebUtils.toHttp(response);
             servletResponse.reset();
 
             // This is still a 401, unauthorized because of missing header info
@@ -100,7 +101,7 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
     }
 
     protected String getAuthzHeader(ServletRequest request) {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         return httpServletRequest.getHeader(OctopusConstants.AUTHORIZATION_HEADER);
     }
 
@@ -121,7 +122,7 @@ public abstract class RestAuthenticatingFilter extends AuthenticatingFilter {
             return new IncorrectDataToken("Authorization header value must start with Bearer");
         }
 
-        return createToken((HttpServletRequest) request, parts[1]);
+        return createToken(WebUtils.toHttp(request), parts[1]);
     }
 
     protected abstract AuthenticationToken createToken(HttpServletRequest httpServletRequest, String token);

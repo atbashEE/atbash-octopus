@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.filter.authc;
 
 
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.util.WebUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -55,7 +56,7 @@ public class NoneFilter extends AuthenticatingFilter {
     protected void postHandle(ServletRequest request, ServletResponse response) throws Exception {
         response.reset();
         // TODO Is this casting always OK, should we change the parameter type?
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
         httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpServletResponse.setContentType("text/plain");
         httpServletResponse.getWriter().write("Access not allowed");

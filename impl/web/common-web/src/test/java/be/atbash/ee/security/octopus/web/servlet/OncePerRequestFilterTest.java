@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,9 @@ public class OncePerRequestFilterTest {
 
     @Mock
     private HttpServletRequest servletRequestMock;
+
+    @Mock
+    private HttpServletResponse servletResponseMock;
 
     @Mock
     private FilterChain filterChainMock;
@@ -82,7 +85,7 @@ public class OncePerRequestFilterTest {
         throwException = false;
         filter.setName(filterName);
 
-        filter.doFilter(servletRequestMock, null, filterChainMock);
+        filter.doFilter(servletRequestMock, servletResponseMock, filterChainMock);
 
         // There is an important order. First we need to setAttribute, call method, remove attribute
 
@@ -104,7 +107,7 @@ public class OncePerRequestFilterTest {
 
         throwException = false;
 
-        filter.doFilter(servletRequestMock, null, filterChainMock);
+        filter.doFilter(servletRequestMock, servletResponseMock, filterChainMock);
 
         // There is an important order. First we need to setAttribute, call method, remove attribute
 
@@ -128,7 +131,7 @@ public class OncePerRequestFilterTest {
         throwException = true;
 
         try {
-            filter.doFilter(servletRequestMock, null, null);
+            filter.doFilter(servletRequestMock, servletResponseMock, null);
             Assert.fail("Should throw ServletException");
         } catch (ServletException e) {
             assertThat(e.getMessage()).isEqualTo(EXCEPTION_MESSAGE);

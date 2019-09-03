@@ -24,6 +24,7 @@ import be.atbash.ee.security.octopus.filter.authc.AuthenticatingFilter;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.ee.security.sso.server.endpoint.AccessTokenTransformer;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
@@ -65,7 +66,7 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
     @Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         String token = httpServletRequest.getHeader(OctopusConstants.AUTHORIZATION_HEADER);
 
         return createSSOToken(httpServletRequest, token);

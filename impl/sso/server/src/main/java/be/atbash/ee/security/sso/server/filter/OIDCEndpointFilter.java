@@ -20,6 +20,7 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.ee.security.octopus.web.servlet.OncePerRequestFilter;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
@@ -110,7 +111,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
 
         String requestURI = httpServletRequest.getRequestURI();
         if (requestURI.contains(";")) {
@@ -136,7 +137,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
 
         boolean result;
         if (errorInfo != null) {
-            showErrorMessage((HttpServletResponse) response, endpointType, errorInfo);
+            showErrorMessage(WebUtils.toHttp(response), endpointType, errorInfo);
             result = false;
         } else {
 

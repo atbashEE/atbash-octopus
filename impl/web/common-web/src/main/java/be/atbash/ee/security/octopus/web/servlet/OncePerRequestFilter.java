@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.web.servlet;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.Reviewed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,8 +120,7 @@ public abstract class OncePerRequestFilter extends NameableFilter {
                 request.setAttribute(alreadyFilteredAttributeName, Boolean.TRUE);
 
                 try {
-                    // TODO Maybe do some checks before cast?
-                    doFilterInternal((HttpServletRequest) request, (HttpServletResponse) response, filterChain);
+                    doFilterInternal(WebUtils.toHttp(request), WebUtils.toHttp(response), filterChain);
                 } finally {
                     // Once the request has finished, we're done and we don't
                     // need to mark as 'already filtered' any more.

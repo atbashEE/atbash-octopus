@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.filter.authz;
 import be.atbash.ee.security.octopus.authz.permission.voter.AbstractGenericVoter;
 import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.CustomAccessDecisionVoterContext;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 
@@ -25,7 +26,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -41,7 +41,7 @@ public class CustomVoterFilter extends AuthorizationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response) throws Exception {
 
-        String url = ((HttpServletRequest) request).getRequestURL().toString();
+        String url = WebUtils.toHttp(request).getRequestURL().toString();
 
         OctopusInvocationContext invocationContext = new OctopusInvocationContext(url, new Object[]{request});
         AccessDecisionVoterContext context = new CustomAccessDecisionVoterContext(invocationContext);

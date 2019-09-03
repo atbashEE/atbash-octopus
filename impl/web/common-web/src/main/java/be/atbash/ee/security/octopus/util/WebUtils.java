@@ -420,6 +420,9 @@ public class WebUtils {
      * @return the <code>request</code> argument casted to an <code>HttpServletRequest</code>.
      */
     public static HttpServletRequest toHttp(ServletRequest request) {
+        if (!(request instanceof HttpServletRequest)) {
+            throw new IllegalArgumentException(String.format("The request parameter was not of type HttpServletRequest but %s.", request.getClass().getName()));
+        }
         return (HttpServletRequest) request;
     }
 
@@ -436,6 +439,10 @@ public class WebUtils {
      * @return the <code>response</code> argument casted to an <code>HttpServletResponse</code>.
      */
     public static HttpServletResponse toHttp(ServletResponse response) {
+        if (!(response instanceof HttpServletResponse)) {
+            throw new IllegalArgumentException(String.format("The response parameter was not of type HttpServletResponse but %s.", response.getClass().getName()));
+        }
+
         return (HttpServletResponse) response;
     }
 

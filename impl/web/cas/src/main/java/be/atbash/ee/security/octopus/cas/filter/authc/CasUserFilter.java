@@ -16,12 +16,12 @@
 package be.atbash.ee.security.octopus.cas.filter.authc;
 
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
+import be.atbash.ee.security.octopus.util.WebUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Filter that allows access to resources if the accessor is a known user, which is defined as
@@ -47,7 +47,7 @@ public class CasUserFilter extends AbstractUserFilter {
         // FIXME CAS support is the only module using this technique
         // For Keycloak, a redirect to the Keycloak Servlet is performed where the redirect to login of CAS is done.
         // Check if we can do the same for CAS.
-        String loginURL = casConfigurationHelper.defineCasLoginURL((HttpServletRequest) request);
+        String loginURL = casConfigurationHelper.defineCasLoginURL(WebUtils.toHttp(request));
         setLoginUrl(loginURL);
     }
 }

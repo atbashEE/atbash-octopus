@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.ratelimit;
 
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.filter.PathMatchingFilter;
+import be.atbash.ee.security.octopus.util.WebUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -65,7 +66,7 @@ public class RateLimitFilter extends PathMatchingFilter {
         String path = (String) request.getAttribute(OCTOPUS_CHAIN_NAME);
         Token token = rateLimiters.get(path).getToken(path);  // key should be some x-api-key header stuff for REST??
         if (!token.isUsable()) {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
             httpServletResponse.setStatus(429);  //Too many requests
             httpServletResponse.setContentType("text/plain");
             httpServletResponse.getWriter().write("Rate limit exceeded");

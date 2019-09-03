@@ -73,7 +73,7 @@ public class SSOLogoutFilter extends AuthorizationFilter {
 
         boolean result = false;
 
-        HttpServletRequest servletRequest = (HttpServletRequest) request;
+        HttpServletRequest servletRequest = WebUtils.toHttp(request);
         try {
             LogoutRequest logoutRequest = LogoutRequest.parse(servletRequest.getQueryString());
 

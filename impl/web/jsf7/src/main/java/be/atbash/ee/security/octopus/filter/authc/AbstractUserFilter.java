@@ -19,6 +19,7 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.subject.WebSubject;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.Reviewed;
 
 import javax.inject.Inject;
@@ -76,7 +77,7 @@ public class AbstractUserFilter extends AccessControlFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         boolean postIsAllowedSavedRequest = jsfConfiguration.getPostIsAllowedSavedRequest();
 
-        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletRequest req = WebUtils.toHttp(request);
         if (POST_METHOD.equals(req.getMethod()) && !postIsAllowedSavedRequest) {
             redirectToLogin(request, response);
         } else {
@@ -94,7 +95,7 @@ public class AbstractUserFilter extends AccessControlFilter {
      */
     @Override
     protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
-        HttpServletRequest servletRequest = (HttpServletRequest) request;
+        HttpServletRequest servletRequest = WebUtils.toHttp(request);
 
         if ("partial/ajax".equals(servletRequest.getHeader("Faces-Request"))) {
             response.setContentType("text/xml");

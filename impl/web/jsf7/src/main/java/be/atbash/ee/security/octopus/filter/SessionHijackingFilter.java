@@ -61,7 +61,7 @@ public class SessionHijackingFilter extends AdviceFilter {
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         boolean result = true;
         if (jsfConfiguration.getSessionHijackingLevel() != SessionHijackingLevel.OFF) {
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
 
             if (!WebUtils._isSessionCreationEnabled(httpServletRequest)) {
                 // probably we are using REST Endpoints also available within the app and since we don't have any session, we can't Hijack it :)
@@ -85,7 +85,7 @@ public class SessionHijackingFilter extends AdviceFilter {
 
             if (!result) {
                 // Session Hijacking detected, so stop this request and inform other session.
-                HttpServletResponse servletResponse = (HttpServletResponse) response;
+                HttpServletResponse servletResponse = WebUtils.toHttp(response);
                 servletResponse.setStatus(401);
                 servletResponse.getWriter().write("Refused by the Session Hijacking Protection");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.filter.mgt;
 
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
+import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class ExceptionFilter extends AdviceFilter {
             if (sessionCreationEnabled != null && !sessionCreationEnabled) {
                 // We assume we are in a REST/JAX_RS call and thus return JSON
 
-                HttpServletResponse servletResponse = (HttpServletResponse) response;
+                HttpServletResponse servletResponse = WebUtils.toHttp(response);
                 servletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
                 String code = unexpectedException == null ? "OCT-001" : "OCT-002";
