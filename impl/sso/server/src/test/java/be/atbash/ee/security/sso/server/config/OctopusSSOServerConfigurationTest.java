@@ -31,12 +31,9 @@ public class OctopusSSOServerConfigurationTest {
 
     private OctopusSSOServerConfiguration configuration = new OctopusSSOServerConfiguration();
 
-    private TestLogger logger = TestLoggerFactory.getTestLogger(OctopusSSOServerConfiguration.class);
-
     @After
     public void teardown() {
         TestConfig.resetConfig();
-        TestLoggerFactory.clear();
     }
 
     @Test
@@ -48,64 +45,10 @@ public class OctopusSSOServerConfigurationTest {
     }
 
     @Test
-    public void getSSOCookieTimeToLive_days() {
-        TestConfig.addConfigValue("SSO.cookie.timetolive", "12d");
-
-        int ssoCookieTimeToLive = configuration.getSSOCookieTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(12 * 24 * 3600);
-    }
-
-    @Test
-    public void getSSOCookieTimeToLive_months() {
-        TestConfig.addConfigValue("SSO.cookie.timetolive", "1m");
-
-        int ssoCookieTimeToLive = configuration.getSSOCookieTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(24 * 30 * 3600);
-    }
-
-    @Test
     public void getSSOCookieTimeToLive_default() {
 
         int ssoCookieTimeToLive = configuration.getSSOCookieTimeToLive();
         assertThat(ssoCookieTimeToLive).isEqualTo(10 * 3600);
-    }
-
-    @Test
-    public void getSSOCookieTimeToLive_wrongValue() {
-        TestConfig.addConfigValue("SSO.cookie.timetolive", "JUnit");
-        int ssoCookieTimeToLive = configuration.getSSOCookieTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(10 * 3600); // Default Value
-
-        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).getLevel()).isEqualTo(Level.WARN);
-        assertThat(events.get(0).getMessage()).isEqualTo("Invalid configuration value for SSO.cookie.timetolive = JUnit. Using default of 10h");
-
-    }
-
-    @Test
-    public void getSSOCookieTimeToLive_Zero() {
-        TestConfig.addConfigValue("SSO.cookie.timetolive", "0h");
-        int ssoCookieTimeToLive = configuration.getSSOCookieTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(10 * 3600); // Default Value
-
-        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).getLevel()).isEqualTo(Level.WARN);
-        assertThat(events.get(0).getMessage()).isEqualTo("Invalid configuration value for SSO.cookie.timetolive = 0h. Using default of 10h");
-
-    }
-
-    @Test
-    public void getSSOCookieTimeToLive_negative() {
-        TestConfig.addConfigValue("SSO.cookie.timetolive", "-1h");
-        int ssoCookieTimeToLive = configuration.getSSOCookieTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(10 * 3600); // Default Value
-
-        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).getLevel()).isEqualTo(Level.WARN);
-        assertThat(events.get(0).getMessage()).isEqualTo("Invalid configuration value for SSO.cookie.timetolive = -1h. Using default of 10h");
     }
 
     @Test
@@ -144,47 +87,9 @@ public class OctopusSSOServerConfigurationTest {
     }
 
     @Test
-    public void getSSOAccessTokenTimeToLive_minutes() {
-        TestConfig.addConfigValue("SSO.access.token.timetolive", "12m");
-
-        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(12 * 60);
-    }
-
-    @Test
-    public void getSSOAccessTokenTimeToLive_seconds() {
-        TestConfig.addConfigValue("SSO.access.token.timetolive", "1s");
-
-        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(1);
-    }
-
-    @Test
     public void getSSOAccessTokenTimeToLive_default() {
 
         int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
         assertThat(ssoCookieTimeToLive).isEqualTo(3600);
     }
-
-    @Test
-    public void getSSOAccessTokenTimeToLive_wrongValue() {
-        TestConfig.addConfigValue("SSO.access.token.timetolive", "JUnit");
-        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(3600); // Default Value
-    }
-
-    @Test
-    public void getSSOAccessTokenTimeToLive_Zero() {
-        TestConfig.addConfigValue("SSO.access.token.timetolive", "0h");
-        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(3600); // Default Value
-    }
-
-    @Test
-    public void getSSOAccessTokenTimeToLive_negative() {
-        TestConfig.addConfigValue("SSO.access.token.timetolive", "-1h");
-        int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
-        assertThat(ssoCookieTimeToLive).isEqualTo(3600); // Default Value
-    }
-
 }

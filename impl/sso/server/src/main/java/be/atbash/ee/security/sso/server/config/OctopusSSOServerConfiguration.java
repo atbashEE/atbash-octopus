@@ -20,21 +20,12 @@ import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ApplicationScoped
 @ModuleConfigName("Octopus SSO Server Configuration")
 public class OctopusSSOServerConfiguration extends AbstractConfiguration implements ModuleConfig {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(OctopusSSOServerConfiguration.class);
-
-    private static final int COOKIE_TIME_TO_LIVE = 10;
-    private static final int ACCESS_TOKEN_TIME_TO_LIVE = 3600;
 
     @ConfigEntry
     public String getSSOCookieName() {
@@ -49,32 +40,9 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
     @ConfigEntry
     public int getSSOCookieTimeToLive() {
         String timeToLive = getOptionalValue("SSO.cookie.timetolive", "10h", String.class);
-        Pattern pattern = Pattern.compile("^(\\d+)([hdm])$");
-        Matcher matcher = pattern.matcher(timeToLive);
 
-        int result = 0;
-        if (matcher.matches()) {
+        return TimeConfigUtil.getSecondsFromConfigPattern(timeToLive, "10h", "SSO.cookie.timetolive");
 
-            if ("h".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.parseInt(matcher.group(1));
-            }
-            if ("d".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.parseInt(matcher.group(1)) * 24;
-            }
-            if ("m".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.parseInt(matcher.group(1)) * 24 * 30;
-            }
-
-            if (!(result > 0)) {
-                LOGGER.warn("Invalid configuration value for SSO.cookie.timetolive = " + timeToLive + ". Using default of 10h");
-                result = COOKIE_TIME_TO_LIVE;
-            }
-
-        } else {
-            LOGGER.warn("Invalid configuration value for SSO.cookie.timetolive = " + timeToLive + ". Using default of 10h");
-            result = COOKIE_TIME_TO_LIVE;
-        }
-        return result * 60 * 60;  // From hours to seconds
     }
 
     @ConfigEntry
@@ -106,32 +74,8 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
     @ConfigEntry
     public int getSSOAccessTokenTimeToLive() {
         String timeToLive = getOptionalValue("SSO.access.token.timetolive", "1h", String.class);
-        Pattern pattern = Pattern.compile("^(\\d+)([hms])$");
-        Matcher matcher = pattern.matcher(timeToLive);
+        return TimeConfigUtil.getSecondsFromConfigPattern(timeToLive, "1h", "SSO.access.token.timetolive");
 
-        int result = 0;
-        if (matcher.matches()) {
-
-            if ("h".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.parseInt(matcher.group(1)) * 60 * 60;
-            }
-            if ("m".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.parseInt(matcher.group(1)) * 60;
-            }
-            if ("s".equalsIgnoreCase(matcher.group(2))) {
-                result = Integer.parseInt(matcher.group(1));
-            }
-
-            if (!(result > 0)) {
-                LOGGER.warn("Invalid configuration value for SSO.access.token.timetolive = " + timeToLive + ". Using default of 1h");
-                result = ACCESS_TOKEN_TIME_TO_LIVE;
-            }
-
-        } else {
-            LOGGER.warn("Invalid configuration value for SSO.access.token.timetolive = " + timeToLive + ". Using default of 10h");
-            result = ACCESS_TOKEN_TIME_TO_LIVE;
-        }
-        return result;
     }
 
     public String getSSOEndpointRoot() {
