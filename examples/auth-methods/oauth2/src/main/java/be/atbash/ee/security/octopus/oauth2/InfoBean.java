@@ -52,11 +52,15 @@ public class InfoBean {
     }
 
     public String getAccessToken() {
-        // Warning, AccessToken should never made public and transferred to browser. This is hust for demo
+        // Warning, AccessToken should never made public and transferred to browser. This is just for demo
         //purposes and to be able to test the Rest endpoint protection based on OAuth2 tokens.
         Subject subject = SecurityUtils.getSubject();
-        OAuth2UserToken oauth2Token = subject.getPrincipals().oneByType(OAuth2UserToken.class);
-        return oauth2Token.getToken().getRawResponse();
+        if (subject.isAuthenticated()) {
+            OAuth2UserToken oauth2Token = subject.getPrincipals().oneByType(OAuth2UserToken.class);
+            return oauth2Token.getToken().getRawResponse();
+        } else {
+            return "(not authenticated)";
+        }
     }
 
 

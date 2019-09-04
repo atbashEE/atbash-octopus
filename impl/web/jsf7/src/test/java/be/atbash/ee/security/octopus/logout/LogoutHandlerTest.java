@@ -43,13 +43,7 @@ public class LogoutHandlerTest {
     private OctopusJSFConfiguration jsfConfigurationMock;
 
     @Mock
-    private OctopusWebConfiguration webConfigurationMock;
-
-    @Mock
     private WebSubject webSubjectMock;
-
-    @Mock
-    private HttpServletRequest httpServletRequestMock;
 
     @InjectMocks
     private LogoutHandler logoutHandler;
@@ -73,13 +67,11 @@ public class LogoutHandlerTest {
         logoutHandler.init();
 
         ThreadContext.bind(webSubjectMock);
-        when(webSubjectMock.getServletRequest()).thenReturn(httpServletRequestMock);
-        configureServerRequest();
 
         when(jsfConfigurationMock.getLogoutPage()).thenReturn("/logout.xhtml");
 
         String page = logoutHandler.getLogoutPage();
-        assertThat(page).isEqualTo("http://test.org/root/logout.xhtml");
+        assertThat(page).isEqualTo("/logout.xhtml");
     }
 
     @Test
@@ -90,20 +82,10 @@ public class LogoutHandlerTest {
         logoutHandler.init();
 
         ThreadContext.bind(webSubjectMock);
-        when(webSubjectMock.getServletRequest()).thenReturn(httpServletRequestMock);
-        configureServerRequest();
-
         when(jsfConfigurationMock.getLogoutPage()).thenReturn("/logout");
 
         String page = logoutHandler.getLogoutPage();
-        assertThat(page).isEqualTo("http://test.org/root/logout?fromProcessor");
-    }
-
-    private void configureServerRequest() {
-        when(httpServletRequestMock.getScheme()).thenReturn("http");
-        when(httpServletRequestMock.getServerName()).thenReturn("test.org");
-        when(httpServletRequestMock.getServerPort()).thenReturn(80);
-        when(httpServletRequestMock.getContextPath()).thenReturn("/root");
+        assertThat(page).isEqualTo("/logout?fromProcessor");
     }
 
     private static class TestProcessor implements LogoutURLProcessor {

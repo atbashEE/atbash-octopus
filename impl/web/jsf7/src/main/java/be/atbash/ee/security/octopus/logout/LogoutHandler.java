@@ -46,18 +46,7 @@ public class LogoutHandler {
     }
 
     public String getLogoutPage() {
-        String logoutUrl;
-
-        String logoutPage = octopusJSFConfiguration.getLogoutPage();
-        if (logoutPage.startsWith("http")) {
-            logoutUrl = logoutPage;
-        } else {
-            if (logoutPage.startsWith("/")) {
-                logoutUrl = getRootUrl() + logoutPage;
-            } else {
-                logoutUrl = getRootUrl() + '/' + logoutPage;
-            }
-        }
+        String logoutUrl = octopusJSFConfiguration.getLogoutPage();
 
         Subject subject = SecurityUtils.getSubject();
         LogoutParameters parameters = new LogoutParameters(octopusJSFConfiguration.isSingleLogout(), subject.getPrincipals());
@@ -66,11 +55,6 @@ public class LogoutHandler {
             logoutUrl = processor.postProcessLogoutUrl(logoutUrl, parameters);
         }
         return logoutUrl;
-    }
-
-    private String getRootUrl() {
-        WebSubject subject = SecurityUtils.getSubject();
-        return WebUtils.determineRoot(subject.getServletRequest());
     }
 
 }
