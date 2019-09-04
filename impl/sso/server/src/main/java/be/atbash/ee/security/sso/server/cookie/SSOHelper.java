@@ -16,7 +16,7 @@
 package be.atbash.ee.security.sso.server.cookie;
 
 
-import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.WebUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -34,7 +34,7 @@ public class SSOHelper {
         httpServletRequest.getSession().setAttribute(CLIENT_ID_LOGIN, clientId);
     }
 
-    public String getSSOClientId(Subject subject) {
+    public String getSSOClientId(WebSubject subject) {
         HttpServletRequest servletRequest = WebUtils.getHttpRequest(subject);
         return getSSOClientId(servletRequest);
     }

@@ -20,10 +20,8 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.rememberme.CookieRememberMeManager;
-import be.atbash.ee.security.octopus.subject.PrincipalCollection;
-import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.SubjectContext;
-import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.subject.*;
+import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
@@ -31,6 +29,7 @@ import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.ee.security.sso.server.store.TokenStoreInfo;
 import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +69,11 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
 
     @Override
     public void onSuccessfulLogin(Subject subject, AuthenticationToken token, AuthenticationInfo info) {
-        String clientId = ssoHelper.getSSOClientId(subject);
+        if (!(subject instanceof WebSubject)) {
+            throw new AtbashUnexpectedException("subject needs to be of type WebSubject");
+        }
+
+        String clientId = ssoHelper.getSSOClientId((WebSubject) subject);
         if (StringUtils.hasText(clientId)) {
             rememberIdentity(subject, info);
         } else {
@@ -115,8 +118,11 @@ public class SSOCookieRememberMeManager extends CookieRememberMeManager {
 
     public PrincipalCollection getRememberedPrincipals(SubjectContext subjectContext) {
         PrincipalCollection principals = null;
+        if (!(subjectContext instanceof WebSubjectContext)) {
+            throw new AtbashUnexpectedException("subjectContext needs to be of type WebSubjectContext");
+        }
 
-        HttpServletRequest httpRequest = WebUtils.getHttpRequest(subjectContext);
+        HttpServletRequest httpRequest = WebUtils.getHttpRequest((WebSubjectContext) subjectContext);
         if (!WebUtils.getRequestUri(httpRequest).contains("/octopus/")) {
             // We are logging into the SSO server itself, not a client application.
             // Never use the SSO cookies for the main app itself.

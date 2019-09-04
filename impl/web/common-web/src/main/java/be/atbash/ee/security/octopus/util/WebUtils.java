@@ -320,30 +320,22 @@ public class WebUtils {
      * @return {@code true} IFF the specified context has HTTP request/response objects, {@code false} otherwise.
      * @since 1.0
      */
-// FIXME Limit the parameter to actual used parameters when called
-    public static ServletRequest getRequest(Object requestPairSource) {
-        if (requestPairSource instanceof RequestPairSource) {
-            return ((RequestPairSource) requestPairSource).getServletRequest();
-        }
-        return null;
+
+    private static ServletRequest getRequest(RequestPairSource requestPairSource) {
+        return requestPairSource.getServletRequest();
     }
-    // FIXME Limit the parameter to actual used parameters when called
-    public static ServletResponse getResponse(Object requestPairSource) {
-        if (requestPairSource instanceof RequestPairSource) {
-            return ((RequestPairSource) requestPairSource).getServletResponse();
-        }
-        return null;
+
+    private static ServletResponse getResponse(RequestPairSource requestPairSource) {
+        return requestPairSource.getServletResponse();
     }
-    // FIXME Limit the parameter to actual used parameters when called
-    public static HttpServletRequest getHttpRequest(Object requestPairSource) {
+
+
+    public static HttpServletRequest getHttpRequest(RequestPairSource requestPairSource) {
         ServletRequest request = getRequest(requestPairSource);
-        if (request instanceof HttpServletRequest) {
-            return (HttpServletRequest) request;
-        }
-        return null;
+        return toHttp(request);
     }
     // FIXME Limit the parameter to actual used parameters when called
-    public static HttpServletResponse getHttpResponse(Object requestPairSource) {
+    public static HttpServletResponse getHttpResponse(RequestPairSource requestPairSource) {
         ServletResponse response = getResponse(requestPairSource);
         if (response instanceof HttpServletResponse) {
             return (HttpServletResponse) response;
