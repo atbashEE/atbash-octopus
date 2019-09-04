@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.oauth2.servlet;
 
+import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authc.event.LogoutEvent;
 import be.atbash.ee.security.octopus.oauth2.config.ProviderSelection;
 import be.atbash.ee.security.octopus.oauth2.config.UserProviderSelection;
@@ -22,7 +23,10 @@ import be.atbash.ee.security.octopus.oauth2.config.jsf.OAuth2JSFConfiguration;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2Provider;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaData;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderMetaDataControl;
+import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
+import be.atbash.ee.security.octopus.util.SecretUtil;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.PublicAPI;
 import be.atbash.util.StringUtils;
@@ -107,8 +111,8 @@ public class OAuth2ServletInfo implements UserProviderSelection, Serializable {
         this.userProviderSelection = userProviderSelection;
         providerSelection.setProviderSelection(userProviderSelection);
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        SavedRequest savedRequest = WebUtils.getAndClearSavedRequest((ServletRequest) externalContext
-                .getRequest());
+        WebSubject subject = SecurityUtils.getSubject();
+        SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(subject);
 
         try {
             externalContext

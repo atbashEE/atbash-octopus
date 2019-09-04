@@ -334,14 +334,7 @@ public class WebUtils {
         ServletRequest request = getRequest(requestPairSource);
         return toHttp(request);
     }
-    // FIXME Limit the parameter to actual used parameters when called
-    public static HttpServletResponse getHttpResponse(RequestPairSource requestPairSource) {
-        ServletResponse response = getResponse(requestPairSource);
-        if (response instanceof HttpServletResponse) {
-            return (HttpServletResponse) response;
-        }
-        return null;
-    }
+
 /*
     private static boolean isWeb(RequestPairSource source) {
         ServletRequest request = source.getServletRequest();
@@ -493,22 +486,18 @@ public class WebUtils {
         session.setAttribute(SAVED_REQUEST_KEY, savedRequest);
     }
 
-    public static SavedRequest getAndClearSavedRequest(ServletRequest request) {
-        // TODO Improve (ServletRequest not needed and WebSubject passed to getSavedRequest)
-        SavedRequest savedRequest = getSavedRequest(request);
+    public static SavedRequest getAndClearSavedRequest(WebSubject subject) {
+        SavedRequest savedRequest = getSavedRequest(subject);
 
         if (savedRequest != null) {
-            WebSubject subject = SecurityUtils.getSubject();
             Session session = subject.getSession();
             session.removeAttribute(SAVED_REQUEST_KEY);
         }
         return savedRequest;
     }
 
-    // TODO can be private and WebSubject as parameter.
-    public static SavedRequest getSavedRequest(ServletRequest request) {
+    private static SavedRequest getSavedRequest(WebSubject subject) {
         SavedRequest savedRequest = null;
-        WebSubject subject = SecurityUtils.getSubject();
         Session session = subject.getSession(false);
         if (session != null) {
             savedRequest = (SavedRequest) session.getAttribute(SAVED_REQUEST_KEY);
@@ -538,7 +527,8 @@ public class WebUtils {
             throws IOException {
         String successUrl = null;
         boolean contextRelative = true;
-        SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+        WebSubject subject = SecurityUtils.getSubject();
+        SavedRequest savedRequest = getAndClearSavedRequest(subject);
         // FIXME, Verify what happens with a POST and the PostAllowed config parameter.
         if (savedRequest != null && savedRequest.getMethod().equalsIgnoreCase(AccessControlFilter.GET_METHOD)) {
             successUrl = savedRequest.getRequestUrl();

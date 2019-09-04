@@ -22,6 +22,8 @@ import be.atbash.ee.security.octopus.cas.adapter.info.CasInfoProvider;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
+import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -65,10 +67,11 @@ public class CasServlet extends HttpServlet {
 
             sessionUtil.invalidateCurrentSession(request);
 
-            SecurityUtils.getSubject().login(casUser);
+            WebSubject subject = SecurityUtils.getSubject();
+            subject.login(casUser);
 
             //activeSessionRegistry.startSession(ticket, SecurityUtils.getSubject().getPrincipal());
-            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(subject);
             try {
                 response.sendRedirect(savedRequest != null ? savedRequest.getRequestUrl() : request.getContextPath());
             } catch (IOException e) {

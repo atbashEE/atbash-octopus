@@ -24,6 +24,8 @@ import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
 import be.atbash.ee.security.octopus.keycloak.adapter.OIDCAuthenticationException;
 import be.atbash.ee.security.octopus.keycloak.config.OctopusKeycloakConfiguration;
 import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
+import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -248,9 +250,10 @@ public class KeycloakServlet extends HttpServlet {
             // FIXME Is this required here or done already as part of the login?
             //sessionUtil.invalidateCurrentSession(request);
 
-            SecurityUtils.getSubject().login(user);
+            WebSubject subject = SecurityUtils.getSubject();
+            subject.login(user);
 
-            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(subject);
             response.sendRedirect(savedRequest != null ? savedRequest.getRequestUrl() : request.getContextPath());
         } catch (AuthenticationException e) {
             HttpSession sess = request.getSession();

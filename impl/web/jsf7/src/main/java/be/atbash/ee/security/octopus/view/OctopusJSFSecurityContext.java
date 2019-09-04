@@ -65,8 +65,8 @@ public class OctopusJSFSecurityContext extends OctopusWebSecurityContext {
         }
         subject.login(token);
 
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+        if (subject.isAuthenticated()) {
+            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(subject);
 
             externalContext.redirect(savedRequest != null ? savedRequest.getRequestUrl() : rootUrl);
         } else {

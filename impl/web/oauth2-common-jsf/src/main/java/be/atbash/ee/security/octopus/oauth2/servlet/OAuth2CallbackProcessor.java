@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
 import be.atbash.ee.security.octopus.oauth2.info.OAuth2InfoProvider;
 import be.atbash.ee.security.octopus.session.SessionUtil;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -103,7 +104,8 @@ public abstract class OAuth2CallbackProcessor {
 
         try {
 
-            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+            WebSubject subject = SecurityUtils.getSubject();
+            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(subject);
             sessionUtil.invalidateCurrentSession(request);
 
             SecurityUtils.getSubject().login(oAuth2User);

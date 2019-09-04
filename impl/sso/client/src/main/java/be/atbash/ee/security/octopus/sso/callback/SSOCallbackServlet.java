@@ -30,6 +30,8 @@ import be.atbash.ee.security.octopus.sso.core.rest.DefaultPrincipalUserInfoJSONP
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
+import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
@@ -145,9 +147,10 @@ public class SSOCallbackServlet extends HttpServlet {
             sessionUtil.invalidateCurrentSession(httpServletRequest);
 
             // Do the login
-            SecurityUtils.getSubject().login(user);
+            WebSubject subject = SecurityUtils.getSubject();
+            subject.login(user);
 
-            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(httpServletRequest);
+            SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(subject);
             try {
                 httpServletResponse.sendRedirect(savedRequest != null ? savedRequest.getRequestUrl() : httpServletRequest.getContextPath());
             } catch (IOException e) {
