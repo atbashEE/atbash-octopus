@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.config;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -71,6 +72,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     @ConfigProperty(name = "session.hijacking.level", defaultValue = "ON")
     // WildFly swarm version used in IT testing, doesn't handle yet Enum in a generic way yet!
     private String sessionHijackingLevel;
+
+    @Inject
+    @ConfigProperty(name = "aliasNameLoginBean", defaultValue = "")
+    private String aliasNameLoginbean;
 
     @ConfigEntry()
     public String getLoginPage() {
@@ -132,4 +137,10 @@ public class OctopusJSFConfiguration implements ModuleConfig {
     public SessionHijackingLevel getSessionHijackingLevel() {
         return SessionHijackingLevel.valueOf(sessionHijackingLevel);
     }
+
+    @ConfigEntry
+    public String getAliasNameLoginbean() {
+        return aliasNameLoginbean;
+    }
+
 }

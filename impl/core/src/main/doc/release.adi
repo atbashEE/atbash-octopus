@@ -8,6 +8,7 @@
 . Single Session support for JSF
 . Advanced sendRedirect configuration
 . Support for multiple AuthorizationInfo
+. aliasNameLoginBean support
 
 . Improved handling of Remembered Identities.
 
@@ -18,7 +19,7 @@
 ==== Important changes
 
 . the Map `userInfo` from `UserPrincipal` has now a key of type `java.lang.String`.
-. All `PathMatchingFilter` have now the parameter `Object mappedValue` removed. If you need pathConfig, use getPathConfig(ServletRequest).
+. All methods within `PathMatchingFilter` have now the parameter `Object mappedValue` removed. If you need pathConfig, use `getPathConfig(ServletRequest)`.
 
 === 0.5
 

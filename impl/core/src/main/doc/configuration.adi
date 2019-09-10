@@ -194,6 +194,12 @@ Determines the Session Hijack Protection level. It uses the IP Address and User-
 
 The default level _ON_, checks both properties, _PARTIAL_ only the User-Agent header value and _OFF_ disables the protection.
 
+==== aliasNameLoginBean
+
+default : *none*
+
+An alternative name for the named CDI bean `loginBean`. When this config property is set, this name can be used in JSF pages to link to the Octopus provided loginBean so that this name can follow your coding conventions you might have.
+
 === Remember me configuration
 
 ==== octopus.rememberme.cookie.name
