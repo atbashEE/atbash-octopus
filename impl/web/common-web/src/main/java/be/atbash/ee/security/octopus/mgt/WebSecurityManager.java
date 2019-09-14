@@ -572,12 +572,8 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
             octopusRealm.onLogout(principals);
         }
 
-        delete((WebSubject) subject);
-        /*
-
-        FIXME Verify if and how it is required and should be used.
         try {
-            delete(subject);
+            delete((WebSubject) subject);
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 String msg = "Unable to cleanly unbind Subject.  Ignoring (logging out).";
@@ -585,7 +581,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
             }
         } finally {
             try {
-                stopSession(subject);
+                stopSession((WebSubject) subject);
             } catch (Exception e) {
                 if (log.isDebugEnabled()) {
                     String msg = "Unable to cleanly stop Session for Subject [" + subject.getPrincipal() + "] " +
@@ -595,7 +591,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
             }
         }
 
-        */
+
     }
 
     /**
@@ -609,5 +605,16 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
      */
     protected void delete(WebSubject subject) {
         this.subjectDAO.delete(subject);
+    }
+
+    /**
+     * Stop the session related to the Subject which results in the invalidation of the HTTP Session.
+     * @param subject
+     */
+    protected void stopSession(WebSubject subject) {
+        Session s = subject.getSession(false);
+        if (s != null) {
+            s.stop();
+        }
     }
 }

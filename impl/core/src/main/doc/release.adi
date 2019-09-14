@@ -9,6 +9,7 @@
 . Advanced sendRedirect configuration
 . Support for multiple AuthorizationInfo
 . aliasNameLoginBean support
+. HTTPSession invalidated when logging in and logging out.
 
 . Improved handling of Remembered Identities.
 

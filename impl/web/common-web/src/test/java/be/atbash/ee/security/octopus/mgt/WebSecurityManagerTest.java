@@ -25,8 +25,10 @@ import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.realm.remember.RememberMeManager;
 import be.atbash.ee.security.octopus.realm.remember.RememberMeManagerProvider;
+import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.Subject;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.systemaccount.internal.SystemAccountPrincipal;
@@ -47,6 +49,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static be.atbash.ee.security.octopus.WebConstants.IDENTITY_REMOVED_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -86,6 +89,9 @@ public class WebSecurityManagerTest {
 
     @Mock
     private RememberMeManager rememberMeManagerMock;
+
+    @Mock
+    private Session sessionMock;
 
     @Captor
     private ArgumentCaptor<Subject> subjectArgument;
@@ -266,6 +272,28 @@ public class WebSecurityManagerTest {
 
         verify(newWebSubjectMock).startTwoStepProcess();
         verify(twoStepManagerMock).startSecondStep(newWebSubjectMock);
+
+    }
+
+    @Test
+    public void logout() {
+        when(rememberMeManagerProviderMock.getRememberMeManager()).thenReturn(rememberMeManagerMock);
+        when(webSubjectMock.getServletRequest()).thenReturn(servletRequestMock);
+
+        UserPrincipal userPrincipal = new UserPrincipal(-1, "junit", "JUnit");
+        PrincipalCollection principals = new PrincipalCollection(userPrincipal);
+        when(webSubjectMock.getPrincipals()).thenReturn(principals);
+
+        when(webSubjectMock.getSession(false)).thenReturn(sessionMock);
+        // test
+        webSecurityManager.logout(webSubjectMock);
+
+        // checks
+        verify(rememberMeManagerMock).onLogout(webSubjectMock);
+        verify(servletRequestMock).setAttribute(IDENTITY_REMOVED_KEY, Boolean.TRUE);
+        verify(octopusRealmMock).onLogout(principals);
+        verify(subjectDAOMock).delete(webSubjectMock);
+        verify(sessionMock).stop();
 
     }
 }
