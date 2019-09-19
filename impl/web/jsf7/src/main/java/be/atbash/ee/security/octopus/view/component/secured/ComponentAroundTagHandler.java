@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ import java.util.Map;
 /**
  *
  */
-public class ComponentAroundTagHandler extends UIComponentBase {
+class ComponentAroundTagHandler extends UIComponentBase {
 
     private static final String[] PERMISSION_LISTENER_ATTRIBUTES = new String[]{"voter", "permission", "role", "not", "combined", "for", "listener"};
 
     private Map<String, Object> attributes = new HashMap<>();
     private Map<String, ValueExpression> valueExpressions = new HashMap<>();
 
-    public ComponentAroundTagHandler(FaceletContext ctx, OctopusTagHandler tagHandler) {
+    ComponentAroundTagHandler(FaceletContext ctx, OctopusTagHandler tagHandler) {
 
         for (String attributeName : PERMISSION_LISTENER_ATTRIBUTES) {
             TagAttribute attribute = tagHandler.getAttributeCallback(attributeName);

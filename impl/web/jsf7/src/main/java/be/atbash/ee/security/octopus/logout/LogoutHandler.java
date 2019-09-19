@@ -18,8 +18,6 @@ package be.atbash.ee.security.octopus.logout;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.subject.Subject;
-import be.atbash.ee.security.octopus.subject.WebSubject;
-import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
 

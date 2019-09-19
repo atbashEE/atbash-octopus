@@ -24,7 +24,6 @@ import be.atbash.ee.security.octopus.keycloak.adapter.KeycloakUserToken;
 import be.atbash.ee.security.octopus.keycloak.adapter.OIDCAuthenticationException;
 import be.atbash.ee.security.octopus.keycloak.config.OctopusKeycloakConfiguration;
 import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
-import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;

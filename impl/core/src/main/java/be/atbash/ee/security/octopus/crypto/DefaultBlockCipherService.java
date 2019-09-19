@@ -126,6 +126,7 @@ import be.atbash.util.StringUtils;
  * @see <a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation">Wikipedia: Block Cipher Modes of Operation</a>
  */
 public class DefaultBlockCipherService extends AbstractSymmetricCipherService {
+// TODO Review if we can create a custom CipherService
 
     private static final int DEFAULT_BLOCK_SIZE = 0;
 

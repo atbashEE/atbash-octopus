@@ -51,7 +51,7 @@ public class RateLimitFilter extends PathMatchingFilter {
     @Override
     public Filter processPathConfig(String path, String config) {
         Filter result = super.processPathConfig(path, config);
-        String[] configValues = (String[]) appliedPaths.get(path);
+        String[] configValues = appliedPaths.get(path);
 
         if (configValues.length != 1) {
             throw new ConfigurationException(String.format("Configuration of Rate limit filter on path %s is wrong (%s)", path, config));

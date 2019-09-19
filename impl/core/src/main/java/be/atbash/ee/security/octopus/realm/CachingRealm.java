@@ -70,7 +70,7 @@ public abstract class CachingRealm extends AbstractAuthenticator implements Auth
      * Note that while in general, caching may be enabled by default, subclasses have control over
      * if specific caching is enabled.
      */
-    public CachingRealm() {
+    CachingRealm() {
         cachingEnabled = true;
     }
 

@@ -30,7 +30,6 @@ import be.atbash.ee.security.octopus.sso.core.rest.DefaultPrincipalUserInfoJSONP
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
-import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;

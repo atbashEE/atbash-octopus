@@ -27,6 +27,5 @@ import java.security.Principal;
 
 public interface PrincipalProvider {
     // FIXME Move To Core together with AfterSuccesFilLoginHandler ??
-    // FIXME Is Object correct? What is stored in PrincipalCollection?
     Principal createPrincipal(UserPrincipal userPrincipal);
 }

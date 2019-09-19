@@ -22,7 +22,6 @@ import be.atbash.ee.security.octopus.cas.adapter.info.CasInfoProvider;
 import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
-import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;

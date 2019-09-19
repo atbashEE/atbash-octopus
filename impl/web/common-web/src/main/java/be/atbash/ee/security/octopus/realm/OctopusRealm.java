@@ -40,8 +40,6 @@ public class OctopusRealm extends AuthorizingRealm {
 
     private boolean listenerConfigured = false;
 
-    private boolean authorizationInfoRequired = false;
-
     @Inject
     private AuthenticationInfoProviderHandler authenticationInfoProviderHandler;
 
@@ -93,7 +91,6 @@ public class OctopusRealm extends AuthorizingRealm {
             }
         }
 
-
         // FIXME implement the be.c4j.ee.security.realm.OctopusRealmAuthenticator#doSingleRealmAuthentication() logic
         return authenticationInfo;
     }
@@ -124,7 +121,7 @@ public class OctopusRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
-        if (!listenerConfigured) {
+        if (!listenerConfigured) {  // FIXME listenerConfigured never set to true
             configureListeners();
             checkAuthorizationInfoMarkers();
         }

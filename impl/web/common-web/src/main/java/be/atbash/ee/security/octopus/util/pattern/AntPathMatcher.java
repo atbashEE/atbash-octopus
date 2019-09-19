@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ import javax.enterprise.inject.Typed;
 @Reviewed
 public class AntPathMatcher implements PatternMatcher {
 
-    private String pathSeparator = "/";
+    private static final String PATH_SEPARATOR = "/";
 
     public boolean matches(String pattern, String path) {
         if (pattern == null) {
@@ -97,12 +97,12 @@ public class AntPathMatcher implements PatternMatcher {
      * <code>false</code> if it didn't
      */
     private boolean doMatch(String pattern, String path) {
-        if (path.startsWith(pathSeparator) != pattern.startsWith(pathSeparator)) {
+        if (path.startsWith(PATH_SEPARATOR) != pattern.startsWith(PATH_SEPARATOR)) {
             return false;
         }
 
-        String[] pattDirs = StringUtils.tokenizeToStringArray(pattern, pathSeparator);
-        String[] pathDirs = StringUtils.tokenizeToStringArray(path, pathSeparator);
+        String[] pattDirs = StringUtils.tokenizeToStringArray(pattern, PATH_SEPARATOR);
+        String[] pathDirs = StringUtils.tokenizeToStringArray(path, PATH_SEPARATOR);
 
         int pattIdxStart = 0;
         int pattIdxEnd = pattDirs.length - 1;
@@ -125,11 +125,11 @@ public class AntPathMatcher implements PatternMatcher {
         if (pathIdxStart > pathIdxEnd) {
             // Path is exhausted, only match if rest of pattern is * or **'s
             if (pattIdxStart > pattIdxEnd) {
-                return (pattern.endsWith(pathSeparator) == path.endsWith(pathSeparator));
+                return (pattern.endsWith(PATH_SEPARATOR) == path.endsWith(PATH_SEPARATOR));
             }
 
             if (pattIdxStart == pattIdxEnd && pattDirs[pattIdxStart].equals("*") &&
-                    path.endsWith(pathSeparator)) {
+                    path.endsWith(PATH_SEPARATOR)) {
                 return true;
             }
             for (int i = pattIdxStart; i <= pattIdxEnd; i++) {

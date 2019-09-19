@@ -66,7 +66,7 @@ public interface Permission extends JSONAware {
      * Returns {@code true} if this current instance <em>implies</em> all the functionality and/or resource access
      * described by the specified {@code Permission} argument, {@code false} otherwise.
      * <p/>
-     * <p>That is, this current instance must be exactly equal to or a <em>superset</em> of the functionalty
+     * <p>That is, this current instance must be exactly equal to or a <em>superset</em> of the functionality
      * and/or resource access described by the given {@code Permission} argument.  Yet another way of saying this
      * would be:
      * <p/>

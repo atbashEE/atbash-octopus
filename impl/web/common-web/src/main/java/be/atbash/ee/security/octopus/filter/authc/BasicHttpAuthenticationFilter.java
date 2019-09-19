@@ -228,7 +228,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
             loggedIn = executeLogin(request, response);
         }
         if (!loggedIn) {
-            sendChallenge(request, response);
+            sendChallenge(request, response);  // FIXME Handle return method?
         }
         return loggedIn;
     }

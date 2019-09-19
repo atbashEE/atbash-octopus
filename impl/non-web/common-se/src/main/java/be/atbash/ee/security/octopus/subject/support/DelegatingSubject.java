@@ -306,7 +306,6 @@ public class DelegatingSubject implements Subject {
         return popIdentity();
     }
 
-    @SuppressWarnings("unchecked")
     private List<PrincipalCollection> getRunAsPrincipalsStack() {
         // FIXME support for runAs
         return null;

@@ -26,6 +26,7 @@ import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import com.nimbusds.oauth2.sdk.util.MultivaluedMapUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import com.nimbusds.openid.connect.sdk.AuthenticationErrorResponse;
 import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
@@ -111,7 +112,7 @@ class SSOCallbackServletHandler {
         State result = null;
         Map<String, List<String>> params = URLUtils.parseParameters(query);
         if (params.containsKey("state")) {
-            result = State.parse(params.get("state").get(0)); // FIXME Only the first?
+            result = State.parse(MultivaluedMapUtils.getFirstValue(params, "state"));
         }
         return result;
     }

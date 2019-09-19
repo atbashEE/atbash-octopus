@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ public class NamedPermissionProducer extends AbstractProducer {
         }
     }
 
+    // FIXME Create IT test for this
     @Produces
     public GenericPermissionVoter getVoter(InjectionPoint injectionPoint) {
         NamedPermission[] permissions;
@@ -81,10 +82,9 @@ public class NamedPermissionProducer extends AbstractProducer {
         }
 
         if (result == null) {
-            Annotation annotation = injectionPoint.getAnnotated().getAnnotation(RequiresPermissions.class);
-            if (annotation != null) {
+            RequiresPermissions requiresPermissions = injectionPoint.getAnnotated().getAnnotation(RequiresPermissions.class);
+            if (requiresPermissions != null) {
 
-                RequiresPermissions requiresPermissions = (RequiresPermissions) annotation;
                 String[] stringPermissions = requiresPermissions.value();
                 if (stringPermissions.length > 1) {
                     throw new AmbiguousResolutionException(String.format("Only one named permission can be specified at %s", defineInjectionPointInfo(injectionPoint)));
@@ -139,10 +139,9 @@ public class NamedPermissionProducer extends AbstractProducer {
         }
 
         if (result == null) {
-            Annotation annotation = injectionPoint.getAnnotated().getAnnotation(RequiresPermissions.class);
-            if (annotation != null) {
+            RequiresPermissions requiresPermissions = injectionPoint.getAnnotated().getAnnotation(RequiresPermissions.class);
+            if (requiresPermissions != null) {
 
-                RequiresPermissions requiresPermissions = (RequiresPermissions) annotation;
                 String[] stringPermissions = requiresPermissions.value();
                 if (stringPermissions.length > 1) {
                     throw new AmbiguousResolutionException(String.format("Only one named permission can be specified at %s", defineInjectionPointInfo(injectionPoint)));

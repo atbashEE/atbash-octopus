@@ -36,7 +36,7 @@ public class LinkedinJSONProcessor extends OAuth2UserInfoProcessor {
     private static final List<String> KEYS = Arrays.asList("id", "emailAddress", "publicProfileUrl", "pictureUrl");
 
     public OAuth2UserToken extractLinkedinUser(String json) {
-        OAuth2UserToken oAuth2User = null;
+        OAuth2UserToken oAuth2User;
         try {
             JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
 

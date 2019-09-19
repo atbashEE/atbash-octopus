@@ -118,6 +118,7 @@ public class AuthenticationInfoProviderHandler {
         for (int i = pos; i < strategyValuesForProviders.size(); i++) {
             if (strategyValuesForProviders.get(i) == AuthenticationStrategy.REQUIRED) {
                 result = false;
+                break;
             }
         }
         return result;

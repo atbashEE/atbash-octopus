@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,6 @@ public class OctopusFilter extends OncePerRequestFilter {
 
             ThreadContext.bind(subject);
 
-            //noinspection unchecked
             subject.execute(new Callable() {
                 public Object call() throws Exception {
                     executeChain(servletRequest, servletResponse, chain);

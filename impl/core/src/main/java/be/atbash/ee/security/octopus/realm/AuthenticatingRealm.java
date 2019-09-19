@@ -134,7 +134,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
     private boolean authenticationCachingEnabled;
     private String authenticationCacheName;
 
-    public AuthenticatingRealm() {
+    AuthenticatingRealm() {
 
         int instanceNumber = INSTANCE_COUNT.getAndIncrement();
         authenticationCacheName = getClass().getName() + DEFAULT_AUTHORIZATION_CACHE_SUFFIX;

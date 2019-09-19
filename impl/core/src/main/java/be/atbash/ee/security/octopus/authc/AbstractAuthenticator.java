@@ -64,7 +64,7 @@ public abstract class AbstractAuthenticator implements Authenticator, LogoutAwar
      * Default no-argument constructor. Ensures the internal
      * {@link AuthenticationListener AuthenticationListener} collection is a non-null {@code ArrayList}.
      */
-    public AbstractAuthenticator() {
+    protected AbstractAuthenticator() {
         listeners = new ArrayList<>();
     }
 

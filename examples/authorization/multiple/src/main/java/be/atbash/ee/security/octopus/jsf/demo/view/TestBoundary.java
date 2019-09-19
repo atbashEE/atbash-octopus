@@ -16,10 +16,8 @@
 package be.atbash.ee.security.octopus.jsf.demo.view;
 
 import be.atbash.ee.security.octopus.authz.annotation.RequiresPermissions;
-import be.atbash.ee.security.octopus.authz.annotation.RequiresUser;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
 
 /**
  *

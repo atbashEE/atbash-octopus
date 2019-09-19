@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class OctopusExtension implements Extension {
     private Class<VoterNameFactory> voterNameFactoryClass = VoterNameFactory.class;
 
     protected OctopusCoreConfiguration config;
-    protected VoterNameFactory nameFactory;
+    private VoterNameFactory nameFactory;
 
     protected void createPermissionVoters(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
@@ -113,7 +113,7 @@ public class OctopusExtension implements Extension {
 
         private NamedPermission namedPermission;
 
-        public PermissionLifecycleCallback(InjectionTarget<GenericPermissionVoter> injectionTarget, NamedPermission
+        PermissionLifecycleCallback(InjectionTarget<GenericPermissionVoter> injectionTarget, NamedPermission
                 someNamedPermission) {
             super(injectionTarget);
             namedPermission = someNamedPermission;
@@ -141,7 +141,7 @@ public class OctopusExtension implements Extension {
 
         private NamedRole namedRole;
 
-        public RoleLifecycleCallback(InjectionTarget<GenericRoleVoter> injectionTarget, NamedRole
+        RoleLifecycleCallback(InjectionTarget<GenericRoleVoter> injectionTarget, NamedRole
                 someNamedRole) {
             super(injectionTarget);
             namedRole = someNamedRole;

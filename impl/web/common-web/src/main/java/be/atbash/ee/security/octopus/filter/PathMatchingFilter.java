@@ -90,7 +90,7 @@ public abstract class PathMatchingFilter extends AdviceFilter {
         }
 
         if (requiresPathConfiguration() && (values == null || values.length == 0)) {
-            String msg = String.format("(E0013) Error : chainSpecificFilterConfig iss required for filter '%s'", this.getClass().getName());
+            String msg = String.format("(E0013) Error : chainSpecificFilterConfig is required for filter '%s'", this.getClass().getName());
             throw new ConfigurationException(msg);
 
         }

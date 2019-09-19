@@ -18,7 +18,6 @@ package be.atbash.ee.security.octopus.basic;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfoProvider;
 import be.atbash.ee.security.octopus.realm.AuthenticationInfoBuilder;
-import be.atbash.ee.security.octopus.realm.SecurityDataProvider;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 

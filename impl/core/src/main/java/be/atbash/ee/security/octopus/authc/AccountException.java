@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  * under which an authentication attempt is being executed.
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.AccountException"})
-public class AccountException extends AuthenticationException {
+class AccountException extends AuthenticationException {
 
     /**
      * Creates a new AccountException.
      */
-    public AccountException() {
+    AccountException() {
         super();
     }
 
@@ -36,7 +36,7 @@ public class AccountException extends AuthenticationException {
      *
      * @param message the reason for the exception
      */
-    public AccountException(String message) {
+    AccountException(String message) {
         super(message);
     }
 
@@ -45,7 +45,7 @@ public class AccountException extends AuthenticationException {
      *
      * @param cause the underlying Throwable that caused this exception to be thrown.
      */
-    public AccountException(Throwable cause) {
+    AccountException(Throwable cause) {
         super(cause);
     }
 
@@ -55,7 +55,7 @@ public class AccountException extends AuthenticationException {
      * @param message the reason for the exception
      * @param cause   the underlying Throwable that caused this exception to be thrown.
      */
-    public AccountException(String message, Throwable cause) {
+    AccountException(String message, Throwable cause) {
         super(message, cause);
     }
 

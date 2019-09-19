@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,6 @@ public class SoftHashMap<K, V> implements Map<K, V> {
      * @param retentionSize the total number of most recent entries in the map that will be strongly referenced
      *                      (retained), preventing them from being eagerly garbage collected by the JVM.
      */
-    @SuppressWarnings({"unchecked"})
     public SoftHashMap(int retentionSize) {
         super();
         RETENTION_SIZE = Math.max(0, retentionSize);

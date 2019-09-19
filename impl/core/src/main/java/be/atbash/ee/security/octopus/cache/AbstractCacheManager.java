@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     /**
      * Default no-arg constructor that instantiates an internal name-to-cache {@code ConcurrentMap}.
      */
-    public AbstractCacheManager() {
+    AbstractCacheManager() {
         caches = new ConcurrentHashMap<>();
     }
 

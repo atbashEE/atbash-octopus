@@ -30,13 +30,6 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 public class InvalidSessionException extends SessionException {
 
     /**
-     * Creates a new InvalidSessionException.
-     */
-    public InvalidSessionException() {
-        super();
-    }
-
-    /**
      * Constructs a new InvalidSessionException.
      *
      * @param message the reason for the exception

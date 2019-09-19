@@ -31,7 +31,7 @@ public final class OctopusConstants {
     public static final String GENDER = "gender";
     public static final String LOCALE = "locale";
     public static final String TOKEN = "token";  // FIXME Review usage , same as INFO_KEY_TOKEN
-    public static final String UPSTREAM_TOKEN = "upstreamToken";
+    public static final String UPSTREAM_TOKEN = "upstreamToken";  // FIXME Review usage
     public static final String EXTERNAL_SESSION_ID = "externalSession";
 
     public static final String FIRST_NAME = "firstName";

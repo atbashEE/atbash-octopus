@@ -32,6 +32,7 @@ public class ProducerBean {
 
     @Produces
     @RequestScoped
+    // FIXME This is not correctly proxied
     public Subject produceSubject() {
         return SecurityUtils.getSubject();
     }
