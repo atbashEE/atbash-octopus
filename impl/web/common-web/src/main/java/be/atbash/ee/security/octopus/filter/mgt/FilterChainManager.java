@@ -16,6 +16,8 @@
 package be.atbash.ee.security.octopus.filter.mgt;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.audit.OctopusAuditFilter;
+import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import be.atbash.ee.security.octopus.filter.GlobalFilterProvider;
@@ -48,6 +50,9 @@ import static be.atbash.ee.security.octopus.filter.mgt.ExceptionFilter.EXCEPTION
 public class FilterChainManager {
 
     private static final Logger log = LoggerFactory.getLogger(FilterChainManager.class);
+
+    @Inject
+    private OctopusWebConfiguration webConfiguration;
 
     @Inject
     private SecuredURLReader securedURLReader;
@@ -235,6 +240,9 @@ public class FilterChainManager {
 
         // Add the ExceptionFilter as first filter in the chain. Always!!
         addToChain(realChainName, EXCEPTION_FILTER_NAME, null);
+        if (webConfiguration.isGlobalAuditActive()) {
+            addToChain(realChainName, OctopusAuditFilter.AUDIT_FILTER_NAME, null);
+        }
 
         for (GlobalFilterProvider globalFilterProvider : globalFilterProviders) {
             List<String> additionalFilters = globalFilterProvider.addFiltersTo(realChainName);

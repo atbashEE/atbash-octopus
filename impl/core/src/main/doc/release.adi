@@ -10,6 +10,7 @@
 . Support for multiple AuthorizationInfo
 . aliasNameLoginBean support
 . HTTPSession invalidated when logging in and logging out.
+. Audit Filter
 
 . Improved handling of Remembered Identities.
 

@@ -15,30 +15,39 @@
  */
 package be.atbash.ee.security.octopus.filter.mgt;
 
+import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.filter.AdviceFilter;
 import be.atbash.ee.security.octopus.filter.GlobalFilterProvider;
 import be.atbash.ee.security.octopus.filter.PathMatchingFilter;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.Filter;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  *
  */
-
+@RunWith(MockitoJUnitRunner.class)
 public class FilterChainManagerTest {
 
+    @Mock
+    private OctopusWebConfiguration webConfigurationMock;
+
+    @InjectMocks
     private FilterChainManager filterChainManager;
 
     private Map<String, AdviceFilter> filters;
 
     @Test
     public void createChain_happyCase() throws IllegalAccessException {
-        filterChainManager = new FilterChainManager();
         init("ef", "sh", "user", "np");
         initGlobalFilter(false);
 
@@ -56,8 +65,7 @@ public class FilterChainManagerTest {
 
     @Test
     public void createChain_AdditionalGlobal() throws IllegalAccessException {
-        filterChainManager = new FilterChainManager();
-        init("ef", "sh", "user", "np", "test", "audit", "f2");
+        init("ef", "sh", "user", "np", "test", "customAudit", "f2");
         initGlobalFilter(true);
 
         filterChainManager.createChain("pages/**", "user, np[permission:read:*]");
@@ -65,7 +73,7 @@ public class FilterChainManagerTest {
         NamedFilterList chain = filterChainManager.getChain("/pages/**");
         assertThat(chain).hasSize(6); // 2 defined + ef + 3 global
         assertThat(chain.get(0).getName()).isEqualTo("ef");
-        assertThat(chain.get(1).getName()).isEqualTo("audit");
+        assertThat(chain.get(1).getName()).isEqualTo("customAudit");
         assertThat(chain.get(2).getName()).isEqualTo("test");
         assertThat(chain.get(3).getName()).isEqualTo("f2");
         assertThat(chain.get(4).getName()).isEqualTo("user");
@@ -75,7 +83,6 @@ public class FilterChainManagerTest {
 
     @Test
     public void createChain_checkFilterConfigParsing() throws IllegalAccessException {
-        filterChainManager = new FilterChainManager();
         init("ef", "sh", "user", "np", "test", "audit", "f2");
         initGlobalFilter(false);
 
@@ -84,6 +91,23 @@ public class FilterChainManagerTest {
         NamedFilterList chain = filterChainManager.getChain("/pages/**");
         assertThat(chain).hasSize(4);
         assertThat(((TestFilter) chain.get(3)).config).isEqualTo("a,b");
+
+    }
+
+    @Test
+    public void createChain_checkAudit() throws IllegalAccessException {
+        when(webConfigurationMock.isGlobalAuditActive()).thenReturn(true);
+
+        init("ef", "sh", "user", "audit");
+        initGlobalFilter(false);
+
+        filterChainManager.createChain("pages/**", "user");
+
+        NamedFilterList chain = filterChainManager.getChain("/pages/**");
+        assertThat(chain).hasSize(3);
+        assertThat(chain.get(0).getName()).isEqualTo("ef");
+        assertThat(chain.get(1).getName()).isEqualTo("audit");
+        assertThat(chain.get(2).getName()).isEqualTo("user");
 
     }
 
@@ -132,7 +156,7 @@ public class FilterChainManagerTest {
 
         @Override
         public List<String> addFiltersTo(String url) {
-            return Arrays.asList("audit");
+            return Arrays.asList("customAudit");
         }
     }
 }

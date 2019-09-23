@@ -367,6 +367,14 @@ type : Authenticating
 
 Retrieves authentication information from the Bearer header formatted accordingly to the MP JWT Auth spec.
 
+==== audit
+
+type : other
+
+When an URL is accessed which has this filter defined on, the **OctopusAuditEvent* is thrown.
+Instead of manually define this filter on all URLs defined in the _securedURLs.ini_ file, you can also add it to all
+URLs by setting the **globalAuditActive** property to true.
+
 === Java SE
 
 Methods can be annotated with authorization checks, like @RequiresPermission, and authorization checks are performed by calling the method

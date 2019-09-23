@@ -124,6 +124,12 @@ SSO_REST:
 
 ???
 
+==== globalAuditActive
+
+default : *false*
+
+When configuration property set to true, all URLs have the audit filter added and Audit Events are generated for each access.
+
 === JSF Configuration
 
 ==== user.filter.default

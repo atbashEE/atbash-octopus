@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.config;
 import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
+import org.apache.deltaspike.core.api.config.ConfigResolver;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -40,6 +41,10 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "single.session", defaultValue = "false")
     private boolean singleSession;
 
+    @Inject
+    @ConfigProperty(name = "globalAuditActive", defaultValue = "false")
+    private boolean globalAuditActive;
+
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
         return securedURLsFile;
@@ -49,4 +54,10 @@ public class OctopusWebConfiguration implements ModuleConfig {
     public boolean isSingleSession() {
         return singleSession;
     }
+
+    @ConfigEntry
+    public boolean isGlobalAuditActive() {
+        return globalAuditActive;
+    }
+
 }

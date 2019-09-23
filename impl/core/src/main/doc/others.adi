@@ -1,0 +1,36 @@
+Octopus has also some other small features which are handy in certain cases
+
+=== Requested pages auditing
+
+Since all requests are passed through the Octopus framework to determine if the user is allowed to retrieve the information, we can easily keep track of which user requested a certain page when.
+
+For that purpose, a CDI event is thrown when the configuration parameter +globalAuditActive+ is set to true or on individual URLs using the **audit** filter. With the onRequest method below, we can then store or log the access of the user.
+
+[source,java]
+----
+public void onRequest(@Observes OctopusAuditEvent octopusAuditEvent) {
+}
+----
+
+The +OctopusAuditEvent+ class contains following information:
+. String requestURI -> The requested URI by the user
+. Object principal -> The object describing the logged on principle or null if anonymous access. By default, Octopus return an instance of +UserPrincipal+ in the parameter.
+. String remoteAddress -> The remote address (IP address) of the user.
+
+JSF AJAX calls don't trigger the generation of this event.
+
+=== Additional filters
+
+Octopus has the possibility to add some custom filters to some or all the URLs programmatic. If you need this feature, you can also use regular Web filters for this purpose, you need to implement the +GlobalFilterProvider+ interface and define it as an +ApplicationScoped+ CDI bean.
+
+[source,java]
+----
+public interface GlobalFilterProvider {
+
+    List<String> addFiltersTo(String url);
+}
+----
+
+With the help of the +addFiltersTo+ method we can determine which of the filters defined with the other method, we like to add to a certain URL.
+
+??? TODO Possibility to specify URL filter programmatically ProgrammaticURLProtectionProvider
