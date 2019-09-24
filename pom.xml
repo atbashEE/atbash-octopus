@@ -126,6 +126,8 @@
     <modules>
         <module>impl</module>
         <module>examples</module>
+        <module>opinionated</module>
+        <module>bom</module>
     </modules>
 
     <build>

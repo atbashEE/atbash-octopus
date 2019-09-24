@@ -11,7 +11,7 @@
 . aliasNameLoginBean support
 . HTTPSession invalidated when logging in and logging out.
 . Audit Filter
-
+. An opinionated and BOM style of artifact (for JSF only for the moment)
 . Improved handling of Remembered Identities.
 
 ==== Bugs fixed

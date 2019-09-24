@@ -30,3 +30,108 @@ x|be.atbash.ee.security:octopus-mp-core |EE (JAX-RS) | Utility classes and metho
 x|be.atbash.ee.security:octopus-rest-client-provider |EE (JAX-RS) | Registration of Rest Client providers from configuration
 x|be.atbash.ee.security:octopus-common-web |EE (Web) | All Octopus classes Specific for Java EE (Web - Servlets)
 |======================
+
+There are 4 ways to define the required dependencies in a Maven project.  In the following examples I'm using the configuration for a JSF application as example. Support for other types of applications will be forseen in a future example (the 'opinionated' artifacts is a preview of release 0.6)
+
+1. Individual artifacts
+
+The most flexible way is to define the different artifacts in your Maven project file
+
+[source,xml]
+----
+    <dependency>
+        <groupId>be.atbash.ee.security</groupId>
+        <artifactId>octopus-jsf7</artifactId>
+        <version>${octopus.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>deltaspike-security-module-impl</artifactId>
+        <version>${deltaspike.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+
+----
+Remark: Octopus also depends on some of the Java EE specifications (Servlet, CDI and JAX-RS to name the most important ones) So your web application needs also to include this dependency.
+
+Remark: The DeltaSpike dependencies are defined optionally within Octopus because it is likely that you have defined them already within your project. So in order to minimize the possibility of a version conflict, the dependency is left to the developer to define (but it is required !!)
+
+2. Include the Opinionated stack
+
+Instead of defining each artifact, you can also use the opinionated artifact which defines the dependencies and versions I find the most useful. The way to define it in the Maven project file is:
+
+[source,xml]
+----
+    <dependency>
+        <groupId>be.atbash.ee.security.octopus.opinionated</groupId>
+        <artifactId>jsf</artifactId>
+        <version>${octopus.version}</version>
+        <type>pom</type>
+    </dependency>
+----
+
+Some remarks
+- The Java EE dependency still needs to be defined.
+- By using the **opinionated JSF** dependency, the inclusion of DeltaSpike and PrimeFaces is performed.
+
+3. As parent
+
+It is also possible to define the Opinionated dependency as a parent of your project.
+
+[source,xml]
+----
+    <parent>
+        <groupId>be.atbash.ee.security.octopus.opinionated</groupId>
+        <artifactId>jsf</artifactId>
+        <version>0.6-SNAPSHOT</version>
+    </parent>
+----
+
+In the above scenario, not only DeltaSpike and PrimeFaces dependencies are included but also the Java EE 8 API.
+
+4. BOM
+
+The last option is using the Bill Of Material type of working. It resembles a lot with the scenario 1 described above but you do not need to
+define the versions of the dependencies since they are already defined in the BOM.
+
+[source,xml]
+----
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>be.atbash.ee.security.octopus</groupId>
+                <artifactId>bom</artifactId>
+                <version>${octopus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+        </dependency>
+
+       <dependency>
+           <groupId>be.atbash.ee.security</groupId>
+           <artifactId>octopus-jsf7</artifactId>
+       </dependency>
+
+       <dependency>
+           <groupId>org.apache.deltaspike.modules</groupId>
+           <artifactId>deltaspike-security-module-impl</artifactId>
+           <scope>runtime</scope>
+       </dependency>
+   </dependencies>
+----
+
+In this scenario, the Java EE API is also version 8.
