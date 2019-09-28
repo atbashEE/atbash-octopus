@@ -20,8 +20,8 @@ import be.atbash.ee.security.octopus.authc.credential.external.ExternalCredentia
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import be.atbash.ee.security.octopus.util.order.CredentialsMatcherComparator;
 import be.atbash.util.exception.AtbashIllegalActionException;
+import be.atbash.util.ordered.OrderComparator;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -80,7 +80,7 @@ public class CredentialsMatcherHandler {
             for (CredentialsMatcher credentialsMatcher : ServiceLoader.load(CredentialsMatcher.class)) {
                 matchers.add(credentialsMatcher);
             }
-            Collections.sort(matchers, new CredentialsMatcherComparator());
+            Collections.sort(matchers, new OrderComparator());
 
             externalCredentialsManager = new ExternalCredentialsManager();
         }

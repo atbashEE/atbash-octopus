@@ -23,10 +23,10 @@ import be.atbash.ee.security.octopus.otp.OTPUserData;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.OTPToken;
 import be.atbash.ee.security.octopus.totp.config.TOTPConfiguration;
-import be.atbash.ee.security.octopus.util.order.CredentialsMatcherOrder;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.ordered.Order;
 
-@CredentialsMatcherOrder(-50)
+@Order(-50)
 public class OTPCredentialsMatcher implements CredentialsMatcher {
 
     private OTPProvider otpProvider;

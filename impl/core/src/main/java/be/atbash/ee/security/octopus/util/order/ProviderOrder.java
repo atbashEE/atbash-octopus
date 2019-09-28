@@ -19,6 +19,7 @@ import java.lang.annotation.*;
 
 /**
  * Determines the order of the providers (AuthenticationInfoProvider, ....) processing.
+ * FIXME, replace also by @Order?
  */
 @Documented
 @Target({ElementType.TYPE})

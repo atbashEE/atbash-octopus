@@ -157,3 +157,21 @@ The event is thrown just **before** the user is effectively logged out of the sy
 This event is thrown when a user is successful allowed to the system through thre Remember Me functionality.
 
 . rememberMeLogonEvent.getSubject() : The _WebSubject_ created for the user in response of the the successful Remember Me action.
+
+=== Custom artifacts
+
+For many Octopus artifacts, custom versions can be created.  // TODO List other custom ones.
+
+==== CredentialMatcher
+
+In case the Octopus supplied CredentialMatchers doesn't suit for your use case (this would be only on vary rare cases, an External Credential Matcher is more common, see further on), a custom version can be created.
+
+These are the steps required to create your custom Credential Matcher.
+
+- Create a class which implements the interface `be.atbash.ee.security.octopus.authc.credential.CredentialsMatcher`.
+- Implement the method `doCredentialsMatch` where `AuthenticationToken` contains the information entered by the user and `AuthenticationInfo` the information supplied by the `AuthenticationInfoProvider`.
+- When return `true`, the user will be allowed access.
+- Annotate the class with `be.atbash.util.ordered.Order`.
+- Create a ServiceLoader file for `be.atbash.ee.security.octopus.authc.credential.CredentialsMatcher` and define the class of your custom matcher.
+- The `CredentialsMatcherHandler` loops over all matchers know to the system and if one of them return true, the user is granted access.
+- The Octopus internal matchers have a negative value as order, so when just using `@Order` it comes at the end of the chain.

@@ -478,7 +478,9 @@ public abstract class AuthenticatingRealm extends CachingRealm {
     }
 
     private void prepareCredentialsMatcherHandler() {
-        credentialsMatcher = new CredentialsMatcherHandler();
+        if (credentialsMatcher == null) {  // In the case of Java SE with no CDI injection.
+            credentialsMatcher = new CredentialsMatcherHandler();
+        }
     }
 
     protected void verifyHashEncoding(AuthenticationInfo info) {

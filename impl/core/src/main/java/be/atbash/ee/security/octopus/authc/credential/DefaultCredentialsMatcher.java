@@ -20,8 +20,9 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.crypto.hash.SaltHashingUtil;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
-import be.atbash.ee.security.octopus.util.order.CredentialsMatcherOrder;
+import be.atbash.ee.security.octopus.util.order.ProviderOrder;
 import be.atbash.util.codec.CodecSupport;
+import be.atbash.util.ordered.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ import java.util.Arrays;
  * <p/>
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authc.credential.SimpleCredentialsMatcher", "org.apache.shiro.authc.credential.HashedCredentialsMatcher"})
-@CredentialsMatcherOrder(-100)
+@Order(-100)
 // TODO Do we need protected methods so that we can override
 public class DefaultCredentialsMatcher extends CodecSupport implements CredentialsMatcher {
 
