@@ -45,6 +45,10 @@ public class OctopusWebConfiguration implements ModuleConfig {
     @ConfigProperty(name = "globalAuditActive", defaultValue = "false")
     private boolean globalAuditActive;
 
+    @Inject
+    @ConfigProperty(name = "session.invalidate.login", defaultValue = "true")
+    private boolean invalidateSessionAtLogin;
+
     @ConfigEntry
     public String getLocationSecuredURLProperties() {
         return securedURLsFile;
@@ -60,4 +64,8 @@ public class OctopusWebConfiguration implements ModuleConfig {
         return globalAuditActive;
     }
 
+    @ConfigProperty
+    public boolean getIsSessionInvalidatedAtLogin() {
+        return invalidateSessionAtLogin;
+    }
 }

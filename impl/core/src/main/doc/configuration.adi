@@ -130,6 +130,12 @@ default : *false*
 
 When configuration property set to true, all URLs have the audit filter added and Audit Events are generated for each access.
 
+==== session.invalidate.login
+
+default : *true*
+
+When logging in or logging out, does this also does an invalidation of the HTTP Session? True by default as it is a best practice (security wise)
+
 === JSF Configuration
 
 ==== user.filter.default

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,21 +35,18 @@ public class SessionUtil {
     @Inject
     private OctopusWebConfiguration octopusWebConfiguration;
 
+    /**
+     * This invalidates the current HTTP Session by logging out the current Subject.
+     * However, it preserves the attributes defined at the HTTP Session.
+     *
+     * @param request
+     */
     public void invalidateCurrentSession(HttpServletRequest request) {
-        /*
-        FIXME
-        if (!octopusConfig.getIsSessionInvalidatedAtLogin()) {
-            // Defined with config that developer don't was logout/session invalidation.
+        if (!octopusWebConfiguration.getIsSessionInvalidatedAtLogin()) {
+            // Defined with config that developer don't want logout/session invalidation.
             return;
         }
-*/
 
-        /*
-        if (SecurityUtils.getSubject() instanceof TwoStepSubject) {
-            // Otherwise the principals are cleared from the current subject which isn't something we want :)
-            return;
-        }
-        */
         HttpSession session = request.getSession();
 
         HashMap<String, Object> content = new HashMap<>();
