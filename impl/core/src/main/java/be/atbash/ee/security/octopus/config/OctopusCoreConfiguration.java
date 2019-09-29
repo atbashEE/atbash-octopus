@@ -248,6 +248,11 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
         return getOptionalValue("cacheManager.class", MemoryConstrainedCacheManager.class, Class.class);
     }
 
+    @ConfigEntry
+    public boolean isAuthenticationCachingEnabled() {
+        return getOptionalValue("cache.authentication.activate", false, Boolean.class);
+    }
+
     // CDI Interceptor / interdyn
     @ConfigEntry
     public boolean getCDIInterceptorActive() {

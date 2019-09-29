@@ -108,6 +108,12 @@ default : *classpath:octopusInterceptor.config*
 
 File containing the patterns of the fully qualified class names of CDI beans which will be intercepted by the Octopus security interceptor.
 
+==== cache.authentication.activate
+
+default : *false*
+
+When true, the `AuthenticationInfo` will be cached for further use. When User explicitly does a logout, the cache information is also cleared. See ??? for resetting the cache.
+
 ==== show.debug
 
 default : *(none)*

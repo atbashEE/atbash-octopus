@@ -208,19 +208,16 @@ public abstract class AuthenticatingRealm extends CachingRealm {
     }
 
     /**
-     * Sets whether or not authentication caching should be utilized if a {@link CacheManager} has been
-     * {@link #setCacheManager(CacheManager) configured}, {@code false} otherwise.
+     * Sets whether or not authentication caching should be utilized, {@code false} otherwise.
      * <p/>
-     * The default value is {@code false} to retain backwards compatibility with Shiro 1.1 and earlier.
+     * The default value is {@code false} to retain backwards compatibility.
      * <p/>
      * <b>WARNING:</b> Only set this property to {@code true} if safe caching conditions apply, as documented at the top
      * of this page in the class-level JavaDoc.
      *
      * @param authenticationCachingEnabled the value to set
      */
-    @SuppressWarnings({"UnusedDeclaration"})
-    public void setAuthenticationCachingEnabled(boolean authenticationCachingEnabled) {
-        // FIXME We need a config to enable this, this is still the old Shiro way with ini usage
+    private void setAuthenticationCachingEnabled(boolean authenticationCachingEnabled) {
         this.authenticationCachingEnabled = authenticationCachingEnabled;
         if (authenticationCachingEnabled) {
             setCachingEnabled(true);
@@ -270,7 +267,8 @@ public abstract class AuthenticatingRealm extends CachingRealm {
         if (codecUtil == null) {
             codecUtil = new CodecUtil(); // FIXME check if we have a use-case in Java SE. / Hashing PW check in Java SE
         }
-        // FIXME From config retrieve if cache is enabled or not.
+
+        setAuthenticationCachingEnabled(configuration.isAuthenticationCachingEnabled());
         //trigger obtaining the authorization cache if possible
         getAvailableAuthenticationCache();
         onInit();
@@ -383,6 +381,7 @@ public abstract class AuthenticatingRealm extends CachingRealm {
             return;
         }
 
+        // FIXME We need a way of clearing the cache.
         Cache<Object, AuthenticationInfo> cache = getAvailableAuthenticationCache();
         if (cache != null) {
             Object key = getAuthenticationCacheKey(token);
