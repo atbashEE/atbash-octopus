@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,11 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.filter.mgt.FilterChainManager;
+import be.atbash.ee.security.octopus.filter.mgt.NamedFilterList;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
+import be.atbash.util.TestReflectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,7 +36,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -69,7 +71,7 @@ public class FilterChainResolverTest {
     }
 
     @Test
-    public void getChain_foundChain() {
+    public void getChain_foundChain() throws NoSuchFieldException {
         FilterChain originalChain = new FilterChain() {
             @Override
             public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException, ServletException {
@@ -87,11 +89,19 @@ public class FilterChainResolverTest {
         when(pathMatcherMock.matches("/pages/**", "/pages/user.xhtml")).thenReturn(true);
 
         when(filterChainManagerMock.proxy(originalChain, "/pages/**")).thenReturn(Mockito.mock(FilterChain.class));
+
+        NamedFilterList namedFilterList = new NamedFilterList("/pages/**");
+        TestReflectionUtils.setFieldValue(namedFilterList, "filterNames","The Filter List");
+        // Too difficult to generate it under normal conditions in this test.
+
+        when(filterChainManagerMock.getChain("/pages/**")).thenReturn(namedFilterList);
+
         FilterChain chain = filterChainResolver.getChain(servletRequestMock, null, originalChain);
         assertThat(chain).isNotNull();
 
         verify(filterChainManagerMock).proxy(originalChain, "/pages/**");
-        verify(servletRequestMock).setAttribute(OCTOPUS_CHAIN_NAME, "/pages/**");
+        verify(servletRequestMock).setAttribute(WebConstants.OCTOPUS_CHAIN_NAME, "/pages/**");
+        verify(servletRequestMock).setAttribute(WebConstants.OCTOPUS_FILTER_NAMES, "The Filter List");
     }
 
     @Test

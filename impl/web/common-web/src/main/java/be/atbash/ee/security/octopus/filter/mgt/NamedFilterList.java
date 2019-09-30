@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public class NamedFilterList implements List<AdviceFilter> {
 
     private String name;
     private List<AdviceFilter> backingList;
+    private String filterNames;
 
     /**
      * Creates a new {@code SimpleNamedFilterList} instance with the specified {@code name}, defaulting to a new
@@ -192,4 +193,18 @@ public class NamedFilterList implements List<AdviceFilter> {
         return backingList.toArray(a);
     }
 
+    void listFinalFilterNames() {
+        StringBuilder filterNames = new StringBuilder();
+        for (AdviceFilter adviceFilter : backingList) {
+            if (filterNames.length()>0) {
+                filterNames.append(", ");
+            }
+            filterNames.append(adviceFilter.getName());
+        }
+        this.filterNames = filterNames.toString();
+    }
+
+    public String getFilterNames() {
+        return filterNames;
+    }
 }

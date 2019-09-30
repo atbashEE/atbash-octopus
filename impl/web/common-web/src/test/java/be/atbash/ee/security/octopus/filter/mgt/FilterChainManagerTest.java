@@ -61,6 +61,7 @@ public class FilterChainManagerTest {
         assertThat(chain.get(2).getName()).isEqualTo("np");
         assertThat(((TestFilter) chain.get(2)).config).isEqualTo("permission:read:*");
 
+        assertThat(chain.getFilterNames()).isEqualTo("ef, user, np");
     }
 
     @Test

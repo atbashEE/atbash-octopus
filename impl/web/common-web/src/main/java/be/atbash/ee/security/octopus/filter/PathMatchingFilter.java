@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.filter;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.WebUtils;
@@ -29,8 +30,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-
-import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 
 /**
  * <p>Base class for Filters that will process only specified paths and allow all others to pass through.</p>
@@ -171,7 +170,7 @@ public abstract class PathMatchingFilter extends AdviceFilter {
      */
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-        String pathKeyName = (String) request.getAttribute(OCTOPUS_CHAIN_NAME);
+        String pathKeyName = (String) request.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME);
         if (StringUtils.isEmpty(pathKeyName)) {
             // There is not passing through the Octopus filters and thus we just allow that the chain continues.
             // In fact, we should never be in this case, all (Octopus) filters descending from PathMatchingFilter should have this attribute.

@@ -19,5 +19,5 @@ package be.atbash.ee.security.octopus.config;
  *
  */
 public enum Debug {
-    SSO_FLOW, SSO_REST, SESSION_HIJACKING
+    SSO_FLOW, SSO_REST, SESSION_HIJACKING, FILTER_INFO
 }

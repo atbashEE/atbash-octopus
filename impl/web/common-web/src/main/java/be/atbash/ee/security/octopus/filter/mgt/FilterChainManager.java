@@ -275,6 +275,9 @@ public class FilterChainManager {
             //now we have the filter name, path and (possibly null) path-specific config.  Let's apply them:
             addToChain(realChainName, nameConfigPair[0], nameConfigPair[1]);
         }
+
+        NamedFilterList chain = ensureChain(realChainName);
+        chain.listFinalFilterNames();
     }
 
     private String processChainName(String url) {

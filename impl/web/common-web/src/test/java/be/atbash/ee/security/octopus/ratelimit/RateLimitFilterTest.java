@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.ratelimit;
 
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Before;
@@ -28,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -80,7 +80,7 @@ public class RateLimitFilterTest {
         Map<String, FixedBucket> rateLimiters = TestReflectionUtils.getValueOf(filter, "rateLimiters");
         rateLimiters.put(SOMEPATH, fixedBucketMock);
 
-        when(requestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn(SOMEPATH);
+        when(requestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn(SOMEPATH);
         when(fixedBucketMock.getToken(anyString())).thenReturn(TokenInstance.USABLE);
 
         filter.onPreHandle(requestMock, responseMock);
@@ -94,7 +94,7 @@ public class RateLimitFilterTest {
         Map<String, FixedBucket> rateLimiters = TestReflectionUtils.getValueOf(filter, "rateLimiters");
         rateLimiters.put(SOMEPATH, fixedBucketMock);
 
-        when(requestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn(SOMEPATH);
+        when(requestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn(SOMEPATH);
         when(responseMock.getWriter()).thenReturn(printWriterMock);
         when(fixedBucketMock.getToken(anyString())).thenReturn(TokenInstance.UNUSABLE);
 

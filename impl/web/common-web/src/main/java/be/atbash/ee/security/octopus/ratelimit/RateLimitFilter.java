@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.ratelimit;
 
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.filter.PathMatchingFilter;
 import be.atbash.ee.security.octopus.util.WebUtils;
@@ -27,8 +28,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-
-import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 
 /**
  *
@@ -63,7 +62,7 @@ public class RateLimitFilter extends PathMatchingFilter {
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-        String path = (String) request.getAttribute(OCTOPUS_CHAIN_NAME);
+        String path = (String) request.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME);
         Token token = rateLimiters.get(path).getToken(path);  // key should be some x-api-key header stuff for REST??
         if (!token.isUsable()) {
             HttpServletResponse httpServletResponse = WebUtils.toHttp(response);

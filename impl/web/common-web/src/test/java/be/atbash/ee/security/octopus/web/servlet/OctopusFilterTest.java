@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.octopus.web.servlet;
 
+import be.atbash.ee.security.octopus.config.Debug;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.filter.FilterChainResolver;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
@@ -38,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -77,6 +80,9 @@ public class OctopusFilterTest {
     @Mock
     private FilterConfig filterConfigMock;
 
+    @Mock
+    private OctopusCoreConfiguration coreConfigurationMock;
+
     @Captor
     private ArgumentCaptor<WebSubjectContext> webSubjectContextArgumentCaptor;
 
@@ -91,6 +97,8 @@ public class OctopusFilterTest {
 
         beanManagerFake.registerBean(realmMock, OctopusRealm.class);
         beanManagerFake.endRegistration();
+
+        when(coreConfigurationMock.showDebugFor()).thenReturn(new ArrayList<Debug>());
     }
 
     @After

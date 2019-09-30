@@ -16,6 +16,9 @@
 package be.atbash.ee.security.octopus.web.servlet;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.WebConstants;
+import be.atbash.ee.security.octopus.config.Debug;
+import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.filter.FilterChainResolver;
 import be.atbash.ee.security.octopus.mgt.WebSecurityManager;
@@ -67,6 +70,9 @@ public class OctopusFilter extends OncePerRequestFilter {
 
     @Inject
     private SecuredURLReader securedURLReader;
+
+    @Inject
+    private OctopusCoreConfiguration coreConfiguration;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -169,6 +175,15 @@ public class OctopusFilter extends OncePerRequestFilter {
         if (resolved != null) {
             log.trace("Resolved a configured FilterChain for the current request.");
             result = resolved;
+
+            if (coreConfiguration.showDebugFor().contains(Debug.FILTER_INFO)) {
+                log.info(String.format("Matched the chain %s for the request to %s",
+                        request.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME),
+                        request.getRequestURI()));
+                log.info(String.format("Executing filters %s for the request to %s",
+                        request.getAttribute(WebConstants.OCTOPUS_FILTER_NAMES)
+                        , request.getRequestURI()));
+            }
         } else {
             // TODO Should we have a config parameter to indicate that this happened and write
             // it it the log as info or have some statistics engine?

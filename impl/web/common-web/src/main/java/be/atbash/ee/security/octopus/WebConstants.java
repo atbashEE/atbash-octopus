@@ -41,4 +41,14 @@ public final class WebConstants {
      * Attribute on ServletRequest to define HTTP 1.0  compatible flag of RedirectHelper
      */
     public static final String REDIRECT_HTTP10_COMPATIBLE = "REDIRECT_HTTP10_COMPATIBLE";
+
+    /**
+     * Attribute on ServletRequest to indicate the matched chainName (like /pages/**)
+     */
+    public static final String OCTOPUS_CHAIN_NAME = "octopus.chainName";
+
+    /**
+     * Attribute on ServletRequest to indicate the matched chainName (like /pages/**)
+     */
+    public static final String OCTOPUS_FILTER_NAMES = "octopus.filterNames";
 }

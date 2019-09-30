@@ -126,6 +126,8 @@ SSO_FLOW:
 
 SSO_REST:
 
+FILTER_INFO: Show chain name and list of filters for each requests which passes through **OctopusFilter**.
+
 === Web Configuration
 
 ???

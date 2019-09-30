@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 package be.atbash.ee.security.octopus.filter;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.filter.mgt.FilterChainManager;
+import be.atbash.ee.security.octopus.filter.mgt.NamedFilterList;
 import be.atbash.ee.security.octopus.util.PatternMatcher;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.Reviewed;
@@ -42,7 +44,6 @@ import javax.servlet.ServletResponse;
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.web.filter.mgt.FilterChainResolver", "org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver"})
 @Reviewed
 public class FilterChainResolver {
-    public static final String OCTOPUS_CHAIN_NAME = "octopus.chainName";
 
     private static final Logger log = LoggerFactory.getLogger(FilterChainResolver.class);
 
@@ -79,7 +80,11 @@ public class FilterChainResolver {
                     log.trace(String.format("Matched path pattern [%s] for requestURI [%s].  " +
                             "Utilizing corresponding filter chain...", pathPattern, requestURI));
                 }
-                request.setAttribute(OCTOPUS_CHAIN_NAME, pathPattern);
+                request.setAttribute(WebConstants.OCTOPUS_CHAIN_NAME, pathPattern);
+
+                NamedFilterList chain = filterChainManager.getChain(pathPattern);
+                request.setAttribute(WebConstants.OCTOPUS_FILTER_NAMES, chain.getFilterNames());
+
                 return filterChainManager.proxy(originalChain, pathPattern);
             }
         }

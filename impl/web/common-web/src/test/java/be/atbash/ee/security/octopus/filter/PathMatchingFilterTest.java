@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.filter;
 
+import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.TestReflectionUtils;
 import org.junit.Before;
@@ -27,7 +28,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.nio.file.PathMatcher;
 
-import static be.atbash.ee.security.octopus.filter.FilterChainResolver.OCTOPUS_CHAIN_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,7 +55,7 @@ public class PathMatchingFilterTest {
     @Test
     public void onPreHandle_PathWithNoConfig() throws Exception {
         filter.processPathConfig("/path", null);
-        when(servletRequestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn("/path");
+        when(servletRequestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn("/path");
 
         filter.setOnPreHandleResult(true);
 
@@ -66,7 +66,7 @@ public class PathMatchingFilterTest {
 
     @Test
     public void onPreHandle_PathWithNoConfigRegistered() throws Exception {
-        when(servletRequestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn("/path");
+        when(servletRequestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn("/path");
 
         filter.setOnPreHandleResult(true);
 
@@ -80,7 +80,7 @@ public class PathMatchingFilterTest {
         // This test is here to see if we take value from attribute and not using matches (as it was previously)
         filter.processPathConfig("/path/**", "value1");
         filter.processPathConfig("/path/test/**", "value2");
-        when(servletRequestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn("/path/**");
+        when(servletRequestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn("/path/**");
 
         filter.setOnPreHandleResult(true);
 
@@ -94,7 +94,7 @@ public class PathMatchingFilterTest {
 
         filter.processPathConfig("/path/**", "value1");
         filter.processPathConfig("/path/test/**", "value2");
-        when(servletRequestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn("/path/test/**");
+        when(servletRequestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn("/path/test/**");
 
         filter.setOnPreHandleResult(false);
 
@@ -117,7 +117,7 @@ public class PathMatchingFilterTest {
     public void onPreHandle_notEnabled() throws Exception {
 
         filter.processPathConfig("/path", null);
-        when(servletRequestMock.getAttribute(OCTOPUS_CHAIN_NAME)).thenReturn("/path");
+        when(servletRequestMock.getAttribute(WebConstants.OCTOPUS_CHAIN_NAME)).thenReturn("/path");
 
         filter.setOnPreHandleResult(false);
         filter.setNotEnabled();
