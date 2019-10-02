@@ -98,6 +98,7 @@ public class OncePerRequestFilterTest {
         order.verify(servletRequestMock).removeAttribute(filterAttributeName);
 
         assertThat(filterMethodCalled).isTrue();
+        Mockito.verify(servletRequestMock).getAttribute(filterName + ".DISABLED_FOR_REQUEST");
 
         Mockito.verifyNoMoreInteractions(servletRequestMock, filterChainMock);
     }
@@ -120,6 +121,7 @@ public class OncePerRequestFilterTest {
         order.verify(servletRequestMock).removeAttribute(attributeName);
 
         assertThat(filterMethodCalled).isTrue();
+        Mockito.verify(servletRequestMock).getAttribute(filter.getClass().getName() + ".DISABLED_FOR_REQUEST");
 
         Mockito.verifyNoMoreInteractions(servletRequestMock, filterChainMock);
 
@@ -154,27 +156,17 @@ public class OncePerRequestFilterTest {
 
     @Test
     public void isEnabled_Default() throws ServletException, IOException {
+        filter.setName(filterName);
+        when(servletRequestMock.getAttribute(filterName + ".DISABLED_FOR_REQUEST")).thenReturn(null); // any return will trigger isEnabled false
+        assertThat(filter.isEnabled(servletRequestMock)).isTrue(); //
 
-        assertThat(filter.isEnabled()).isTrue();
-        assertThat(filter.isEnabled(null, null)).isTrue(); // By default it just passes control to isEnabled() and not using the parameters
-
-    }
-
-    @Test
-    public void isEnabled_disabled() {
-
-        filter.setEnabled(false);
-
-        assertThat(filter.isEnabled()).isFalse();
-
-        Mockito.verifyNoMoreInteractions(servletRequestMock, filterChainMock);
     }
 
     @Test
     public void doFilter_disabled() throws ServletException, IOException {
 
         filter.setName(filterName);
-        filter.setEnabled(false);
+        when(servletRequestMock.getAttribute(filterName + ".DISABLED_FOR_REQUEST")).thenReturn(new Object()); // any return will do
 
         filter.doFilter(servletRequestMock, null, filterChainMock);
 
@@ -182,6 +174,7 @@ public class OncePerRequestFilterTest {
         assertThat(filterMethodCalled).isFalse();
 
         Mockito.verify(servletRequestMock).getAttribute(filterAttributeName);
+        Mockito.verify(servletRequestMock).getAttribute(filterName + ".DISABLED_FOR_REQUEST");
         Mockito.verifyNoMoreInteractions(servletRequestMock, filterChainMock);
     }
 

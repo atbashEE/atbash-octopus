@@ -18,6 +18,7 @@ package be.atbash.ee.security.sso.server.filter;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
+import be.atbash.ee.security.octopus.filter.SessionHijackingFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.util.WebUtils;
@@ -277,8 +278,9 @@ public class OIDCEndpointFilter extends AccessControlFilter {
             httpServletRequest.setAttribute(AbstractRequest.class.getName(), tokenRequest);
 
             // Disable the SessionHijacking filter on this request.
-            // FIXME the ALREADY_FILTERED_SUFFIX should be kept private to that class. Make method that define the attribute
-            httpServletRequest.setAttribute("sh" + OncePerRequestFilter.ALREADY_FILTERED_SUFFIX, Boolean.TRUE);
+            //disableFilterForRequest(httpServletRequest, SessionHijackingFilter.class);
+            // TODO the chain is ef, sh, oidcFilter so it is already too late to disable it
+            // but there seems to be no issue with sh and oidcFilter within Atbash Octopus.
         }
         return result;
     }

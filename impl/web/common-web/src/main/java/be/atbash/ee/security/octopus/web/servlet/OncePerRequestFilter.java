@@ -17,6 +17,7 @@ package be.atbash.ee.security.octopus.web.servlet;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.util.CDIUtils;
 import be.atbash.util.Reviewed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,7 @@ import java.io.IOException;
  * to identify that a request is already filtered. The default implementation
  * is based on the configured name of the concrete filter instance.
  * <h3>Controlling filter execution</h3>
- * The {@link #isEnabled(ServletRequest, ServletResponse)} method and
- * {@link #isEnabled()} property to allow explicit control over whether the filter executes (or allows passthrough)
+ * The {@link #isEnabled(ServletRequest)} method allows explicit control over whether the filter executes (or allows passthrough)
  * for any given request.
  * <p/>
  * <b>NOTE</b> This class was initially borrowed from the Spring framework but has continued modifications.
@@ -58,42 +58,14 @@ public abstract class OncePerRequestFilter extends NameableFilter {
      *
      * @see #getAlreadyFilteredAttributeName
      */
-    public static final String ALREADY_FILTERED_SUFFIX = ".FILTERED";
+    private static final String ALREADY_FILTERED_SUFFIX = ".FILTERED";
 
     /**
-     * Determines generally if this filter should execute or let requests fall through to the next chain element.
+     * Suffix that gets appended to the filter name for the "disabled for this request" request attribute.
      *
-     * @see #isEnabled()
+     * @see #getAlreadyFilteredAttributeName
      */
-    private boolean enabled = true; //most filters wish to execute when configured, so default to true
-
-    /**
-     * Returns {@code true} if this filter should <em>generally</em><b>*</b> execute for any request,
-     * {@code false} if it should let the request/response pass through immediately to the next
-     * element in the {@link FilterChain}.  The default value is {@code true}, as most filters would inherently need
-     * to execute when configured.
-     * <p/>
-     * <b>*</b> This configuration property is for general configuration for any request that comes through
-     * the filter.  The
-     * {@link #isEnabled(ServletRequest, ServletResponse) isEnabled(request,response)}
-     * method actually determines whether or not if the filter is enabled based on the current request.
-     *
-     * @return {@code true} if this filter should <em>generally</em> execute, {@code false} if it should let the
-     * request/response pass through immediately to the next element in the {@link FilterChain}.
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Sets whether or not this filter <em>generally</em> executes for any request.  See the
-     * {@link #isEnabled() isEnabled()} JavaDoc as to what <em>general</em> execution means.
-     *
-     * @param enabled whether or not this filter <em>generally</em> executes.
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    private static final String DISABLED_FOR_REQUEST_SUFFIX = ".DISABLED_FOR_REQUEST";
 
     /**
      * This {@code doFilter} implementation stores a request attribute for
@@ -110,7 +82,7 @@ public abstract class OncePerRequestFilter extends NameableFilter {
             log.trace("Filter '{}' already executed.  Proceeding without invoking this filter.", getName());
             filterChain.doFilter(request, response);
         } else {
-            if (!isEnabled(request, response)) {
+            if (!isEnabled(request)) {
                 log.debug("Filter '{}' is not enabled for the current request.  Proceeding without invoking this filter.",
                         getName());
                 filterChain.doFilter(request, response);
@@ -132,18 +104,19 @@ public abstract class OncePerRequestFilter extends NameableFilter {
 
     /**
      * This method is used within the {@link #doFilterInternal(HttpServletRequest, HttpServletResponse, FilterChain)} doFilterInternal}
-     * method to determine if the filter need to be enabled or not.
+     * method to determine if the filter need to be executed for this request or not.
      * <p>
-     * By default is returns the value which is set by the {@link #setEnabled(boolean) setEnabled } method or the default value {@code true}.
-     *
+     * By default is returns true unless {@link #disableFilterForRequest(HttpServletRequest, Class) is called.
+     * <p>
+     * Custom filters can implement a custom logic here.
      * @param request
-     * @param response
      * @return
      * @throws ServletException
      * @throws IOException
      */
-    protected boolean isEnabled(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-        return isEnabled();
+    protected boolean isEnabled(ServletRequest request) throws ServletException, IOException {
+        String disabledForRequestAttributeName = getDisabledForRequestAttributeName();
+        return request.getAttribute(disabledForRequestAttributeName) == null;
     }
 
     /**
@@ -166,6 +139,14 @@ public abstract class OncePerRequestFilter extends NameableFilter {
         return name + ALREADY_FILTERED_SUFFIX;
     }
 
+    protected String getDisabledForRequestAttributeName() {
+        String name = getName();
+        if (name == null) {
+            name = getClass().getName();
+        }
+        return name + DISABLED_FOR_REQUEST_SUFFIX;
+    }
+
     /**
      * Same contract as for
      * {@link #doFilter(ServletRequest, ServletResponse, FilterChain)},
@@ -179,4 +160,9 @@ public abstract class OncePerRequestFilter extends NameableFilter {
      */
     protected abstract void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException;
+
+    protected void disableFilterForRequest(HttpServletRequest httpServletRequest, Class<? extends OncePerRequestFilter> filterClass) {
+        OncePerRequestFilter oncePerRequestFilter = CDIUtils.retrieveInstance(filterClass);
+        httpServletRequest.setAttribute(oncePerRequestFilter.getDisabledForRequestAttributeName(), Boolean.TRUE);
+    }
 }

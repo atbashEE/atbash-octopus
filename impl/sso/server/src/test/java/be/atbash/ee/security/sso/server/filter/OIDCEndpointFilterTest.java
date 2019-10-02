@@ -16,6 +16,7 @@
 package be.atbash.ee.security.sso.server.filter;
 
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.filter.SessionHijackingFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
@@ -126,6 +127,9 @@ public class OIDCEndpointFilterTest {
         beanManagerFake.registerBean(ssoHelperMock, SSOHelper.class);
         beanManagerFake.registerBean(clientCredentialsSelectorMock, OctopusClientCredentialsSelector.class);
         beanManagerFake.registerBean(abstractUserFilterMock, AbstractUserFilter.class);
+        SessionHijackingFilter filter = new SessionHijackingFilter();
+        filter.init();
+        beanManagerFake.registerBean(filter, SessionHijackingFilter.class);
 
         beanManagerFake.endRegistration();
 
@@ -340,15 +344,16 @@ public class OIDCEndpointFilterTest {
         boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(true);
 
-        verify(httpServletRequestMock, times(2)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
+        verify(httpServletRequestMock, times(1)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
 
         assertThat(attributeNameCapture.getAllValues().get(0)).isEqualTo(AbstractRequest.class.getName());
         Object value1 = attributeValueCapture.getAllValues().get(0);
         assertThat(value1).isInstanceOf(TokenRequest.class);
 
-        assertThat(attributeNameCapture.getAllValues().get(1)).isEqualTo("sh.FILTERED");
-        Object value2 = attributeValueCapture.getAllValues().get(1);
-        assertThat(value2).isEqualTo(Boolean.TRUE);
+        // Disabling sh doesn't seems to be necessary anymore.
+        //assertThat(attributeNameCapture.getAllValues().get(1)).isEqualTo("sh.FILTERED");
+        //Object value2 = attributeValueCapture.getAllValues().get(1);
+        //assertThat(value2).isEqualTo(Boolean.TRUE);
 
         verify(webSubjectMock).getPrincipal();
     }
@@ -421,15 +426,15 @@ public class OIDCEndpointFilterTest {
         boolean data = endpointFilter.onPreHandle(httpServletRequestMock, httpServletResponseMock);
         assertThat(data).isEqualTo(true);
 
-        verify(httpServletRequestMock, times(2)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
+        verify(httpServletRequestMock, times(1)).setAttribute(attributeNameCapture.capture(), attributeValueCapture.capture());
 
         assertThat(attributeNameCapture.getAllValues().get(0)).isEqualTo(AbstractRequest.class.getName());
         Object value1 = attributeValueCapture.getAllValues().get(0);
         assertThat(value1).isInstanceOf(TokenRequest.class);
 
-        assertThat(attributeNameCapture.getAllValues().get(1)).isEqualTo("sh.FILTERED");
-        Object value2 = attributeValueCapture.getAllValues().get(1);
-        assertThat(value2).isEqualTo(Boolean.TRUE);
+        //assertThat(attributeNameCapture.getAllValues().get(1)).isEqualTo("sh.FILTERED");
+        //Object value2 = attributeValueCapture.getAllValues().get(1);
+        //assertThat(value2).isEqualTo(Boolean.TRUE);
 
         verify(webSubjectMock).getPrincipal();
     }

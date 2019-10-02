@@ -228,7 +228,7 @@ public abstract class PathMatchingFilter extends AdviceFilter {
      * @return {@code true} if the request should be able to continue, {@code false} if the filter will
      * handle the response directly.
      * @throws Exception if an error occurs
-     * @see #isEnabled(ServletRequest, ServletResponse, String)
+     * @see #isEnabled(ServletRequest)
      */
     protected boolean onPreHandle(ServletRequest request, ServletResponse response) throws Exception {
         return true;
@@ -236,12 +236,12 @@ public abstract class PathMatchingFilter extends AdviceFilter {
 
     /**
      * Path-matching version of the parent class's
-     * {@link #isEnabled(ServletRequest, ServletResponse)} method, but additionally allows
+     * {@link #isEnabled(ServletRequest)} method, but additionally allows
      * for inspection of any path-specific configuration values corresponding to the specified request.  Subclasses
      * may wish to inspect this additional mapped configuration to determine if the filter is enabled or not.
      * <p/>
      * This method's default implementation ignores the {@code path} arguments and merely
-     * returns the value from a call to {@link #isEnabled(ServletRequest, ServletResponse)}.
+     * returns the value from a call to {@link #isEnabled(ServletRequest)}.
      * It is expected that subclasses override this method if they need to perform enable/disable logic for a specific
      * request based on any path-specific config for the filter instance.
      *
@@ -255,7 +255,7 @@ public abstract class PathMatchingFilter extends AdviceFilter {
     @SuppressWarnings({"UnusedParameters"})
     protected boolean isEnabled(ServletRequest request, ServletResponse response, String path)
             throws Exception {
-        return isEnabled(request, response);
+        return isEnabled(request);
     }
 
     /**
