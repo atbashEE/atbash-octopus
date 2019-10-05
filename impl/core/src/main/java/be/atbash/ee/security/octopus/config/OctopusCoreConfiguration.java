@@ -81,8 +81,14 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
 
     @ConfigEntry
     public int getSaltLength() {
-        // FIXME Validation. Warn if less then 16 (other then 0 of course).
-        return getOptionalValue("saltLength", 0, Integer.class);
+        Integer result = getOptionalValue("saltLength", 0, Integer.class);
+        if (result != 0 && result < 16) {
+            throw new ConfigurationException(
+                    String.format("The 'saltLength' parameter value %s isn't valid. it needs to be 16 as minimum.", result));
+
+        }
+
+        return result;
     }
 
     @ConfigEntry
@@ -96,8 +102,11 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
 
             try {
                 result = Integer.parseInt(value);
+                if (result <= 0) {
+                    throw new ConfigurationException(String.format("Parameter 'hashIterations' must a a positive integer value : %s", value));
+                }
             } catch (NumberFormatException e) {
-                throw new ConfigurationException(String.format("Parameter hashIterations must a a positive integer value : %s", e.getLocalizedMessage()));
+                throw new ConfigurationException(String.format("Parameter 'hashIterations' must a a positive integer value : %s", e.getLocalizedMessage()));
             }
         }
         return result;
@@ -133,6 +142,7 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
 
     @ConfigEntry
     public String getNamedPermissionCheck() {
+        // public for the config logging but only used by
         return getOptionalValue("namedPermissionCheck.class", "", String.class);
     }
 
@@ -157,7 +167,7 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
             try {
                 namedPermissionCheckClass = (Class<? extends Annotation>) ClassUtils.forName(getNamedPermissionCheck());
             } catch (UnknownClassException e) {
-                logger.error("Class defined in configuration property namedPermissionCheck is not found", e);
+                logger.error("Class defined in configuration property 'namedPermissionCheck.class' is not found", e);
             }
         }
         return namedPermissionCheckClass;
@@ -169,21 +179,18 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
             try {
                 customCheckClass = (Class<? extends Annotation>) ClassUtils.forName(getCustomCheck());
             } catch (UnknownClassException e) {
-                logger.error("Class defined in configuration property customCheck is not found", e);
+                logger.error("Class defined in configuration property 'customCheck.class' is not found", e);
             }
         }
         return customCheckClass;
     }
 
     public Class<? extends NamedPermission> getNamedPermissionClass() {
-        if (namedPermissionClass == null) {
-
-            if (getNamedPermission().length() != 0) {
-                try {
-                    namedPermissionClass = (Class<? extends NamedPermission>) ClassUtils.forName(getNamedPermission());
-                } catch (UnknownClassException e) {
-                    logger.error("Class defined in configuration property 'namedPermission' is not found", e);
-                }
+        if (namedPermissionClass == null && getNamedPermission().length() != 0) {
+            try {
+                namedPermissionClass = (Class<? extends NamedPermission>) ClassUtils.forName(getNamedPermission());
+            } catch (UnknownClassException e) {
+                logger.error("Class defined in configuration property 'namedPermission.class' is not found", e);
             }
         }
         return namedPermissionClass;
@@ -195,21 +202,18 @@ public class OctopusCoreConfiguration extends AbstractConfiguration implements M
             try {
                 namedRoleCheckClass = (Class<? extends Annotation>) ClassUtils.forName(getNamedRoleCheck());
             } catch (UnknownClassException e) {
-                logger.error("Class defined in configuration property namedPermissionCheck is not found", e);
+                logger.error("Class defined in configuration property 'namedRoleCheck.class' is not found", e);
             }
         }
         return namedRoleCheckClass;
     }
 
     public Class<? extends NamedRole> getNamedRoleClass() {
-        if (namedRoleClass == null) {
-
-            if (getNamedRole().length() != 0) {
-                try {
-                    namedRoleClass = (Class<? extends NamedRole>) Class.forName(getNamedRole());
-                } catch (ClassNotFoundException e) {
-                    logger.error("Class defined in configuration property 'namedRole' is not found", e);
-                }
+        if (namedRoleClass == null && getNamedRole().length() != 0) {
+            try {
+                namedRoleClass = (Class<? extends NamedRole>) Class.forName(getNamedRole());
+            } catch (ClassNotFoundException e) {
+                logger.error("Class defined in configuration property 'namedRole.class' is not found", e);
             }
         }
         return namedRoleClass;

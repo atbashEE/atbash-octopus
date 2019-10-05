@@ -17,8 +17,12 @@ package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.exception.ConfigurationException;
 import be.atbash.config.test.TestConfig;
+import be.atbash.ee.security.octopus.authz.permission.NamedPermission;
+import be.atbash.ee.security.octopus.authz.permission.role.NamedRole;
+import be.atbash.ee.security.octopus.config.testclasses.DemoNamedPermission;
+import be.atbash.ee.security.octopus.config.testclasses.DemoNamedRole;
+import be.atbash.ee.security.octopus.config.testclasses.NamedCheck;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
-import be.atbash.ee.security.octopus.crypto.hash.HashFactory;
 import be.atbash.util.TestReflectionUtils;
 import com.google.common.collect.ImmutableList;
 import org.junit.After;
@@ -28,10 +32,10 @@ import uk.org.lidalia.slf4jtest.LoggingEvent;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 public class OctopusCoreConfigurationTest {
 
@@ -43,6 +47,12 @@ public class OctopusCoreConfigurationTest {
     public void tearDown() throws NoSuchFieldException {
         TestConfig.resetConfig();
         TestReflectionUtils.resetOf(coreConfiguration, "debugValues");
+        TestReflectionUtils.resetOf(coreConfiguration, "namedPermissionCheckClass");
+        TestReflectionUtils.resetOf(coreConfiguration, "namedPermissionClass");
+        TestReflectionUtils.resetOf(coreConfiguration, "namedRoleCheckClass");
+        TestReflectionUtils.resetOf(coreConfiguration, "namedRoleClass");
+        TestReflectionUtils.resetOf(coreConfiguration, "customCheckClass");
+
         // Config value is cached.
         logger.clearAll();
     }
@@ -57,7 +67,6 @@ public class OctopusCoreConfigurationTest {
 
         ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
         assertThat(events).isEmpty();
-
     }
 
     @Test
@@ -113,16 +122,164 @@ public class OctopusCoreConfigurationTest {
     }
 
     @Test(expected = ConfigurationException.class)
-    public void getHashEncoding_WrongValue() {
+    public void getHashEncoding_wrongValue() {
         TestConfig.addConfigValue("hashEncoding", "TEST");
         coreConfiguration.getHashEncoding();
 
     }
 
     @Test
-    public void getHashIterations() {
-        // FIXME
-        Integer iterations = coreConfiguration.getHashIterations();
+    public void getSaltLength() {
+        TestConfig.addConfigValue("saltLength", "16");
+        Integer saltLength = coreConfiguration.getSaltLength();
+        assertThat(saltLength).isEqualTo(16);
+    }
 
+    @Test
+    public void getSaltLength_default() {
+        Integer saltLength = coreConfiguration.getSaltLength();
+        assertThat(saltLength).isEqualTo(0);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSaltLength_WrongValue() {
+        TestConfig.addConfigValue("saltLength", "15");
+        coreConfiguration.getSaltLength();
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getSaltLength_WrongValue_negative() {
+        TestConfig.addConfigValue("saltLength", "-16");
+        coreConfiguration.getSaltLength();
+    }
+
+    @Test
+    public void getHashIterations() {
+        TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
+        TestConfig.addConfigValue("hashIterations", "2");
+        Integer iterations = coreConfiguration.getHashIterations();
+        assertThat(iterations).isEqualTo(2);
+    }
+
+    @Test
+    public void getHashIterations_default_hash() {
+        TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
+        Integer iterations = coreConfiguration.getHashIterations();
+        assertThat(iterations).isEqualTo(1);
+    }
+
+    @Test
+    public void getHashIterations_default_keyFactory() {
+        TestConfig.addConfigValue("hashAlgorithmName", "PBKDF2");
+        Integer iterations = coreConfiguration.getHashIterations();
+        assertThat(iterations).isEqualTo(1024);
+    }
+
+    @Test
+    public void getHashIterations_noAlgorithm() {
+        TestConfig.addConfigValue("hashIterations", "2");
+        Integer iterations = coreConfiguration.getHashIterations();
+        assertThat(iterations).isNull();
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getHashIterations_wrongValue() {
+        TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
+        TestConfig.addConfigValue("hashIterations", "0");
+        coreConfiguration.getHashIterations();
+
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getHashIterations_NoNumber() {
+        TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
+        TestConfig.addConfigValue("hashIterations", "abc");
+        coreConfiguration.getHashIterations();
+
+    }
+
+    @Test
+    public void getNamedPermissionCheckClass() {
+        TestConfig.addConfigValue("namedPermissionCheck.class", NamedCheck.class.getName());
+        Class<? extends Annotation> checkClass = coreConfiguration.getNamedPermissionCheckClass();
+        assertThat(checkClass).isNotNull();
+    }
+
+    @Test
+    public void getNamedPermissionCheckClass_wrongClass() {
+        TestConfig.addConfigValue("namedPermissionCheck.class", "some.unknown.class");
+        Class<? extends Annotation> checkClass = coreConfiguration.getNamedPermissionCheckClass();
+        assertThat(checkClass).isNull();
+
+        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
+        assertThat(events).isNotEmpty();
+    }
+
+    @Test
+    public void getCustomCheckClass() {
+        TestConfig.addConfigValue("customCheck.class", NamedCheck.class.getName());
+        Class<? extends Annotation> checkClass = coreConfiguration.getCustomCheckClass();
+        assertThat(checkClass).isNotNull();
+    }
+
+    @Test
+    public void getCustomCheckClass_wrongClass() {
+        TestConfig.addConfigValue("customCheck.class", "some.unknown.class");
+        Class<? extends Annotation> checkClass = coreConfiguration.getCustomCheckClass();
+        assertThat(checkClass).isNull();
+
+        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
+        assertThat(events).isNotEmpty();
+    }
+
+    @Test
+    public void getNamedPermissionClass() {
+        TestConfig.addConfigValue("namedPermission.class", DemoNamedPermission.class.getName());
+        Class<? extends NamedPermission> permissionClass = coreConfiguration.getNamedPermissionClass();
+        assertThat(permissionClass).isNotNull();
+    }
+
+    @Test
+    public void getNamedPermissionClass_wrongClass() {
+        TestConfig.addConfigValue("namedPermission.class", "some.unknown.class");
+        Class<? extends NamedPermission> permissionClass = coreConfiguration.getNamedPermissionClass();
+        assertThat(permissionClass).isNull();
+
+        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
+        assertThat(events).isNotEmpty();
+    }
+
+    @Test
+    public void getNamedRoleCheckClass() {
+        TestConfig.addConfigValue("namedRoleCheck.class", NamedCheck.class.getName());
+        Class<? extends Annotation> checkClass = coreConfiguration.getNamedRoleCheckClass();
+        assertThat(checkClass).isNotNull();
+    }
+
+    @Test
+    public void getNamedRoleCheckClass_wrongClass() {
+        TestConfig.addConfigValue("namedRoleCheck.class", "some.unknown.class");
+        Class<? extends Annotation> checkClass = coreConfiguration.getNamedRoleCheckClass();
+        assertThat(checkClass).isNull();
+
+        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
+        assertThat(events).isNotEmpty();
+    }
+
+    @Test
+    public void getNamedRoleClass() {
+        TestConfig.addConfigValue("namedRole.class", DemoNamedRole.class.getName());
+        Class<? extends NamedRole> roleClass = coreConfiguration.getNamedRoleClass();
+        assertThat(roleClass).isNotNull();
+    }
+
+    @Test
+    public void getNamedRoleClass_wrongClass() {
+        TestConfig.addConfigValue("namedRole.class", "someWrongClass");
+        Class<? extends NamedRole> roleClass = coreConfiguration.getNamedRoleClass();
+        assertThat(roleClass).isNull();
+
+        ImmutableList<LoggingEvent> events = logger.getLoggingEvents();
+        assertThat(events).isNotEmpty();
     }
 }
