@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package be.atbash.ee.security.octopus;
 
-import be.atbash.util.base64.Base64Codec;
 import oshi.SystemInfo;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 /**
  * Generates The local secret based on the passphrase.
@@ -42,7 +42,7 @@ public class LocalSecret {
         byte[] secret = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1").generateSecret(
                 new PBEKeySpec(passPhrase.toCharArray(), salt.getBytes(), 1024, 256)).getEncoded();
 
-        String secret64 = Base64Codec.encodeToString(secret, true);
+        String secret64 = Base64.getEncoder().withoutPadding().encodeToString(secret);
         System.out.println("Local secret value is " + secret64);
 
     }

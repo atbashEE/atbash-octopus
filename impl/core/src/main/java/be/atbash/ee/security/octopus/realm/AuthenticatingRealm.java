@@ -26,12 +26,12 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.codec.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.Base64;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -504,7 +504,9 @@ public abstract class AuthenticatingRealm extends CachingRealm {
                         case BASE64:
                             // TODO All Hex characters are valid base64 characters, so we can't detect hex encoded password with Base64 config.
 
-                            if (!Base64Codec.isBase64Encoded(storedBytes)) {
+                            try {
+                                Base64.getDecoder().decode(storedBytes);
+                            } catch (IllegalArgumentException e) {
                                 throw new IllegalArgumentException("Invalid Base64 encoded value");
                             }
                             break;

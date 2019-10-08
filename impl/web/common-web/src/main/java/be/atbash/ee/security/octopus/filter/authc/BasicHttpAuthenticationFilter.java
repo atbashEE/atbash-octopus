@@ -20,7 +20,6 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.WebUtils;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.codec.CodecSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +30,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Base64;
 import java.util.Locale;
 
 /**
@@ -400,7 +400,7 @@ public class BasicHttpAuthenticationFilter extends AuthenticatingFilter {
      * @return the username (index 0)/password (index 1) pair obtained from the encoded header data.
      */
     protected String[] getPrincipalsAndCredentials(String scheme, String encoded) {
-        String decoded = CodecSupport.toString(Base64Codec.decode(encoded));
+        String decoded = CodecSupport.toString(Base64.getDecoder().decode(encoded));
         return decoded.split(":", 2);
     }
 }

@@ -28,7 +28,6 @@ import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.util.BeanManagerFake;
-import be.atbash.util.base64.Base64Codec;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.oauth2.sdk.AbstractRequest;
@@ -59,6 +58,7 @@ import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -443,7 +443,7 @@ public class OIDCEndpointFilterTest {
         byte[] secret = new byte[32];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(secret);
-        return Base64Codec.encodeToString(secret, true);
+        return Base64.getEncoder().withoutPadding().encodeToString(secret);
     }
 
     private String generateJWT(String ssoClientId, String ssoClientSecret, URI tokenEndPoint) {

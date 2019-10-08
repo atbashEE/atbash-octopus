@@ -23,7 +23,6 @@ import be.atbash.ee.security.octopus.subject.SubjectContext;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.util.StringUtils;
-import be.atbash.util.base64.Base64Codec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +33,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Base64;
 
 import static be.atbash.ee.security.octopus.WebConstants.IDENTITY_REMOVED_KEY;
 
@@ -143,7 +144,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
         HttpServletResponse response = webSubject.getServletResponse();
 
         //base 64 encode it and store as a cookie:
-        String base64 = Base64Codec.encodeToString(serialized, true);
+        String base64 = Base64.getEncoder().withoutPadding().encodeToString(serialized);
 
         Cookie cookie = createCookie(base64, request);
         response.addCookie(cookie);
@@ -209,7 +210,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace(String.format("Acquired Base64 encoded identity [%s]", base64));
             }
-            byte[] decoded = Base64Codec.decode(base64);
+            byte[] decoded = Base64.getDecoder().decode(base64);
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace(String.format("Base64 decoded byte array length: %s bytes.", decoded.length));
             }

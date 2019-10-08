@@ -19,9 +19,10 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.config.RememberMeConfiguration;
 import be.atbash.ee.security.octopus.crypto.AESCipherService;
 import be.atbash.ee.security.octopus.realm.remember.DefaultSerializer;
-import be.atbash.ee.security.octopus.subject.*;
+import be.atbash.ee.security.octopus.subject.PrincipalCollection;
+import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.codec.ByteSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,8 +38,8 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,7 +106,7 @@ public class CookieRememberMeManagerTest {
         // Other tests are performed by AbstractRememberMeManagerTest
 
         // Check if the Cookie value is the Encrypted PrincipalCollection containing the UserPrincipal!
-        byte[] rawBytes = Base64Codec.decode(cookie.getValue().getBytes());
+        byte[] rawBytes = Base64.getDecoder().decode(cookie.getValue().getBytes());
         AESCipherService cipherService = new AESCipherService();
         ByteSource decrypted = cipherService.decrypt(rawBytes, encryptionKey);
 

@@ -26,7 +26,6 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
-import be.atbash.util.base64.Base64Codec;
 import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -35,6 +34,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,7 +56,7 @@ public class ClientAuthenticationInfoProviderTest {
 
     private void defineDefaultConfigValues() {
 
-        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString("NotAGoodSecretButAnywayItIsOKForTesting".getBytes(), true));
+        TestConfig.addConfigValue("SSO.clientSecret", Base64.getEncoder().encodeToString("NotAGoodSecretButAnywayItIsOKForTesting".getBytes()));
         issuer = "http://localhost:" + Jadler.port() + "/root";
         TestConfig.addConfigValue("SSO.octopus.server", issuer);
         TestConfig.addConfigValue("SSO.clientId", "testClientId");

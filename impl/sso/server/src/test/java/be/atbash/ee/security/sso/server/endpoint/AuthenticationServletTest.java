@@ -27,7 +27,6 @@ import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
-import be.atbash.util.base64.Base64Codec;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -63,6 +62,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -344,7 +344,7 @@ public class AuthenticationServletTest {
         assertThat(parameters.get("state").get(0)).isEqualTo("stateValue");
         assertThat(parameters.get("token_type").get(0)).isEqualTo("Bearer");
 
-        byte[] bytes = Base64Codec.decode(parameters.get("access_token").get(0));
+        byte[] bytes = Base64.getDecoder().decode(parameters.get("access_token").get(0));
         assertThat(bytes.length >= 45 && bytes.length <= 48).isTrue(); // Don't know why the actual length isn't 48
 
 

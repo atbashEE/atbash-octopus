@@ -22,12 +22,12 @@ import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.config.logging.StartupLogging;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.StringUtils;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.reflection.CDICheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.Base64;
 
 /**
  *
@@ -96,7 +96,7 @@ public class OctopusSSOServerClientConfiguration extends AbstractConfiguration i
     public byte[] getSSOClientSecret() {
         String ssoClientSecret = defineConfigValue("SSO.clientSecret");
         if (StringUtils.hasText(ssoClientSecret)) {
-            byte[] result = Base64Codec.decode(ssoClientSecret);
+            byte[] result = Base64.getDecoder().decode(ssoClientSecret);
             if (result.length < 32) {
                 throw new ConfigurationException("value for {SSO.application}SSO.clientSecret must be at least 32 byte (256 bit)");
             }
@@ -113,7 +113,7 @@ public class OctopusSSOServerClientConfiguration extends AbstractConfiguration i
             throw new ConfigurationException("Value for {SSO.application}SSO.idTokenSecret parameter is empty");
         }
 
-        byte[] result = Base64Codec.decode(tokenSecret);
+        byte[] result = Base64.getDecoder().decode(tokenSecret);
 
         if (result.length < 32) {
             throw new ConfigurationException("value for {SSO.application}SSO.idTokenSecret must be at least 32 byte (256 bit)");

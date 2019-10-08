@@ -23,7 +23,6 @@ import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -51,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,7 +100,7 @@ public class SSOLogoutFilterTest {
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
+        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
@@ -127,7 +127,7 @@ public class SSOLogoutFilterTest {
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, "theAccessCode", "http://some.server/logout"));
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
+        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
@@ -198,7 +198,7 @@ public class SSOLogoutFilterTest {
 
         ClientInfo clientInfo = new ClientInfo();
         secret = defineSecret(256 / 8 + 1);  // another secret
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
+        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
@@ -227,7 +227,7 @@ public class SSOLogoutFilterTest {
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64Codec.encodeToString(secret, true));
+        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 

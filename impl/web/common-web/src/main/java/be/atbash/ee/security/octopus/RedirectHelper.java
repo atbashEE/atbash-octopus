@@ -15,12 +15,12 @@
  */
 package be.atbash.ee.security.octopus;
 
-import be.atbash.config.ConfigOptionalValue;
-import be.atbash.util.StringUtils;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Helper that redirects to an absolute, context relative, or current request
@@ -50,12 +50,8 @@ public final class RedirectHelper {
 
     private RedirectHelper() {
         // TODO Do we need a 'configuration' for this so that it gets printed at startup?
-        String compatible = ConfigOptionalValue.getValue("redirect.http10.compatible", String.class);
-        if (StringUtils.hasText(compatible)) {
-            http10Compatible = Boolean.parseBoolean(compatible);
-        } else {
-            http10Compatible = true;
-        }
+        Optional<String> compatible = ConfigProvider.getConfig().getOptionalValue("redirect.http10.compatible", String.class);
+        http10Compatible = compatible.map(Boolean::parseBoolean).orElse(true);
     }
 
     private String prepareURL(HttpServletRequest servletRequest, String url) {

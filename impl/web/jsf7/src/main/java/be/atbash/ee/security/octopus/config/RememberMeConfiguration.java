@@ -22,11 +22,11 @@ import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.crypto.AESCipherService;
 import be.atbash.util.StringUtils;
-import be.atbash.util.base64.Base64Codec;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Base64;
 
 /**
  *
@@ -70,10 +70,11 @@ public class RememberMeConfiguration extends AbstractConfiguration implements Mo
         if (cipherKey == null) {
             String cipherValue = getOptionalValue("octopus.rememberme.cipherkey", "", String.class);
             if (StringUtils.hasText(cipherValue)) {
-                if (!Base64Codec.isBase64Encoded(cipherValue)) {
+                try {
+                    cipherKey = Base64.getDecoder().decode(cipherValue);
+                } catch (IllegalArgumentException e) {
                     throw new ConfigurationException("Value for 'octopus.rememberme.cipherkey' must be a BASE64 encoded byte array");
                 }
-                cipherKey = Base64Codec.decode(cipherValue);
             } else {
                 // FIXME Fix this unhealthy relation
                 cipherKey = new AESCipherService().generateNewKey().getEncoded();

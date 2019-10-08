@@ -17,10 +17,10 @@ package be.atbash.ee.security.octopus.sso.client.config;
 
 import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import be.atbash.util.base64.Base64Codec;
 import org.junit.After;
 import org.junit.Test;
 
+import java.util.Base64;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +40,7 @@ public class OctopusSSOServerClientConfigurationTest {
     public void getSSOClientSecret() {
         byte[] value = new byte[32];
         random.nextBytes(value);
-        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString(value, true));
+        TestConfig.addConfigValue("SSO.clientSecret", Base64.getEncoder().withoutPadding().encodeToString(value));
 
         byte[] secret = configuration.getSSOClientSecret();
         assertThat(secret).isEqualTo(value);
@@ -50,7 +50,7 @@ public class OctopusSSOServerClientConfigurationTest {
     public void getSSOClientSecret_tooShort() {
         byte[] value = new byte[31];
         random.nextBytes(value);
-        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString(value, true));
+        TestConfig.addConfigValue("SSO.clientSecret", Base64.getEncoder().withoutPadding().encodeToString(value));
 
         configuration.getSSOClientSecret();
     }
@@ -65,11 +65,11 @@ public class OctopusSSOServerClientConfigurationTest {
         TestConfig.addConfigValue("SSO.application", "test");
         byte[] value1 = new byte[32];
         random.nextBytes(value1);
-        TestConfig.addConfigValue("test.SSO.clientSecret", Base64Codec.encodeToString(value1, true));
+        TestConfig.addConfigValue("test.SSO.clientSecret",Base64.getEncoder().withoutPadding().encodeToString(value1));
 
         byte[] value2 = new byte[32];
         random.nextBytes(value2);
-        TestConfig.addConfigValue("SSO.clientSecret", Base64Codec.encodeToString(value2, true));
+        TestConfig.addConfigValue("SSO.clientSecret", Base64.getEncoder().withoutPadding().encodeToString(value2));
 
         byte[] secret = configuration.getSSOClientSecret();
         assertThat(secret).isEqualTo(value1);
@@ -79,7 +79,7 @@ public class OctopusSSOServerClientConfigurationTest {
     public void getSSOIdTokenSecret() {
         byte[] value = new byte[32];
         random.nextBytes(value);
-        TestConfig.addConfigValue("SSO.idTokenSecret", Base64Codec.encodeToString(value, true));
+        TestConfig.addConfigValue("SSO.idTokenSecret", Base64.getEncoder().withoutPadding().encodeToString(value));
 
         byte[] secret = configuration.getSSOIdTokenSecret();
         assertThat(secret).isEqualTo(value);
@@ -89,7 +89,7 @@ public class OctopusSSOServerClientConfigurationTest {
     public void getSSOIdTokenSecret_tooShort() {
         byte[] value = new byte[31];
         random.nextBytes(value);
-        TestConfig.addConfigValue("SSO.idTokenSecret", Base64Codec.encodeToString(value, true));
+        TestConfig.addConfigValue("SSO.idTokenSecret", Base64.getEncoder().withoutPadding().encodeToString(value));
 
         configuration.getSSOIdTokenSecret();
 
@@ -106,11 +106,11 @@ public class OctopusSSOServerClientConfigurationTest {
         TestConfig.addConfigValue("SSO.application", "test");
         byte[] value1 = new byte[32];
         random.nextBytes(value1);
-        TestConfig.addConfigValue("test.SSO.idTokenSecret", Base64Codec.encodeToString(value1, true));
+        TestConfig.addConfigValue("test.SSO.idTokenSecret", Base64.getEncoder().withoutPadding().encodeToString(value1));
 
         byte[] value2 = new byte[32];
         random.nextBytes(value2);
-        TestConfig.addConfigValue("SSO.idTokenSecret", Base64Codec.encodeToString(value2, true));
+        TestConfig.addConfigValue("SSO.idTokenSecret", Base64.getEncoder().withoutPadding().encodeToString(value2));
 
         byte[] secret = configuration.getSSOIdTokenSecret();
         assertThat(secret).isEqualTo(value1);

@@ -22,12 +22,12 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-examples</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>java-fx</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -38,14 +38,14 @@
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-javafx</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- We can't put this into octopus-javafx as we force then everyone to use this MP config implementation -->
         <dependency>
-            <groupId>be.atbash.config</groupId>
-            <artifactId>geronimo-config</artifactId>
-            <version>${atbash-config.version}</version>
+            <groupId>org.apache.geronimo.config</groupId>
+            <artifactId>geronimo-config-impl</artifactId>
+            <version>1.2.2</version>
             <scope>runtime</scope>
         </dependency>
 

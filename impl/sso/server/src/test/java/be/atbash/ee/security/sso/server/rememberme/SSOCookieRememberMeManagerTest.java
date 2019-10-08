@@ -25,7 +25,6 @@ import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.codec.ByteSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +41,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -116,7 +116,7 @@ public class SSOCookieRememberMeManagerTest {
         assertThat(cookie.getName()).isEqualTo("testSSOCookie");
 
         // Check if the Cookie value is the Encrypted UUID
-        byte[] rawBytes = Base64Codec.decode(cookie.getValue().getBytes());
+        byte[] rawBytes = Base64.getDecoder().decode(cookie.getValue().getBytes());
         AESCipherService cipherService = new AESCipherService();
         ByteSource decrypted = cipherService.decrypt(rawBytes, encryptionKey);
 

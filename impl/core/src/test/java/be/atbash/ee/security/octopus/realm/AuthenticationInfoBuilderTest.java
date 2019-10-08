@@ -148,8 +148,8 @@ public class AuthenticationInfoBuilderTest {
         assertThat(info.getPrincipals().getPrimaryPrincipal()).isInstanceOf(UserPrincipal.class);
 
         UserPrincipal userPrincipal = info.getPrincipals().getPrimaryPrincipal();
-        assertThat(userPrincipal.getUserInfo("key")).isEqualTo(321L);
-        assertThat(userPrincipal.getUserInfo("key2")).isEqualTo("value2");
+        assertThat((Long)userPrincipal.getUserInfo("key")).isEqualTo(321L);
+        assertThat((String)userPrincipal.getUserInfo("key2")).isEqualTo("value2");
 
         assertThat(userPrincipal.getInfo()).hasSize(3);
 

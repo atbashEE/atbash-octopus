@@ -16,11 +16,11 @@
 package be.atbash.ee.security.octopus.util;
 
 import be.atbash.util.PublicAPI;
-import be.atbash.util.base64.Base64Codec;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
  * Generates a random byte array and codes as Base64.
@@ -43,7 +43,7 @@ public class SecretUtil {
         byte[] secret = new byte[byteLength];
 
         secureRandom.nextBytes(secret);
-        return Base64Codec.encodeToString(secret, true);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(secret);
     }
 
     // Java SE Support + Used in CDI Extension

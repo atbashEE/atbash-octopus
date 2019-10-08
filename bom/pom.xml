@@ -24,13 +24,13 @@
     <parent>
         <groupId>be.atbash.ee.security</groupId>
         <artifactId>octopus-parent</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>be.atbash.ee.security.octopus</groupId>
     <artifactId>bom</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <dependencyManagement>

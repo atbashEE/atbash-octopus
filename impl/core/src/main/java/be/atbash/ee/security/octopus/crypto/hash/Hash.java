@@ -19,13 +19,13 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
 import be.atbash.ee.security.octopus.crypto.UnknownAlgorithmException;
 import be.atbash.util.PublicAPI;
 import be.atbash.util.StringUtils;
-import be.atbash.util.base64.Base64Codec;
 import be.atbash.util.codec.*;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * A {@code Hash} implementation that allows any {@link MessageDigest MessageDigest} algorithm name to
@@ -305,7 +305,7 @@ public class Hash extends CodecSupport implements Serializable {
     public String toBase64() {
         if (base64Encoded == null) {
             //cache result in case this method is called multiple times.
-            base64Encoded = Base64Codec.encodeToString(getBytes(), true);
+            base64Encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(getBytes());
         }
         return base64Encoded;
     }
