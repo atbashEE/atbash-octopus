@@ -74,6 +74,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+            <version>${microprofile-config.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-common-web</artifactId>
             <version>${project.parent.version}</version>

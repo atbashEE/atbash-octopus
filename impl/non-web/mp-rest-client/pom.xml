@@ -35,6 +35,12 @@
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
         <dependency>
@@ -58,9 +64,9 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.mp.rest-client</groupId>
-            <artifactId>atbash-rest-client-impl</artifactId>
-            <version>${atbash-rest-client.version}</version>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-api</artifactId>
+            <version>1.1</version>
         </dependency>
 
         <dependency>

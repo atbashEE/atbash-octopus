@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import be.atbash.ee.security.octopus.mp.exception.UnauthorizedExceptionMapper;
 import be.atbash.ee.security.octopus.mp.rest.MPRestClientProvider;
 import be.atbash.ee.security.octopus.token.OfflineToken;
 import be.atbash.ee.security.octopus.token.OfflineTokenParser;
-import org.eclipse.microprofile.rest.client.AbstractRestClientBuilder;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,7 +39,7 @@ public class CallMP {
         OfflineToken token = OfflineTokenParser.parse(tokenEncoded, passPhrase);
         OctopusSecurityContext.getInstance().authenticate(token);
 
-        HelloService helloService = AbstractRestClientBuilder.newBuilder()
+        HelloService helloService = RestClientBuilder.newBuilder()
                 .baseUrl(new URL("http://localhost:8080/rest-mp/data"))
                 .register(MPRestClientProvider.class)
                 .register(UnauthorizedExceptionMapper.class)

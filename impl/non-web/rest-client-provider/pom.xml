@@ -35,12 +35,27 @@
     <packaging>jar</packaging>
 
     <dependencies>
-
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
-            <groupId>be.atbash.mp.rest-client</groupId>
-            <artifactId>atbash-rest-client-impl</artifactId>
-            <version>${atbash-rest-client.version}</version>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-se</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-api</artifactId>
+            <version>1.1</version>
         </dependency>
 
     </dependencies>

@@ -69,7 +69,6 @@
         <jwt-support.version>0.9.1</jwt-support.version>
         <microprofile-config.version>1.1</microprofile-config.version>
 
-        <atbash-rest-client.version>0.5.1.1</atbash-rest-client.version> <!-- FIXME JDK7, remove in next migration step -->
         <slf4j.version>1.7.25</slf4j.version>
 
         <assertj.version>3.12.0</assertj.version>
@@ -88,6 +87,11 @@
                 <groupId>be.atbash.utils</groupId>
                 <artifactId>utils-cdi</artifactId>
                 <version>${atbash-utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>be.atbash.config</groupId>
+                <artifactId>atbash-config</artifactId>
+                <version>${atbash-config.version}</version>
             </dependency>
 
         </dependencies>

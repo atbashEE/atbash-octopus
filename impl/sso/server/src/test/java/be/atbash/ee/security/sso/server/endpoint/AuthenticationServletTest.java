@@ -344,7 +344,7 @@ public class AuthenticationServletTest {
         assertThat(parameters.get("state").get(0)).isEqualTo("stateValue");
         assertThat(parameters.get("token_type").get(0)).isEqualTo("Bearer");
 
-        byte[] bytes = Base64.getDecoder().decode(parameters.get("access_token").get(0));
+        byte[] bytes = Base64.getUrlDecoder().decode(parameters.get("access_token").get(0));
         assertThat(bytes.length >= 45 && bytes.length <= 48).isTrue(); // Don't know why the actual length isn't 48
 
 
