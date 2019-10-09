@@ -117,11 +117,9 @@ public class OctopusFilter extends OncePerRequestFilter {
 
             ThreadContext.bind(subject);
 
-            subject.execute(new Callable() {
-                public Object call() throws Exception {
-                    executeChain(servletRequest, servletResponse, chain);
-                    return null;
-                }
+            subject.execute((Callable) () -> {
+                executeChain(servletRequest, servletResponse, chain);
+                return null;
             });
 
         } catch (ExecutionException ex) {

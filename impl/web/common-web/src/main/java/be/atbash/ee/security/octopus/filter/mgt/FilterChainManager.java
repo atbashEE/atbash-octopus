@@ -87,7 +87,7 @@ public class FilterChainManager {
         // retrieveInstances is an unmodifiable list
         globalFilterProviders = new ArrayList<>(CDIUtils.retrieveInstances(GlobalFilterProvider.class));
 
-        Collections.sort(globalFilterProviders, new ProviderComparator());
+        globalFilterProviders.sort(new ProviderComparator());
 
     }
 

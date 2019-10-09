@@ -98,11 +98,7 @@ public class OctopusCasConfiguration extends AbstractConfiguration implements Mo
 
     private void disableSSLChecks() {
         try {
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+            HostnameVerifier allHostsValid = (hostname, session) -> true;
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 
             SSLContext ctx = SSLContext.getInstance("SSL");

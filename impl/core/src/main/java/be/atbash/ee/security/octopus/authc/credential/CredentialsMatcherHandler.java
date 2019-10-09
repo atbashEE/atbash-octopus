@@ -80,7 +80,7 @@ public class CredentialsMatcherHandler {
             for (CredentialsMatcher credentialsMatcher : ServiceLoader.load(CredentialsMatcher.class)) {
                 matchers.add(credentialsMatcher);
             }
-            Collections.sort(matchers, new OrderComparator());
+            matchers.sort(new OrderComparator());
 
             externalCredentialsManager = new ExternalCredentialsManager();
         }

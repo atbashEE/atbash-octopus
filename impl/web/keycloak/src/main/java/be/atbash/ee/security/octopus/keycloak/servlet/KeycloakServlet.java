@@ -119,7 +119,7 @@ public class KeycloakServlet extends HttpServlet {
 
     private boolean handleRequest(OIDCActions oidcActions) {
         String requestUri = oidcActions.getURI();
-        logger.debug("adminRequest {0}", requestUri);
+        logger.debug("adminRequest {}", requestUri);
         if (oidcActions.preflightCors()) {
             return true;
         }

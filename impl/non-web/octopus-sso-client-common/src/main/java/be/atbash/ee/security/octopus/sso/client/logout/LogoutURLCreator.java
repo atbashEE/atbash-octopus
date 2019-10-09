@@ -67,7 +67,7 @@ public class LogoutURLCreator {
         Date exp = timeUtil.addSecondsToDate(2, iat); // TODO Config parameter for time?
 
         Subject subject = new Subject(accessToken);  // AccessToken as the subject to identify the user.
-        IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(issuer, subject, new ArrayList<Audience>(), exp, iat);
+        IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(issuer, subject, new ArrayList<>(), exp, iat);
 
         SignedJWT idToken;
         try {

@@ -77,7 +77,7 @@ public class SecuredURLReader {
     }
 
     private void orderURLProtectionProviders(List<ProgrammaticURLProtectionProvider> providers) {
-        Collections.sort(providers, new URLProtectionProviderComparator());
+        providers.sort(new URLProtectionProviderComparator());
     }
 
     private Map<String, String> readPatternsFromFile(ServletContext servletContext) {

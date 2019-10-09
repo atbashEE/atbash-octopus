@@ -153,7 +153,7 @@ public class SSOAuthenticatingFilter extends AuthenticatingFilter {
         ssoUser.setEmail(userPrincipal.getEmail());
         ssoUser.setUserName(userPrincipal.getUserName());
         // FIXME Verify if authenticated from SSO Cookie
-        ssoUser.setCookieToken((String) userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN));
+        ssoUser.setCookieToken(userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN));
         ssoUser.addUserInfo(userPrincipal.getInfo());
         return ssoUser;
 

@@ -121,12 +121,7 @@ public class ActiveSessionRegistry {
 
     private void logoutOtherSessions(final UserPrincipal userPrincipalFromNewLogin, final String sessionIdNewLogin) {
 
-        invalidateSession(new UserSessionFinder() {
-            @Override
-            public boolean isCorrectPrincipal(UserPrincipal userPrincipal, String sessionId) {
-                return !sessionIdNewLogin.equals(sessionId) && userPrincipal.equals(userPrincipalFromNewLogin);
-            }
-        });
+        invalidateSession((userPrincipal, sessionId) -> !sessionIdNewLogin.equals(sessionId) && userPrincipal.equals(userPrincipalFromNewLogin));
     }
 
     private SessionInfo newApplicationUsageInfo(HttpSession session) {

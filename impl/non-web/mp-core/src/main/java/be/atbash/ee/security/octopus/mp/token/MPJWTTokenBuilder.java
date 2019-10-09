@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class MPJWTTokenBuilder {
 
     public MPJWTTokenBuilder addGroup(String groupName) {
         if (token.getGroups() == null) {
-            token.setGroups(new ArrayList<String>());
+            token.setGroups(new ArrayList<>());
         }
         this.token.getGroups().add(groupName);
         return this;

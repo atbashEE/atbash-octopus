@@ -45,7 +45,7 @@ public class AuthenticationInfoProviderHandler {
     public void init() {
         retrieveProviders();
 
-        Collections.sort(authenticationInfoProviders, new ProviderComparator());
+        authenticationInfoProviders.sort(new ProviderComparator());
 
         defineStrategy();
     }
@@ -141,7 +141,7 @@ public class AuthenticationInfoProviderHandler {
                 throw new RealmConfigurationException("Missing configuration for SecurityDataProvider or AuthenticationInfoProvider");
             }
 
-            Collections.sort(authenticationInfoProviders, new ProviderComparator());
+            authenticationInfoProviders.sort(new ProviderComparator());
             defineStrategy();
         }
     }

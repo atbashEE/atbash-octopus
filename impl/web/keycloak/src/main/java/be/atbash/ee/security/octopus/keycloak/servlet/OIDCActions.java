@@ -117,12 +117,7 @@ class OIDCActions {
 
             for (final String clientSession : action.getKeycloakSessionIds()) {
 
-                activeSessionRegistry.invalidateSession(new ActiveSessionRegistry.UserSessionFinder() {
-                    @Override
-                    public boolean isCorrectPrincipal(UserPrincipal userPrincipal, String sessionId) {
-                        return clientSession.equals(userPrincipal.getUserInfo(OctopusConstants.EXTERNAL_SESSION_ID));
-                    }
-                });
+                activeSessionRegistry.invalidateSession((userPrincipal, sessionId) -> clientSession.equals(userPrincipal.getUserInfo(OctopusConstants.EXTERNAL_SESSION_ID)));
             }
             // FIXME Handle global logout
             // Verify but is done I guess.

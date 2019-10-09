@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,12 +46,7 @@ public class MethodParameterCheckUtil {
         SecurityViolation result = null;
         if (!missingClasses.isEmpty()) {
             final OctopusInvocationContext octopusInvocationContext = new OctopusInvocationContext(invocationContext);
-            result = new SecurityViolation() {
-                @Override
-                public String getReason() {
-                    return infoProducer.getWrongMethodSignatureInfo(octopusInvocationContext, missingClasses);
-                }
-            };
+            result = (SecurityViolation) () -> infoProducer.getWrongMethodSignatureInfo(octopusInvocationContext, missingClasses);
         }
         return result;
     }

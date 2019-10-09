@@ -19,7 +19,6 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.credential.CredentialsMatcher;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.OTPToken;
-import be.atbash.ee.security.octopus.util.order.ProviderOrder;
 import be.atbash.util.ordered.Order;
 
 @Order(-50)

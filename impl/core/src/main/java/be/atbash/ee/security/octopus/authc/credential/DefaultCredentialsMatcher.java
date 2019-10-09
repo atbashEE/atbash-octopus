@@ -20,7 +20,6 @@ import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.crypto.hash.SaltHashingUtil;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
-import be.atbash.ee.security.octopus.util.order.ProviderOrder;
 import be.atbash.util.codec.CodecSupport;
 import be.atbash.util.ordered.Order;
 import org.slf4j.Logger;

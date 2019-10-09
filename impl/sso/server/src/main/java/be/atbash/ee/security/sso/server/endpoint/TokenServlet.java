@@ -146,7 +146,7 @@ public class TokenServlet extends HttpServlet {
                 , ssoServerConfiguration.getSSOAccessTokenTimeToLive(), tokenRequest.getScope()));
 
         UserPrincipal userPrincipal = SecurityUtils.getSubject().getPrincipal();
-        if (StringUtils.hasText((String) userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN))) {
+        if (StringUtils.hasText(userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN))) {
             throw new AtbashIllegalActionException("Cannot allow password grant when SSO cookie is found");
         }
 

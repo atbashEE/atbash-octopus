@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class InfoProviderConfiguration extends AbstractConfiguration {
 
         String[] classes = StringUtils.tokenizeToStringArray(StringUtils.clean(providerClasses), ",");
         for (String aClass : classes) {
-            result.add((AuthenticationInfoProvider) ClassUtils.newInstance(aClass));
+            result.add(ClassUtils.newInstance(aClass));
         }
 
         return result;
@@ -61,7 +61,7 @@ public class InfoProviderConfiguration extends AbstractConfiguration {
 
         String[] classes = StringUtils.tokenizeToStringArray(StringUtils.clean(providerClasses), ",");
         for (String aClass : classes) {
-            result.add((AuthorizationInfoProvider) ClassUtils.newInstance(aClass));
+            result.add(ClassUtils.newInstance(aClass));
         }
 
         return result;

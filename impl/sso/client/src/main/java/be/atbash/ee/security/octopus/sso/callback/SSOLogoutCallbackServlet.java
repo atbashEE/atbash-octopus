@@ -56,17 +56,14 @@ public class SSOLogoutCallbackServlet extends HttpServlet {
 
         final String realToken = retrieveToken(httpServletRequest);
 
-        activeSessionRegistry.invalidateSession(new ActiveSessionRegistry.UserSessionFinder() {
-            @Override
-            public boolean isCorrectPrincipal(UserPrincipal userPrincipal, String sessionId) {
-                boolean result = false;
-                Object token = userPrincipal.getUserInfo(OctopusConstants.INFO_KEY_TOKEN);
-                if (token instanceof OctopusSSOToken) {
-                    OctopusSSOToken ssoUser = (OctopusSSOToken) token;
-                    result = ssoUser.getAccessToken().equals(realToken);
-                }
-                return result;
+        activeSessionRegistry.invalidateSession((userPrincipal, sessionId) -> {
+            boolean result = false;
+            Object token = userPrincipal.getUserInfo(OctopusConstants.INFO_KEY_TOKEN);
+            if (token instanceof OctopusSSOToken) {
+                OctopusSSOToken ssoUser = (OctopusSSOToken) token;
+                result = ssoUser.getAccessToken().equals(realToken);
             }
+            return result;
         });
         showDebugInfo(realToken);
     }
