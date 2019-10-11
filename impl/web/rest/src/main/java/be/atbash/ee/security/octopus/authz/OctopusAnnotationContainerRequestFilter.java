@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.CustomAccessDecisionVoterContext;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationInfo;
 import be.atbash.ee.security.octopus.interceptor.annotation.AnnotationUtil;
+import be.atbash.util.CDIUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 
-import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
@@ -46,20 +46,18 @@ public class OctopusAnnotationContainerRequestFilter implements ContainerRequest
     @Context
     private ResourceInfo resourceInfo;
 
-    @Inject
+    // We cannot use Inject as this is not working on all servers
     private OctopusCoreConfiguration config;
 
-    @Inject
     private OctopusRestConfiguration restConfiguration;
 
-    @Inject
     private AnnotationAuthorizationChecker annotationAuthorizationChecker;
 
-    @Inject
     private SecurityViolationInfoProducer infoProducer;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        checkDependencies();
         Class<?> classType = resourceInfo.getResourceClass();
         Method method = resourceInfo.getResourceMethod();
 
@@ -96,5 +94,14 @@ public class OctopusAnnotationContainerRequestFilter implements ContainerRequest
             }
         }
 
+    }
+
+    private void checkDependencies() {
+        if (config == null) {
+            config = CDIUtils.retrieveInstance(OctopusCoreConfiguration.class);
+            restConfiguration = CDIUtils.retrieveInstance(OctopusRestConfiguration.class);
+            annotationAuthorizationChecker = CDIUtils.retrieveInstance(AnnotationAuthorizationChecker.class);
+            infoProducer = CDIUtils.retrieveInstance(SecurityViolationInfoProducer.class);
+        }
     }
 }
