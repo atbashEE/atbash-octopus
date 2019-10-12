@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -99,11 +100,11 @@ public class OctopusAnnotationContainerRequestFilterTest {
         when(restConfigurationMock.isRestInterceptorEnabled()).thenReturn(true);
 
         DummyAnswerMethod answer = new DummyAnswerMethod(false, "testMethod");
-        when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).then(answer);
+        when(annotationAuthorizationCheckerMock.checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class))).then(answer);
 
         filter.filter(null);
 
-        verify(annotationAuthorizationCheckerMock).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+        verify(annotationAuthorizationCheckerMock).checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class));
     }
 
     @Test(expected = UnauthorizedException.class)
@@ -117,13 +118,13 @@ public class OctopusAnnotationContainerRequestFilterTest {
         when(restConfigurationMock.isRestInterceptorEnabled()).thenReturn(true);
 
         DummyAnswerMethod answer = new DummyAnswerMethod(true, "testMethod");
-        when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).then(answer);
+        when(annotationAuthorizationCheckerMock.checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class))).then(answer);
 
         try {
             filter.filter(null);
         } finally {
 
-            verify(annotationAuthorizationCheckerMock).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+            verify(annotationAuthorizationCheckerMock).checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class));
         }
     }
 
@@ -138,11 +139,11 @@ public class OctopusAnnotationContainerRequestFilterTest {
         when(restConfigurationMock.isRestInterceptorEnabled()).thenReturn(true);
 
         DummyAnswerClass answer = new DummyAnswerClass(false, "testMethod");
-        when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).then(answer);
+        when(annotationAuthorizationCheckerMock.checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class))).then(answer);
 
         filter.filter(null);
 
-        verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+        verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class));
     }
 
     @Test(expected = UnauthorizedException.class)
@@ -156,13 +157,13 @@ public class OctopusAnnotationContainerRequestFilterTest {
         when(restConfigurationMock.isRestInterceptorEnabled()).thenReturn(true);
 
         DummyAnswerClass answer = new DummyAnswerClass(true, "testMethod");
-        when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).then(answer);
+        when(annotationAuthorizationCheckerMock.checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class))).then(answer);
 
         try {
             filter.filter(null);
         } finally {
 
-            verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+            verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class));
         }
     }
 
@@ -178,7 +179,7 @@ public class OctopusAnnotationContainerRequestFilterTest {
 
         filter.filter(null);
 
-        verify(annotationAuthorizationCheckerMock, never()).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+        verify(annotationAuthorizationCheckerMock, never()).checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class));
     }
 
     @Test(expected = SecurityAuthorizationViolationException.class)
@@ -193,13 +194,13 @@ public class OctopusAnnotationContainerRequestFilterTest {
 
         when(restConfigurationMock.isRestInterceptorEnabled()).thenReturn(true);
 
-        when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).thenReturn(false);
+        when(annotationAuthorizationCheckerMock.checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class))).thenReturn(false);
 
         try {
             filter.filter(null);
         } finally {
 
-            verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+            verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(ArgumentMatchers.<Annotation>anySet(), any(AccessDecisionVoterContext.class));
         }
     }
 
