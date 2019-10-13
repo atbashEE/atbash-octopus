@@ -48,6 +48,7 @@ public class MPTokenAuthenticationInfoProvider extends AuthenticationInfoProvide
                 builder.principalId(mpToken.getId());
             }
             builder.name(mpToken.getPrincipal().toString());
+            builder.userName(mpToken.getPrincipal().toString());
             builder.token(mpToken);
             return builder.build();
 
