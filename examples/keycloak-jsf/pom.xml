@@ -68,6 +68,13 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-api</artifactId>
+            <version>${microprofile-rest-client.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- due to different version from different dependencies :) -->
         <dependency>
             <groupId>be.atbash.config</groupId>
