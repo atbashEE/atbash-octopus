@@ -13,9 +13,7 @@ Other differences
 
 # Work in Progress
 
-Currently only a very small subset of the original Octopus functionality is available.
-
-And thus for the moment, it is no valid replacement.
+As of version 0.9.6 (Java 7) and 1.0.0 (Java 8) most features are rewritten and thus the Atbash Octopus version can be used as a replacement of the original framework.
 
 
 # End of alfa tryout

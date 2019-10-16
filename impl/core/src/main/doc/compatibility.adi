@@ -1,0 +1,41 @@
+There are various factors which determine if a certain runtime/server can be used for running applications build with Atbash Octopus.
+
+These requirements also depends on which modules you are using. But in general, these rules apply
+
+- Java 8
+- MicroProfile config 1.1 compliant runtime or add compatible implementation for Java SE like *Apache Geronimo Config*
+
+When using Web applications
+
+- CDI 1.1
+- Servlet 3.1
+- JSF 2.0
+
+Which corresponds with Java EE 7.
+
+When using Rest based modules, they are based on
+
+- JAX-RS 2.0
+
+And propagation of authentication and authorization context requires (module octopus-mp-rest-client)
+
+- MicroProfile Rest Client 1.1
+
+==== Some examples
+
+So mainly a Runtime/Server which supports Java 8, Java EE 7 and MicroProfile 1.4 can be used without issues.
+
+When **not** using the _module octopus-mp-rest-client_
+
+- Payara (Micro) 5.181 and newer
+- WildFly 14 and newer
+- OpenLiberty 17.0.0.3 and newer
+
+When using the module _octopus-mp-rest-client_
+
+- Payara (Micro) 5.184 and newer
+- WildFly 18 and newer
+- OpenLiberty 18.0.0.3 and newer
+
+The above list is not complete but contains the ones which are tested.
+

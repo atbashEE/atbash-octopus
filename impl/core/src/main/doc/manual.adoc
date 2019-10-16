@@ -6,6 +6,10 @@ v0.6, ??/??/2019
 
 include::release.adi[]
 
+== Compatible runtimes
+
+include::compatibility.adi[]
+
 == Modules
 
 include::modules.adi[]
