@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.authz.permission.voter;
 
 import be.atbash.ee.security.octopus.authz.violation.SecurityViolationInfoProducer;
+import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.MethodParameterCheckUtil;
@@ -25,8 +26,6 @@ import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterConte
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 
 import javax.inject.Inject;
-import javax.interceptor.InvocationContext;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 /**
@@ -48,27 +47,31 @@ public abstract class AbstractGenericVoter extends AbstractAccessDecisionVoter {
     @Inject
     protected Subject subject;
 
-    protected void checkMethodHasParameterTypes(Set<SecurityViolation> violations, InvocationContext invocationContext, Class<?>... parameterTypes) {
+    protected void checkMethodHasParameterTypes(Set<SecurityViolation> violations, OctopusInvocationContext invocationContext, Class<?>... parameterTypes) {
         SecurityViolation violation = methodParameterCheckUtil.checkMethodHasParameterTypes(invocationContext, parameterTypes);
         if (violation != null) {
             violations.add(violation);
         }
     }
 
-    protected boolean verifyMethodHasParameterTypes(InvocationContext invocationContext, Class<?>... parameterTypes) {
+    protected boolean verifyMethodHasParameterTypes(OctopusInvocationContext invocationContext, Class<?>... parameterTypes) {
         SecurityViolation violation = methodParameterCheckUtil.checkMethodHasParameterTypes(invocationContext, parameterTypes);
         return violation == null;
     }
 
-    protected boolean hasServletRequestInfo(InvocationContext invocationContext) {
+    /*
+    FIXME Move to a AbstractWebGenericVoter
+    protected boolean hasServletRequestInfo(OctopusInvocationContext invocationContext) {
         SecurityViolation violation = methodParameterCheckUtil.checkMethodHasParameterTypes(invocationContext, HttpServletRequest.class);
         return violation == null;
     }
 
-    protected String getURLRequestParameter(InvocationContext invocationContext, String paramName) {
+    protected String getURLRequestParameter(OctopusInvocationContext invocationContext, String paramName) {
         HttpServletRequest httpServletRequest = methodParameterCheckUtil.getAssignableParameter(invocationContext, HttpServletRequest.class);
         return httpServletRequest.getParameter(paramName);
     }
+
+     */
 
     public boolean verify(AccessDecisionVoterContext invocationContext) {
         return checkPermission(invocationContext).isEmpty();
