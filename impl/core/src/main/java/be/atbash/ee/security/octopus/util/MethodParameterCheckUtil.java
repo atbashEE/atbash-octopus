@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class MethodParameterCheckUtil {
     @Inject
     private SecurityViolationInfoProducer infoProducer;
 
-    public SecurityViolation checkMethodHasParameterTypes(InvocationContext invocationContext, Class<?>... parameterTypes) {
+    public SecurityViolation checkMethodHasParameterTypes(final OctopusInvocationContext invocationContext, Class<?>... parameterTypes) {
         final List<Class<?>> missingClasses = new ArrayList<>();
         for (Class<?> type : parameterTypes) {
             if (!hasAssignableParameter(invocationContext.getParameters(), type)) {
@@ -45,11 +45,10 @@ public class MethodParameterCheckUtil {
         }
         SecurityViolation result = null;
         if (!missingClasses.isEmpty()) {
-            final OctopusInvocationContext octopusInvocationContext = new OctopusInvocationContext(invocationContext);
             result = new SecurityViolation() {
                 @Override
                 public String getReason() {
-                    return infoProducer.getWrongMethodSignatureInfo(octopusInvocationContext, missingClasses);
+                    return infoProducer.getWrongMethodSignatureInfo(invocationContext, missingClasses);
                 }
             };
         }
@@ -71,11 +70,11 @@ public class MethodParameterCheckUtil {
         return result || nullValueFound;
     }
 
-    public <T> T getAssignableParameter(InvocationContext invocationContext, Class<T> type) {
+    public <T> T getAssignableParameter(OctopusInvocationContext invocationContext, Class<T> type) {
         return getAssignableParameter(invocationContext, type, 0);
     }
 
-    public <T> T getAssignableParameter(InvocationContext invocationContext, Class<T> type, int pos) {
+    public <T> T getAssignableParameter(OctopusInvocationContext invocationContext, Class<T> type, int pos) {
         int idx = 0;
         int found = -1;
         Object[] parameters = invocationContext.getParameters();
