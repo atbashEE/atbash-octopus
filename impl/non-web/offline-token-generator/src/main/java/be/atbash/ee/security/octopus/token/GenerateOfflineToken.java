@@ -39,7 +39,7 @@ public final class GenerateOfflineToken {
         JWTEncoder encoder = new JWTEncoder();
 
         JWTParameters parameters = JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS)
-                .withHeader("Octopus Offline", "v0.2")
+                .withHeader("Octopus Offline", "v1.0")
                 .withSecretKeyForSigning(HmacSecretUtil.generateSecretKey(LOCAL_SECRET_KEY_ID, Base64.getUrlDecoder().decode(localSecret)))
                 .build();
 
