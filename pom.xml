@@ -23,7 +23,7 @@
 
     <groupId>be.atbash.ee.security</groupId>
     <artifactId>octopus-parent</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>pom</packaging>
 
     <name>Atbash Octopus Parent</name>
@@ -59,7 +59,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <atbash-utils.version>0.9.3.2-SNAPSHOT</atbash-utils.version>
+        <atbash-utils.version>0.9.3.2</atbash-utils.version>
         <atbash-config.version>0.9.3</atbash-config.version>
         <atbash-json.version>0.9.2</atbash-json.version>
         <jwt-support.version>0.9.1</jwt-support.version>
