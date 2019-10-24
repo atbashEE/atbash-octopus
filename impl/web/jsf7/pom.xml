@@ -102,6 +102,17 @@
             <version>${atbash-utils.version}</version>
         </dependency>
 
+        <!-- To overwrite version from jerry-->
+        <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>be.atbash.utils</groupId>
+            <artifactId>utils-cdi</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>be.atbash.ee.jsf</groupId>
             <artifactId>jerry</artifactId>

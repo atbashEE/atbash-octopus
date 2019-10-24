@@ -45,12 +45,6 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-rest</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>be.atbash.ee.security</groupId>
             <artifactId>octopus-mp</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
