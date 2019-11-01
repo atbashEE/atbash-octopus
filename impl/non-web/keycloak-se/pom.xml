@@ -50,6 +50,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>be.atbash.json</groupId>
+            <artifactId>octopus-jwt-support</artifactId>
+            <version>${jwt-support.version}</version>
+        </dependency>
+
         <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
         <dependency>
             <groupId>javax.interceptor</groupId>
@@ -62,6 +68,20 @@
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSONP/JSONB -->
+        <dependency>
+            <groupId>javax.json.bind</groupId>
+            <artifactId>javax.json.bind-api</artifactId>
+            <version>${javax.json.bind.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+            <version>${javax.json.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -97,18 +117,25 @@
         </dependency>
 
         <!-- testing -->
-        <dependency>
-            <!-- we use this to simulate a valid response from keycloak -->
-            <groupId>be.atbash.json</groupId>
-            <artifactId>octopus-jwt-support</artifactId>
-            <version>${jwt-support.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>be.atbash.config</groupId>
             <artifactId>atbash-config-test</artifactId>
             <version>${atbash-config.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1</version>
             <scope>test</scope>
         </dependency>
 

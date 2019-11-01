@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,11 +51,23 @@ public class MPJWTTokenTest {
 
         JWTDecoder decoder = new JWTDecoder();
 
-
         MPJWTToken token = decoder.decode("{\"framework\":\"Octopus\",\"extra\":\"JUnit\",\"exp\":1514288343,\"iat\":1514288343}", MPJWTToken.class);
 
         assertThat(token.getAdditionalClaims()).containsEntry("extra", "JUnit");
         assertThat(token.getAdditionalClaims()).containsEntry("framework", "Octopus");
+    }
+
+    @Test
+    public void decode_withCollection() {
+
+        JWTDecoder decoder = new JWTDecoder();
+
+        MPJWTToken token = decoder.decode("{\"framework\":\"Octopus\",\"extra\":\"JUnit\",\"exp\":1514288343,\"iat\":1514288343,\"groups\":[\"value2\",\"value1\"]}", MPJWTToken.class);
+
+        assertThat(token.getAdditionalClaims()).containsEntry("extra", "JUnit");
+        assertThat(token.getAdditionalClaims()).containsEntry("framework", "Octopus");
+
+        assertThat(token.getGroups()).contains("value1","value2");
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@ package be.atbash.ee.security.octopus.oauth2.github.json;
 
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
-import be.atbash.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
+
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,19 +40,19 @@ public class GithubJSONProcessorTest {
 
     @Test
     public void extractGithubUser() {
-        JSONObject data = new JSONObject();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        data.put("id", "1234567");
-        data.put("email", "info@atbash.be");
+        builder.add("id", "1234567");
+        builder.add("email", "info@atbash.be");
 
-        data.put("name", "Test Atbash");
-        data.put("url", "http://atbash.be/");
-        data.put("gravatar_url", "http://atbash.be/logo.png");
+        builder.add("name", "Test Atbash");
+        builder.add("url", "http://atbash.be/");
+        builder.add("gravatar_url", "http://atbash.be/logo.png");
 
-        data.put("custom1", "value1");
-        data.put("custom2", "value2");
+        builder.add("custom1", "value1");
+        builder.add("custom2", "value2");
 
-        OAuth2UserToken token = processor.extractGithubUser(data.toJSONString());
+        OAuth2UserToken token = processor.extractGithubUser(builder.build().toString());
         assertThat(token).isNotNull();
         assertThat(token.getId()).isEqualTo("1234567");
         assertThat(token.getEmail()).isEqualTo("info@atbash.be");
@@ -66,11 +68,11 @@ public class GithubJSONProcessorTest {
 
     @Test
     public void extractGoogleUser_minimal() {
-        JSONObject data = new JSONObject();
-        data.put("id", "1234567");
-        data.put("email", "info@atbash.be");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("id", "1234567");
+        builder.add("email", "info@atbash.be");
 
-        OAuth2UserToken token = processor.extractGithubUser(data.toJSONString());
+        OAuth2UserToken token = processor.extractGithubUser(builder.build().toString());
         assertThat(token).isNotNull();
         assertThat(token.getId()).isEqualTo("1234567");
         assertThat(token.getEmail()).isEqualTo("info@atbash.be");
@@ -81,11 +83,11 @@ public class GithubJSONProcessorTest {
 
     @Test(expected = UnauthenticatedException.class)
     public void extractGoogleUser_error() {
-        JSONObject data = new JSONObject();
-        data.put("error", "invalid authentication");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("error", "invalid authentication");
 
         try {
-            processor.extractGithubUser(data.toJSONString());
+            processor.extractGithubUser(builder.build().toString());
         } finally {
             assertThat(logger.getLoggingEvents()).hasSize(1);
             assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Received following response from Github token resolving \n{\"error\":\"invalid authentication\"}");

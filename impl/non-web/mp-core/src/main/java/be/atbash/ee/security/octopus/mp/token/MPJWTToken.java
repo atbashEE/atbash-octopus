@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package be.atbash.ee.security.octopus.mp.token;
 
-import be.atbash.json.JSONAware;
-import be.atbash.json.JSONObject;
-import be.atbash.json.parser.MappedBy;
-import net.minidev.json.JSONArray;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,9 +26,9 @@ import java.util.Map;
 
 /**
  * Represent the MP Auth token (can be used in a
- */
-@MappedBy(beanEncoder = MPJWTTokenMapper.class)
-public class MPJWTToken implements JSONAware, Cloneable {
+ //*/
+//@MappedBy(beanEncoder = MPJWTTokenMapper.class)
+public class MPJWTToken implements /*JSONAware,*/ Cloneable {
 
     private String iss; // issuer
     private String aud; // audience
@@ -42,7 +41,7 @@ public class MPJWTToken implements JSONAware, Cloneable {
     private List<String> groups = new ArrayList<>();
         /*
     "iss": "https://server.example.com",
-            "aud": "s6BhdRkqt3",
+            "aud": "s6BhdRkqt3",MPJWTTokenTest
             "jti": "a-123",
             "exp": 1311281970,
             "iat": 1311280970,
@@ -149,33 +148,51 @@ public class MPJWTToken implements JSONAware, Cloneable {
         additionalClaims.put(key, value);
     }
 
-    @Override
+    //@Override
     public String toJSONString() {
+        // FIXME Should we create a JsonSerializer??
+        JsonObjectBuilder result = Json.createObjectBuilder();
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.appendField("iss", iss);
-        jsonObject.appendField("aud", aud);
-        jsonObject.appendField("jti", jti);
-        jsonObject.appendField("exp", exp / 1000);
-        jsonObject.appendField("iat", iat / 1000);
-        jsonObject.appendField("sub", sub);
-        jsonObject.appendField("upn", upn);
-        jsonObject.appendField("preferred_username", preferredUsername);
+        if (iss != null) {
+            result.add("iss", iss);
+        }
+        if (aud != null) {
+            result.add("aud", aud);
+        }
+        if (jti != null) {
+            result.add("jti", jti);
+        }
+        if (exp != null) {
+            result.add("exp", exp / 1000);
+        }
+        if (iat != null) {
+            result.add("iat", iat / 1000);
+        }
+        if (sub != null) {
+            result.add("sub", sub);
+        }
+        if (upn != null) {
+            result.add("upn", upn);
+        }
+        if (preferredUsername != null) {
+            result.add("preferred_username", preferredUsername);
+        }
         // FIXME The other properties
 
         if (additionalClaims != null) {
             for (Map.Entry<String, String> entry : additionalClaims.entrySet()) {
-                jsonObject.appendField(entry.getKey(), entry.getValue());
+                result.add(entry.getKey(), entry.getValue());
             }
         }
 
-        JSONArray groupsArr = new JSONArray();
-        for (String group : groups) {
-            groupsArr.appendElement(group);
-        }
-        jsonObject.appendField("groups", groupsArr);
+            JsonArrayBuilder groupsArr = Json.createArrayBuilder();
 
-        return jsonObject.toJSONString();
+        for (String group : groups) {
+            groupsArr.add(group);
+        }
+            result.add("groups", groupsArr);
+
+            return result.build().toString();
     }
 
     // FIXME Is this a real clone or just a duplicate?

@@ -17,11 +17,13 @@ package be.atbash.ee.security.octopus.oauth2.linkedin.json;
 
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
-import be.atbash.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
+
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,20 +40,20 @@ public class LinkedinJSONProcessorTest {
 
     @Test
     public void extractLinkedinUser() {
-        JSONObject data = new JSONObject();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        data.put("id", "1234567");
-        data.put("emailAddress", "info@atbash.be");
+        builder.add("id", "1234567");
+        builder.add("emailAddress", "info@atbash.be");
 
-        data.put("lastName", "Atbash");
-        data.put("firstName", "Test");
-        data.put("publicProfileUrl", "http://atbash.be/");
-        data.put("pictureUrl", "http://atbash.be/logo.png");
+        builder.add("lastName", "Atbash");
+        builder.add("firstName", "Test");
+        builder.add("publicProfileUrl", "http://atbash.be/");
+        builder.add("pictureUrl", "http://atbash.be/logo.png");
 
-        data.put("custom1", "value1");
-        data.put("custom2", "value2");
+        builder.add("custom1", "value1");
+        builder.add("custom2", "value2");
 
-        OAuth2UserToken token = processor.extractLinkedinUser(data.toJSONString());
+        OAuth2UserToken token = processor.extractLinkedinUser(builder.build().toString());
         assertThat(token).isNotNull();
         assertThat(token.getId()).isEqualTo("1234567");
         assertThat(token.getEmail()).isEqualTo("info@atbash.be");
@@ -67,11 +69,11 @@ public class LinkedinJSONProcessorTest {
 
     @Test
     public void extractLinkedinUser_minimal() {
-        JSONObject data = new JSONObject();
-        data.put("id", "1234567");
-        data.put("emailAddress", "info@atbash.be");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("id", "1234567");
+        builder.add("emailAddress", "info@atbash.be");
 
-        OAuth2UserToken token = processor.extractLinkedinUser(data.toJSONString());
+        OAuth2UserToken token = processor.extractLinkedinUser(builder.build().toString());
         assertThat(token).isNotNull();
         assertThat(token.getId()).isEqualTo("1234567");
         assertThat(token.getEmail()).isEqualTo("info@atbash.be");
@@ -82,11 +84,11 @@ public class LinkedinJSONProcessorTest {
 
     @Test(expected = UnauthenticatedException.class)
     public void extractLinkedin_error() {
-        JSONObject data = new JSONObject();
-        data.put("error", "invalid authentication");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("error", "invalid authentication");
 
         try {
-            processor.extractLinkedinUser(data.toJSONString());
+            processor.extractLinkedinUser(builder.build().toString());
         } finally {
             assertThat(logger.getLoggingEvents()).hasSize(1);
             assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Received following response from LinkedIn token resolving \n{\"error\":\"invalid authentication\"}");

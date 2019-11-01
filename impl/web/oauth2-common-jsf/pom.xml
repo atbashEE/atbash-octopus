@@ -57,6 +57,20 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JSONP/JSONB -->
+        <dependency>
+            <groupId>javax.json.bind</groupId>
+            <artifactId>javax.json.bind-api</artifactId>
+            <version>${javax.json.bind.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+            <version>${javax.json.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- oAuth2 -->
         <dependency>
             <groupId>com.github.scribejava</groupId>
@@ -118,12 +132,25 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-cdi</artifactId>
             <version>${atbash-utils.version}</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1</version>
             <scope>test</scope>
         </dependency>
 

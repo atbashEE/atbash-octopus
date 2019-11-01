@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package be.atbash.ee.security.octopus.authz.permission;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.json.JSONValue;
 import be.atbash.util.CollectionUtils;
 import be.atbash.util.StringUtils;
 
@@ -256,9 +255,5 @@ public class WildcardPermission implements Permission, Serializable {
         return parts.hashCode();
     }
 
-    @Override
-    public String toJSONString() {
 
-        return "\"" + JSONValue.escape(toString()) + '"';
-    }
 }

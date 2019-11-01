@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,15 @@
  */
 package be.atbash.ee.security.octopus.keycloak.adapter;
 
-import be.atbash.json.asm.Accessor;
-import be.atbash.json.asm.mapper.FieldPropertyNameMapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  */
+//FIXME
+public class JacksonFieldPropertyNameMapper /*implements FieldPropertyNameMapper*/ {
 
-public class JacksonFieldPropertyNameMapper implements FieldPropertyNameMapper {
-
-    @Override
+    /*@Override
     public String getPropertyName(Accessor accessor) {
         JsonProperty jsonProperty = accessor.getAnnotation(JsonProperty.class);
         if (jsonProperty != null) {
@@ -33,5 +31,5 @@ public class JacksonFieldPropertyNameMapper implements FieldPropertyNameMapper {
         }
         return null;
     }
-
+       */
 }

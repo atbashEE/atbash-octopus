@@ -58,11 +58,6 @@ public class RolePermission implements Permission, NamedPermission {
         return roleName;
     }
 
-    @Override
-    public String toJSONString() {
-        // FIXME
-        throw new UnsupportedOperationException("TODO Implement");
-    }
 
     @Override
     public final boolean equals(Object o) {

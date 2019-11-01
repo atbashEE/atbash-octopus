@@ -23,11 +23,6 @@ Of course you can also define your custom _IdentityStore_s as CDI beans.
 
 ==== Tips
 
-When using on a Java EE 7 server
-
-* Don't forget to include the API (javax.security.enterprise-api) and implementation (like Soteria) to the application since they have the _IdentityStore_ logic.
-* There is no need for the special configuration files (jboss-web.xml, glassfish-web.xml, ibm-application-bnd.xml) since Atbash Octopus module isn't depending on JASPIC.
-
 When using on a Java EE 8 server
 
 * Don't include the Java EE Security API artifacts, they are already on the server.

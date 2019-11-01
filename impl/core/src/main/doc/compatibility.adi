@@ -1,3 +1,5 @@
+FIXME Determine and document the proper compatibility
+
 There are various factors which determine if a certain runtime/server can be used for running applications build with Atbash Octopus.
 
 These requirements also depends on which modules you are using. But in general, these rules apply
@@ -10,8 +12,10 @@ When using Web applications
 - CDI 1.1
 - Servlet 3.1
 - JSF 2.0
+- JSONP 1.1
+- JSONB 1.0
 
-Which corresponds with Java EE 7.
+Which corresponds with Java EE 8
 
 When using Rest based modules, they are based on
 

@@ -29,7 +29,6 @@ public class DemoNamedPermission implements NamedPermission {
         return false;
     }
 
-    @Override
     public String toJSONString() {
         return null;
     }

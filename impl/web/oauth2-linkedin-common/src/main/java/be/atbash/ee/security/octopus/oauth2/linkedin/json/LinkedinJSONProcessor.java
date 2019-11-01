@@ -16,14 +16,14 @@
 package be.atbash.ee.security.octopus.oauth2.linkedin.json;
 
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
 import be.atbash.ee.security.octopus.oauth2.info.OAuth2UserInfoProcessor;
-import be.atbash.json.JSONObject;
-import be.atbash.json.parser.JSONParser;
-import be.atbash.json.parser.ParseException;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.JsonObject;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,14 +38,12 @@ public class LinkedinJSONProcessor extends OAuth2UserInfoProcessor {
     public OAuth2UserToken extractLinkedinUser(String json) {
         OAuth2UserToken oAuth2User;
         try {
-            JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-
-            JSONObject jsonObject = (JSONObject) parser.parse(json);
+            JsonObject jsonObject = JSONObjectUtils.parse(json);
 
             if (!jsonObject.containsKey("error")) {
                 oAuth2User = new OAuth2UserToken();
-                oAuth2User.setId(getString(jsonObject, "id"));
-                oAuth2User.setEmail(getString(jsonObject, "emailAddress"));
+                oAuth2User.setId(jsonObject.getString("id"));
+                oAuth2User.setEmail(jsonObject.getString("emailAddress"));
 
                 oAuth2User.setFullName(optString(jsonObject, "lastName") + " " + optString(jsonObject, "firstName"));
 

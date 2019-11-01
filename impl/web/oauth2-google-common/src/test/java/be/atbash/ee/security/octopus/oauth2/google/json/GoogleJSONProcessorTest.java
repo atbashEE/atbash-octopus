@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@ package be.atbash.ee.security.octopus.oauth2.google.json;
 
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
-import be.atbash.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
+
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,24 +40,24 @@ public class GoogleJSONProcessorTest {
 
     @Test
     public void extractGoogleUser() {
-        JSONObject data = new JSONObject();
-        data.put("sub", "1234567");
-        data.put("email", "info@atbash.be");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("sub", "1234567");
+        builder.add("email", "info@atbash.be");
 
-        data.put("verified_email", "true");
-        data.put("family_name", "Atbash");
-        data.put("given_name", "Test");
-        data.put("name", "Test Atbash");
-        data.put("hd", "atbash.be");
-        data.put("link", "http://atbash.be/");
-        data.put("picture", "http://atbash.be/logo.png");
-        data.put("gender", "male");
-        data.put("locale", "en");
+        builder.add("verified_email", "true");
+        builder.add("family_name", "Atbash");
+        builder.add("given_name", "Test");
+        builder.add("name", "Test Atbash");
+        builder.add("hd", "atbash.be");
+        builder.add("link", "http://atbash.be/");
+        builder.add("picture", "http://atbash.be/logo.png");
+        builder.add("gender", "male");
+        builder.add("locale", "en");
 
-        data.put("custom1", "value1");
-        data.put("custom2", "value2");
+        builder.add("custom1", "value1");
+        builder.add("custom2", "value2");
 
-        OAuth2UserToken token = processor.extractGoogleUser(data.toJSONString());
+        OAuth2UserToken token = processor.extractGoogleUser(builder.build().toString());
         assertThat(token).isNotNull();
         assertThat(token.getId()).isEqualTo("1234567");
         assertThat(token.getEmail()).isEqualTo("info@atbash.be");
@@ -76,11 +78,11 @@ public class GoogleJSONProcessorTest {
 
     @Test
     public void extractGoogleUser_minimal() {
-        JSONObject data = new JSONObject();
-        data.put("sub", "1234567");
-        data.put("email", "info@atbash.be");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("sub", "1234567");
+        builder.add("email", "info@atbash.be");
 
-        OAuth2UserToken token = processor.extractGoogleUser(data.toJSONString());
+        OAuth2UserToken token = processor.extractGoogleUser(builder.build().toString());
         assertThat(token).isNotNull();
         assertThat(token.getId()).isEqualTo("1234567");
         assertThat(token.getEmail()).isEqualTo("info@atbash.be");
@@ -91,11 +93,11 @@ public class GoogleJSONProcessorTest {
 
     @Test(expected = UnauthenticatedException.class)
     public void extractGoogleUser_error() {
-        JSONObject data = new JSONObject();
-        data.put("error", "invalid authentication");
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("error", "invalid authentication");
 
         try {
-            processor.extractGoogleUser(data.toJSONString());
+            processor.extractGoogleUser(builder.build().toString());
         } finally {
             assertThat(logger.getLoggingEvents()).hasSize(1);
             assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Received following response from Google token resolving \n{\"error\":\"invalid authentication\"}");

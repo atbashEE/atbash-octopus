@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.mp.token;
+package be.atbash.ee.security.octopus.keycloak.adapter.json;
 
-import be.atbash.json.writer.CustomBeanJSONEncoder;
+import be.atbash.ee.security.octopus.json.AbstractJacksonJsonSerializer;
+import org.keycloak.representations.IDToken;
 
-/**
- *
- */
+import javax.json.bind.serializer.JsonbSerializer;
 
-public class MPJWTTokenMapper extends CustomBeanJSONEncoder<MPJWTToken> {
-
-    public MPJWTTokenMapper() {
-        super( MPJWTToken.class);
-    }
-
-    @Override
-    public void setCustomValue(MPJWTToken current, String key, Object value) {
-        current.addAdditionalClaims(key, value.toString());
-    }
+public class IdTokenSerializer extends AbstractJacksonJsonSerializer<IDToken> implements JsonbSerializer<IDToken> {
 
 }

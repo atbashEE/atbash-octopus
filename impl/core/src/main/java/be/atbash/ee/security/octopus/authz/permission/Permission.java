@@ -16,8 +16,6 @@
 package be.atbash.ee.security.octopus.authz.permission;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
-import be.atbash.json.JSONAware;
-import be.atbash.json.parser.MappedBy;
 
 /**
  * A Permission represents the ability to perform an action or access a resource.  A Permission is the most
@@ -59,8 +57,9 @@ import be.atbash.json.parser.MappedBy;
  * <p/>
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authz.Permission"})
-@MappedBy(encoder = PermissionEncoder.class)  // Reading from JSON
-public interface Permission extends JSONAware {
+//@MappedBy(encoder = PermissionEncoder.class)  // Reading from JSON
+//@JsonbTypeDeserializer
+public interface Permission /*extends JSONAware*/ {
 
     /**
      * Returns {@code true} if this current instance <em>implies</em> all the functionality and/or resource access

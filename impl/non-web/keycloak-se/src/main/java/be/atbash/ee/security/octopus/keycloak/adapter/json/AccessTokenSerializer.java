@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.security.octopus.authz.permission;
+package be.atbash.ee.security.octopus.keycloak.adapter.json;
 
+import be.atbash.ee.security.octopus.json.AbstractJacksonJsonSerializer;
+import org.keycloak.representations.AccessToken;
 
-/**
- *
- */
+import javax.json.bind.serializer.JsonbSerializer;
 
-public class PermissionEncoder /*implements CustomJSONEncoder*/ {
-    //JsonBSerializer
+public class AccessTokenSerializer extends AbstractJacksonJsonSerializer<AccessToken> implements JsonbSerializer<AccessToken> {
 
-    //@Override
-    public Object parse(Object data) {
-        // FIXME Support for other Permission types in the future
-        if (data instanceof String) {
-            return new WildcardPermission((String) data);
-        }
-        // FIXME throw exception
-        return null;
-    }
 }

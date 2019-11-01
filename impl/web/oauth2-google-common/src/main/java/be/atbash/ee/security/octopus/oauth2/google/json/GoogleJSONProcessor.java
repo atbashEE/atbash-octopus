@@ -17,14 +17,14 @@ package be.atbash.ee.security.octopus.oauth2.google.json;
 
 
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
 import be.atbash.ee.security.octopus.oauth2.info.OAuth2UserInfoProcessor;
-import be.atbash.json.JSONObject;
-import be.atbash.json.parser.JSONParser;
-import be.atbash.json.parser.ParseException;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.JsonObject;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,14 +40,12 @@ public class GoogleJSONProcessor extends OAuth2UserInfoProcessor {
     public OAuth2UserToken extractGoogleUser(String json) {
         OAuth2UserToken oAuth2User;
         try {
-            JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-
-            JSONObject jsonObject = (JSONObject) parser.parse(json);
+            JsonObject jsonObject = JSONObjectUtils.parse(json);
 
             if (!jsonObject.containsKey("error")) {
                 oAuth2User = new OAuth2UserToken();
-                oAuth2User.setId(getString(jsonObject, "sub"));
-                oAuth2User.setEmail(getString(jsonObject, "email"));
+                oAuth2User.setId(jsonObject.getString("sub"));
+                oAuth2User.setEmail(jsonObject.getString("email"));
 
                 oAuth2User.setVerifiedEmail(optBoolean(jsonObject, "verified_email"));
                 oAuth2User.setLastName(optString(jsonObject, "family_name"));
@@ -72,7 +70,7 @@ public class GoogleJSONProcessor extends OAuth2UserInfoProcessor {
         return oAuth2User;
     }
 
-    private boolean optBoolean(JSONObject jsonObject, String key) {
+    private boolean optBoolean(JsonObject jsonObject, String key) {
         String value = optString(jsonObject, key);
         if (value != null) {
             return Boolean.parseBoolean(value);
