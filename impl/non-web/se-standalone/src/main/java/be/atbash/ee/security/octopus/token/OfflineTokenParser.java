@@ -21,8 +21,8 @@ import be.atbash.ee.security.octopus.jwt.decoder.JWTVerifier;
 import be.atbash.ee.security.octopus.keys.AtbashKey;
 import be.atbash.ee.security.octopus.keys.selector.KeySelector;
 import be.atbash.ee.security.octopus.keys.selector.SingleKeySelector;
-import be.atbash.ee.security.octopus.nimbus.jose.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;

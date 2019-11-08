@@ -18,8 +18,8 @@ package be.atbash.ee.security.octopus.mp.filter.authc;
 import be.atbash.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTVerifier;
 import be.atbash.ee.security.octopus.mp.config.MPCoreConfiguration;
-import be.atbash.ee.security.octopus.nimbus.jose.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.util.StringUtils;
 
 import javax.annotation.PostConstruct;

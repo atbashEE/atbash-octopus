@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
 import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
 import be.atbash.ee.security.octopus.keys.selector.SecretKeyType;
 import be.atbash.ee.security.octopus.keys.selector.filter.SecretKeyTypeKeyFilter;
-import be.atbash.ee.security.octopus.nimbus.jose.jwk.KeyType;
+import be.atbash.ee.security.octopus.nimbus.jwk.KeyType;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import org.junit.After;
 import org.junit.Test;
