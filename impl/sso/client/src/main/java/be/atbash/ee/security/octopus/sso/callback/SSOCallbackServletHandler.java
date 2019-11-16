@@ -15,23 +15,23 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.AuthorizationCode;
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
+import be.atbash.ee.oauth2.sdk.util.URLUtils;
+import be.atbash.ee.openid.connect.sdk.AuthenticationErrorResponse;
+import be.atbash.ee.openid.connect.sdk.AuthenticationResponse;
+import be.atbash.ee.openid.connect.sdk.AuthenticationResponseParser;
+import be.atbash.ee.openid.connect.sdk.AuthenticationSuccessResponse;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.util.MultivaluedMapUtils;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
-import com.nimbusds.openid.connect.sdk.AuthenticationErrorResponse;
-import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
-import com.nimbusds.openid.connect.sdk.AuthenticationResponseParser;
-import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,7 +76,7 @@ class SSOCallbackServletHandler {
             authenticationResponse = AuthenticationResponseParser.parse(responseURL);
         } catch (URISyntaxException e) {
             errorObject = new ErrorObject("OCT-SSO-CLIENT-001", e.getMessage());
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             // TODO Can only happen with response= in query (When is this generated as it related a JWT reply)
             errorObject = new ErrorObject("OCT-SSO-CLIENT-002", e.getMessage());
         }
@@ -149,7 +149,7 @@ class SSOCallbackServletHandler {
         } catch (java.text.ParseException e) {
             ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-018", "User Info endpoint response JWT validation failure : " + e.getMessage());
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-017", "User Info endpoint response validation failure : " + e.getMessage());
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
 

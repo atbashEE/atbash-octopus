@@ -15,6 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.AuthenticationSuccessResponse;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
@@ -35,9 +38,6 @@ import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;

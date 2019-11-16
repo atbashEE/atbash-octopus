@@ -15,9 +15,18 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.sso.core.config.OctopusSSOConfiguration;
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
@@ -33,17 +42,6 @@ import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,8 +52,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -176,7 +178,7 @@ public class OctopusSSOEndpointTest {
     }
 
     @Test
-    public void getUserInfo_defaultScope() throws net.minidev.json.parser.ParseException {
+    public void getUserInfo_defaultScope() {
         beanManagerFake.endRegistration();
 
         OIDCStoreData oidcStoreData = new OIDCStoreData(new BearerAccessToken(0, Scope.parse("openid")));
@@ -201,8 +203,8 @@ public class OctopusSSOEndpointTest {
         String data = response.getEntity().toString();
         assertThat(data).startsWith("{");
 
-        JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-        JSONObject jsonObject = (JSONObject) parser.parse(data);
+        JsonReader jsonReader = Json.createReader(new StringReader(data));
+        JsonObject jsonObject = jsonReader.readObject();
 
         assertThat(jsonObject.keySet()).containsOnly("sub", "iss", "aud", "exp", "iat");
 
@@ -211,7 +213,7 @@ public class OctopusSSOEndpointTest {
     }
 
     @Test
-    public void getUserInfo_customScope() throws net.minidev.json.parser.ParseException {
+    public void getUserInfo_customScope() {
         when(userEndpointDataTransformerMock.transform(any(UserInfo.class), any(UserPrincipal.class), any(Scope.class))).thenAnswer(new Answer<UserInfo>() {
             @Override
             public UserInfo answer(InvocationOnMock invocation) throws Throwable {
@@ -249,8 +251,9 @@ public class OctopusSSOEndpointTest {
         String data = response.getEntity().toString();
         assertThat(data).startsWith("{");
 
-        JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-        JSONObject jsonObject = (JSONObject) parser.parse(data);
+        JsonReader jsonReader = Json.createReader(new StringReader(data));
+        JsonObject jsonObject = jsonReader.readObject();
+
 
         assertThat(jsonObject.keySet()).containsOnly("sub", "iss", "aud", "exp", "iat", "JUnitClaim");
 

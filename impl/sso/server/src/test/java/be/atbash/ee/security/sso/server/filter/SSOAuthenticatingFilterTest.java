@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
@@ -25,8 +27,6 @@ import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

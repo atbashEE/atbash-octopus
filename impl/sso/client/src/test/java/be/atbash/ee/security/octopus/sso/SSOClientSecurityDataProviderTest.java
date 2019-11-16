@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.octopus.sso;
 
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.StringPermissionLookup;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
@@ -22,7 +23,6 @@ import be.atbash.ee.security.octopus.sso.client.ClientCustomization;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import net.jadler.Jadler;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.After;

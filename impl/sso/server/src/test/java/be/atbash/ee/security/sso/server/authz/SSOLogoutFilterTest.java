@@ -15,7 +15,17 @@
  */
 package be.atbash.ee.security.sso.server.authz;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.openid.connect.sdk.LogoutRequest;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
@@ -24,17 +34,6 @@ import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.openid.connect.sdk.LogoutRequest;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -252,7 +251,7 @@ public class SSOLogoutFilterTest {
         TimeUtil timeUtil = new TimeUtil();
         Date iat = new Date();
         Date exp = timeUtil.addSecondsToDate(2, iat);
-        IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(new Issuer(clientId), new Subject(subject), new ArrayList<Audience>(), exp, iat);
+        IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(new Issuer(clientId), new Subject(subject), new ArrayList<>(), exp, iat);
 
         try {
             JWSHeader.Builder headerBuilder = new JWSHeader.Builder(JWSAlgorithm.HS256);
@@ -260,7 +259,7 @@ public class SSOLogoutFilterTest {
             result = new SignedJWT(headerBuilder.build(), claimsSet.toJWTClaimsSet());
 
             result.sign(new MACSigner(secret));
-        } catch (ParseException | JOSEException e) {
+        } catch (OAuth2JSONParseException | JOSEException e) {
             throw new AtbashUnexpectedException(e);
         }
 

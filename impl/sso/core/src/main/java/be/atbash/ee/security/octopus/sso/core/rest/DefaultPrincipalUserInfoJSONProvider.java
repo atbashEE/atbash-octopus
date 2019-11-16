@@ -15,20 +15,20 @@
  */
 package be.atbash.ee.security.octopus.sso.core.rest;
 
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.sso.core.rest.reflect.Bean;
 import be.atbash.ee.security.octopus.sso.core.rest.reflect.Property;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONStyle;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.inject.Vetoed;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import java.text.ParseException;
 import java.util.Map;
-
-import static net.minidev.json.JSONStyle.FLAG_IGNORE_NULL;
 
 /**
  * TODO, this doesn't support serialization of values in super classes.
@@ -41,7 +41,7 @@ public class DefaultPrincipalUserInfoJSONProvider implements PrincipalUserInfoJS
 
     @Override
     public String writeValue(Object data) {
-        JSONObject result = new JSONObject();
+        JsonObjectBuilder result = Json.createObjectBuilder();
 
         Bean<?> bean = Bean.forClass(data.getClass());
         Property[] declaredProperties = bean.getDeclaredProperties();
@@ -51,14 +51,15 @@ public class DefaultPrincipalUserInfoJSONProvider implements PrincipalUserInfoJS
             name = declaredProperty.getName();
             value = bean.getProperty(name).get(data);
             if (Property.isBasicPropertyType(value)) {
-                result.put(name, value);
+                JSONObjectUtils.addValue(result, name, value);
             } else if (value.getClass().isEnum()) {
-                result.put(name, value);
+                result.add(name, value.toString());
             } else {
-                result.put(name, writeValue(value));  // Recursive call
+                // FIXME Is this still correct with JSONP
+                result.add(name, Json.createValue(writeValue(value)));  // Recursive call
             }
         }
-        return result.toJSONString(new JSONStyle(FLAG_IGNORE_NULL));
+        return result.build().toString();
     }
 
     @Override
@@ -68,14 +69,12 @@ public class DefaultPrincipalUserInfoJSONProvider implements PrincipalUserInfoJS
         try {
             result = classType.newInstance();
 
-            JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-
-            JSONObject jsonObject = (JSONObject) parser.parse(json);
+            JsonObject jsonObject = JSONObjectUtils.parse(json);
 
             Object value;
-            for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+            for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
 
-                value = entry.getValue();
+                value = JSONObjectUtils.getJsonValueAsObject(entry.getValue());
 
                 Property property = bean.getProperty(entry.getKey());
                 if (property.isWritable()) {

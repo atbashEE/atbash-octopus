@@ -15,24 +15,24 @@
  */
 package be.atbash.ee.security.octopus.oauth2.adapter;
 
+import be.atbash.ee.oauth2.sdk.*;
+import be.atbash.ee.oauth2.sdk.auth.ClientAuthentication;
+import be.atbash.ee.oauth2.sdk.auth.ClientSecretJWT;
+import be.atbash.ee.oauth2.sdk.auth.Secret;
+import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
+import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.util.ByteUtils;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.debug.CorrelationCounter;
 import be.atbash.ee.security.octopus.sso.client.requestor.AbstractRequestor;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.util.ByteUtils;
-import com.nimbusds.oauth2.sdk.*;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
-import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import java.io.IOException;
 import java.net.URI;
@@ -114,7 +114,7 @@ public class TokenRequestor extends AbstractRequestor {
 
         } catch (URISyntaxException e) {
             throw new AtbashUnexpectedException(String.format("Invalid URI for token endpoint (SSO.server parameter) %s. Exception message : %s", configuration.getTokenEndpoint(), e.getMessage()));
-        } catch (ParseException | JOSEException e) {
+        } catch (OAuth2JSONParseException | JOSEException e) {
             throw new AtbashUnexpectedException(e);
         }
 

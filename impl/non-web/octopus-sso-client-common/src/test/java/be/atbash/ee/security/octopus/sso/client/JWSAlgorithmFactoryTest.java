@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.sso.client;
 
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JWSAlgorithm;
 import org.junit.Test;
 
 import java.security.SecureRandom;

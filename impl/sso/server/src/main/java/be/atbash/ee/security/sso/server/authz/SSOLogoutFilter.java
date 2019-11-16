@@ -15,9 +15,15 @@
  */
 package be.atbash.ee.security.sso.server.authz;
 
+import be.atbash.ee.openid.connect.sdk.LogoutRequest;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.filter.authz.AuthorizationFilter;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.WebUtils;
@@ -26,13 +32,6 @@ import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.ee.security.sso.server.token.UserPrincipalToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jose.util.Base64;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.LogoutRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +94,7 @@ public class SSOLogoutFilter extends AuthorizationFilter {
                     throw new AtbashUnexpectedException(e);
                 }
             }
-        } catch (ParseException | java.text.ParseException e) {
+        } catch (java.text.ParseException e) {
             // TODO Add error codes
             logger.warn(String.format("SSOLogoutFilter: Parsing of the id_token_hint failed %s", request.getParameter("id_token_hint")));
         }
@@ -119,7 +118,7 @@ public class SSOLogoutFilter extends AuthorizationFilter {
                 return false;
             }
 
-            byte[] clientSecret = new Base64(clientInfo.getClientSecret()).decode();
+            byte[] clientSecret = new Base64Value(clientInfo.getClientSecret()).decode();
             MACVerifier verifier = new MACVerifier(clientSecret);
             if (!idTokenHint.verify(verifier)) {
                 // TODO Add error codes

@@ -15,10 +15,10 @@
  */
 package be.atbash.ee.security.octopus.sso.client;
 
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.util.ByteUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.util.ByteUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;

@@ -15,6 +15,17 @@
  */
 package be.atbash.ee.security.sso.server.endpoint.helper;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
+import be.atbash.ee.openid.connect.sdk.Nonce;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.SecretUtil;
 import be.atbash.ee.security.octopus.util.TimeUtil;
@@ -22,16 +33,6 @@ import be.atbash.ee.security.octopus.util.URLUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
-import com.nimbusds.openid.connect.sdk.Nonce;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -95,7 +96,7 @@ public class OIDCTokenHelperTest {
     }
 
     @Test
-    public void signToken() throws JOSEException, ParseException, com.nimbusds.oauth2.sdk.ParseException {
+    public void signToken() throws JOSEException, ParseException, OAuth2JSONParseException {
         Issuer iss = new Issuer("http://some.host/root");
         Subject sub = new Subject("subject");
         List<Audience> audList = Audience.create("JUnit_client");

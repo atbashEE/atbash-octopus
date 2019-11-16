@@ -15,8 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.client;
 
-import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.openid.connect.sdk.Nonce;
+
+import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.openid.connect.sdk.Nonce;
 
 import java.io.Serializable;
 

@@ -15,11 +15,11 @@
  */
 package be.atbash.ee.security.sso.server.authc;
 
+import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.sso.server.token.OIDCEndpointToken;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

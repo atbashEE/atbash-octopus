@@ -16,19 +16,19 @@
 package be.atbash.ee.security.octopus.oauth2.adapter;
 
 import be.atbash.config.test.TestConfig;
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.Permission;
+import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
-import com.nimbusds.jwt.util.DateUtils;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import net.jadler.Jadler;
 import org.junit.After;
 import org.junit.Before;

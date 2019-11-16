@@ -15,10 +15,25 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.oauth2.sdk.*;
+import be.atbash.ee.oauth2.sdk.auth.ClientAuthentication;
+import be.atbash.ee.oauth2.sdk.auth.ClientSecretBasic;
+import be.atbash.ee.oauth2.sdk.auth.verifier.ClientAuthenticationVerifier;
+import be.atbash.ee.oauth2.sdk.auth.verifier.InvalidClientException;
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
+import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
+import be.atbash.ee.oauth2.sdk.util.URLUtils;
+import be.atbash.ee.openid.connect.sdk.AuthenticationErrorResponse;
+import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.filter.AccessControlFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
@@ -26,23 +41,8 @@ import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.ee.security.sso.server.token.OIDCEndpointToken;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.oauth2.sdk.*;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
-import com.nimbusds.oauth2.sdk.auth.verifier.ClientAuthenticationVerifier;
-import com.nimbusds.oauth2.sdk.auth.verifier.InvalidClientException;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.oauth2.sdk.util.MultivaluedMapUtils;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
-import com.nimbusds.openid.connect.sdk.AuthenticationErrorResponse;
-import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,7 +174,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
                 response.setHeader("Content-Type", "application/json");
                 TokenErrorResponse tokenErrorResponse = new TokenErrorResponse(errorInfo.getErrorObject());
                 try {
-                    response.getWriter().println(tokenErrorResponse.toJSONObject().toJSONString());
+                    response.getWriter().println(tokenErrorResponse.toJSONObject().toString());
                 } catch (IOException e) {
                     throw new AtbashUnexpectedException(e);
                 }
@@ -259,7 +259,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
             ErrorObject errorObject = new ErrorObject("OCT-SSO-SERVER-100", "invalid URL");
             result = new ErrorInfo(errorObject);
 
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             // TokenRequest.parse(httpRequest);
             result = new ErrorInfo(e.getErrorObject());
         } catch (IOException e) {
@@ -356,7 +356,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
         AuthenticationRequest request;
         try {
             request = AuthenticationRequest.parse(query);
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             LOGGER.info(e.getMessage());
             Map<String, List<String>> queryParameters = URLUtils.parseParameters(query);
             return new ErrorInfo(queryParameters, e.getErrorObject());
@@ -428,7 +428,7 @@ public class OIDCEndpointFilter extends AccessControlFilter {
             URI result = null;
             String paramValue = redirectURIList.get(0); // FIXME Check when multiple items
 
-            if (StringUtils.isNotBlank(paramValue)) {
+            if (StringUtils.hasText(paramValue)) {
 
                 try {
                     result = new URI(paramValue);

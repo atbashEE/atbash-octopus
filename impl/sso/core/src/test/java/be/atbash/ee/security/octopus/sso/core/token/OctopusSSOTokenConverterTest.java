@@ -15,15 +15,15 @@
  */
 package be.atbash.ee.security.octopus.sso.core.token;
 
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authz.permission.DomainPermission;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.sso.core.config.OctopusSSOConfiguration;
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.testclasses.WithDefaultConstructor;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.util.TestReflectionUtils;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import net.minidev.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +34,8 @@ import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -148,31 +150,32 @@ public class OctopusSSOTokenConverterTest {
     @Test
     public void fromUserInfo() {
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", "IdValue");
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 
-        jsonObject.put(UserInfo.PREFERRED_USERNAME_CLAIM_NAME, "UserNameValue");
+        jsonObject.add("id", "IdValue");
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put(UserInfo.FAMILY_NAME_CLAIM_NAME, "LastNameValue");
-        jsonObject.put(UserInfo.GIVEN_NAME_CLAIM_NAME, "FirstNameValue");
-        jsonObject.put(UserInfo.NAME_CLAIM_NAME, "FullNameValue");
-        jsonObject.put(UserInfo.EMAIL_CLAIM_NAME, "john.doe@acme.com");
+        jsonObject.add(UserInfo.PREFERRED_USERNAME_CLAIM_NAME, "UserNameValue");
 
-        jsonObject.put("stringProperty", "StringPropertyValue");
-        jsonObject.put("longProperty", 123L);
-        jsonObject.put("booleanProperty", Boolean.TRUE);
+        jsonObject.add(UserInfo.FAMILY_NAME_CLAIM_NAME, "LastNameValue");
+        jsonObject.add(UserInfo.GIVEN_NAME_CLAIM_NAME, "FirstNameValue");
+        jsonObject.add(UserInfo.NAME_CLAIM_NAME, "FullNameValue");
+        jsonObject.add(UserInfo.EMAIL_CLAIM_NAME, "john.doe@acme.com");
+
+        jsonObject.add("stringProperty", "StringPropertyValue");
+        jsonObject.add("longProperty", 123L);
+        jsonObject.add("booleanProperty", Boolean.TRUE);
         Date dateValue = new Date();
-        jsonObject.put("dateProperty", dateValue);
+        jsonObject.add("dateProperty", dateValue.getTime());
 
         List<String> stringList = new ArrayList<>();
         stringList.add("JUnit");
 
-        jsonObject.put("listProperty", stringList);
-        jsonObject.put("permission", "be.atbash.ee.security.octopus.authz.permission.DomainPermission@@permissionSerialization");
+        jsonObject.add("listProperty", JSONObjectUtils.asJsonArray(stringList));
+        jsonObject.add("permission", "be.atbash.ee.security.octopus.authz.permission.DomainPermission@@permissionSerialization");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         DomainPermission permission = new DomainPermission();
         when(jsonProviderMock.readValue("permissionSerialization", DomainPermission.class)).thenReturn(permission);
@@ -192,7 +195,7 @@ public class OctopusSSOTokenConverterTest {
         assertThat(ssoToken.getUserInfo()).containsEntry("stringProperty", "StringPropertyValue");
         assertThat(ssoToken.getUserInfo()).containsEntry("longProperty", "123");
         assertThat(ssoToken.getUserInfo()).containsEntry("booleanProperty", "true");
-        assertThat(ssoToken.getUserInfo()).containsEntry("dateProperty", dateValue.toString());
+        assertThat(ssoToken.getUserInfo()).containsEntry("dateProperty", String.valueOf(dateValue.getTime()));
         assertThat(ssoToken.getUserInfo()).containsEntry("listProperty", "[JUnit]");
         assertThat(ssoToken.getUserInfo()).containsEntry("permission", permission);
 
@@ -201,13 +204,13 @@ public class OctopusSSOTokenConverterTest {
     @Test
     public void fromUserInfo_noId() {
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put(UserInfo.PREFERRED_USERNAME_CLAIM_NAME, "UserNameValue");
+        jsonObject.add(UserInfo.PREFERRED_USERNAME_CLAIM_NAME, "UserNameValue");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
 
@@ -221,12 +224,12 @@ public class OctopusSSOTokenConverterTest {
     @Test
     public void fromUserInfo_ForCredentialOwner() {
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", "IdValue");
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("id", "IdValue");
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
 
@@ -241,13 +244,13 @@ public class OctopusSSOTokenConverterTest {
     public void fromUserInfo_EmailSupport() {
         // Fixing issue #136
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", "IdValue");
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("id", "IdValue");
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
-        jsonObject.put("mail", "some.person@foor.org");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
+        jsonObject.add("mail", "some.person@foor.org");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
 
@@ -265,13 +268,13 @@ public class OctopusSSOTokenConverterTest {
         TestLogger logger = TestLoggerFactory.getTestLogger(OctopusSSOTokenConverter.class);
         TestReflectionUtils.injectDependencies(octopusSSOUserConverter, logger);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", "IdValue");
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("id", "IdValue");
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
-        jsonObject.put("customKey", "be.atbash.security.demo.ServerClass@@{property=value}");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
+        jsonObject.add("customKey", "be.atbash.security.demo.ServerClass@@{property=value}");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
 
@@ -294,14 +297,14 @@ public class OctopusSSOTokenConverterTest {
         TestLogger logger = TestLoggerFactory.getTestLogger(OctopusSSOTokenConverter.class);
         TestReflectionUtils.injectDependencies(octopusSSOUserConverter, logger);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", "IdValue");
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("id", "IdValue");
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
 
-        jsonObject.put("noDefaultConstructor", "be.atbash.ee.security.octopus.sso.core.token.testclasses.NoDefaultConstructor@@JUnit");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("noDefaultConstructor", "be.atbash.ee.security.octopus.sso.core.token.testclasses.NoDefaultConstructor@@JUnit");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         OctopusSSOToken ssoToken = octopusSSOUserConverter.fromUserInfo(userInfo, jsonProviderMock);
 
@@ -319,14 +322,14 @@ public class OctopusSSOTokenConverterTest {
 
     @Test
     public void fromUserInfo_WithDefaultConstructor() throws IllegalAccessException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", "IdValue");
-        jsonObject.put(OctopusConstants.LOCAL_ID, "LocalIdValue");
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("id", "IdValue");
+        jsonObject.add(OctopusConstants.LOCAL_ID, "LocalIdValue");
 
-        jsonObject.put("sub", "RequiredByOpenIDConnectSpec");
+        jsonObject.add("sub", "RequiredByOpenIDConnectSpec");
 
-        jsonObject.put("withDefaultConstructor", "be.atbash.ee.security.octopus.sso.core.token.testclasses.WithDefaultConstructor@@JUnit");
-        UserInfo userInfo = new UserInfo(jsonObject);
+        jsonObject.add("withDefaultConstructor", "be.atbash.ee.security.octopus.sso.core.token.testclasses.WithDefaultConstructor@@JUnit");
+        UserInfo userInfo = new UserInfo(jsonObject.build());
 
         when(jsonProviderMock.readValue("JUnit", WithDefaultConstructor.class)).thenReturn(new WithDefaultConstructor("JUnit"));
 

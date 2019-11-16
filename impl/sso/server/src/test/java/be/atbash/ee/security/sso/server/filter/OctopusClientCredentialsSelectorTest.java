@@ -15,17 +15,17 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.oauth2.sdk.auth.ClientSecretJWT;
+import be.atbash.ee.oauth2.sdk.auth.Secret;
+import be.atbash.ee.oauth2.sdk.auth.verifier.ClientAuthenticationVerifier;
+import be.atbash.ee.oauth2.sdk.auth.verifier.InvalidClientException;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.util.Base64;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
-import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.auth.verifier.ClientAuthenticationVerifier;
-import com.nimbusds.oauth2.sdk.auth.verifier.InvalidClientException;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -54,7 +54,7 @@ public class OctopusClientCredentialsSelectorTest {
     @Test
     public void selectClientSecrets() throws JOSEException, InvalidClientException, URISyntaxException {
 
-        byte[] clientSecret = new Base64(clientSecretBase64Encoded).decode();
+        byte[] clientSecret = new Base64URLValue(clientSecretBase64Encoded).decode();
 
         Secret secret = new Secret(new String(clientSecret, StandardCharsets.UTF_8));
 

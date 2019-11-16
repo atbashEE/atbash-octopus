@@ -15,9 +15,9 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 /**
  * Transform the UserInfo (claims) before they are returned to the client. Extension point for custom scopes.

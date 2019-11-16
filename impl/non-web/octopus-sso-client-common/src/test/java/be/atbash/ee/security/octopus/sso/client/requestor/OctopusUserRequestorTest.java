@@ -15,7 +15,16 @@
  */
 package be.atbash.ee.security.octopus.sso.client.requestor;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
@@ -25,16 +34,7 @@ import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
 import be.atbash.ee.security.octopus.util.SecretUtil;
 import be.atbash.util.TestReflectionUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import net.jadler.Jadler;
-import net.minidev.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +46,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -91,7 +93,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -137,7 +139,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_expired() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken_expired() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -183,7 +185,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_invalidSignature() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken_invalidSignature() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -230,7 +232,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_missingNonce() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken_missingNonce() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -273,7 +275,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken_missingAud() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken_missingAud() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -322,7 +324,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken_customValidator() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException, IllegalAccessException {
+    public void getOctopusSSOToken_customValidator() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException, IllegalAccessException {
         // Inject custom validator
         CustomUserInfoValidator customUserInfoValidatorMock = Mockito.mock(CustomUserInfoValidator.class);
         TestReflectionUtils.injectDependencies(octopusUserRequestor, customUserInfoValidatorMock);
@@ -380,7 +382,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_ErrorReturn() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken_ErrorReturn() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -404,17 +406,17 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken_plainJSONResult() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void getOctopusSSOToken_plainJSONResult() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData();
 
         when(octopusSSOServerClientConfigurationMock.getUserInfoEndpoint()).thenReturn("http://localhost:" + Jadler.port() + "/oidc/octopus/sso/user");
         when(octopusSSOServerClientConfigurationMock.getOctopusSSOServer()).thenReturn("http://localhost/oidc");
 
-        JSONObject json = new JSONObject();
-        json.put("sub", "JUnit");
-        json.put("iss", "http://localhost/oidc");
-        json.put("exp", addSecondsToDate(2, new Date()).getTime());
+        JsonObjectBuilder json = Json.createObjectBuilder();
+        json.add("sub", "JUnit");
+        json.add("iss", "http://localhost/oidc");
+        json.add("exp", addSecondsToDate(2, new Date()).getTime());
 
 
         Jadler.onRequest()
@@ -422,7 +424,7 @@ public class OctopusUserRequestorTest {
                 .havingPathEqualTo("/oidc/octopus/sso/user")
                 .havingHeaderEqualTo("Authorization", "Bearer TheAccessToken")
                 .respond()
-                .withBody(json.toJSONString())
+                .withBody(json.build().toString())
                 .withContentType("application/json");
 
 

@@ -15,6 +15,7 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.oauth2.sdk.Scope;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.IncorrectDataToken;
@@ -29,7 +30,6 @@ import be.atbash.ee.security.sso.server.endpoint.AccessTokenTransformer;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.CDIUtils;
-import com.nimbusds.oauth2.sdk.Scope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

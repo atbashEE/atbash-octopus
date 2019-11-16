@@ -154,7 +154,7 @@ JWTParametersSigning(Map<String, Object> headerValues, SecretKeyType secretKeyTy
 
 * OCT-DEV-103
 
-When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **RSA** is specified by the secretKeySigning is NOT of type _com.nimbusds.jose.jwk.RSAKey_
+When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **RSA** is specified by the secretKeySigning is NOT of type _be.atbash.ee.security.octopus.nimbus.jwk.RSAKey_
 
  
 ```
@@ -163,7 +163,7 @@ JWTParametersSigning(Map<String, Object> headerValues, SecretKeyType secretKeyTy
 
 * OCT-DEV-104
 
-When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **EC** is specified by the secretKeySigning is NOT of type _com.nimbusds.jose.jwk.ECKey_
+When creating the parameters for a JWT signing, some parameters are dependent. This error is thrown when the secretKeyType **EC** is specified by the secretKeySigning is NOT of type _be.atbash.ee.security.octopus.nimbus.jwk.ECKey_
 
  
 ```

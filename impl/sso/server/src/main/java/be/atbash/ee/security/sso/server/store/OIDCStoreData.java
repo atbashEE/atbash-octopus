@@ -15,16 +15,16 @@
  */
 package be.atbash.ee.security.sso.server.store;
 
+import be.atbash.ee.oauth2.sdk.AuthorizationCode;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import net.minidev.json.JSONObject;
 
+import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -40,7 +40,7 @@ public class OIDCStoreData implements Serializable {
 
     private AuthorizationCode authorizationCode;
     private BearerAccessToken accessToken;
-    private JSONObject idTokenClaimsSet;
+    private JsonObject idTokenClaimsSet;
 
     private Date expiresOn;
 
@@ -81,11 +81,11 @@ public class OIDCStoreData implements Serializable {
     public IDTokenClaimsSet getIdTokenClaimsSet() {
         try {
             if (idTokenClaimsSet != null) {
-                return IDTokenClaimsSet.parse(idTokenClaimsSet.toJSONString());
+                return IDTokenClaimsSet.parse(idTokenClaimsSet.toString());
             } else {
                 return null;
             }
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             throw new AtbashUnexpectedException(e);
         }
     }
@@ -93,7 +93,7 @@ public class OIDCStoreData implements Serializable {
     public void setIdTokenClaimsSet(IDTokenClaimsSet idTokenClaimsSet) {
         // IDTokenClaimsSet is not Serializable,
         if (idTokenClaimsSet != null) {
-            this.idTokenClaimsSet = idTokenClaimsSet.toJSONObject();
+            this.idTokenClaimsSet = idTokenClaimsSet.toJSONObject().build();
         } else {
             this.idTokenClaimsSet = null;
         }

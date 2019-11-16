@@ -15,32 +15,31 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.*;
+import be.atbash.ee.oauth2.sdk.auth.ClientAuthentication;
+import be.atbash.ee.oauth2.sdk.auth.ClientSecretJWT;
+import be.atbash.ee.oauth2.sdk.auth.Secret;
+import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.OIDCTokenResponse;
+import be.atbash.ee.openid.connect.sdk.OIDCTokenResponseParser;
+import be.atbash.ee.openid.connect.sdk.token.OIDCTokens;
+import be.atbash.ee.openid.connect.sdk.validators.IDTokenClaimsVerifier;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.sso.client.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
 import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.jwt.proc.BadJWTException;
-import com.nimbusds.oauth2.sdk.*;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
-import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
-import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
-import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
-import com.nimbusds.openid.connect.sdk.validators.IDTokenClaimsVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +110,7 @@ public class ExchangeForAccessCode {
 
                 // TODO Seems not related to the AccessCode but with the IdToken. Verify
                 IDTokenClaimsVerifier claimsVerifier = new IDTokenClaimsVerifier(new Issuer(serverConfiguration.getOctopusSSOServer()), new ClientID(serverConfiguration.getSSOClientId()), variableClientData.getNonce(), 0);
-                claimsVerifier.verify(idToken.getJWTClaimsSet(), null);
+                claimsVerifier.verify(idToken.getJWTClaimsSet());
             } else {
                 TokenErrorResponse errorResponse = (TokenErrorResponse) tokenResponse;
                 ErrorObject errorObject = errorResponse.getErrorObject();
@@ -125,7 +124,12 @@ public class ExchangeForAccessCode {
         } catch (URISyntaxException | IOException e) {
             throw new AtbashUnexpectedException(e);
 
-        } catch (ParseException e) {
+        } catch (BadJWTException e) {
+            result = null;
+
+            ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-016", "Validation of ID token JWT failed : " + e.getMessage());
+            callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
+        } catch (OAuth2JSONParseException e) {
             ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-018", "Parsing of Token endpoint response failed : " + e.getMessage());
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
 
@@ -135,11 +139,6 @@ public class ExchangeForAccessCode {
             ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-017", "Parsing of ID Token failed : " + e.getMessage());
             callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
 
-        } catch (BadJWTException e) {
-            result = null;
-
-            ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-016", "Validation of ID token JWT failed : " + e.getMessage());
-            callbackErrorHandler.showErrorMessage(httpServletResponse, errorObject);
         } catch (JOSEException e) {
             // thrown by new ClientSecretJWT
             ErrorObject errorObject = new ErrorObject("OCT-SSO-CLIENT-019", "HMAC calculation failed");

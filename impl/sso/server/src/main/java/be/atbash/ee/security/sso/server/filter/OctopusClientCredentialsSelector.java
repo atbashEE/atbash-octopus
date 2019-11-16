@@ -15,15 +15,15 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
+import be.atbash.ee.oauth2.sdk.auth.Secret;
+import be.atbash.ee.oauth2.sdk.auth.verifier.ClientCredentialsSelector;
+import be.atbash.ee.oauth2.sdk.auth.verifier.Context;
+import be.atbash.ee.oauth2.sdk.auth.verifier.InvalidClientException;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.auth.verifier.ClientCredentialsSelector;
-import com.nimbusds.oauth2.sdk.auth.verifier.Context;
-import com.nimbusds.oauth2.sdk.auth.verifier.InvalidClientException;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

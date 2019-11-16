@@ -15,9 +15,9 @@
  */
 package be.atbash.ee.security.sso.server.token;
 
+import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.token.SystemAuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 
 /**
  *

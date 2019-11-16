@@ -15,6 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.servlet;
 
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.security.octopus.sso.ClientCallbackHelper;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
@@ -22,9 +25,6 @@ import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.ee.security.octopus.util.URLUtil;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;

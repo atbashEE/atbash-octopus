@@ -15,12 +15,12 @@
  */
 package be.atbash.ee.security.octopus.sso;
 
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.logout.LogoutParameters;
 import be.atbash.ee.security.octopus.sso.client.logout.LogoutURLCreator;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

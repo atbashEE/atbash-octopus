@@ -15,12 +15,22 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.AuthorizationCode;
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
-import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
-import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionUtil;
+import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
+import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
 import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
@@ -30,15 +40,6 @@ import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.TestReflectionUtils;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jwt.PlainJWT;
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,13 +55,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static be.atbash.ee.security.octopus.util.WebUtils.SAVED_REQUEST_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -196,14 +197,14 @@ public class SSOCallbackServletTest {
 
 
     @Test
-    public void doGet_MissingAuthorizationCode() throws ServletException, IOException, ParseException {
+    public void doGet_MissingAuthorizationCode() throws ServletException, IOException, OAuth2JSONParseException {
         when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
         when(httpSessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(clientData);
 
-        List<Audience> audience = new ArrayList<Audience>();
+        List<Audience> audience = new ArrayList<>();
         IDTokenClaimsSet tokenClaimsSet = new IDTokenClaimsSet(new Issuer("Issuer")
-                , new com.nimbusds.oauth2.sdk.id.Subject("subject"), audience, new Date(), new Date());
+                , new Subject("subject"), audience, new Date(), new Date());
         String idToken = new PlainJWT(tokenClaimsSet.toJWTClaimsSet()).serialize();
         when(httpServletRequestMock.getQueryString()).thenReturn("id_token=" + idToken + "&state=" + clientData.getState().getValue());
 
@@ -216,7 +217,7 @@ public class SSOCallbackServletTest {
     }
 
     @Test
-    public void doGet_ValidAuthenticationToken() throws ServletException, IOException, java.text.ParseException, JOSEException, OctopusRetrievalException, ParseException, URISyntaxException {
+    public void doGet_ValidAuthenticationToken() throws ServletException, IOException, ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
         when(httpSessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(clientData);
@@ -266,7 +267,7 @@ public class SSOCallbackServletTest {
     // catch (UnauthorizedException e) {
 
     @Test
-    public void doGet_ValidAccessToken() throws ServletException, IOException, java.text.ParseException, JOSEException, OctopusRetrievalException, ParseException, URISyntaxException {
+    public void doGet_ValidAccessToken() throws ServletException, IOException, ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         // Implicit flow
         when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");

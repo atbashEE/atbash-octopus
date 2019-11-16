@@ -15,11 +15,24 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.*;
+import be.atbash.ee.oauth2.sdk.auth.verifier.InvalidClientException;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.oauth2.sdk.token.Tokens;
+import be.atbash.ee.openid.connect.sdk.OIDCTokenResponse;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
+import be.atbash.ee.openid.connect.sdk.token.OIDCTokens;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
@@ -32,24 +45,11 @@ import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashIllegalActionException;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.*;
-import com.nimbusds.oauth2.sdk.auth.verifier.InvalidClientException;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.token.Tokens;
-import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
-import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -106,8 +106,8 @@ public class TokenServlet extends HttpServlet {
                     // OK for ResourceOwnerPasswordCredentialsGrant when invalid PW is supplied
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
-                JSONObject jsonObject = tokenResponse.toHTTPResponse().getContentAsJSONObject();
-                response.getWriter().append(jsonObject.toJSONString());
+                JsonObject jsonObject = tokenResponse.toHTTPResponse().getContentAsJSONObject();
+                response.getWriter().append(jsonObject.toString());
             }
         } catch (Exception e) {
             // OWASP A6 : Sensitive Data Exposure
@@ -129,8 +129,6 @@ public class TokenServlet extends HttpServlet {
             // OAuth2 (RFC 6749) 5.2.  Error Response
             ErrorObject errorObject = new ErrorObject("unauthorized_client", "ResourceOwnerPasswordCredentialsGrant is not allowed for client_id");
             return new TokenErrorResponse(errorObject);
-        } catch (ParseException e) {
-            throw new AtbashUnexpectedException(e);
         }
 
         // TODO, We should do a logout here I guess. Since we don't need anything from the session.
@@ -138,7 +136,7 @@ public class TokenServlet extends HttpServlet {
         return result;
     }
 
-    private TokenResponse createTokensForPasswordGrant(HttpServletRequest httpServletRequest, TokenRequest tokenRequest) throws ParseException {
+    private TokenResponse createTokensForPasswordGrant(HttpServletRequest httpServletRequest, TokenRequest tokenRequest) {
 
         IDTokenClaimsSet claimsSet = null;
 
@@ -179,7 +177,7 @@ public class TokenServlet extends HttpServlet {
         return defineResponse(oidcStoreData);
     }
 
-    private AccessTokenResponse getResponseAuthorizationGrant(HttpServletResponse response, TokenRequest tokenRequest, AuthorizationCodeGrant codeGrant) throws ParseException {
+    private AccessTokenResponse getResponseAuthorizationGrant(HttpServletResponse response, TokenRequest tokenRequest, AuthorizationCodeGrant codeGrant) {
 
         OIDCStoreData oidcStoreData = tokenStore.getOIDCDataByAuthorizationCode(codeGrant.getAuthorizationCode(), tokenRequest.getClientAuthentication().getClientID());
         if (oidcStoreData == null) {
@@ -198,14 +196,14 @@ public class TokenServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         TokenErrorResponse tokenErrorResponse = new TokenErrorResponse(expiredSecret.getErrorObject());
         try {
-            response.getWriter().println(tokenErrorResponse.toJSONObject().toJSONString());
+            response.getWriter().println(tokenErrorResponse.toJSONObject().toString());
         } catch (IOException e) {
             throw new AtbashUnexpectedException(e);
         }
 
     }
 
-    private AccessTokenResponse defineResponse(OIDCStoreData oidcStoreData) throws ParseException {
+    private AccessTokenResponse defineResponse(OIDCStoreData oidcStoreData) {
         AccessTokenResponse result;
 
         if (oidcStoreData.getIdTokenClaimsSet() != null) {
@@ -214,7 +212,12 @@ public class TokenServlet extends HttpServlet {
             // TODO Support JWE?
             JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
             // TODO We should also add the clientId to the token info, so that it can be used as id_token_hint for the logout request.
-            SignedJWT signedJWT = new SignedJWT(header, oidcStoreData.getIdTokenClaimsSet().toJWTClaimsSet());
+            SignedJWT signedJWT = null;
+            try {
+                signedJWT = new SignedJWT(header, oidcStoreData.getIdTokenClaimsSet().toJWTClaimsSet());
+            } catch (OAuth2JSONParseException e) {
+                e.printStackTrace();  // FIXME what should we do in this case?
+            }
 
             // Apply the HMAC
             ClientInfo clientInfo = clientInfoRetriever.retrieveInfo(oidcStoreData.getClientId().getValue());

@@ -15,8 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.core.client;
 
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseType;
+
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.ResponseType;
 
 /**
  * This are the OAuth2 flows
@@ -35,7 +36,7 @@ public enum SSOFlow {
             } else {
                 responseType = ResponseType.parse("code");
             }
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             // Should never happen as it is developer written code
         }
 

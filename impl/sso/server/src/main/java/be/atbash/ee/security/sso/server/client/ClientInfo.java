@@ -15,11 +15,11 @@
  */
 package be.atbash.ee.security.sso.server.client;
 
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.sso.core.SSOConstants;
 import be.atbash.util.PublicAPI;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.util.Base64;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -112,7 +112,7 @@ public class ClientInfo {
     }
 
     public byte[] getIdTokenSecretByte() {
-        return new Base64(idTokenSecret).decode();
+        return new Base64URLValue(idTokenSecret).decode();
     }
 
     public void setIdTokenSecret(String idTokenSecret) {
@@ -124,7 +124,7 @@ public class ClientInfo {
     }
 
     public byte[] getClientSecretByte() {
-        return new Base64(clientSecret).decode();
+        return new Base64URLValue(clientSecret).decode();
     }
 
     public void setClientSecret(String clientSecret) {

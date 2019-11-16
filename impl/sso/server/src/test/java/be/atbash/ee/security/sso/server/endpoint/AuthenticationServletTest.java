@@ -15,9 +15,25 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.AbstractRequest;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.ResponseType;
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.id.*;
+import be.atbash.ee.oauth2.sdk.util.URLUtils;
+import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.TimeUtil;
@@ -27,22 +43,6 @@ import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jose.util.Base64URL;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.AbstractRequest;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.id.*;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
-import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,7 +135,7 @@ public class AuthenticationServletTest {
     }
 
     @Test
-    public void doGet_happyCase_CodeFlow() throws ServletException, IOException, ParseException, URISyntaxException {
+    public void doGet_happyCase_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException {
 
         ThreadContext.bind(subjectMock);
         UserPrincipal userPrincipal = new UserPrincipal();
@@ -173,7 +173,7 @@ public class AuthenticationServletTest {
         assertThat(callbackURL).endsWith("&state=stateValue");
 
         String authorizationCode = callbackURL.substring(31, callbackURL.indexOf('&'));
-        byte[] bytes = new Base64URL(authorizationCode).decode();
+        byte[] bytes = new Base64URLValue(authorizationCode).decode();
         assertThat(bytes.length).isEqualTo(48);
 
         verify(tokenStoreMock).addLoginFromClient(any(UserPrincipal.class), cookieTokenArgumentCaptor.capture(),
@@ -196,7 +196,7 @@ public class AuthenticationServletTest {
 
 
     @Test
-    public void doGet_happyCase_ImplicitFlow_IdTokenOnly() throws ServletException, IOException, ParseException, URISyntaxException, java.text.ParseException, JOSEException {
+    public void doGet_happyCase_ImplicitFlow_IdTokenOnly() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException, JOSEException {
         ThreadContext.bind(subjectMock);
         UserPrincipal userPrincipal = new UserPrincipal();
         when(subjectMock.getPrincipal()).thenReturn(userPrincipal);
@@ -290,13 +290,13 @@ public class AuthenticationServletTest {
             }
 
 
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    public void doGet_happyCase_ImplicitFlow() throws ServletException, IOException, ParseException, URISyntaxException, java.text.ParseException, JOSEException {
+    public void doGet_happyCase_ImplicitFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException, JOSEException {
         ThreadContext.bind(subjectMock);
         UserPrincipal userPrincipal = new UserPrincipal();
         when(subjectMock.getPrincipal()).thenReturn(userPrincipal);

@@ -15,10 +15,21 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.LogoutRequest;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.config.OctopusJSFConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
@@ -27,19 +38,6 @@ import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.LogoutRequest;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -204,7 +202,7 @@ public class LogoutServletTest {
         TimeUtil timeUtil = new TimeUtil();
         Date iat = new Date();
         Date exp = timeUtil.addSecondsToDate(2, iat);
-        IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(new Issuer(clientId), new Subject(subject), new ArrayList<Audience>(), exp, iat);
+        IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(new Issuer(clientId), new Subject(subject), new ArrayList<>(), exp, iat);
 
         try {
             JWSHeader.Builder headerBuilder = new JWSHeader.Builder(JWSAlgorithm.HS256);
@@ -212,7 +210,7 @@ public class LogoutServletTest {
             result = new SignedJWT(headerBuilder.build(), claimsSet.toJWTClaimsSet());
 
             result.sign(new MACSigner(secret));
-        } catch (ParseException | JOSEException e) {
+        } catch (OAuth2JSONParseException | JOSEException e) {
             throw new AtbashUnexpectedException(e);
         }
 

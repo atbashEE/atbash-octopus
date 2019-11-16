@@ -15,15 +15,16 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.AuthorizationCode;
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.AuthenticationSuccessResponse;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -166,7 +167,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_happyCase() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void retrieveUser_happyCase() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
@@ -181,7 +182,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_OctopusRetrievalException() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void retrieveUser_OctopusRetrievalException() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
@@ -201,7 +202,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_ParseException() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void retrieveUser_ParseException() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
@@ -220,12 +221,12 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_ParseException2() throws ParseException, JOSEException, OctopusRetrievalException, com.nimbusds.oauth2.sdk.ParseException, URISyntaxException {
+    public void retrieveUser_ParseException2() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
 
-        com.nimbusds.oauth2.sdk.ParseException parseException = new com.nimbusds.oauth2.sdk.ParseException("Something went wrong");
+        OAuth2JSONParseException parseException = new OAuth2JSONParseException("Something went wrong");
         when(octopusUserRequestorMock.getOctopusSSOToken(variableClientData, accessToken)).thenThrow(parseException);
 
         OctopusSSOToken result = handler.retrieveUser(octopusUserRequestorMock, accessToken);

@@ -15,10 +15,10 @@
  */
 package be.atbash.ee.security.octopus.sso.core.token;
 
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.token.AbstractOctopusAuthenticationToken;
 import be.atbash.ee.security.octopus.token.SystemAuthenticationToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 import java.io.Serializable;
 

@@ -15,19 +15,20 @@
  */
 package be.atbash.ee.security.octopus.sso.core.token;
 
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.OctopusConstants;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.sso.core.config.OctopusSSOConfiguration;
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.rest.reflect.Property;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.util.StringUtils;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -120,7 +121,7 @@ public class OctopusSSOTokenConverter {
 
         Serializable value;
 
-        JSONObject jsonObject = userInfo.toJSONObject();
+        JsonObject jsonObject = userInfo.toJSONObject().build();
         for (String keyName : jsonObject.keySet()) {
 
             if (!DEFAULT_PROPERTY_NAMES.contains(keyName)) {
@@ -177,8 +178,8 @@ public class OctopusSSOTokenConverter {
         return result;
     }
 
-    private static String getString(JSONObject jsonObject, String key) {
-        Object keyValue = jsonObject.get(key);
+    private static String getString(JsonObject jsonObject, String key) {
+        Object keyValue = JSONObjectUtils.getJsonValueAsObject(jsonObject.get(key));
         if (keyValue != null) {
             return keyValue.toString();
         } else {

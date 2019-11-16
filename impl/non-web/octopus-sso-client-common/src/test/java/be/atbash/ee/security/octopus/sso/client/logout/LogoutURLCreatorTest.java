@@ -15,21 +15,23 @@
  */
 package be.atbash.ee.security.octopus.sso.client.logout;
 
+import be.atbash.ee.oauth2.sdk.util.URLUtils;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
+import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.sso.client.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.TestReflectionUtils;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.jwt.util.DateUtils;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.json.JsonValue;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.*;
@@ -71,12 +73,12 @@ public class LogoutURLCreatorTest {
         assertThat(params.get("post_logout_redirect_uri").get(0)).isEqualTo("http://main.url/root/original/Logout");
         SignedJWT jwt = SignedJWT.parse(params.get("id_token_hint").get(0));
         JWSHeader jwsHeader = jwt.getHeader();
-        Set<Map.Entry<String, Object>> headerSet = jwsHeader.toJSONObject().entrySet();
+        Set<Map.Entry<String, JsonValue>> headerSet = jwsHeader.toJSONObject().build().entrySet();
         Map<String, Object> data = convertToMap(headerSet);
         assertThat(data).containsEntry("alg", "HS256");
         assertThat(data).containsEntry("clientId", "junit-clientId");
 
-        Set<Map.Entry<String, Object>> claimSet = jwt.getJWTClaimsSet().toJSONObject().entrySet();
+        Set<Map.Entry<String, JsonValue>> claimSet = jwt.getJWTClaimsSet().toJSONObject().entrySet();
         data = convertToMap(claimSet);
         assertThat(data).containsEntry("iss", "junit-clientId");
         assertThat(data).containsEntry("sub", "theAccessToken");
@@ -88,10 +90,10 @@ public class LogoutURLCreatorTest {
         assertThat(exp.getTime() - iat.getTime()).isEqualTo(2000); // 2 seconds
     }
 
-    private Map<String, Object> convertToMap(Set<Map.Entry<String, Object>> headerSet) {
+    private Map<String, Object> convertToMap(Set<Map.Entry<String, JsonValue>> headerSet) {
         Map<String, Object> data = new HashMap<>();
-        for (Map.Entry<String, Object> entry : headerSet) {
-            data.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, JsonValue> entry : headerSet) {
+            data.put(entry.getKey(), JSONObjectUtils.getJsonValueAsObject(entry.getValue()));
         }
         return data;
     }

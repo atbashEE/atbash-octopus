@@ -15,8 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.core;
 
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.GeneralException;
+
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.GeneralException;
 
 /**
  *

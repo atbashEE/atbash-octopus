@@ -15,30 +15,30 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.AuthorizationCode;
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
+import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.oauth2.sdk.token.AccessToken;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.OIDCTokenResponse;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
+import be.atbash.ee.openid.connect.sdk.token.OIDCTokens;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.sso.client.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.PlainJWT;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.token.AccessToken;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 import net.jadler.Jadler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -53,7 +53,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,7 +108,7 @@ public class ExchangeForAccessCodeTest {
     }
 
     @Test
-    public void doExchange_happyCase() throws IOException, ParseException {
+    public void doExchange_happyCase() throws OAuth2JSONParseException {
         defineSecret(256 / 8 + 1);
         when(jwsAlgorithmFactoryMock.determineOptimalAlgorithm(any(byte[].class))).thenReturn(JWSAlgorithm.HS256);
         exchangeForAccessCode.init();
@@ -130,7 +129,7 @@ public class ExchangeForAccessCodeTest {
                 .havingPathEqualTo("/oidc/octopus/sso/token")
                 .respond()
                 .withContentType(CommonContentTypes.APPLICATION_JSON.toString())
-                .withBody(oidcTokenResponse.toJSONObject().toJSONString());
+                .withBody(oidcTokenResponse.toJSONObject().build().toString());
 
         BearerAccessToken accessToken = exchangeForAccessCode.doExchange(httpServletResponseMock, variableClientData, authorizationCode);
 
@@ -149,7 +148,7 @@ public class ExchangeForAccessCodeTest {
     }
 
     @Test
-    public void doExchange_clientAuthenticationJWTExpired() throws IOException, ParseException {
+    public void doExchange_clientAuthenticationJWTExpired() throws OAuth2JSONParseException {
         defineSecret(256 / 8 + 1);
         when(jwsAlgorithmFactoryMock.determineOptimalAlgorithm(any(byte[].class))).thenReturn(JWSAlgorithm.HS256);
         exchangeForAccessCode.init();
@@ -170,7 +169,7 @@ public class ExchangeForAccessCodeTest {
                 .havingPathEqualTo("/oidc/octopus/sso/token")
                 .respond()
                 .withContentType(CommonContentTypes.APPLICATION_JSON.toString())
-                .withBody(oidcTokenResponse.toJSONObject().toJSONString());
+                .withBody(oidcTokenResponse.toJSONObject().build().toString());
 
         BearerAccessToken accessToken = exchangeForAccessCode.doExchange(httpServletResponseMock, variableClientData, authorizationCode);
 
@@ -189,7 +188,7 @@ public class ExchangeForAccessCodeTest {
     }
 
     @Test
-    public void doExchange_clientAuthenticationJWTInvalidSigning() throws IOException, ParseException, JOSEException {
+    public void doExchange_clientAuthenticationJWTInvalidSigning() throws OAuth2JSONParseException, JOSEException {
         defineSecret(256 / 8 + 1);
         when(jwsAlgorithmFactoryMock.determineOptimalAlgorithm(any(byte[].class))).thenReturn(JWSAlgorithm.HS256);
         exchangeForAccessCode.init();
@@ -217,7 +216,7 @@ public class ExchangeForAccessCodeTest {
                 .havingPathEqualTo("/oidc/octopus/sso/token")
                 .respond()
                 .withContentType(CommonContentTypes.APPLICATION_JSON.toString())
-                .withBody(oidcTokenResponse.toJSONObject().toJSONString());
+                .withBody(oidcTokenResponse.toJSONObject().build().toString());
 
         BearerAccessToken accessToken = exchangeForAccessCode.doExchange(httpServletResponseMock, variableClientData, authorizationCode);
 
@@ -236,7 +235,7 @@ public class ExchangeForAccessCodeTest {
     }
 
     @Test
-    public void doExchange_errorResponse() throws IOException, ParseException {
+    public void doExchange_errorResponse() {
         defineSecret(256 / 8 + 1);
         when(jwsAlgorithmFactoryMock.determineOptimalAlgorithm(any(byte[].class))).thenReturn(JWSAlgorithm.HS256);
         exchangeForAccessCode.init();
@@ -270,8 +269,8 @@ public class ExchangeForAccessCodeTest {
         assertThat(errorObjectArgumentCaptor.getValue().getDescription()).isEqualTo("some error description");
     }
 
-    private OIDCTokens defineTokens(OpenIdVariableClientData variableClientData, int addSeconds) throws ParseException {
-        List<Audience> audiences = new ArrayList<Audience>();
+    private OIDCTokens defineTokens(OpenIdVariableClientData variableClientData, int addSeconds) throws OAuth2JSONParseException {
+        List<Audience> audiences = new ArrayList<>();
         audiences.add(new Audience("junit_client"));
 
         IDTokenClaimsSet idTokenClaimSet = new IDTokenClaimsSet(new Issuer("http://some.server/oidc"),
@@ -285,7 +284,7 @@ public class ExchangeForAccessCodeTest {
         return new OIDCTokens(plainJWT, accessCode, null);
     }
 
-    private OIDCTokens defineTokens(OpenIdVariableClientData variableClientData, byte[] secret) throws ParseException, JOSEException {
+    private OIDCTokens defineTokens(OpenIdVariableClientData variableClientData, byte[] secret) throws OAuth2JSONParseException, JOSEException {
 
         List<Audience> audiences = new ArrayList<>();
         audiences.add(new Audience("junit_client"));

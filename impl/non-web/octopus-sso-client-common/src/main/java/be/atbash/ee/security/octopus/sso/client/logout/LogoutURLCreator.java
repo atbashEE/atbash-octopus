@@ -15,22 +15,21 @@
  */
 package be.atbash.ee.security.octopus.sso.client.logout;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.openid.connect.sdk.LogoutRequest;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.sso.client.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.openid.connect.sdk.LogoutRequest;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -77,7 +76,7 @@ public class LogoutURLCreator {
             idToken = new SignedJWT(headerBuilder.build(), claimsSet.toJWTClaimsSet());
 
             idToken.sign(new MACSigner(ssoServerClientConfiguration.getSSOClientSecret()));
-        } catch (ParseException | JOSEException e) {
+        } catch (OAuth2JSONParseException | JOSEException e) {
             throw new AtbashUnexpectedException(e);
         }
 

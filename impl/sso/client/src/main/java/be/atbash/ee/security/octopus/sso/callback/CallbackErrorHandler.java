@@ -15,8 +15,8 @@
  */
 package be.atbash.ee.security.octopus.sso.callback;
 
+import be.atbash.ee.oauth2.sdk.ErrorObject;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.oauth2.sdk.ErrorObject;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;

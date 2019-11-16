@@ -15,6 +15,10 @@
  */
 package be.atbash.ee.security.octopus.oauth2.adapter;
 
+import be.atbash.ee.oauth2.sdk.AccessTokenResponse;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.TokenErrorResponse;
+import be.atbash.ee.oauth2.sdk.TokenResponse;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationInfo;
 import be.atbash.ee.security.octopus.authc.AuthenticationStrategy;
@@ -23,6 +27,7 @@ import be.atbash.ee.security.octopus.authz.permission.NamedDomainPermission;
 import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.realm.AuthorizationInfoBuilder;
 import be.atbash.ee.security.octopus.realm.SecurityDataProvider;
 import be.atbash.ee.security.octopus.sso.client.ClientCustomization;
@@ -40,11 +45,6 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.oauth2.sdk.AccessTokenResponse;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.TokenErrorResponse;
-import com.nimbusds.oauth2.sdk.TokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,7 +135,7 @@ public class ClientAuthenticationInfoProvider extends SecurityDataProvider {
             try {
                 octopusSSOToken = octopusUserRequestor.getOctopusSSOToken(clientData, accessTokenResponse.getTokens().getBearerAccessToken());
 
-            } catch (URISyntaxException | JOSEException | java.text.ParseException | OctopusRetrievalException | ParseException e) {
+            } catch (URISyntaxException | JOSEException | java.text.ParseException | OctopusRetrievalException | OAuth2JSONParseException e) {
                 e.printStackTrace(); // FIXME
                 return null;
             }

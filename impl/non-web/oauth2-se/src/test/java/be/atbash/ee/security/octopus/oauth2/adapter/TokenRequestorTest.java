@@ -15,13 +15,13 @@
  */
 package be.atbash.ee.security.octopus.oauth2.adapter;
 
+import be.atbash.ee.oauth2.sdk.AccessTokenResponse;
+import be.atbash.ee.oauth2.sdk.TokenResponse;
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.util.TestReflectionUtils;
-import com.nimbusds.oauth2.sdk.AccessTokenResponse;
-import com.nimbusds.oauth2.sdk.TokenResponse;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import net.jadler.Jadler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

@@ -15,9 +15,9 @@
  */
 package be.atbash.ee.security.octopus.sso.client.requestor;
 
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.util.PublicAPI;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 import java.util.List;
 

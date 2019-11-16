@@ -15,20 +15,22 @@
  */
 package be.atbash.ee.security.sso.server.store;
 
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.id.Audience;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.Subject;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.BeanManagerFake;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import net.minidev.json.JSONObject;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.util.Date;
 import java.util.List;
 
@@ -48,12 +50,12 @@ public class OIDCStoreDataTest {
 
     @Test
     public void testEqualsAndHashCode() {
-        JSONObject red = new JSONObject();
-        red.put("key", "value1");
-        JSONObject black = new JSONObject();
-        black.put("key", "value2");
+        JsonObjectBuilder red = Json.createObjectBuilder();
+        red.add("key", "value1");
+        JsonObjectBuilder black = Json.createObjectBuilder();
+        black.add("key", "value2");
         EqualsVerifier.forClass(OIDCStoreData.class)
-                .withPrefabValues(JSONObject.class, red, black)
+                .withPrefabValues(JsonObject.class, red.build(), black.build())
                 .suppress(Warning.NONFINAL_FIELDS)
                 .verify();
     }

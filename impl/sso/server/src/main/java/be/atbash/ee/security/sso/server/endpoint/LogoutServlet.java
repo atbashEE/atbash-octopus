@@ -15,19 +15,19 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.openid.connect.sdk.LogoutRequest;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.LogoutRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class LogoutServlet extends HttpServlet {
         LogoutRequest logoutRequest;
         try {
             logoutRequest = LogoutRequest.parse(request.getQueryString());
-        } catch (ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             // OWASP A6 : Sensitive Data Exposure
             throw new AtbashUnexpectedException(e);
             // TODO What should we return (check spec)

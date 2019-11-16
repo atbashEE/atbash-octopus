@@ -16,10 +16,10 @@
 package be.atbash.ee.security.octopus.sso.client.logout;
 
 import be.atbash.config.test.TestConfig;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import net.jadler.Jadler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

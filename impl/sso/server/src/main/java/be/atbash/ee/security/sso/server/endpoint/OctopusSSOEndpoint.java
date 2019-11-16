@@ -15,6 +15,11 @@
  */
 package be.atbash.ee.security.sso.server.endpoint;
 
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
+import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.OctopusConstants;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.WebConstants;
@@ -24,6 +29,13 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.sso.core.rest.DefaultPrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
@@ -39,18 +51,6 @@ import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +58,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -67,7 +71,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.nimbusds.openid.connect.sdk.claims.UserInfo.SUB_CLAIM_NAME;
 
 /**
  *
@@ -168,21 +171,21 @@ public class OctopusSSOEndpoint {
         try {
             if (idTokenClaimsSet == null) {
                 // There was no scope openid specified. But for convenience we define a minimal response
-                JSONObject json = new JSONObject();
-                json.put(SUB_CLAIM_NAME, userPrincipal.getUserName());
+                JsonObjectBuilder json = Json.createObjectBuilder();
+                json.add(UserInfo.SUB_CLAIM_NAME, userPrincipal.getUserName());
 
-                json.put("iss", urlUtil.determineRoot(uriDetails.getBaseUri()));
+                json.add("iss", urlUtil.determineRoot(uriDetails.getBaseUri()));
 
                 Date iat = new Date();
                 Date exp = timeUtil.addSecondsToDate(ssoServerConfiguration.getSSOAccessTokenTimeToLive(), iat); // TODO Verify how we handle expiration when multiple clients are using the server
 
-                json.put("exp", exp.getTime());
+                json.add("exp", exp.getTime());
 
-                jwtClaimsSet = JWTClaimsSet.parse(json);
+                jwtClaimsSet = JWTClaimsSet.parse(json.build());
             } else {
                 jwtClaimsSet = idTokenClaimsSet.toJWTClaimsSet();
             }
-        } catch (ParseException | java.text.ParseException e) {
+        } catch (OAuth2JSONParseException | java.text.ParseException e) {
             throw new AtbashUnexpectedException(e);
         }
 
@@ -228,7 +231,7 @@ public class OctopusSSOEndpoint {
         // Is this endpoint specified in OpenIdConnect and is NONE allowed?
         if (endpointEncoding == UserEndpointEncoding.NONE) {
             builder.type(CommonContentTypes.APPLICATION_JSON.toString());
-            builder.entity(userInfo.toJSONObject().toJSONString());
+            builder.entity(userInfo.toJSONObject().build().toString());
         }
 
         if (endpointEncoding == UserEndpointEncoding.JWS) {
@@ -255,15 +258,15 @@ public class OctopusSSOEndpoint {
         claimSetBuilder.expirationTime(timeUtil.addSecondsToDate(2, new Date()));
         // Spec defines that we need also aud, but this is already set from idTokenClaimSet
 
-        JSONObject jsonObject = userInfo.toJSONObject();
-        for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+        JsonObject jsonObject = userInfo.toJSONObject().build();
+        for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
             if ("aud".equals(entry.getKey())) {
                 // due to octopusSSOTokenConverter.fromIdToken(jwtClaimsSet); earlier, there was a conversion from jwtClaimsSet to JSonObject
                 // Which converted the Audience List to a single String.  If we don't put it in the correct type again, the new SignedJWT 3 statements further on
                 // Will fail on the audience and leave it out from the SignedJWT.
                 claimSetBuilder.claim(entry.getKey(), Collections.singletonList(entry.getValue()));
             } else {
-                claimSetBuilder.claim(entry.getKey(), entry.getValue());
+                claimSetBuilder.claim(entry.getKey(), JSONObjectUtils.getJsonValueAsObject(entry.getValue()));
             }
         }
 

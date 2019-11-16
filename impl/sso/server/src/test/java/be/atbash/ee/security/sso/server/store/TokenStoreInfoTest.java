@@ -15,10 +15,10 @@
  */
 package be.atbash.ee.security.sso.server.store;
 
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.BeanManagerFake;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

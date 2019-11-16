@@ -15,10 +15,10 @@
  */
 package be.atbash.ee.security.octopus.sso.client.requestor;
 
+import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
+import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

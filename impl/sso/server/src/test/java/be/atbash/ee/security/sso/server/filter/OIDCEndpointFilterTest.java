@@ -15,9 +15,21 @@
  */
 package be.atbash.ee.security.sso.server.filter;
 
+import be.atbash.ee.oauth2.sdk.AbstractRequest;
+import be.atbash.ee.oauth2.sdk.TokenRequest;
+import be.atbash.ee.oauth2.sdk.auth.ClientAuthentication;
+import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
+import be.atbash.ee.oauth2.sdk.auth.ClientSecretJWT;
+import be.atbash.ee.oauth2.sdk.auth.Secret;
+import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
+import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.filter.SessionHijackingFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
@@ -28,18 +40,6 @@ import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.util.BeanManagerFake;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.oauth2.sdk.AbstractRequest;
-import com.nimbusds.oauth2.sdk.TokenRequest;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
-import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -232,7 +232,7 @@ public class OIDCEndpointFilterTest {
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("http://localhost:8080/sso-app2/sso/SSOCallback?error_description=Invalid+request%3A+Missing+%22client_id%22+parameter&state=stateCode&error=invalid_request");
+        assertThat(stringCapture.getValue()).isEqualTo("http://localhost:8080/sso-app2/sso/SSOCallback?error=invalid_request&error_description=Invalid+request%3A+Missing+%22client_id%22+parameter&state=stateCode");
         verifyNoMoreInteractions(ssoHelperMock);
         verify(sessionMock, never()).setAttribute(anyString(), any(SavedRequest.class));
 
@@ -247,7 +247,7 @@ public class OIDCEndpointFilterTest {
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("sso-app2?error_description=Invalid+request%3A+Missing+%22client_id%22+parameter&state=stateCode&error=invalid_request");
+        assertThat(stringCapture.getValue()).isEqualTo("sso-app2?error=invalid_request&error_description=Invalid+request%3A+Missing+%22client_id%22+parameter&state=stateCode");
         verifyNoMoreInteractions(ssoHelperMock);
         verify(sessionMock, never()).setAttribute(anyString(), any(SavedRequest.class));
     }
@@ -278,7 +278,7 @@ public class OIDCEndpointFilterTest {
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("http://localhost:8080/sso-app2/sso/SSOCallback?error_description=Client+authentication+failed%3A+Unknown+%22client_id%22+parameter+value&state=stateCode&error=invalid_client");
+        assertThat(stringCapture.getValue()).isEqualTo("http://localhost:8080/sso-app2/sso/SSOCallback?error=invalid_client&error_description=Client+authentication+failed%3A+Unknown+%22client_id%22+parameter+value&state=stateCode");
 
         verify(httpServletRequestMock, never()).setAttribute(stringCapture.capture(), authenticationRequestCapture.capture());
         verifyNoMoreInteractions(ssoHelperMock);
@@ -300,7 +300,7 @@ public class OIDCEndpointFilterTest {
         assertThat(data).isEqualTo(false);
 
         verify(httpServletResponseMock).sendRedirect(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("http://localhost:8080/sso-app2/sso/SSOCallback?error_description=Client+authentication+failed%3A+Unknown+%22redirect_uri%22+parameter+value&state=stateCode&error=invalid_client");
+        assertThat(stringCapture.getValue()).isEqualTo("http://localhost:8080/sso-app2/sso/SSOCallback?error=invalid_client&error_description=Client+authentication+failed%3A+Unknown+%22redirect_uri%22+parameter+value&state=stateCode");
 
         verify(httpServletRequestMock, never()).setAttribute(stringCapture.capture(), authenticationRequestCapture.capture());
         verifyNoMoreInteractions(ssoHelperMock);
@@ -383,7 +383,7 @@ public class OIDCEndpointFilterTest {
 
         verify(httpServletResponseMock).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         verify(printWriterMock).println(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("{\"error_description\":\"Client authentication required\",\"error\":\"OCT-SSO-SERVER-014\"}");
+        assertThat(stringCapture.getValue()).isEqualTo("{\"error\":\"OCT-SSO-SERVER-014\",\"error_description\":\"Client authentication required\"}");
 
         verify(webSubjectMock, never()).getPrincipal();
     }
@@ -483,7 +483,7 @@ public class OIDCEndpointFilterTest {
 
         verify(httpServletResponseMock).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         verify(printWriterMock).println(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("{\"error_description\":\"Invalid request: Missing required \\\"client_id\\\" parameter\",\"error\":\"invalid_request\"}");
+        assertThat(stringCapture.getValue()).isEqualTo("{\"error\":\"invalid_request\",\"error_description\":\"Invalid request: Missing required \\\"client_id\\\" parameter\"}");
 
         verify(httpServletRequestMock, never()).setAttribute(anyString(), ArgumentMatchers.any());
     }
@@ -508,7 +508,7 @@ public class OIDCEndpointFilterTest {
 
         verify(httpServletResponseMock).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         verify(printWriterMock).println(stringCapture.capture());
-        assertThat(stringCapture.getValue()).isEqualTo("{\"error_description\":\"Invalid request: Missing or empty \\\"code\\\" parameter\",\"error\":\"invalid_request\"}");
+        assertThat(stringCapture.getValue()).isEqualTo("{\"error\":\"invalid_request\",\"error_description\":\"Invalid request: Missing or empty \\\"code\\\" parameter\"}");
 
         verify(httpServletRequestMock, never()).setAttribute(anyString(), ArgumentMatchers.any());
     }

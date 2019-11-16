@@ -15,9 +15,9 @@
  */
 package be.atbash.ee.security.sso.server.store;
 
+import be.atbash.ee.oauth2.sdk.AuthorizationCode;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import java.util.List;
 

@@ -15,8 +15,18 @@
  */
 package be.atbash.ee.security.octopus.sso.client.requestor;
 
+import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
+import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
+import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
+import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
+import be.atbash.ee.openid.connect.sdk.*;
+import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.debug.CorrelationCounter;
@@ -25,16 +35,6 @@ import be.atbash.ee.security.octopus.sso.core.rest.PrincipalUserInfoJSONProvider
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOToken;
 import be.atbash.ee.security.octopus.sso.core.token.OctopusSSOTokenConverter;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.*;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 import java.io.IOException;
 import java.net.URI;
@@ -61,7 +61,7 @@ public class OctopusUserRequestor extends AbstractRequestor {
         this.customUserInfoValidator = customUserInfoValidator;
     }
 
-    public OctopusSSOToken getOctopusSSOToken(OpenIdVariableClientData variableClientData, BearerAccessToken accessToken) throws URISyntaxException, ParseException, JOSEException, java.text.ParseException, OctopusRetrievalException {
+    public OctopusSSOToken getOctopusSSOToken(OpenIdVariableClientData variableClientData, BearerAccessToken accessToken) throws URISyntaxException, OAuth2JSONParseException, JOSEException, java.text.ParseException, OctopusRetrievalException {
         // Create UserInfoRequest instance to send request to Server
         UserInfoRequest infoRequest = new UserInfoRequest(new URI(configuration.getUserInfoEndpoint()), accessToken);
 
