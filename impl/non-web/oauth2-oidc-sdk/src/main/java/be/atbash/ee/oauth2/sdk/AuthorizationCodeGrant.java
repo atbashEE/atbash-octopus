@@ -22,10 +22,7 @@ import be.atbash.util.StringUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -181,10 +178,13 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
         if (!code.equals(codeGrant.code)) {
             return false;
         }
-        if (redirectURI != null ? !redirectURI.equals(codeGrant.redirectURI) : codeGrant.redirectURI != null) {
+        if (!Objects.equals(redirectURI, codeGrant.redirectURI)) {
             return false;
         }
-        return codeVerifier != null ? codeVerifier.equals(codeGrant.codeVerifier) : codeGrant.codeVerifier == null;
+        if (codeVerifier != null && codeGrant.codeVerifier != null) {
+            return codeVerifier.getValue().equals(codeGrant.codeVerifier.getValue());
+        }
+        return codeVerifier == null && codeGrant.codeVerifier == null;
 
     }
 
@@ -263,7 +263,7 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
         if (StringUtils.hasText(codeVerifierString)) {
 
             try {
-                codeVerifier = new CodeVerifier(codeVerifierString);
+                codeVerifier = new CodeVerifier(codeVerifierString);  // FIXME Is this correct String <-> Byte ARray sinceSecret has Changed!!
             } catch (IllegalArgumentException e) {
                 // Illegal code verifier
                 throw new OAuth2JSONParseException(e.getMessage(), e);

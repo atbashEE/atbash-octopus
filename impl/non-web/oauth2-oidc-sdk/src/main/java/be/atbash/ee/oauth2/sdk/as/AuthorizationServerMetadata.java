@@ -1479,9 +1479,9 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
 
         // Parse issuer and subject_types_supported first
 
-        Issuer issuer = null;
+        Issuer issuer;
         try {
-            issuer = new Issuer(JSONObjectUtils.getURI(jsonObject, "issuer").toString());
+            issuer = new Issuer(JSONObjectUtils.getURIRequired(jsonObject, "issuer").toString());
         } catch (ParseException e) {
             throw new OAuth2JSONParseException(e.getMessage(), e);
         }
@@ -1800,7 +1800,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
         allKeys.removeAll(REGISTERED_PARAMETER_NAMES);
         for (String key : allKeys) {
 
-            as.setCustomParameter(key, JSONObjectUtils.getJsonValueAsObject(jsonObject.getJsonObject(key)));
+            as.setCustomParameter(key, JSONObjectUtils.getJsonValueAsObject(jsonObject.get(key)));
         }
 
 

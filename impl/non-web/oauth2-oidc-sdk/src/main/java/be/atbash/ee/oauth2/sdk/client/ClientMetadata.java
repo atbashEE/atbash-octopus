@@ -18,10 +18,7 @@ package be.atbash.ee.oauth2.sdk.client;
 
 import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.langtag.LangTagUtils;
-import be.atbash.ee.oauth2.sdk.GrantType;
-import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
-import be.atbash.ee.oauth2.sdk.ResponseType;
-import be.atbash.ee.oauth2.sdk.Scope;
+import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
 import be.atbash.ee.oauth2.sdk.id.SoftwareID;
 import be.atbash.ee.oauth2.sdk.id.SoftwareVersion;
@@ -1585,7 +1582,7 @@ public class ClientMetadata {
      */
     public Object getCustomField(final String name) {
 
-        return customFields.get(name);
+        return JSONObjectUtils.getJsonValueAsObject(customFields.get(name));
     }
 
 
@@ -1980,7 +1977,9 @@ public class ClientMetadata {
 
         ClientMetadata metadata = new ClientMetadata();
 
-        if (jsonObject.get("redirect_uris") != null) {
+        Set<String> keys = new HashSet<>(jsonObject.keySet());
+
+        if (JSONObjectUtils.hasValue(jsonObject, "redirect_uris")) {
 
             Set<URI> redirectURIs = new LinkedHashSet<>();
 
@@ -2001,19 +2000,24 @@ public class ClientMetadata {
             }
 
             metadata.setRedirectionURIs(redirectURIs);
-            jsonObject.remove("redirect_uris");
+            keys.remove("redirect_uris");
         }
 
         try {
 
-            if (jsonObject.get("scope") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "scope")) {
                 metadata.setScope(Scope.parse(jsonObject.getString("scope")));
-                jsonObject.remove("scope");
+                keys.remove("scope");
             }
 
 
-            if (jsonObject.get("response_types") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "response_types")) {
 
+                if (jsonObject.get("response_types").getValueType() != JsonValue.ValueType.ARRAY) {
+                    ErrorObject errorObject = new ErrorObject(RegistrationError.INVALID_CLIENT_METADATA.getCode(), "Invalid client metadata field: Unexpected type of JSON object member with key \"response_types\"");
+
+                    throw new OAuth2JSONParseException("Unexpected type of JSON object member with key \"response_types\"", errorObject);
+                }
                 Set<ResponseType> responseTypes = new LinkedHashSet<>();
 
                 for (String rt : JSONObjectUtils.getStringList(jsonObject, "response_types")) {
@@ -2022,11 +2026,11 @@ public class ClientMetadata {
                 }
 
                 metadata.setResponseTypes(responseTypes);
-                jsonObject.remove("response_types");
+                keys.remove("response_types");
             }
 
 
-            if (jsonObject.get("grant_types") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "grant_types")) {
 
                 Set<GrantType> grantTypes = new LinkedHashSet<>();
 
@@ -2036,13 +2040,13 @@ public class ClientMetadata {
                 }
 
                 metadata.setGrantTypes(grantTypes);
-                jsonObject.remove("grant_types");
+                keys.remove("grant_types");
             }
 
 
-            if (jsonObject.get("contacts") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "contacts")) {
                 metadata.setEmailContacts(JSONObjectUtils.getStringList(jsonObject, "contacts"));
-                jsonObject.remove("contacts");
+                keys.remove("contacts");
             }
 
 
@@ -2059,7 +2063,7 @@ public class ClientMetadata {
                     throw new OAuth2JSONParseException("Invalid \"client_name\" (language tag) parameter");
                 }
 
-                removeMember(jsonObject, "client_name", entry.getKey());
+                keys.remove(createJsonObjectKey("client_name", entry.getKey()));
             }
 
 
@@ -2079,7 +2083,7 @@ public class ClientMetadata {
                     throw new OAuth2JSONParseException("Invalid \"logo_uri\" (language tag) parameter");
                 }
 
-                removeMember(jsonObject, "logo_uri", entry.getKey());
+                keys.remove(createJsonObjectKey("logo_uri", entry.getKey()));
             }
 
 
@@ -2100,7 +2104,7 @@ public class ClientMetadata {
                     throw new OAuth2JSONParseException("Invalid \"client_uri\" (language tag) parameter");
                 }
 
-                removeMember(jsonObject, "client_uri", entry.getKey());
+                keys.remove(createJsonObjectKey("client_uri", entry.getKey()));
             }
 
 
@@ -2120,7 +2124,7 @@ public class ClientMetadata {
                     throw new OAuth2JSONParseException("Invalid \"policy_uri\" (language tag) parameter");
                 }
 
-                removeMember(jsonObject, "policy_uri", entry.getKey());
+                keys.remove(createJsonObjectKey("policy_uri", entry.getKey()));
             }
 
 
@@ -2140,44 +2144,44 @@ public class ClientMetadata {
                     throw new OAuth2JSONParseException("Invalid \"tos_uri\" (language tag) parameter");
                 }
 
-                removeMember(jsonObject, "tos_uri", entry.getKey());
+                keys.remove(createJsonObjectKey("tos_uri", entry.getKey()));
             }
 
 
-            if (jsonObject.get("token_endpoint_auth_method") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "token_endpoint_auth_method")) {
                 metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.parse(
                         jsonObject.getString("token_endpoint_auth_method")));
 
-                jsonObject.remove("token_endpoint_auth_method");
+                keys.remove("token_endpoint_auth_method");
             }
 
 
-            if (jsonObject.get("token_endpoint_auth_signing_alg") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "token_endpoint_auth_signing_alg")) {
                 metadata.setTokenEndpointAuthJWSAlg(JWSAlgorithm.parse(
                         jsonObject.getString("token_endpoint_auth_signing_alg")));
 
-                jsonObject.remove("token_endpoint_auth_signing_alg");
+                keys.remove("token_endpoint_auth_signing_alg");
             }
 
 
-            if (jsonObject.get("jwks_uri") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "jwks_uri")) {
                 metadata.setJWKSetURI(JSONObjectUtils.getURI(jsonObject, "jwks_uri"));
-                jsonObject.remove("jwks_uri");
+                keys.remove("jwks_uri");
             }
 
-            if (jsonObject.get("jwks") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "jwks")) {
 
                 try {
-                    metadata.setJWKSet(JWKSet.parse(jsonObject.getString("jwks")));
+                    metadata.setJWKSet(JWKSet.parse(jsonObject.get("jwks").toString()));
 
                 } catch (java.text.ParseException e) {
                     throw new OAuth2JSONParseException(e.getMessage(), e);
                 }
 
-                jsonObject.remove("jwks");
+                keys.remove("jwks");
             }
 
-            if (jsonObject.get("request_uris") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "request_uris")) {
 
                 Set<URI> requestURIs = new LinkedHashSet<>();
 
@@ -2193,85 +2197,85 @@ public class ClientMetadata {
                 }
 
                 metadata.setRequestObjectURIs(requestURIs);
-                jsonObject.remove("request_uris");
+                keys.remove("request_uris");
             }
 
-            if (jsonObject.get("request_object_signing_alg") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "request_object_signing_alg")) {
                 metadata.setRequestObjectJWSAlg(JWSAlgorithm.parse(
                         jsonObject.getString("request_object_signing_alg")));
 
-                jsonObject.remove("request_object_signing_alg");
+                keys.remove("request_object_signing_alg");
             }
 
-            if (jsonObject.get("request_object_encryption_alg") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "request_object_encryption_alg")) {
                 metadata.setRequestObjectJWEAlg(JWEAlgorithm.parse(
                         jsonObject.getString("request_object_encryption_alg")));
 
-                jsonObject.remove("request_object_encryption_alg");
+                keys.remove("request_object_encryption_alg");
             }
 
-            if (jsonObject.get("request_object_encryption_enc") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "request_object_encryption_enc")) {
                 metadata.setRequestObjectJWEEnc(EncryptionMethod.parse(
                         jsonObject.getString("request_object_encryption_enc")));
 
-                jsonObject.remove("request_object_encryption_enc");
+                keys.remove("request_object_encryption_enc");
             }
 
-            if (jsonObject.get("software_id") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "software_id")) {
                 metadata.setSoftwareID(new SoftwareID(jsonObject.getString("software_id")));
-                jsonObject.remove("software_id");
+                keys.remove("software_id");
             }
 
-            if (jsonObject.get("software_version") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "software_version")) {
                 metadata.setSoftwareVersion(new SoftwareVersion(jsonObject.getString("software_version")));
-                jsonObject.remove("software_version");
+                keys.remove("software_version");
             }
 
-            if (jsonObject.get("tls_client_certificate_bound_access_tokens") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "tls_client_certificate_bound_access_tokens")) {
                 metadata.setTLSClientCertificateBoundAccessTokens(jsonObject.getBoolean("tls_client_certificate_bound_access_tokens"));
-                jsonObject.remove("tls_client_certificate_bound_access_tokens");
+                keys.remove("tls_client_certificate_bound_access_tokens");
             }
 
-            if (jsonObject.get("tls_client_auth_subject_dn") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "tls_client_auth_subject_dn")) {
                 metadata.setTLSClientAuthSubjectDN(jsonObject.getString("tls_client_auth_subject_dn"));
-                jsonObject.remove("tls_client_auth_subject_dn");
+                keys.remove("tls_client_auth_subject_dn");
             }
 
-            if (jsonObject.get("tls_client_auth_san_dns") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "tls_client_auth_san_dns")) {
                 metadata.setTLSClientAuthSanDNS(jsonObject.getString("tls_client_auth_san_dns"));
-                jsonObject.remove("tls_client_auth_san_dns");
+                keys.remove("tls_client_auth_san_dns");
             }
 
-            if (jsonObject.get("tls_client_auth_san_uri") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "tls_client_auth_san_uri")) {
                 metadata.setTLSClientAuthSanURI(jsonObject.getString("tls_client_auth_san_uri"));
-                jsonObject.remove("tls_client_auth_san_uri");
+                keys.remove("tls_client_auth_san_uri");
             }
 
-            if (jsonObject.get("tls_client_auth_san_ip") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "tls_client_auth_san_ip")) {
                 metadata.setTLSClientAuthSanIP(jsonObject.getString("tls_client_auth_san_ip"));
-                jsonObject.remove("tls_client_auth_san_ip");
+                keys.remove("tls_client_auth_san_ip");
             }
 
-            if (jsonObject.get("tls_client_auth_san_email") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "tls_client_auth_san_email")) {
                 metadata.setTLSClientAuthSanEmail(jsonObject.getString("tls_client_auth_san_email"));
-                jsonObject.remove("tls_client_auth_san_email");
+                keys.remove("tls_client_auth_san_email");
             }
 
             metadata.ensureExactlyOneCertSubjectFieldForTLSClientAuth();
 
-            if (jsonObject.get("authorization_signed_response_alg") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "authorization_signed_response_alg")) {
                 metadata.setAuthorizationJWSAlg(JWSAlgorithm.parse(jsonObject.getString("authorization_signed_response_alg")));
-                jsonObject.remove("authorization_signed_response_alg");
+                keys.remove("authorization_signed_response_alg");
             }
 
-            if (jsonObject.get("authorization_encrypted_response_alg") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "authorization_encrypted_response_alg")) {
                 metadata.setAuthorizationJWEAlg(JWEAlgorithm.parse(jsonObject.getString("authorization_encrypted_response_alg")));
-                jsonObject.remove("authorization_encrypted_response_alg");
+                keys.remove("authorization_encrypted_response_alg");
             }
 
-            if (jsonObject.get("authorization_encrypted_response_enc") != null) {
+            if (JSONObjectUtils.hasValue(jsonObject, "authorization_encrypted_response_enc")) {
                 metadata.setAuthorizationJWEEnc(EncryptionMethod.parse(jsonObject.getString("authorization_encrypted_response_enc")));
-                jsonObject.remove("authorization_encrypted_response_enc");
+                keys.remove("authorization_encrypted_response_enc");
             }
 
         } catch (ParseException | IllegalStateException e) {
@@ -2282,26 +2286,21 @@ public class ClientMetadata {
         }
 
         // The remaining fields are custom
-        metadata.customFields = jsonObject;
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        for (String key : keys) {
+            builder.add(key, jsonObject.get(key));
+        }
+        metadata.customFields = builder.build();
 
         return metadata;
     }
 
-
-    /**
-     * Removes a JSON object member with the specified base name and
-     * optional language tag.
-     *
-     * @param jsonObject The JSON object. Must not be {@code null}.
-     * @param name       The base member name. Must not be {@code null}.
-     * @param langTag    The language tag, {@code null} if none.
-     */
-    private static void removeMember(final JsonObject jsonObject, final String name, final LangTag langTag) {
-
-        if (langTag == null) {
-            jsonObject.remove(name);
-        } else {
-            jsonObject.remove(name + "#" + langTag);
+    private static String createJsonObjectKey(String key, LangTag langTag) {
+        StringBuilder result = new StringBuilder();
+        result.append(key);
+        if (langTag != null) {
+            result.append('#').append(langTag.toString());
         }
+        return result.toString();
     }
 }

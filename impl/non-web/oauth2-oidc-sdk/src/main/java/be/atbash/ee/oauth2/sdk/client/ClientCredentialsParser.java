@@ -44,6 +44,9 @@ public class ClientCredentialsParser {
     public static ClientID parseID(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
+        if (!jsonObject.containsKey("client_id")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"client_id\"");
+        }
         return new ClientID(jsonObject.getString("client_id"));
     }
 

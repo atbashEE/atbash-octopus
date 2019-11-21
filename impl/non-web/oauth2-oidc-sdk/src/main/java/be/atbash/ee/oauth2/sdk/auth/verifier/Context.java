@@ -19,6 +19,7 @@ package be.atbash.ee.oauth2.sdk.auth.verifier;
 /**
  * Generic context for passing objects.
  */
+// FIXME Used or just passed around?
 public class Context<T> {
 
 

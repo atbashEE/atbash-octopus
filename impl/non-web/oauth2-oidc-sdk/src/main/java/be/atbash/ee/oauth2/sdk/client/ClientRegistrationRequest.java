@@ -25,8 +25,10 @@ import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSObject;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.util.StringUtils;
 
+import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.net.MalformedURLException;
@@ -270,7 +272,8 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
             }
 
             // Prevent the JWT from appearing in the metadata
-            jsonObject.remove("software_statement");
+
+            jsonObject = JSONObjectUtils.remove(jsonObject, "software_statement");
         }
 
         // Parse the client metadata

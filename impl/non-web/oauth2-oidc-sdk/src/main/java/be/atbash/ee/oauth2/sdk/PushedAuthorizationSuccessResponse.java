@@ -158,10 +158,16 @@ public class PushedAuthorizationSuccessResponse extends PushedAuthorizationRespo
             throws OAuth2JSONParseException {
 
         URI requestURI = null;
+        if (!JSONObjectUtils.hasValue(jsonObject,"request_uri")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"request_uri\"");
+        }
         try {
             requestURI = JSONObjectUtils.getURI(jsonObject, "request_uri");
         } catch (ParseException e) {
             throw new OAuth2JSONParseException(e.getMessage(), e);
+        }
+        if (!JSONObjectUtils.hasValue(jsonObject,"expires_in")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"expires_in\"");
         }
         long lifetime = jsonObject.getJsonNumber("expires_in").longValue();
         return new PushedAuthorizationSuccessResponse(requestURI, lifetime);

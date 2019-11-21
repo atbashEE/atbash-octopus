@@ -335,7 +335,7 @@ public class ErrorObject {
 
         String code = jsonObject.getString("error");
 
-        String description = jsonObject.getString("error_description");
+        String description = jsonObject.getString("error_description", null);
 
 
         URI uri = null;

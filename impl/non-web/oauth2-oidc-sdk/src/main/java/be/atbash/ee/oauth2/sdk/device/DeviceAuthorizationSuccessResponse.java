@@ -25,6 +25,7 @@ import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.*;
@@ -412,10 +413,16 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
      */
     public static DeviceAuthorizationSuccessResponse parse(final JsonObject jsonObject) throws OAuth2JSONParseException {
 
+        if (!JSONObjectUtils.hasValue(jsonObject, "device_code")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"device_code\"");
+        }
         DeviceCode deviceCode = new DeviceCode(jsonObject.getString("device_code"));
-        UserCode userCode = new UserCode(jsonObject.getString("user_code"));
-        URI verificationURI = null;
-        URI verificationURIComplete = null;
+        if (!JSONObjectUtils.hasValue(jsonObject, "user_code")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"user_code\"");
+        }
+        UserCode userCode = new UserCode(jsonObject.getString("user_code", null));
+        URI verificationURI;
+        URI verificationURIComplete;
         try {
             verificationURI = JSONObjectUtils.getURI(jsonObject, "verification_uri");
             verificationURIComplete = JSONObjectUtils.getURI(jsonObject, "verification_uri_complete");
@@ -425,7 +432,7 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
 
         // Parse lifetime
         long lifetime;
-        if (jsonObject.get("expires_in") instanceof Number) {
+        if (jsonObject.get("expires_in").getValueType() == JsonValue.ValueType.NUMBER) {
 
             lifetime = jsonObject.getJsonNumber("expires_in").longValue();
         } else {
@@ -443,7 +450,7 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
         // Parse lifetime
         long interval = 5;
         if (jsonObject.containsKey("interval")) {
-            if (jsonObject.get("interval") instanceof Number) {
+            if (jsonObject.get("interval").getValueType() == JsonValue.ValueType.NUMBER) {
 
                 interval = jsonObject.getJsonNumber("interval").longValue();
             } else {
@@ -471,7 +478,7 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
             customParams = new LinkedHashMap<>();
 
             for (String name : customParamNames) {
-                customParams.put(name, jsonObject.get(name));
+                customParams.put(name, JSONObjectUtils.getJsonValueAsObject(jsonObject.get(name)));
             }
         }
 

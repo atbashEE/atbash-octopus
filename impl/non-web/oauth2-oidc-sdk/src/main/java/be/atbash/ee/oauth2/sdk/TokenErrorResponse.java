@@ -157,7 +157,11 @@ public class TokenErrorResponse extends TokenResponse implements ErrorResponse {
             return result.build();
         }
 
-        result.add("error", error.getCode());
+        if (error.getCode() != null) {
+            result.add("error", error.getCode());
+        } else {
+            result.addNull("error");
+        }
 
         if (error.getDescription() != null) {
             result.add("error_description", error.getDescription());

@@ -26,6 +26,7 @@ import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.Date;
@@ -211,6 +212,18 @@ public final class RequestObjectPOSTSuccessResponse extends RequestObjectPOSTRes
     public static RequestObjectPOSTSuccessResponse parse(final JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
+        if (!JSONObjectUtils.hasValue(jsonObject, "iss")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"iss\"");
+        }
+        if (!JSONObjectUtils.hasValue(jsonObject, "aud")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"aud\"");
+        }
+        if (!JSONObjectUtils.hasValue(jsonObject, "request_uri")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"request_uri\"");
+        }
+        if (!JSONObjectUtils.hasValue(jsonObject, "exp")) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"exp\"");
+        }
         try {
             return new RequestObjectPOSTSuccessResponse(
                     new Issuer(jsonObject.getString("iss")),

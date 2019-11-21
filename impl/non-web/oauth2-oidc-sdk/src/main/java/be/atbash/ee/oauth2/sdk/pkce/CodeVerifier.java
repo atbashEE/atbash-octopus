@@ -17,6 +17,7 @@ package be.atbash.ee.oauth2.sdk.pkce;
 
 
 import be.atbash.ee.oauth2.sdk.auth.Secret;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 
 /**
  * Authorisation code verifier.
@@ -34,6 +35,11 @@ public class CodeVerifier extends Secret {
      * The minimum character length of a code verifier.
      */
     public static final int MIN_LENGTH = 43;
+
+    /**
+     * The minimum character length of a code verifier.
+     */
+    public static final int RAW_MIN_LENGTH = 32;
 
 
     /**
@@ -59,6 +65,27 @@ public class CodeVerifier extends Secret {
         }
 
         if (value.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException("The code verifier must not be longer than " + MAX_LENGTH + " characters");
+        }
+    }
+
+    /**
+     * Creates a new code verifier with the specified value.
+     *
+     * @param value The code verifier value. Must not contain characters
+     *              other than [A-Z] / [a-z] / [0-9] / "-" / "." / "_" /
+     *              "~". The verifier length must be at least 43
+     *              characters but not more than 128 characters. Must not
+     *              be {@code null} or empty string.
+     */
+    public CodeVerifier( Base64URLValue value) {
+        super(value);
+
+        if (this.value.length < RAW_MIN_LENGTH) {
+            throw new IllegalArgumentException("The code verifier must be at least " + MIN_LENGTH + " characters");
+        }
+
+        if (this.value.length > MAX_LENGTH) {
             throw new IllegalArgumentException("The code verifier must not be longer than " + MAX_LENGTH + " characters");
         }
     }

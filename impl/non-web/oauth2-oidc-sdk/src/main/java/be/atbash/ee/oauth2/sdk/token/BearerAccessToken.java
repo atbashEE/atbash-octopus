@@ -23,6 +23,7 @@ import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.util.StringUtils;
 
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import java.util.List;
 import java.util.Map;
 
@@ -197,7 +198,7 @@ public class BearerAccessToken extends AccessToken {
 
             // Lifetime can be a JSON number or string
 
-            if (jsonObject.get("expires_in") instanceof Number) {
+            if (jsonObject.get("expires_in").getValueType() == JsonValue.ValueType.NUMBER) {
 
                 lifetime = jsonObject.getJsonNumber("expires_in").longValue();
             } else {

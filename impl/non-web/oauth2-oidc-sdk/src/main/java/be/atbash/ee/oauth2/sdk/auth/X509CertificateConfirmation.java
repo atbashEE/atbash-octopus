@@ -210,7 +210,7 @@ public final class X509CertificateConfirmation {
             return null;
         }
 
-        String x5tString = cnf.getString("x5t#S256");
+        String x5tString = cnf.getString("x5t#S256", null);
 
         if (x5tString == null) {
             return null;

@@ -179,7 +179,7 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
         httpResponse.setCacheControl("no-store");
         httpResponse.setPragma("no-cache");
 
-        httpResponse.setContent(toJSONObject().toString());
+        httpResponse.setContent(toJSONObject().build().toString());
 
         return httpResponse;
     }
@@ -210,7 +210,7 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
             customParams = new HashMap<>();
 
             for (String name : customParamNames) {
-                customParams.put(name, jsonObject.get(name));
+                customParams.put(name, JSONObjectUtils.getJsonValueAsObject(jsonObject.get(name)));
             }
         }
 

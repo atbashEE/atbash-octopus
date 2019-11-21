@@ -15,6 +15,8 @@
  */
 package be.atbash.ee.langtag;
 
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
+
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import java.util.*;
@@ -72,15 +74,15 @@ public final class LangTagUtils {
 
         for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
 
-            Object value;
+            JsonValue value;
             try {
-                value = ((Map.Entry) entry).getValue();
+                value = entry.getValue();
             } catch (ClassCastException var10) {
                 continue;
             }
 
             if (((Map.Entry) entry).getKey().equals(baseName)) {
-                result.put((LangTag) null, (T) value);
+                result.put( null, (T) JSONObjectUtils.getJsonValueAsObject(value));
             } else if (((String) ((Map.Entry) entry).getKey()).startsWith(baseName + '#')) {
                 String[] parts = ((String) ((Map.Entry) entry).getKey()).split("#", 2);
                 LangTag langTag = null;
@@ -91,7 +93,7 @@ public final class LangTagUtils {
                     }
                 }
 
-                result.put(langTag, (T) value);
+                result.put(langTag, (T) JSONObjectUtils.getJsonValueAsObject(value));
             }
         }
 

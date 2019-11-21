@@ -403,7 +403,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      */
     public Scope getScope() {
 
-        return Scope.parse(params.getString("scope"));
+        if (JSONObjectUtils.hasValue(params, "scope")) {
+            return Scope.parse(params.getString("scope"));
+        }
+        return null;
     }
 
 
@@ -415,7 +418,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      */
     public ClientID getClientID() {
 
-        return new ClientID(params.getString("client_id"));
+        if (JSONObjectUtils.hasValue(params, "client_id")) {
+            return new ClientID(params.getString("client_id"));
+        }
+        return null;
     }
 
 
@@ -438,8 +444,11 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token type, {@code null} if not specified.
      */
     public AccessTokenType getTokenType() {
+        if (JSONObjectUtils.hasValue(params, "token_type")) {
+            return new AccessTokenType(params.getString("token_type"));
 
-        return new AccessTokenType(params.getString("token_type"));
+        }
+        return null;
     }
 
 
@@ -451,7 +460,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      */
     public Date getExpirationTime() {
 
-        return DateUtils.fromSecondsSinceEpoch(params.getJsonNumber("exp").longValue());
+        if (JSONObjectUtils.hasValue(params, "exp")) {
+            return DateUtils.fromSecondsSinceEpoch(params.getJsonNumber("exp").longValue());
+        }
+        return null;
     }
 
 
@@ -461,8 +473,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token issue time, {@code null} if not specified.
      */
     public Date getIssueTime() {
-
-        return DateUtils.fromSecondsSinceEpoch(params.getJsonNumber("iat").longValue());
+        if (JSONObjectUtils.hasValue(params, "iat")) {
+            return DateUtils.fromSecondsSinceEpoch(params.getJsonNumber("iat").longValue());
+        }
+        return null;
     }
 
 
@@ -473,8 +487,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token not-before time, {@code null} if not specified.
      */
     public Date getNotBeforeTime() {
-
-        return DateUtils.fromSecondsSinceEpoch(params.getJsonNumber("nbf").longValue());
+        if (JSONObjectUtils.hasValue(params, "nbf")) {
+            return DateUtils.fromSecondsSinceEpoch(params.getJsonNumber("nbf").longValue());
+        }
+        return null;
     }
 
 
@@ -486,8 +502,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token subject, {@code null} if not specified.
      */
     public Subject getSubject() {
-
-        return new Subject(params.getString("sub"));
+        if (JSONObjectUtils.hasValue(params, "sub")) {
+            return new Subject(params.getString("sub"));
+        }
+        return null;
     }
 
 
@@ -498,14 +516,17 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token audience, {@code null} if not specified.
      */
     public List<Audience> getAudience() {
-        // Try string array first, then string
-        if (params.get("aud").getValueType() == JsonValue.ValueType.ARRAY) {
-            return Audience.create(JSONObjectUtils.getStringList(params, "aud"));
+        if (JSONObjectUtils.hasValue(params, "aud")) {
+            // Try string array first, then string
+            if (params.get("aud").getValueType() == JsonValue.ValueType.ARRAY) {
+                return Audience.create(JSONObjectUtils.getStringList(params, "aud"));
 
-        } else {
-            return new Audience(params.getString("aud")).toSingleAudienceList();
+            } else {
+                return new Audience(params.getString("aud")).toSingleAudienceList();
 
+            }
         }
+        return null;
     }
 
 
@@ -515,8 +536,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token issuer, {@code null} if not specified.
      */
     public Issuer getIssuer() {
-
-        return new Issuer(params.getString("iss"));
+        if (JSONObjectUtils.hasValue(params, "iss")) {
+            return new Issuer(params.getString("iss"));
+        }
+        return null;
     }
 
 
@@ -527,8 +550,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The token identifier, {@code null} if not specified.
      */
     public JWTID getJWTID() {
-
-        return new JWTID(params.getString("jti"));
+        if (JSONObjectUtils.hasValue(params, "jti")) {
+            return new JWTID(params.getString("jti"));
+        }
+        return null;
     }
 
 
@@ -593,9 +618,12 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter value.
      */
-    public boolean getBooleanParameter(final String name) {
-
-        return params.getBoolean(name);
+    public boolean getBooleanParameter(final String name) throws OAuth2JSONParseException {
+        if (JSONObjectUtils.hasValue(params, name) &&
+                (params.get(name).getValueType() == JsonValue.ValueType.TRUE || params.get(name).getValueType() == JsonValue.ValueType.FALSE)) {
+            return params.getBoolean(name);
+        }
+        throw new OAuth2JSONParseException(String.format("Unexpected type of JSON object member with key \"%s\"", name));
     }
 
 
@@ -607,8 +635,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * parsing failed.
      */
     public Number getNumberParameter(final String name) {
-
-        return params.getJsonNumber(name).numberValue();
+        if (JSONObjectUtils.hasValue(params, name) && params.get(name).getValueType() == JsonValue.ValueType.NUMBER) {
+            return params.getJsonNumber(name).numberValue();
+        }
+        return null;
     }
 
 
@@ -621,7 +651,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      */
     public List<String> getStringListParameter(final String name) {
 
-        return JSONObjectUtils.getStringList(params, name);
+        if (JSONObjectUtils.hasValue(params, name) && params.get(name).getValueType() == JsonValue.ValueType.ARRAY) {
+            return JSONObjectUtils.getStringList(params, name);
+        }
+        return null;
     }
 
 
@@ -633,8 +666,10 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * parsing failed.
      */
     public JsonObject getJSONObjectParameter(final String name) {
-
-        return params.getJsonObject(name);
+        if (JSONObjectUtils.hasValue(params, name) && params.get(name).getValueType() == JsonValue.ValueType.OBJECT) {
+            return params.getJsonObject(name);
+        }
+        return null;
     }
 
 

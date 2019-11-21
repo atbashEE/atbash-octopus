@@ -50,8 +50,9 @@ public class Secret {
     /**
      * The secret value.
      */
-    private byte[] value;
+    protected byte[] value;
 
+    private boolean fromBase64Value;
 
     /**
      * Optional expiration date.
@@ -66,7 +67,7 @@ public class Secret {
      *              UTF-8 encoded and not {@code null}.
      */
     public Secret(final String value) {
-
+        // Also a 'plain' secret is allowed meaning a human readable password for some scenarios
         this(value, null);
     }
 
@@ -80,10 +81,35 @@ public class Secret {
      */
     public Secret(final String value, final Date expDate) {
 
-        this.value = value.getBytes(Charset.forName("utf-8"));
+        this.value = value.getBytes(StandardCharsets.UTF_8);
         this.expDate = expDate;
     }
 
+    /**
+     * Creates a new secret with the specified value.
+     *
+     * @param value The secret value. May be an empty string. Must be
+     *              UTF-8 encoded and not {@code null}.
+     */
+    public Secret(final Base64URLValue value) {
+
+        this(value, null);
+    }
+
+
+    /**
+     * Creates a new secret with the specified value and expiration date.
+     *
+     * @param value   The secret value. May be an empty string. Must be
+     *                UTF-8 encoded and not {@code null}.
+     * @param expDate The expiration date, {@code null} if not specified.
+     */
+    public Secret(final Base64URLValue value, final Date expDate) {
+
+        this.value = value.decode();
+        this.expDate = expDate;
+        fromBase64Value = true;
+    }
 
     /**
      * Generates a new secret with a cryptographic random value of the
@@ -118,7 +144,8 @@ public class Secret {
 
         SECURE_RANDOM.nextBytes(n);
 
-        value = Base64URLValue.encode(n).toString().getBytes(StandardCharsets.UTF_8);
+        value = n;
+        fromBase64Value = true; // Well actually just a bunch of random bytes so nothing human readable.
 
         this.expDate = expDate;
     }
@@ -146,7 +173,11 @@ public class Secret {
             return null; // value has been erased
         }
 
-        return new String(value, Charset.forName("utf-8"));
+        if (fromBase64Value) {
+            return Base64URLValue.encode(value).toString();
+        } else {
+            return new String(value, StandardCharsets.UTF_8);
+        }
     }
 
 
