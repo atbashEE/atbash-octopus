@@ -151,7 +151,7 @@ public class LogoutTokenClaimsSet extends CommonClaimsSet {
 
         JsonObjectBuilder events = Json.createObjectBuilder();
         events.add(EVENT_TYPE, Json.createObjectBuilder().build());
-        setClaim(EVENTS_CLAIM_NAME, events);
+        setClaim(EVENTS_CLAIM_NAME, events.build());
 
         if (sid != null) {
             setClaim(SID_CLAIM_NAME, sid.getValue());

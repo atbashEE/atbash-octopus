@@ -26,7 +26,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.util.List;
@@ -884,7 +884,7 @@ public class HTTPRequest extends HTTPMessage {
 
         try {
             // Open a connection, then send method and headers
-            reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
 
             // The next step is to get the status
             statusCode = conn.getResponseCode();

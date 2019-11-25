@@ -30,10 +30,7 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -1457,8 +1454,14 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
         }
 
         // Append any custom (not registered) parameters
-        // FIXME Verify if the Builder is active or the JsonObject!!
-        result.addAll(customParametersBuilder);
+        ensureReadMode();
+        for (Map.Entry<String, JsonValue> entry : customParameters.entrySet()) {
+            if (entry.getValue().getValueType() == JsonValue.ValueType.NULL) {
+                result.addNull(entry.getKey());
+            } else {
+                result.add(entry.getKey(), entry.getValue());
+            }
+        }
 
         return result;
     }
@@ -1750,7 +1753,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
             as.mtlsEndpointAliases = AuthorizationServerEndpointMetadata.parse(jsonObject.getJsonObject("mtls_endpoint_aliases"));
         }
 
-        if (jsonObject.get("tls_client_certificate_bound_access_tokens") != null) {
+        if (JSONObjectUtils.hasValue(jsonObject, "tls_client_certificate_bound_access_tokens")) {
             as.tlsClientCertificateBoundAccessTokens = jsonObject.getBoolean("tls_client_certificate_bound_access_tokens");
         }
 

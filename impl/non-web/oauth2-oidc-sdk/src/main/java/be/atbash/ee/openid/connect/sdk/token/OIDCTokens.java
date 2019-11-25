@@ -22,6 +22,7 @@ import be.atbash.ee.oauth2.sdk.token.RefreshToken;
 import be.atbash.ee.oauth2.sdk.token.Tokens;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -200,11 +201,13 @@ public final class OIDCTokens extends Tokens {
 
         RefreshToken refreshToken = RefreshToken.parse(jsonObject);
 
-        if (jsonObject.get("id_token") != null) {
+        if (JSONObjectUtils.hasValue(jsonObject, "id_token")) {
 
             JWT idToken;
             try {
+
                 idToken = JWTParser.parse(jsonObject.getString("id_token"));
+
             } catch (java.text.ParseException e) {
                 throw new OAuth2JSONParseException("Couldn't parse ID token: " + e.getMessage(), e);
             }

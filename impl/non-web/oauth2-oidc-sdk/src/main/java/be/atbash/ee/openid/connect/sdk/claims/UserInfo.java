@@ -30,6 +30,7 @@ import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.mail.internet.InternetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -1170,7 +1171,7 @@ public class UserInfo extends ClaimsSet {
     public void setAddress(final Address address) {
 
         if (address != null) {
-            setClaim(ADDRESS_CLAIM_NAME, address.toJSONObject());
+            setClaim(ADDRESS_CLAIM_NAME, address.toJSONObject().build());
         } else {
             setClaim(ADDRESS_CLAIM_NAME, null);
         }
@@ -1236,8 +1237,11 @@ public class UserInfo extends ClaimsSet {
         if (aggregatedClaims == null) {
             return;
         }
-
-        aggregatedClaims.mergeInto(claims);
+        if (claims == null) {
+            claims = claimsBuilder.build();
+            claimsBuilder = null;
+        }
+        claims = aggregatedClaims.mergeInto(claims);
     }
 
 
@@ -1262,14 +1266,14 @@ public class UserInfo extends ClaimsSet {
             String sourceID = en.getKey();
             JsonObject sourceSpec = en.getValue();
 
-            Object jwtValue = sourceSpec.get("JWT");
-            if (!(jwtValue instanceof String)) {
+            JsonValue jwtValue = sourceSpec.get("JWT");
+            if (jwtValue == null || jwtValue.getValueType() != JsonValue.ValueType.STRING) {
                 continue; // skip
             }
 
             JWT claimsJWT;
             try {
-                claimsJWT = JWTParser.parse((String) jwtValue);
+                claimsJWT = JWTParser.parse(sourceSpec.getString("JWT"));
             } catch (java.text.ParseException e) {
                 continue; // invalid JWT, skip
             }
@@ -1303,7 +1307,11 @@ public class UserInfo extends ClaimsSet {
             return;
         }
 
-        distributedClaims.mergeInto(claims);
+        if (claims == null) {
+            claims = claimsBuilder.build();
+            claimsBuilder = null;
+        }
+        claims = distributedClaims.mergeInto(claims);
     }
 
 
@@ -1315,6 +1323,10 @@ public class UserInfo extends ClaimsSet {
      */
     public Set<DistributedClaims> getDistributedClaims() {
 
+        if (claims == null) {
+            claims = claimsBuilder.build();
+            claimsBuilder = null;  // TODO ensureRead method
+        }
         Map<String, JsonObject> claimSources = ExternalClaimsUtils.getExternalClaimSources(claims);
 
         if (claimSources == null) {
@@ -1328,22 +1340,22 @@ public class UserInfo extends ClaimsSet {
             String sourceID = en.getKey();
             JsonObject sourceSpec = en.getValue();
 
-            Object endpointValue = sourceSpec.get("endpoint");
-            if (!(endpointValue instanceof String)) {
+            JsonValue endpointValue = sourceSpec.get("endpoint");
+            if (endpointValue == null || endpointValue.getValueType() != JsonValue.ValueType.STRING) {
                 continue; // skip
             }
 
             URI endpoint;
             try {
-                endpoint = new URI((String) endpointValue);
+                endpoint = new URI(sourceSpec.getString("endpoint"));
             } catch (URISyntaxException e) {
                 continue; // invalid URI, skip
             }
 
             AccessToken accessToken = null;
-            Object accessTokenValue = sourceSpec.get("access_token");
-            if (accessTokenValue instanceof String) {
-                accessToken = new TypelessAccessToken((String) accessTokenValue);
+            JsonValue accessTokenValue = sourceSpec.get("access_token");
+            if (accessTokenValue != null && accessTokenValue.getValueType() == JsonValue.ValueType.STRING) {
+                accessToken = new TypelessAccessToken(sourceSpec.getString("access_token"));
             }
 
             Set<String> claimNames = ExternalClaimsUtils.getExternalClaimNamesForSource(claims, sourceID);

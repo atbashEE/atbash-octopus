@@ -97,7 +97,9 @@ public class AggregatedClaims extends ExternalClaims {
 
 
     @Override
-    void mergeInto(final JsonObject jsonObject) {
+    JsonObject mergeInto(final JsonObject jsonObject) {
+
+        JsonObjectBuilder result = Json.createObjectBuilder(jsonObject);
 
         JsonObjectBuilder claimNamesObject = Json.createObjectBuilder();
 
@@ -105,10 +107,14 @@ public class AggregatedClaims extends ExternalClaims {
             claimNamesObject.add(name, getSourceID());
         }
 
-        if (jsonObject.containsKey("_claim_names")) {
-            ((JsonObject) jsonObject.get("_claim_names")).putAll(claimNamesObject.build());
-        } else {
-            jsonObject.put("_claim_names", claimNamesObject.build());
+        if (jsonObject != null) {
+            if (jsonObject.containsKey("_claim_names")) {
+                JsonObjectBuilder tempBuilder = Json.createObjectBuilder((JsonObject) jsonObject.get("_claim_names"));
+                tempBuilder.addAll(claimNamesObject);
+                result.add("_claim_names", tempBuilder.build());
+            } else {
+                result.add("_claim_names", claimNamesObject.build());
+            }
         }
 
 
@@ -119,10 +125,15 @@ public class AggregatedClaims extends ExternalClaims {
 
         claimSourcesObject.add(getSourceID(), sourceSpec);
 
-        if (jsonObject.containsKey("_claim_sources")) {
-            ((JsonObject) jsonObject.get("_claim_sources")).putAll(claimSourcesObject.build());
-        } else {
-            jsonObject.put("_claim_sources", claimSourcesObject.build());
+        if (jsonObject != null) {
+            if (jsonObject.containsKey("_claim_sources")) {
+                JsonObjectBuilder tempBuilder = Json.createObjectBuilder((JsonObject) jsonObject.get("_claim_sources"));
+                tempBuilder.addAll(claimSourcesObject);
+                result.add("_claim_sources", tempBuilder.build());
+            } else {
+                result.add("_claim_sources", claimSourcesObject.build());
+            }
         }
+        return result.build();
     }
 }

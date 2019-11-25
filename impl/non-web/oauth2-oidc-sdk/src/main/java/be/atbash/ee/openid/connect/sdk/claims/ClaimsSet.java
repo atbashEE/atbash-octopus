@@ -47,7 +47,7 @@ public abstract class ClaimsSet {
     /**
      * The JSON object Builder. Null when claims are
      */
-    private JsonObjectBuilder claimsBuilder;
+    protected JsonObjectBuilder claimsBuilder;
 
     protected JsonObject claims;
 
@@ -87,7 +87,7 @@ public abstract class ClaimsSet {
      */
     public void putAll(ClaimsSet other) {
         validateBuildMode();
-        for (Map.Entry<String, JsonValue> entry : other.claimsBuilder.build().entrySet()) {
+        for (Map.Entry<String, JsonValue> entry : other.claims.entrySet()) {
             claimsBuilder.add(entry.getKey(), entry.getValue());
         }
 
@@ -96,7 +96,8 @@ public abstract class ClaimsSet {
 
     private void validateBuildMode() {
         if (claimsBuilder == null) {
-            throw new IllegalStateException("ClaimSet is in read mode and can't be changed anymore");
+            claimsBuilder = Json.createObjectBuilder(claims);
+            claims = null;
         }
     }
 
@@ -255,7 +256,7 @@ public abstract class ClaimsSet {
      */
     public String getStringClaim(final String name) {
         ensureReadMode();
-        return JSONObjectUtils.hasValue(claims, name) ? claims.getString(name) : null;
+        return claims.get(name) != null && claims.get(name).getValueType() == JsonValue.ValueType.STRING ? claims.getString(name) : null;
 
     }
 
@@ -297,7 +298,7 @@ public abstract class ClaimsSet {
      */
     public Number getNumberClaim(final String name) {
         ensureReadMode();
-        return JSONObjectUtils.hasValue(claims, name) ? claims.getJsonNumber(name).numberValue() : null;
+        return claims.get(name).getValueType() == JsonValue.ValueType.NUMBER ? claims.getJsonNumber(name).numberValue() : null;
     }
 
 
@@ -379,6 +380,9 @@ public abstract class ClaimsSet {
     @Deprecated
     public InternetAddress getEmailClaim(final String name) {
         ensureReadMode();
+        if (!JSONObjectUtils.hasValue(claims, name)) {
+            return null;
+        }
         try {
             return InternetAddress.parse(claims.getString(name))[0];
         } catch (AddressException e) {
@@ -450,7 +454,7 @@ public abstract class ClaimsSet {
      */
     public List<String> getStringListClaim(final String name) {
         ensureReadMode();
-        return JSONObjectUtils.getStringList(claims, name);
+        return claims.get(name) != null && claims.get(name).getValueType() == JsonValue.ValueType.ARRAY ? JSONObjectUtils.getStringList(claims, name) : null;
 
     }
 

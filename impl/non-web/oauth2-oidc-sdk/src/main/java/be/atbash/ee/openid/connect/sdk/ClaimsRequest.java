@@ -415,7 +415,12 @@ public class ClaimsRequest {
                     }
                 }
 
-                result.add(entry.getClaimName(true), entrySpec.build());
+                String claimName = entry.getClaimName(true);
+                if (entrySpec == null) {
+                    result.addNull(claimName);
+                } else {
+                    result.add(claimName, entrySpec.build());
+                }
             }
 
             return result.build();
@@ -475,8 +480,13 @@ public class ClaimsRequest {
                 }
 
                 try {
-                    // TODO Is this cast always correct
-                    JsonObject entrySpec = (JsonObject) member.getValue();
+
+                    JsonObject entrySpec;
+                    if (member.getValue().getValueType() == JsonValue.ValueType.NULL) {
+                        entrySpec = Json.createObjectBuilder().build();
+                    } else {
+                        entrySpec = (JsonObject) member.getValue();
+                    }
 
                     ClaimRequirement requirement = ClaimRequirement.VOLUNTARY;
 
@@ -497,19 +507,14 @@ public class ClaimsRequest {
 
                     } else if (entrySpec.containsKey("values")) {
 
-                        List<String> expectedValues = new LinkedList<>();
-
-                        for (Object v : (List) entrySpec.get("values")) {
-
-                            expectedValues.add((String) v);
-                        }
+                        List<String> expectedValues = new LinkedList<>(JSONObjectUtils.getStringList(entrySpec, "values"));
                         Map<String, Object> additionalInformation = getAdditionalInformationFromClaim(entrySpec);
 
                         entries.add(new Entry(claimName, requirement, langTag, null, expectedValues, additionalInformation));
 
                     } else {
                         Map<String, Object> additionalInformation = getAdditionalInformationFromClaim(entrySpec);
-                        entries.add(new Entry(claimName, requirement, langTag, (String) null, null, additionalInformation));
+                        entries.add(new Entry(claimName, requirement, langTag, null, null, additionalInformation));
                     }
 
                 } catch (Exception e) {
@@ -523,10 +528,13 @@ public class ClaimsRequest {
 
         private static Map<String, Object> getAdditionalInformationFromClaim(JsonObject entrySpec) {
             List<String> keysToRemove = Arrays.asList("essential", "value", "values");
-            entrySpec.keySet().removeAll(keysToRemove);
+            HashSet<String> keys = new HashSet<>(entrySpec.keySet());
+            keys.removeAll(keysToRemove);
             Map<String, Object> additionalClaimInformation = new HashMap<>();
-            for (Map.Entry<String, JsonValue> additionalClaimInformationEntry : entrySpec.entrySet()) {
-                additionalClaimInformation.put(additionalClaimInformationEntry.getKey(), additionalClaimInformationEntry.getValue());
+            for (String key : keys) {
+
+                additionalClaimInformation.put(key, JSONObjectUtils.getJsonValueAsObject(entrySpec.get(key)));
+
             }
             return additionalClaimInformation.isEmpty() ? null : additionalClaimInformation;
         }

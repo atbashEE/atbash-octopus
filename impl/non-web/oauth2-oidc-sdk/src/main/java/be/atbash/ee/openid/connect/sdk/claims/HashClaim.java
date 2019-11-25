@@ -117,6 +117,6 @@ public abstract class HashClaim extends Identifier {
 
         byte[] firstHalf = Arrays.copyOf(hash, hash.length / 2);
 
-        return Base64.getUrlEncoder().encodeToString(firstHalf);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(firstHalf);
     }
 }

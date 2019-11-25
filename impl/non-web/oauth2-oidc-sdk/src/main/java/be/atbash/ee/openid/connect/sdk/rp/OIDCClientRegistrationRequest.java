@@ -21,6 +21,7 @@ import be.atbash.ee.oauth2.sdk.client.ClientRegistrationRequest;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.util.StringUtils;
 
 import javax.json.JsonObject;
@@ -158,7 +159,7 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
             }
 
             // Prevent the JWT from appearing in the metadata
-            jsonObject.remove("software_statement");
+            jsonObject = JSONObjectUtils.remove(jsonObject, "software_statement");
         }
 
         // Parse the client metadata

@@ -16,6 +16,7 @@
 package be.atbash.ee.openid.connect.sdk.rp;
 
 
+import be.atbash.ee.oauth2.sdk.ErrorObject;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.client.ClientMetadata;
 import be.atbash.ee.oauth2.sdk.client.RegistrationError;
@@ -27,6 +28,7 @@ import be.atbash.ee.openid.connect.sdk.id.SectorID;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.EncryptionMethod;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.util.IncorrectJsonValueException;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 
 import javax.json.Json;
@@ -908,131 +910,164 @@ public class OIDCClientMetadata extends ClientMetadata {
 
         JsonObject oidcFields = baseMetadata.getCustomFields();
 
+        JsonObjectBuilder customFieldsBuilder = Json.createObjectBuilder(oidcFields);
+
         try {
             if (jsonObject.get("application_type") != null) {
-                metadata.setApplicationType(JSONObjectUtils.getEnum(jsonObject, "application_type", ApplicationType.class));
-                oidcFields.remove("application_type");
+                try {
+                    metadata.setApplicationType(JSONObjectUtils.getEnum(jsonObject, "application_type", ApplicationType.class));
+                } catch (IncorrectJsonValueException e) {
+                    ErrorObject errorObject = new ErrorObject(RegistrationError.INVALID_CLIENT_METADATA.getCode(), "Invalid client metadata field: Unexpected value of JSON object member with key \"application_type\"");
+                    throw new OAuth2JSONParseException("Unexpected value of JSON object member with key \"application_type\"", errorObject);
+                }
+                customFieldsBuilder.remove("application_type");
             }
 
             if (jsonObject.get("subject_type") != null) {
                 metadata.setSubjectType(JSONObjectUtils.getEnum(jsonObject, "subject_type", SubjectType.class));
-                oidcFields.remove("subject_type");
+                customFieldsBuilder.remove("subject_type");
             }
 
             if (jsonObject.get("sector_identifier_uri") != null) {
                 metadata.setSectorIDURI(JSONObjectUtils.getURI(jsonObject, "sector_identifier_uri"));
-                oidcFields.remove("sector_identifier_uri");
+                customFieldsBuilder.remove("sector_identifier_uri");
             }
 
             if (jsonObject.get("id_token_signed_response_alg") != null) {
-                metadata.setIDTokenJWSAlg(JWSAlgorithm.parse(
-                        jsonObject.getString("id_token_signed_response_alg")));
+                if (JSONObjectUtils.hasValue(jsonObject, "id_token_signed_response_alg")) {
+                    metadata.setIDTokenJWSAlg(JWSAlgorithm.parse(
+                            jsonObject.getString("id_token_signed_response_alg")));
+                }
 
-                oidcFields.remove("id_token_signed_response_alg");
+                customFieldsBuilder.remove("id_token_signed_response_alg");
             }
 
             if (jsonObject.get("id_token_encrypted_response_alg") != null) {
-                metadata.setIDTokenJWEAlg(JWEAlgorithm.parse(
-                        jsonObject.getString("id_token_encrypted_response_alg")));
-
-                oidcFields.remove("id_token_encrypted_response_alg");
+                if (JSONObjectUtils.hasValue(jsonObject, "id_token_encrypted_response_alg")) {
+                    metadata.setIDTokenJWEAlg(JWEAlgorithm.parse(
+                            jsonObject.getString("id_token_encrypted_response_alg")));
+                }
+                customFieldsBuilder.remove("id_token_encrypted_response_alg");
             }
 
             if (jsonObject.get("id_token_encrypted_response_enc") != null) {
-                metadata.setIDTokenJWEEnc(EncryptionMethod.parse(
-                        jsonObject.getString("id_token_encrypted_response_enc")));
-
-                oidcFields.remove("id_token_encrypted_response_enc");
+                if (JSONObjectUtils.hasValue(jsonObject, "id_token_encrypted_response_enc")) {
+                    metadata.setIDTokenJWEEnc(EncryptionMethod.parse(
+                            jsonObject.getString("id_token_encrypted_response_enc")));
+                }
+                customFieldsBuilder.remove("id_token_encrypted_response_enc");
             }
 
             if (jsonObject.get("userinfo_signed_response_alg") != null) {
-                metadata.setUserInfoJWSAlg(JWSAlgorithm.parse(
-                        jsonObject.getString("userinfo_signed_response_alg")));
-
-                oidcFields.remove("userinfo_signed_response_alg");
+                if (JSONObjectUtils.hasValue(jsonObject, "userinfo_signed_response_alg")) {
+                    metadata.setUserInfoJWSAlg(JWSAlgorithm.parse(
+                            jsonObject.getString("userinfo_signed_response_alg")));
+                }
+                customFieldsBuilder.remove("userinfo_signed_response_alg");
             }
 
             if (jsonObject.get("userinfo_encrypted_response_alg") != null) {
-                metadata.setUserInfoJWEAlg(JWEAlgorithm.parse(
-                        jsonObject.getString("userinfo_encrypted_response_alg")));
-
-                oidcFields.remove("userinfo_encrypted_response_alg");
+                if (JSONObjectUtils.hasValue(jsonObject, "userinfo_encrypted_response_alg")) {
+                    metadata.setUserInfoJWEAlg(JWEAlgorithm.parse(
+                            jsonObject.getString("userinfo_encrypted_response_alg")));
+                }
+                customFieldsBuilder.remove("userinfo_encrypted_response_alg");
             }
 
             if (jsonObject.get("userinfo_encrypted_response_enc") != null) {
-                metadata.setUserInfoJWEEnc(EncryptionMethod.parse(
-                        jsonObject.getString("userinfo_encrypted_response_enc")));
+                if (JSONObjectUtils.hasValue(jsonObject, "userinfo_encrypted_response_enc")) {
 
-                oidcFields.remove("userinfo_encrypted_response_enc");
+                    metadata.setUserInfoJWEEnc(EncryptionMethod.parse(
+                            jsonObject.getString("userinfo_encrypted_response_enc")));
+                }
+                customFieldsBuilder.remove("userinfo_encrypted_response_enc");
             }
 
             if (jsonObject.get("default_max_age") != null) {
-                metadata.setDefaultMaxAge(jsonObject.getInt("default_max_age"));
-                oidcFields.remove("default_max_age");
+                if (JSONObjectUtils.hasValue(jsonObject, "default_max_age")) {
+                    metadata.setDefaultMaxAge(jsonObject.getInt("default_max_age"));
+                }
+                customFieldsBuilder.remove("default_max_age");
             }
 
             if (jsonObject.get("require_auth_time") != null) {
-                metadata.requiresAuthTime(jsonObject.getBoolean("require_auth_time"));
-                oidcFields.remove("require_auth_time");
+                if (JSONObjectUtils.hasValue(jsonObject, "require_auth_time")) {
+                    metadata.requiresAuthTime(jsonObject.getBoolean("require_auth_time"));
+                }
+                customFieldsBuilder.remove("require_auth_time");
             }
 
             if (jsonObject.get("default_acr_values") != null) {
+                if (JSONObjectUtils.hasValue(jsonObject, "default_acr_values")) {
+                    List<ACR> acrValues = new LinkedList<>();
 
-                List<ACR> acrValues = new LinkedList<>();
+                    for (String acrString : JSONObjectUtils.getStringList(jsonObject, "default_acr_values")) {
+                        acrValues.add(new ACR(acrString));
+                    }
 
-                for (String acrString : JSONObjectUtils.getStringList(jsonObject, "default_acr_values")) {
-                    acrValues.add(new ACR(acrString));
+                    metadata.setDefaultACRs(acrValues);
                 }
 
-                metadata.setDefaultACRs(acrValues);
-
-                oidcFields.remove("default_acr_values");
+                customFieldsBuilder.remove("default_acr_values");
             }
 
             if (jsonObject.get("initiate_login_uri") != null) {
-                metadata.setInitiateLoginURI(JSONObjectUtils.getURI(jsonObject, "initiate_login_uri"));
-                oidcFields.remove("initiate_login_uri");
+                if (JSONObjectUtils.hasValue(jsonObject, "initiate_login_uri")) {
+                    metadata.setInitiateLoginURI(JSONObjectUtils.getURI(jsonObject, "initiate_login_uri"));
+                }
+                customFieldsBuilder.remove("initiate_login_uri");
             }
 
             if (jsonObject.get("post_logout_redirect_uris") != null) {
 
-                Set<URI> logoutURIs = new LinkedHashSet<>();
+                if (JSONObjectUtils.hasValue(jsonObject, "post_logout_redirect_uris")) {
+                    Set<URI> logoutURIs = new LinkedHashSet<>();
 
-                for (String uriString : JSONObjectUtils.getStringList(jsonObject, "post_logout_redirect_uris")) {
+                    for (String uriString : JSONObjectUtils.getStringList(jsonObject, "post_logout_redirect_uris")) {
 
-                    try {
-                        logoutURIs.add(new URI(uriString));
+                        try {
+                            logoutURIs.add(new URI(uriString));
 
-                    } catch (URISyntaxException e) {
+                        } catch (URISyntaxException e) {
 
-                        throw new OAuth2JSONParseException("Invalid \"post_logout_redirect_uris\" parameter");
+                            throw new OAuth2JSONParseException("Invalid \"post_logout_redirect_uris\" parameter");
+                        }
                     }
-                }
 
-                metadata.setPostLogoutRedirectionURIs(logoutURIs);
-                oidcFields.remove("post_logout_redirect_uris");
+                    metadata.setPostLogoutRedirectionURIs(logoutURIs);
+                }
+                customFieldsBuilder.remove("post_logout_redirect_uris");
             }
 
             if (jsonObject.get("frontchannel_logout_uri") != null) {
 
-                metadata.setFrontChannelLogoutURI(JSONObjectUtils.getURI(jsonObject, "frontchannel_logout_uri"));
-                oidcFields.remove("frontchannel_logout_uri");
+                if (JSONObjectUtils.hasValue(jsonObject, "frontchannel_logout_uri")) {
+                    metadata.setFrontChannelLogoutURI(JSONObjectUtils.getURI(jsonObject, "frontchannel_logout_uri"));
+                }
+                customFieldsBuilder.remove("frontchannel_logout_uri");
+
 
                 if (jsonObject.get("frontchannel_logout_session_required") != null) {
-                    metadata.requiresFrontChannelLogoutSession(jsonObject.getBoolean("frontchannel_logout_session_required"));
-                    oidcFields.remove("frontchannel_logout_session_required");
+                    if (JSONObjectUtils.hasValue(jsonObject, "frontchannel_logout_session_required")) {
+                        metadata.requiresFrontChannelLogoutSession(jsonObject.getBoolean("frontchannel_logout_session_required"));
+                    }
+                    customFieldsBuilder.remove("frontchannel_logout_session_required");
                 }
             }
 
 
             if (jsonObject.get("backchannel_logout_uri") != null) {
 
-                metadata.setBackChannelLogoutURI(JSONObjectUtils.getURI(jsonObject, "backchannel_logout_uri"));
-                oidcFields.remove("backchannel_logout_uri");
+                if (JSONObjectUtils.hasValue(jsonObject, "backchannel_logout_uri")) {
+                    metadata.setBackChannelLogoutURI(JSONObjectUtils.getURI(jsonObject, "backchannel_logout_uri"));
+                }
+                customFieldsBuilder.remove("backchannel_logout_uri");
 
                 if (jsonObject.get("backchannel_logout_session_required") != null) {
-                    metadata.requiresBackChannelLogoutSession(jsonObject.getBoolean("backchannel_logout_session_required"));
-                    oidcFields.remove("backchannel_logout_session_required");
+                    if (JSONObjectUtils.hasValue(jsonObject, "backchannel_logout_session_required")) {
+                        metadata.requiresBackChannelLogoutSession(jsonObject.getBoolean("backchannel_logout_session_required"));
+                    }
+                    customFieldsBuilder.remove("backchannel_logout_session_required");
                 }
             }
 
@@ -1045,7 +1080,8 @@ public class OIDCClientMetadata extends ClientMetadata {
         }
 
         // The remaining fields are custom
-        metadata.setCustomFields(oidcFields);
+
+        metadata.setCustomFields(customFieldsBuilder.build());
 
         return metadata;
     }

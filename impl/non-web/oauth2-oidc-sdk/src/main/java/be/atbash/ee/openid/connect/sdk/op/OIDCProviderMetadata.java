@@ -998,6 +998,9 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
             subjectTypes.add(SubjectType.parse(v));
         }
 
+        if (subjectTypes.isEmpty()) {
+            throw new OAuth2JSONParseException("Missing JSON object member with key \"subject_types_supported\"");
+        }
         OIDCProviderMetadata op = new OIDCProviderMetadata(
                 as.getIssuer(),
                 Collections.unmodifiableList(subjectTypes),

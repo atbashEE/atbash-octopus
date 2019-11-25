@@ -20,9 +20,11 @@ import be.atbash.ee.oauth2.sdk.AccessTokenResponse;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.openid.connect.sdk.token.OIDCTokens;
+import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -160,7 +162,11 @@ public class OIDCTokenResponse extends AccessTokenResponse {
 
         // Parse the custom parameters
         Map<String, Object> customParams = new HashMap<>();
-        customParams.putAll(jsonObject);
+        for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
+
+            customParams.put(entry.getKey(), JSONObjectUtils.getJsonValueAsObject(entry.getValue()));
+        }
+
         for (String tokenParam : tokens.getParameterNames()) {
             customParams.remove(tokenParam);
         }

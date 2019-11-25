@@ -88,5 +88,5 @@ abstract class ExternalClaims {
      *
      * @param jsonObject The JSON object. Must not be {@code null}.
      */
-    abstract void mergeInto(JsonObject jsonObject);
+    abstract JsonObject mergeInto(JsonObject jsonObject);
 }

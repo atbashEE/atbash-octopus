@@ -650,7 +650,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
                 throw new IllegalArgumentException("The subject's JSON Web Key (JWK) must be public");
             }
 
-            setClaim(SUB_JWK_CLAIM_NAME, subJWK.toJSONObject());
+            setClaim(SUB_JWK_CLAIM_NAME, subJWK.toJSONObject().build());
 
         } else {
             setClaim(SUB_JWK_CLAIM_NAME, null);
