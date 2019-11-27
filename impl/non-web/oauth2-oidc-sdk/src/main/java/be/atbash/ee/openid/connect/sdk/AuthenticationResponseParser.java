@@ -63,13 +63,11 @@ public class AuthenticationResponseParser {
                                                Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
-        Map<String, List<String>> workParams = params;
-
         String jwtResponseString = MultivaluedMapUtils.getFirstValue(params, "response");
 
-        if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(workParams, "error"))) {
-            return AuthenticationErrorResponse.parse(redirectURI, workParams);
-        } else if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(workParams, "response"))) {
+        if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(params, "error"))) {
+            return AuthenticationErrorResponse.parse(redirectURI, params);
+        } else if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(params, "response"))) {
             // JARM that wasn't validated, peek into JWT if signed only
             // FIXME
             throw new IllegalArgumentException("Not transferred yet");
@@ -84,7 +82,7 @@ public class AuthenticationResponseParser {
              */
 
         } else {
-            return AuthenticationSuccessResponse.parse(redirectURI, workParams);
+            return AuthenticationSuccessResponse.parse(redirectURI, params);
         }
     }
 

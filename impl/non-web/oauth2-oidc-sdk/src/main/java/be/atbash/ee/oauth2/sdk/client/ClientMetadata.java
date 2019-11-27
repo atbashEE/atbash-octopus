@@ -1952,7 +1952,7 @@ public class ClientMetadata {
      * @param jsonObject The JSON object to parse. Must not be
      *                   {@code null}.
      * @return The client metadata.
-     * @throws ParseException If the JSON object couldn't be parsed to a
+     * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                        client metadata instance.
      */
     public static ClientMetadata parse(JsonObject jsonObject)

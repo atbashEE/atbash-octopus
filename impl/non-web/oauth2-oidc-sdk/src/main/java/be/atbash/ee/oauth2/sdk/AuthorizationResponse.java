@@ -351,13 +351,11 @@ public abstract class AuthorizationResponse implements Response {
                                               Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
-        Map<String, List<String>> workParams = params;
-
         String jwtResponseString = MultivaluedMapUtils.getFirstValue(params, "response");
 
 
-        if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(workParams, "error"))) {
-            return AuthorizationErrorResponse.parse(redirectURI, workParams);
+        if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(params, "error"))) {
+            return AuthorizationErrorResponse.parse(redirectURI, params);
         } else if (StringUtils.hasText(jwtResponseString)) {
             // JARM that wasn't validated, peek into JWT if signed only
             throw new IllegalArgumentException("Not implemented yet");  // TODO
@@ -372,7 +370,7 @@ public abstract class AuthorizationResponse implements Response {
              */
 
         } else {
-            return AuthorizationSuccessResponse.parse(redirectURI, workParams);
+            return AuthorizationSuccessResponse.parse(redirectURI, params);
         }
     }
 

@@ -157,7 +157,7 @@ public class PushedAuthorizationSuccessResponse extends PushedAuthorizationRespo
     public static PushedAuthorizationSuccessResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
-        URI requestURI = null;
+        URI requestURI;
         if (!JSONObjectUtils.hasValue(jsonObject,"request_uri")) {
             throw new OAuth2JSONParseException("Missing JSON object member with key \"request_uri\"");
         }

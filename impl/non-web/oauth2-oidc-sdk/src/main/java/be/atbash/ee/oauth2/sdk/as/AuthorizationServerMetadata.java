@@ -1817,7 +1817,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *
      * @param s The JSON object sting to parse. Must not be {@code null}.
      * @return The OAuth 2.0 Authorisation Server metadata.
-     * @throws ParseException If the JSON object string couldn't be parsed
+     * @throws OAuth2JSONParseException If the JSON object string couldn't be parsed
      *                        to an OAuth 2.0 Authorisation Server
      *                        metadata.
      */

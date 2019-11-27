@@ -62,8 +62,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
      */
     public static Set<JWSAlgorithm> supportedJWAs() {
 
-        Set<JWSAlgorithm> supported = new HashSet<>();
-        supported.addAll(JWSAlgorithm.Family.HMAC_SHA);
+        Set<JWSAlgorithm> supported = new HashSet<>(JWSAlgorithm.Family.HMAC_SHA);
         return Collections.unmodifiableSet(supported);
     }
 

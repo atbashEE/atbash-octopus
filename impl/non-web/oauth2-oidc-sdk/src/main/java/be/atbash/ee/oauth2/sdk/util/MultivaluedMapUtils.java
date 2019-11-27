@@ -73,26 +73,6 @@ public final class MultivaluedMapUtils {
         return valueList.get(0);
     }
 
-
-    /**
-     * Removes the entry for the specified key and returns its first value.
-     *
-     * @param map The multi-valued map. Must not be {@code null}.
-     * @param key The key. Must not be {@code null}.
-     * @return The first value, {@code null} if not set.
-     */
-    public static <K, V> V removeAndReturnFirstValue(Map<K, List<V>> map, String key) {
-
-        List<V> valueList = map.remove(key);
-
-        if (valueList == null || valueList.isEmpty()) {
-            return null;
-        }
-
-        return valueList.get(0);
-    }
-
-
     /**
      * Prevents public instantiation.
      */

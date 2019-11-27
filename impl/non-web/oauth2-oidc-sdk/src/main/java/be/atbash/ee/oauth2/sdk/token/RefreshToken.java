@@ -16,8 +16,6 @@
 package be.atbash.ee.oauth2.sdk.token;
 
 
-import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
-
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -98,11 +96,8 @@ public final class RefreshToken extends Token {
      * @param jsonObject The JSON object to parse. Must not be
      *                   {@code null}.
      * @return The refresh token, {@code null} if not found.
-     * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
-     *                                  refresh token.
      */
-    public static RefreshToken parse(JsonObject jsonObject)
-            throws OAuth2JSONParseException {
+    public static RefreshToken parse(JsonObject jsonObject) {
 
         String value = jsonObject.getString("refresh_token", null);
 

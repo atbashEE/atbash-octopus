@@ -467,8 +467,7 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
         }
 
         // Determine the custom param names
-        Set<String> customParamNames = new HashSet<>();
-        customParamNames.addAll(jsonObject.keySet());
+        Set<String> customParamNames = new HashSet<>(jsonObject.keySet());
         customParamNames.removeAll(getRegisteredParameterNames());
 
         Map<String, Object> customParams = null;

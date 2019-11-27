@@ -58,10 +58,8 @@ public class ClientCredentialsParser {
      * @param jsonObject The JSON object. Must not be {@code null}.
      * @return The client identifier issue date, {@code null} if not
      * specified.
-     * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Date parseIDIssueDate(JsonObject jsonObject)
-            throws OAuth2JSONParseException {
+    public static Date parseIDIssueDate(JsonObject jsonObject) {
 
         if (jsonObject.containsKey("client_id_issued_at")) {
 
@@ -77,10 +75,8 @@ public class ClientCredentialsParser {
      *
      * @param jsonObject The JSON object. Must not be {@code null}.
      * @return The client secret, {@code null} if not specified.
-     * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Secret parseSecret(JsonObject jsonObject)
-            throws OAuth2JSONParseException {
+    public static Secret parseSecret(JsonObject jsonObject) {
 
         if (jsonObject.containsKey("client_secret")) {
 
@@ -129,10 +125,8 @@ public class ClientCredentialsParser {
      * @param jsonObject The JSON object. Must not be {@code null}.
      * @return The client registration access token, {@code null} if not
      * specified.
-     * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static BearerAccessToken parseRegistrationAccessToken(JsonObject jsonObject)
-            throws OAuth2JSONParseException {
+    public static BearerAccessToken parseRegistrationAccessToken(JsonObject jsonObject) {
 
         if (jsonObject.containsKey("registration_access_token")) {
 

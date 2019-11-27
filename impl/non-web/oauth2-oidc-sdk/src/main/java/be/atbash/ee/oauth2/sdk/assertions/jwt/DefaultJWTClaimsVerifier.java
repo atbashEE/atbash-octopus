@@ -163,7 +163,7 @@ public class DefaultJWTClaimsVerifier {
         }
         this.requiredClaims = Collections.unmodifiableSet(requiredClaimsCopy);
 
-        this.prohibitedClaims = prohibitedClaims != null ? Collections.unmodifiableSet(prohibitedClaims) : Collections.<String>emptySet();
+        this.prohibitedClaims = prohibitedClaims != null ? Collections.unmodifiableSet(prohibitedClaims) : Collections.emptySet();
     }
 
 

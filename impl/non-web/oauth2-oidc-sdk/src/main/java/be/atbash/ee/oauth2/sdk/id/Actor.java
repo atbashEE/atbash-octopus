@@ -22,6 +22,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -179,10 +180,10 @@ public final class Actor implements Serializable, Comparable<Actor> {
         if (!subject.equals(actor.subject)) {
             return false;
         }
-        if (issuer != null ? !issuer.equals(actor.issuer) : actor.issuer != null) {
+        if (!Objects.equals(issuer, actor.issuer)) {
             return false;
         }
-        return parent != null ? parent.equals(actor.parent) : actor.parent == null;
+        return Objects.equals(parent, actor.parent);
 
     }
 

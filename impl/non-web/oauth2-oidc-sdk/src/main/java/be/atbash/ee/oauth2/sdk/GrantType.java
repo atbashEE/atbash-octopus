@@ -41,7 +41,7 @@ public final class GrantType extends Identifier {
      * Implicit. Client authentication is not performed (except for signed
      * OpenID Connect authentication requests).
      */
-    public static final GrantType IMPLICIT = new GrantType("implicit", false, true, Collections.<String>emptySet());
+    public static final GrantType IMPLICIT = new GrantType("implicit", false, true, Collections.emptySet());
 
 
     /**
@@ -61,7 +61,7 @@ public final class GrantType extends Identifier {
     /**
      * Client credentials. Client authentication is required.
      */
-    public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials", true, true, Collections.<String>emptySet());
+    public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials", true, true, Collections.emptySet());
 
 
     /**
@@ -115,7 +115,7 @@ public final class GrantType extends Identifier {
      */
     public GrantType(String value) {
 
-        this(value, false, false, Collections.<String>emptySet());
+        this(value, false, false, Collections.emptySet());
     }
 
 
@@ -139,7 +139,7 @@ public final class GrantType extends Identifier {
         super(value);
         this.requiresClientAuth = requiresClientAuth;
         this.requiresClientID = requiresClientID;
-        this.requestParamNames = requestParamNames == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(requestParamNames);
+        this.requestParamNames = requestParamNames == null ? Collections.emptySet() : Collections.unmodifiableSet(requestParamNames);
     }
 
 

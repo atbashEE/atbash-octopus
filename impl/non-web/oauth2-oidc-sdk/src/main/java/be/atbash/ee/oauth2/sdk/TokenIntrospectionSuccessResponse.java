@@ -29,7 +29,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -756,7 +755,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      *
      * @param httpResponse The HTTP response. Must not be {@code null}.
      * @return The token introspection success response.
-     * @throws ParseException If the HTTP response couldn't be parsed to a
+     * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                        token introspection success response.
      */
     public static TokenIntrospectionSuccessResponse parse(HTTPResponse httpResponse)

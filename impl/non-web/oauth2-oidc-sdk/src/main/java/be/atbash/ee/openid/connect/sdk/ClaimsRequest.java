@@ -236,7 +236,7 @@ public class ClaimsRequest {
                 this.value = null;
                 this.values = values;
 
-            } else if (value == null && values == null) {
+            } else if (value == null) {
 
                 this.value = null;
                 this.values = null;
@@ -1197,7 +1197,7 @@ public class ClaimsRequest {
                                         Scope scope,
                                         ClaimsRequest claimsRequest) {
 
-        return resolve(responseType, scope, claimsRequest, Collections.<Scope.Value, Set<String>>emptyMap());
+        return resolve(responseType, scope, claimsRequest, Collections.emptyMap());
     }
 
 

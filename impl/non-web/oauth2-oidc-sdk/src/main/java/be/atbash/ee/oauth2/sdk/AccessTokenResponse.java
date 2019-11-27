@@ -199,8 +199,7 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
         Tokens tokens = Tokens.parse(jsonObject);
 
         // Determine the custom param names
-        Set<String> customParamNames = new HashSet<>();
-        customParamNames.addAll(jsonObject.keySet());
+        Set<String> customParamNames = new HashSet<>(jsonObject.keySet());
         customParamNames.removeAll(tokens.getParameterNames());
 
         Map<String, Object> customParams = null;

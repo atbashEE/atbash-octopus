@@ -272,7 +272,7 @@ public class LogoutTokenClaimsSet extends CommonClaimsSet {
     public static LogoutTokenClaimsSet parse(String json)
             throws OAuth2JSONParseException {
 
-        JsonObject jsonObject = null;
+        JsonObject jsonObject;
         try {
             jsonObject = JSONObjectUtils.parse(json);
         } catch (ParseException e) {

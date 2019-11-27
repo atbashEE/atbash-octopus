@@ -137,11 +137,7 @@ public class SecretKeyDerivation {
                 keyBytes = ByteUtils.subArray(hash, ByteUtils.byteLength(256 - 192), ByteUtils.byteLength(192));
                 break;
             case 256:
-                keyBytes = hash;
-                break;
             case 384:
-                keyBytes = hash;
-                break;
             case 512:
                 keyBytes = hash;
                 break;

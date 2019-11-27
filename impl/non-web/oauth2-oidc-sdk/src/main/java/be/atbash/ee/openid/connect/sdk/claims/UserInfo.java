@@ -1386,7 +1386,7 @@ public class UserInfo extends ClaimsSet {
     public static UserInfo parse(String json)
             throws OAuth2JSONParseException {
 
-        JsonObject jsonObject = null;
+        JsonObject jsonObject;
         try {
             jsonObject = JSONObjectUtils.parse(json);
         } catch (ParseException e) {

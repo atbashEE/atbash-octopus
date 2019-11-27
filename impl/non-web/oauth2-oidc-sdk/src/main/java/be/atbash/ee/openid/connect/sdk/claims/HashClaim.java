@@ -19,7 +19,7 @@ package be.atbash.ee.openid.connect.sdk.claims;
 import be.atbash.ee.oauth2.sdk.id.Identifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -111,7 +111,7 @@ public abstract class HashClaim extends Identifier {
             return null;
         }
 
-        md.update(identifier.getValue().getBytes(Charset.forName("US-ASCII")));
+        md.update(identifier.getValue().getBytes(StandardCharsets.US_ASCII));
 
         byte[] hash = md.digest();
 

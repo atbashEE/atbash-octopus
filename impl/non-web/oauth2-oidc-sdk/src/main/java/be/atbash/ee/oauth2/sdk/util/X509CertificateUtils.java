@@ -41,7 +41,7 @@ public final class X509CertificateUtils {
         Principal issuer = cert.getIssuerDN();
         Principal subject = cert.getSubjectDN();
 
-        return issuer != null && subject != null && issuer.equals(subject);
+        return issuer != null && issuer.equals(subject);
     }
 
 

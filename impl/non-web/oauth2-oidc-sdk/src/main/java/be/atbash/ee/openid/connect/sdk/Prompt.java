@@ -89,28 +89,29 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
         /**
          * Parses a prompt type.
          *
-         * @param s The string to parse.
+         * @param data The string to parse.
          * @return The prompt type.
          * @throws OAuth2JSONParseException If the parsed string is {@code null}
          *                                  or doesn't match a prompt type.
          */
-        public static Type parse(String s)
+        public static Type parse(String data)
                 throws OAuth2JSONParseException {
 
-            if (StringUtils.isEmpty(s)) {
+            if (StringUtils.isEmpty(data)) {
                 throw new OAuth2JSONParseException("Null or empty prompt type string");
             }
 
-            if ("none".equals(s)) {
-                return NONE;
-            } else if ("login".equals(s)) {
-                return LOGIN;
-            } else if ("consent".equals(s)) {
-                return CONSENT;
-            } else if ("select_account".equals(s)) {
-                return SELECT_ACCOUNT;
-            } else {
-                throw new OAuth2JSONParseException("Unknown prompt type: " + s);
+            switch (data) {
+                case "none":
+                    return NONE;
+                case "login":
+                    return LOGIN;
+                case "consent":
+                    return CONSENT;
+                case "select_account":
+                    return SELECT_ACCOUNT;
+                default:
+                    throw new OAuth2JSONParseException("Unknown prompt type: " + data);
             }
         }
     }

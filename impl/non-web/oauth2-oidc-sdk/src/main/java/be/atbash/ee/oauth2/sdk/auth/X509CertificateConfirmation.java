@@ -27,6 +27,7 @@ import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.util.AbstractMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -147,13 +148,13 @@ public final class X509CertificateConfirmation {
             return false;
         }
         X509CertificateConfirmation that = (X509CertificateConfirmation) o;
-        return x5tS256 != null ? x5tS256.equals(that.x5tS256) : that.x5tS256 == null;
+        return Objects.equals(x5tS256, that.x5tS256);
     }
 
 
     @Override
     public int hashCode() {
-        return x5tS256 != null ? x5tS256.hashCode() : 0;
+        return x5tS256.hashCode();
     }
 
 

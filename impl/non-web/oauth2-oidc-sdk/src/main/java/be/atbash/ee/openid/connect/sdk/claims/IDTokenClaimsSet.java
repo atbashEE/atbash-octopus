@@ -685,7 +685,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param json The JSON object string to parse. Must not be
      *             {@code null}.
      * @return The ID token claims set.
-     * @throws ParseException If parsing failed.
+     * @throws OAuth2JSONParseException If parsing failed.
      */
     public static IDTokenClaimsSet parse(String json)
             throws OAuth2JSONParseException {

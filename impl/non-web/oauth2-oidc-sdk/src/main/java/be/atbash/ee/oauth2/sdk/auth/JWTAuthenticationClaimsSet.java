@@ -16,7 +16,6 @@
 package be.atbash.ee.oauth2.sdk.auth;
 
 
-import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.assertions.jwt.JWTAssertionDetails;
 import be.atbash.ee.oauth2.sdk.id.*;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
@@ -142,11 +141,8 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
      *
      * @param jwtClaimsSet The JWT claims set. Must not be {@code null}.
      * @return The client authentication claims set.
-     * @throws OAuth2JSONParseException If the JWT claims set couldn't be parsed to a
-     *                                  client authentication claims set.
      */
-    public static JWTAuthenticationClaimsSet parse(JWTClaimsSet jwtClaimsSet)
-            throws OAuth2JSONParseException {
+    public static JWTAuthenticationClaimsSet parse(JWTClaimsSet jwtClaimsSet) {
 
         return parse(jwtClaimsSet.toJSONObject());
     }

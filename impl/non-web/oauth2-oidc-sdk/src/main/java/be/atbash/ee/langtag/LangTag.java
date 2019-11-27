@@ -58,6 +58,7 @@ public class LangTag {
         }
 
         if (this.languageSubtags != null && this.languageSubtags.length > 0) {
+            // FIXME improve code
             String[] var2 = this.languageSubtags;
             int var3 = var2.length;
 
@@ -291,7 +292,7 @@ public class LangTag {
     }
 
     public boolean equals(Object object) {
-        return object != null && object instanceof LangTag && this.toString().equals(object.toString());
+        return object instanceof LangTag && this.toString().equals(object.toString());
     }
 
     public static LangTag parse(String s) throws LangTagException {
@@ -299,7 +300,7 @@ public class LangTag {
             String[] subtags = s.split("-");
             int pos = 0;
             String primaryLang = null;
-            List<String> extLangSubtags = new LinkedList();
+            List<String> extLangSubtags = new LinkedList<>();
             if (isPrimaryLanguage(subtags[0])) {
                 primaryLang = subtags[pos++];
             }
@@ -308,7 +309,7 @@ public class LangTag {
                 extLangSubtags.add(subtags[pos++]);
             }
 
-            LangTag langTag = new LangTag(primaryLang, (String[]) extLangSubtags.toArray(new String[0]));
+            LangTag langTag = new LangTag(primaryLang, extLangSubtags.toArray(new String[0]));
             if (pos < subtags.length && isScript(subtags[pos])) {
                 langTag.setScript(subtags[pos++]);
             }
@@ -317,17 +318,17 @@ public class LangTag {
                 langTag.setRegion(subtags[pos++]);
             }
 
-            LinkedList variantSubtags = new LinkedList();
+            LinkedList<String> variantSubtags = new LinkedList<>();
 
             while (pos < subtags.length && isVariant(subtags[pos])) {
                 variantSubtags.add(subtags[pos++]);
             }
 
             if (!variantSubtags.isEmpty()) {
-                langTag.setVariants((String[]) variantSubtags.toArray(new String[0]));
+                langTag.setVariants(variantSubtags.toArray(new String[0]));
             }
 
-            LinkedList extSubtags = new LinkedList();
+            LinkedList<String> extSubtags = new LinkedList<>();
 
             while (pos < subtags.length && isExtensionSingleton(subtags[pos])) {
                 String singleton = subtags[pos++];
@@ -339,7 +340,7 @@ public class LangTag {
             }
 
             if (!extSubtags.isEmpty()) {
-                langTag.setExtensions((String[]) extSubtags.toArray(new String[0]));
+                langTag.setExtensions(extSubtags.toArray(new String[0]));
             }
 
             if (pos < subtags.length && subtags[pos].equals("x")) {

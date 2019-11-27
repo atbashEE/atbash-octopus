@@ -211,7 +211,7 @@ public final class URLUtils {
 
                 String param = st.nextToken();
 
-                String pair[] = param.split("=", 2); // Split around the first '=', see issue #169
+                String[] pair = param.split("=", 2); // Split around the first '=', see issue #169
 
                 String key = URLDecoder.decode(pair[0], CHARSET);
 
