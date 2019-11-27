@@ -45,7 +45,7 @@ public final class Nonce extends Identifier {
      * @param value The nonce value. Must not be {@code null} or empty
      *              string.
      */
-    public Nonce(final String value) {
+    public Nonce(String value) {
 
         super(value);
     }
@@ -58,7 +58,7 @@ public final class Nonce extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public Nonce(final int byteLength) {
+    public Nonce(int byteLength) {
 
         super(byteLength);
     }

@@ -19,7 +19,6 @@ package be.atbash.ee.oauth2.sdk.auth;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.utils.ConstantTimeUtils;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,7 +65,7 @@ public class Secret {
      * @param value The secret value. May be an empty string. Must be
      *              UTF-8 encoded and not {@code null}.
      */
-    public Secret(final String value) {
+    public Secret(String value) {
         // Also a 'plain' secret is allowed meaning a human readable password for some scenarios
         this(value, null);
     }
@@ -79,7 +78,7 @@ public class Secret {
      *                UTF-8 encoded and not {@code null}.
      * @param expDate The expiration date, {@code null} if not specified.
      */
-    public Secret(final String value, final Date expDate) {
+    public Secret(String value, Date expDate) {
 
         this.value = value.getBytes(StandardCharsets.UTF_8);
         this.expDate = expDate;
@@ -91,7 +90,7 @@ public class Secret {
      * @param value The secret value. May be an empty string. Must be
      *              UTF-8 encoded and not {@code null}.
      */
-    public Secret(final Base64URLValue value) {
+    public Secret(Base64URLValue value) {
 
         this(value, null);
     }
@@ -104,7 +103,7 @@ public class Secret {
      *                UTF-8 encoded and not {@code null}.
      * @param expDate The expiration date, {@code null} if not specified.
      */
-    public Secret(final Base64URLValue value, final Date expDate) {
+    public Secret(Base64URLValue value, Date expDate) {
 
         this.value = value.decode();
         this.expDate = expDate;
@@ -118,7 +117,7 @@ public class Secret {
      * @param byteLength The byte length of the secret value to generate.
      *                   Must be greater than one.
      */
-    public Secret(final int byteLength) {
+    public Secret(int byteLength) {
 
         this(byteLength, null);
     }
@@ -134,7 +133,7 @@ public class Secret {
      * @param expDate    The expiration date, {@code null} if not
      *                   specified.
      */
-    public Secret(final int byteLength, final Date expDate) {
+    public Secret(int byteLength, Date expDate) {
 
         if (byteLength < 1) {
             throw new IllegalArgumentException("The byte length must be a positive integer");
@@ -269,7 +268,7 @@ public class Secret {
      * @return {@code true} if the SHA-256 hashes of the two secrets are
      * equal, else {@code false}.
      */
-    public boolean equalsSHA256Based(final Secret other) {
+    public boolean equalsSHA256Based(Secret other) {
 
         if (other == null) {
             return false;
@@ -293,7 +292,7 @@ public class Secret {
      * @return {@code true} if both objects are equal, else {@code false}.
      */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

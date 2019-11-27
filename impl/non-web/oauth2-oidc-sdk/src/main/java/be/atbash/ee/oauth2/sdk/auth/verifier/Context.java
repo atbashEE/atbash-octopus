@@ -34,7 +34,7 @@ public class Context<T> {
      *
      * @param o The context content.
      */
-    public void set(final T o) {
+    public void set(T o) {
 
         this.o = o;
     }

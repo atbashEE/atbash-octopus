@@ -48,9 +48,9 @@ public class StateValidator {
      * @throws InvalidHashException If the received state doesn't match the
      *                              hash.
      */
-    public static void validate(final State state,
-                                final JWSAlgorithm jwsAlgorithm,
-                                final StateHash stateHash)
+    public static void validate(State state,
+                                JWSAlgorithm jwsAlgorithm,
+                                StateHash stateHash)
             throws InvalidHashException {
 
         StateHash expectedHash = StateHash.compute(state, jwsAlgorithm);

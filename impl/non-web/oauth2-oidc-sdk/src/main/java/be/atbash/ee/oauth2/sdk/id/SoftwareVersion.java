@@ -36,14 +36,14 @@ public final class SoftwareVersion extends Identifier {
      * @param value The software version identifier value. Must not be
      *              {@code null} or empty string.
      */
-    public SoftwareVersion(final String value) {
+    public SoftwareVersion(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof SoftwareVersion &&
                 this.toString().equals(object.toString());

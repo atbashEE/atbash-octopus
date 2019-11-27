@@ -38,7 +38,7 @@ public class TypelessAccessToken extends AccessToken {
      * @param value The access token value. Must not be {@code null} or
      *              empty string.
      */
-    public TypelessAccessToken(final String value) {
+    public TypelessAccessToken(String value) {
 
         super(AccessTokenType.UNKNOWN, value);
     }
@@ -71,7 +71,7 @@ public class TypelessAccessToken extends AccessToken {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof AccessToken &&
                 this.toString().equals(object.toString());

@@ -144,10 +144,10 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
      * @param lifetime        The lifetime in seconds of the "device_code"
      *                        and "user_code".
      */
-    public DeviceAuthorizationSuccessResponse(final DeviceCode deviceCode,
-                                              final UserCode userCode,
-                                              final URI verificationURI,
-                                              final long lifetime) {
+    public DeviceAuthorizationSuccessResponse(DeviceCode deviceCode,
+                                              UserCode userCode,
+                                              URI verificationURI,
+                                              long lifetime) {
 
         this(deviceCode, userCode, verificationURI, null, lifetime, 5, null);
     }
@@ -176,13 +176,13 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
      * @param customParams            Optional custom parameters,
      *                                {@code null} if none.
      */
-    public DeviceAuthorizationSuccessResponse(final DeviceCode deviceCode,
-                                              final UserCode userCode,
-                                              final URI verificationURI,
-                                              final URI verificationURIComplete,
-                                              final long lifetime,
-                                              final long interval,
-                                              final Map<String, Object> customParams) {
+    public DeviceAuthorizationSuccessResponse(DeviceCode deviceCode,
+                                              UserCode userCode,
+                                              URI verificationURI,
+                                              URI verificationURIComplete,
+                                              long lifetime,
+                                              long interval,
+                                              Map<String, Object> customParams) {
 
         if (deviceCode == null) {
             throw new IllegalArgumentException("The device_code must not be null");
@@ -411,7 +411,7 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  device authorization response.
      */
-    public static DeviceAuthorizationSuccessResponse parse(final JsonObject jsonObject) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationSuccessResponse parse(JsonObject jsonObject) throws OAuth2JSONParseException {
 
         if (!JSONObjectUtils.hasValue(jsonObject, "device_code")) {
             throw new OAuth2JSONParseException("Missing JSON object member with key \"device_code\"");
@@ -496,7 +496,7 @@ public class DeviceAuthorizationSuccessResponse extends DeviceAuthorizationRespo
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  device authorization response.
      */
-    public static DeviceAuthorizationSuccessResponse parse(final HTTPResponse httpResponse) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationSuccessResponse parse(HTTPResponse httpResponse) throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
         JsonObject jsonObject = httpResponse.getContentAsJSONObject();

@@ -329,7 +329,7 @@ public class ClientMetadata {
      * @param metadata The client metadata to copy. Must not be
      *                 {@code null}.
      */
-    public ClientMetadata(final ClientMetadata metadata) {
+    public ClientMetadata(ClientMetadata metadata) {
 
         redirectURIs = metadata.redirectURIs;
         scope = metadata.scope;
@@ -438,7 +438,7 @@ public class ClientMetadata {
      *                     specified. Valid redirection URIs must not
      *                     contain a fragment.
      */
-    public void setRedirectionURIs(final Set<URI> redirectURIs) {
+    public void setRedirectionURIs(Set<URI> redirectURIs) {
 
         if (redirectURIs != null) {
             // check URIs
@@ -465,7 +465,7 @@ public class ClientMetadata {
      *                    specified. A valid redirection URI must not
      *                    contain a fragment.
      */
-    public void setRedirectionURI(final URI redirectURI) {
+    public void setRedirectionURI(URI redirectURI) {
 
         setRedirectionURIs(redirectURI != null ? Collections.singleton(redirectURI) : null);
     }
@@ -491,7 +491,7 @@ public class ClientMetadata {
      * @return {@code true} if the scope value is contained, else
      * {@code false}.
      */
-    public boolean hasScopeValue(final Scope.Value scopeValue) {
+    public boolean hasScopeValue(Scope.Value scopeValue) {
 
         return scope != null && scope.contains(scopeValue);
     }
@@ -503,7 +503,7 @@ public class ClientMetadata {
      *
      * @param scope The scope, {@code null} if not specified.
      */
-    public void setScope(final Scope scope) {
+    public void setScope(Scope scope) {
 
         this.scope = scope;
     }
@@ -528,7 +528,7 @@ public class ClientMetadata {
      * @param responseTypes The response types, {@code null} if not
      *                      specified.
      */
-    public void setResponseTypes(final Set<ResponseType> responseTypes) {
+    public void setResponseTypes(Set<ResponseType> responseTypes) {
 
         this.responseTypes = responseTypes;
     }
@@ -552,7 +552,7 @@ public class ClientMetadata {
      *
      * @param grantTypes The grant types, {@code null} if not specified.
      */
-    public void setGrantTypes(final Set<GrantType> grantTypes) {
+    public void setGrantTypes(Set<GrantType> grantTypes) {
 
         this.grantTypes = grantTypes;
     }
@@ -599,7 +599,7 @@ public class ClientMetadata {
      *                 not specified.
      */
     @Deprecated
-    public void setContacts(final List<InternetAddress> contacts) {
+    public void setContacts(List<InternetAddress> contacts) {
 
         if (contacts == null) {
             this.contacts = null;
@@ -636,7 +636,7 @@ public class ClientMetadata {
      * @param contacts The administrator email contacts, {@code null} if
      *                 not specified.
      */
-    public void setEmailContacts(final List<String> contacts) {
+    public void setEmailContacts(List<String> contacts) {
 
         this.contacts = contacts;
     }
@@ -662,7 +662,7 @@ public class ClientMetadata {
      *                the non-tagged entry.
      * @return The client name, {@code null} if not specified.
      */
-    public String getName(final LangTag langTag) {
+    public String getName(LangTag langTag) {
 
         return nameEntries.get(langTag);
     }
@@ -686,7 +686,7 @@ public class ClientMetadata {
      *
      * @param name The client name, {@code null} if not specified.
      */
-    public void setName(final String name) {
+    public void setName(String name) {
 
         nameEntries.put(null, name);
     }
@@ -699,7 +699,7 @@ public class ClientMetadata {
      * @param name    The client name. Must not be {@code null}.
      * @param langTag The language tag, {@code null} if not specified.
      */
-    public void setName(final String name, final LangTag langTag) {
+    public void setName(String name, LangTag langTag) {
 
         nameEntries.put(langTag, name);
     }
@@ -726,7 +726,7 @@ public class ClientMetadata {
      * @param langTag The language tag, {@code null} if not specified.
      * @return The logo URI, {@code null} if not specified.
      */
-    public URI getLogoURI(final LangTag langTag) {
+    public URI getLogoURI(LangTag langTag) {
 
         return logoURIEntries.get(langTag);
     }
@@ -751,7 +751,7 @@ public class ClientMetadata {
      *
      * @param logoURI The logo URI, {@code null} if not specified.
      */
-    public void setLogoURI(final URI logoURI) {
+    public void setLogoURI(URI logoURI) {
 
         logoURIEntries.put(null, logoURI);
     }
@@ -765,7 +765,7 @@ public class ClientMetadata {
      * @param logoURI The logo URI. Must not be {@code null}.
      * @param langTag The language tag, {@code null} if not specified.
      */
-    public void setLogoURI(final URI logoURI, final LangTag langTag) {
+    public void setLogoURI(URI logoURI, LangTag langTag) {
 
         logoURIEntries.put(langTag, logoURI);
     }
@@ -790,7 +790,7 @@ public class ClientMetadata {
      * @param langTag The language tag, {@code null} if not specified.
      * @return The client URI, {@code null} if not specified.
      */
-    public URI getURI(final LangTag langTag) {
+    public URI getURI(LangTag langTag) {
 
         return uriEntries.get(langTag);
     }
@@ -814,7 +814,7 @@ public class ClientMetadata {
      *
      * @param uri The client URI, {@code null} if not specified.
      */
-    public void setURI(final URI uri) {
+    public void setURI(URI uri) {
 
         uriEntries.put(null, uri);
     }
@@ -827,7 +827,7 @@ public class ClientMetadata {
      * @param uri     The URI. Must not be {@code null}.
      * @param langTag The language tag, {@code null} if not specified.
      */
-    public void setURI(final URI uri, final LangTag langTag) {
+    public void setURI(URI uri, LangTag langTag) {
 
         uriEntries.put(langTag, uri);
     }
@@ -854,7 +854,7 @@ public class ClientMetadata {
      * @param langTag The language tag, {@code null} if not specified.
      * @return The policy URI, {@code null} if not specified.
      */
-    public URI getPolicyURI(final LangTag langTag) {
+    public URI getPolicyURI(LangTag langTag) {
 
         return policyURIEntries.get(langTag);
     }
@@ -879,7 +879,7 @@ public class ClientMetadata {
      *
      * @param policyURI The policy URI, {@code null} if not specified.
      */
-    public void setPolicyURI(final URI policyURI) {
+    public void setPolicyURI(URI policyURI) {
 
         policyURIEntries.put(null, policyURI);
     }
@@ -893,7 +893,7 @@ public class ClientMetadata {
      * @param policyURI The policy URI. Must not be {@code null}.
      * @param langTag   The language tag, {@code null} if not specified.
      */
-    public void setPolicyURI(final URI policyURI, final LangTag langTag) {
+    public void setPolicyURI(URI policyURI, LangTag langTag) {
 
         policyURIEntries.put(langTag, policyURI);
     }
@@ -920,7 +920,7 @@ public class ClientMetadata {
      * @param langTag The language tag, {@code null} if not specified.
      * @return The terms of service URI, {@code null} if not specified.
      */
-    public URI getTermsOfServiceURI(final LangTag langTag) {
+    public URI getTermsOfServiceURI(LangTag langTag) {
 
         return tosURIEntries.get(langTag);
     }
@@ -946,7 +946,7 @@ public class ClientMetadata {
      * @param tosURI The terms of service URI, {@code null} if not
      *               specified.
      */
-    public void setTermsOfServiceURI(final URI tosURI) {
+    public void setTermsOfServiceURI(URI tosURI) {
 
         tosURIEntries.put(null, tosURI);
     }
@@ -960,7 +960,7 @@ public class ClientMetadata {
      * @param tosURI  The terms of service URI. Must not be {@code null}.
      * @param langTag The language tag, {@code null} if not specified.
      */
-    public void setTermsOfServiceURI(final URI tosURI, final LangTag langTag) {
+    public void setTermsOfServiceURI(URI tosURI, LangTag langTag) {
 
         tosURIEntries.put(langTag, tosURI);
     }
@@ -986,7 +986,7 @@ public class ClientMetadata {
      * @param authMethod The Token endpoint authentication  method,
      *                   {@code null} if not specified.
      */
-    public void setTokenEndpointAuthMethod(final ClientAuthenticationMethod authMethod) {
+    public void setTokenEndpointAuthMethod(ClientAuthenticationMethod authMethod) {
 
         this.authMethod = authMethod;
     }
@@ -1014,7 +1014,7 @@ public class ClientMetadata {
      *
      * @param authJWSAlg The JWS algorithm, {@code null} if not specified.
      */
-    public void setTokenEndpointAuthJWSAlg(final JWSAlgorithm authJWSAlg) {
+    public void setTokenEndpointAuthJWSAlg(JWSAlgorithm authJWSAlg) {
 
         this.authJWSAlg = authJWSAlg;
     }
@@ -1042,7 +1042,7 @@ public class ClientMetadata {
      *
      * @param jwkSetURI The JWK set URI, {@code null} if not specified.
      */
-    public void setJWKSetURI(final URI jwkSetURI) {
+    public void setJWKSetURI(URI jwkSetURI) {
 
         this.jwkSetURI = jwkSetURI;
     }
@@ -1072,7 +1072,7 @@ public class ClientMetadata {
      *
      * @param jwkSet The JWK set, {@code null} if not specified.
      */
-    public void setJWKSet(final JWKSet jwkSet) {
+    public void setJWKSet(JWKSet jwkSet) {
 
         this.jwkSet = jwkSet;
     }
@@ -1097,7 +1097,7 @@ public class ClientMetadata {
      * @param requestObjectURIs The request object URIs, {@code null} if
      *                          not specified.
      */
-    public void setRequestObjectURIs(final Set<URI> requestObjectURIs) {
+    public void setRequestObjectURIs(Set<URI> requestObjectURIs) {
 
         this.requestObjectURIs = requestObjectURIs;
     }
@@ -1124,7 +1124,7 @@ public class ClientMetadata {
      * @param requestObjectJWSAlg The JWS algorithm, {@code null} if not
      *                            specified.
      */
-    public void setRequestObjectJWSAlg(final JWSAlgorithm requestObjectJWSAlg) {
+    public void setRequestObjectJWSAlg(JWSAlgorithm requestObjectJWSAlg) {
 
         this.requestObjectJWSAlg = requestObjectJWSAlg;
     }
@@ -1151,7 +1151,7 @@ public class ClientMetadata {
      * @param requestObjectJWEAlg The JWE algorithm, {@code null} if not
      *                            specified.
      */
-    public void setRequestObjectJWEAlg(final JWEAlgorithm requestObjectJWEAlg) {
+    public void setRequestObjectJWEAlg(JWEAlgorithm requestObjectJWEAlg) {
 
         this.requestObjectJWEAlg = requestObjectJWEAlg;
     }
@@ -1178,7 +1178,7 @@ public class ClientMetadata {
      * @param requestObjectJWEEnc The JWE method, {@code null} if not
      *                            specified.
      */
-    public void setRequestObjectJWEEnc(final EncryptionMethod requestObjectJWEEnc) {
+    public void setRequestObjectJWEEnc(EncryptionMethod requestObjectJWEEnc) {
 
         this.requestObjectJWEEnc = requestObjectJWEEnc;
     }
@@ -1203,7 +1203,7 @@ public class ClientMetadata {
      * @param softwareID The software identifier, {@code null} if not
      *                   specified.
      */
-    public void setSoftwareID(final SoftwareID softwareID) {
+    public void setSoftwareID(SoftwareID softwareID) {
 
         this.softwareID = softwareID;
     }
@@ -1228,7 +1228,7 @@ public class ClientMetadata {
      * @param softwareVersion The version identifier, {@code null} if not
      *                        specified.
      */
-    public void setSoftwareVersion(final SoftwareVersion softwareVersion) {
+    public void setSoftwareVersion(SoftwareVersion softwareVersion) {
 
         this.softwareVersion = softwareVersion;
     }
@@ -1260,7 +1260,7 @@ public class ClientMetadata {
      *                                 access tokens, {@code false} if
      *                                 none.
      */
-    public void setTLSClientCertificateBoundAccessTokens(final boolean tlsClientCertBoundTokens) {
+    public void setTLSClientCertificateBoundAccessTokens(boolean tlsClientCertBoundTokens) {
 
         tlsClientCertificateBoundAccessTokens = tlsClientCertBoundTokens;
     }
@@ -1293,7 +1293,7 @@ public class ClientMetadata {
      *                              tokens, {@code false} if none.
      */
     @Deprecated
-    public void setMutualTLSSenderConstrainedAccessTokens(final boolean tlsSenderAccessTokens) {
+    public void setMutualTLSSenderConstrainedAccessTokens(boolean tlsSenderAccessTokens) {
 
         tlsClientCertificateBoundAccessTokens = tlsSenderAccessTokens;
     }
@@ -1322,7 +1322,7 @@ public class ClientMetadata {
      *                  client X.509 certificate, {@code null} if not
      *                  specified.
      */
-    public void setTLSClientAuthSubjectDN(final String subjectDN) {
+    public void setTLSClientAuthSubjectDN(String subjectDN) {
 
         this.tlsClientAuthSubjectDN = subjectDN;
     }
@@ -1350,7 +1350,7 @@ public class ClientMetadata {
      * @param dns The expected dNSName SAN entry in the X.509 certificate,
      *            {@code null} if not specified.
      */
-    public void setTLSClientAuthSanDNS(final String dns) {
+    public void setTLSClientAuthSanDNS(String dns) {
 
         this.tlsClientAuthSanDNS = dns;
     }
@@ -1380,7 +1380,7 @@ public class ClientMetadata {
      * @param uri The expected uniformResourceIdentifier SAN entry in the X.509
      *            certificate, {@code null} if not specified.
      */
-    public void setTLSClientAuthSanURI(final String uri) {
+    public void setTLSClientAuthSanURI(String uri) {
 
         this.tlsClientAuthSanURI = uri;
     }
@@ -1408,7 +1408,7 @@ public class ClientMetadata {
      * @param ip The expected iPAddress SAN entry in the X.509
      *           certificate, {@code null} if not specified.
      */
-    public void setTLSClientAuthSanIP(final String ip) {
+    public void setTLSClientAuthSanIP(String ip) {
 
         this.tlsClientAuthSanIP = ip;
     }
@@ -1436,7 +1436,7 @@ public class ClientMetadata {
      * @param email The expected rfc822Name SAN entry in the X.509
      *              certificate, {@code null} if not specified.
      */
-    public void setTLSClientAuthSanEmail(final String email) {
+    public void setTLSClientAuthSanEmail(String email) {
 
         this.tlsClientAuthSanEmail = email;
     }
@@ -1510,7 +1510,7 @@ public class ClientMetadata {
      * @param authzJWSAlg The JWS algorithm, {@code null} if not specified.
      *                    Must not be {@code "none"}.
      */
-    public void setAuthorizationJWSAlg(final JWSAlgorithm authzJWSAlg) {
+    public void setAuthorizationJWSAlg(JWSAlgorithm authzJWSAlg) {
 
         if (new JWSAlgorithm("none").equals(authzJWSAlg)) {
             // Prevent passing none as JWS alg
@@ -1541,7 +1541,7 @@ public class ClientMetadata {
      *
      * @param authzJWEAlg The JWE algorithm, {@code null} if not specified.
      */
-    public void setAuthorizationJWEAlg(final JWEAlgorithm authzJWEAlg) {
+    public void setAuthorizationJWEAlg(JWEAlgorithm authzJWEAlg) {
 
         this.authzJWEAlg = authzJWEAlg;
     }
@@ -1567,7 +1567,7 @@ public class ClientMetadata {
      *
      * @param authzJWEEnc The encryption method, {@code null} if specified.
      */
-    public void setAuthorizationJWEEnc(final EncryptionMethod authzJWEEnc) {
+    public void setAuthorizationJWEEnc(EncryptionMethod authzJWEEnc) {
 
         this.authzJWEEnc = authzJWEEnc;
     }
@@ -1580,7 +1580,7 @@ public class ClientMetadata {
      * @return The field value, typically serialisable to a JSON entity,
      * {@code null} if none.
      */
-    public Object getCustomField(final String name) {
+    public Object getCustomField(String name) {
 
         return JSONObjectUtils.getJsonValueAsObject(customFields.get(name));
     }
@@ -1604,7 +1604,7 @@ public class ClientMetadata {
      * @param name  The field name. Must not be {@code null}.
      * @param value The field value. Should serialise to a JSON entity.
      */
-    public void setCustomField(final String name, final Object value) {
+    public void setCustomField(String name, Object value) {
 
         // TODO not the most performant way, but does it hurt? is it used?
         JsonObjectBuilder temp = Json.createObjectBuilder(customFields);
@@ -1619,7 +1619,7 @@ public class ClientMetadata {
      * @param customFields The custom metadata fields, as a JSON object,
      *                     empty object if none. Must not be {@code null}.
      */
-    public void setCustomFields(final JsonObject customFields) {
+    public void setCustomFields(JsonObject customFields) {
 
         if (customFields == null) {
             throw new IllegalArgumentException("The custom fields JSON object must not be null");
@@ -1691,7 +1691,7 @@ public class ClientMetadata {
      *                            them.
      * @return The JSON object.
      */
-    public JsonObjectBuilder toJSONObject(final boolean includeCustomFields) {
+    public JsonObjectBuilder toJSONObject(boolean includeCustomFields) {
 
         JsonObjectBuilder result;
 
@@ -1955,7 +1955,7 @@ public class ClientMetadata {
      * @throws ParseException If the JSON object couldn't be parsed to a
      *                        client metadata instance.
      */
-    public static ClientMetadata parse(final JsonObject jsonObject)
+    public static ClientMetadata parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         // Copy JSON object, then parse
@@ -1972,7 +1972,7 @@ public class ClientMetadata {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  client metadata instance.
      */
-    private static ClientMetadata parseFromModifiableJSONObject(final JsonObject jsonObject)
+    private static ClientMetadata parseFromModifiableJSONObject(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         ClientMetadata metadata = new ClientMetadata();

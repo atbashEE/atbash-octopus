@@ -56,7 +56,7 @@ public class RefreshTokenGrant extends AuthorizationGrant {
      *
      * @param refreshToken The refresh token. Must not be {@code null}.
      */
-    public RefreshTokenGrant(final RefreshToken refreshToken) {
+    public RefreshTokenGrant(RefreshToken refreshToken) {
 
 
         super(GRANT_TYPE);
@@ -127,7 +127,7 @@ public class RefreshTokenGrant extends AuthorizationGrant {
      * @return The refresh token grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static RefreshTokenGrant parse(final Map<String, List<String>> params)
+    public static RefreshTokenGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type

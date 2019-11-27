@@ -66,9 +66,9 @@ public class JWTAuthenticationClaimsSetTest {
         assertThat(claimsSet.getAudience().get(0)).isEqualTo(aud);
 
         // 4 min < exp < 6 min
-        final long now = new Date().getTime();
-        final Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
-        final Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
+        long now = new Date().getTime();
+        Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
+        Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
         assertThat(claimsSet.getExpirationTime().after(fourMinutesFromNow)).isTrue();
         assertThat(claimsSet.getExpirationTime().before(sixMinutesFromNow)).isTrue();
 
@@ -120,8 +120,8 @@ public class JWTAuthenticationClaimsSetTest {
 
         ClientID clientID = new ClientID("123");
         List<Audience> audienceList = Arrays.asList(new Audience("https://c2id.com"), new Audience("https://c2id.com/token"));
-        final long now = new Date().getTime() / 1000l * 1000l; // reduce precision
-        final Date fiveMinutesFromNow = new Date(now + 4 * 60 * 1000l);
+        long now = new Date().getTime() / 1000l * 1000l; // reduce precision
+        Date fiveMinutesFromNow = new Date(now + 4 * 60 * 1000l);
 
         JWTAuthenticationClaimsSet claimsSet = new JWTAuthenticationClaimsSet(clientID, audienceList, fiveMinutesFromNow, null, null, null);
 
@@ -173,8 +173,8 @@ public class JWTAuthenticationClaimsSetTest {
     @Test
     public void testNullJTI() {
 
-        final long now = new Date().getTime();
-        final Date fiveMinutesFromNow = new Date(now + 5 * 60 * 1000l);
+        long now = new Date().getTime();
+        Date fiveMinutesFromNow = new Date(now + 5 * 60 * 1000l);
 
         JWTAuthenticationClaimsSet claimsSet = new JWTAuthenticationClaimsSet(
                 new ClientID("123"),

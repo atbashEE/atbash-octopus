@@ -76,7 +76,7 @@ abstract class CommonClaimsSet extends ClaimsSet {
      *
      * @param jsonObject The JSON object. Must not be {@code null}.
      */
-    protected CommonClaimsSet(final JsonObject jsonObject) {
+    protected CommonClaimsSet(JsonObject jsonObject) {
 
         super(jsonObject);
     }
@@ -164,7 +164,7 @@ abstract class CommonClaimsSet extends ClaimsSet {
      *
      * @param sid The session ID, {@code null} if not specified.
      */
-    public void setSessionID(final SessionID sid) {
+    public void setSessionID(SessionID sid) {
 
         setClaim(SID_CLAIM_NAME, sid != null ? sid.getValue() : null);
     }

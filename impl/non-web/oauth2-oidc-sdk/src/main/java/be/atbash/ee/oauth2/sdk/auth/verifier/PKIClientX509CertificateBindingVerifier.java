@@ -45,8 +45,8 @@ public interface PKIClientX509CertificateBindingVerifier<T> {
      * @throws InvalidClientException If client ID and certificate don't
      *                                bind or are invalid.
      */
-    void verifyCertificateBinding(final ClientID clientID,
-                                  final X509Certificate certificate,
-                                  final Context<T> context)
+    void verifyCertificateBinding(ClientID clientID,
+                                  X509Certificate certificate,
+                                  Context<T> context)
             throws InvalidClientException;
 }

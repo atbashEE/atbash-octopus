@@ -39,7 +39,7 @@ public final class SoftwareID extends Identifier {
      * @param value The software identifier value. Must not be {@code null}
      *              or empty string.
      */
-    public SoftwareID(final String value) {
+    public SoftwareID(String value) {
 
         super(value);
     }
@@ -55,7 +55,7 @@ public final class SoftwareID extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof SoftwareID &&
                 this.toString().equals(object.toString());

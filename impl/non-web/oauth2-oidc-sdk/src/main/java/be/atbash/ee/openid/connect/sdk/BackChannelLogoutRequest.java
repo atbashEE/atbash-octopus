@@ -76,8 +76,8 @@ public class BackChannelLogoutRequest extends AbstractRequest {
      * @param logoutToken The logout token. Must be signed, or signed and
      *                    encrypted. Must not be {@code null}.
      */
-    public BackChannelLogoutRequest(final URI uri,
-                                    final JWT logoutToken) {
+    public BackChannelLogoutRequest(URI uri,
+                                    JWT logoutToken) {
 
         super(uri);
 
@@ -171,7 +171,7 @@ public class BackChannelLogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to a
      *                                  back-channel logout request.
      */
-    public static BackChannelLogoutRequest parse(final Map<String, List<String>> params)
+    public static BackChannelLogoutRequest parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         return parse(null, params);
@@ -195,7 +195,7 @@ public class BackChannelLogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to a
      *                                  back-channel logout request.
      */
-    public static BackChannelLogoutRequest parse(final URI uri, Map<String, List<String>> params)
+    public static BackChannelLogoutRequest parse(URI uri, Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         String logoutTokenString = MultivaluedMapUtils.getFirstValue(params, "logout_token");
@@ -238,7 +238,7 @@ public class BackChannelLogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  back-channel logout request.
      */
-    public static BackChannelLogoutRequest parse(final HTTPRequest httpRequest)
+    public static BackChannelLogoutRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         if (!HTTPRequest.Method.POST.equals(httpRequest.getMethod())) {

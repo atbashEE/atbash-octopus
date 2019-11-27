@@ -63,7 +63,7 @@ public abstract class ClientAuthentication {
      *                 {@code null}.
      * @param clientID The client identifier. Must not be {@code null}.
      */
-    protected ClientAuthentication(final ClientAuthenticationMethod method, final ClientID clientID) {
+    protected ClientAuthentication(ClientAuthenticationMethod method, ClientID clientID) {
 
         if (method == null) {
             throw new IllegalArgumentException("The client authentication method must not be null");
@@ -115,7 +115,7 @@ public abstract class ClientAuthentication {
      * @throws OAuth2JSONParseException If the inferred client authentication
      *                                  couldn't be parsed.
      */
-    public static ClientAuthentication parse(final HTTPRequest httpRequest)
+    public static ClientAuthentication parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         // Check for client secret basic
@@ -185,5 +185,5 @@ public abstract class ClientAuthentication {
      *
      * @param httpRequest The HTTP request. Must not be {@code null}.
      */
-    public abstract void applyTo(final HTTPRequest httpRequest);
+    public abstract void applyTo(HTTPRequest httpRequest);
 }

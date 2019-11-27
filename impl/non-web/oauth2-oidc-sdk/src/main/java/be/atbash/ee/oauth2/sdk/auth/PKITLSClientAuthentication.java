@@ -63,8 +63,8 @@ public class PKITLSClientAuthentication extends TLSClientAuthentication {
      *                         client certificate(s), {@code null} to use
      *                         the default one.
      */
-    public PKITLSClientAuthentication(final ClientID clientID,
-                                      final SSLSocketFactory sslSocketFactory) {
+    public PKITLSClientAuthentication(ClientID clientID,
+                                      SSLSocketFactory sslSocketFactory) {
 
         super(ClientAuthenticationMethod.TLS_CLIENT_AUTH, clientID, sslSocketFactory);
         certSubjectDN = null;
@@ -82,8 +82,8 @@ public class PKITLSClientAuthentication extends TLSClientAuthentication {
      * @deprecated This constructor does set the certificate
      */
     @Deprecated
-    public PKITLSClientAuthentication(final ClientID clientID,
-                                      final String certSubjectDN) {
+    public PKITLSClientAuthentication(ClientID clientID,
+                                      String certSubjectDN) {
 
         super(ClientAuthenticationMethod.TLS_CLIENT_AUTH, clientID, (X509Certificate) null);
 
@@ -102,8 +102,8 @@ public class PKITLSClientAuthentication extends TLSClientAuthentication {
      * @param certificate The validated client X.509 certificate from the
      *                    received HTTPS request. Must not be {@code null}.
      */
-    public PKITLSClientAuthentication(final ClientID clientID,
-                                      final X509Certificate certificate) {
+    public PKITLSClientAuthentication(ClientID clientID,
+                                      X509Certificate certificate) {
 
         super(ClientAuthenticationMethod.TLS_CLIENT_AUTH, clientID, certificate);
 
@@ -137,7 +137,7 @@ public class PKITLSClientAuthentication extends TLSClientAuthentication {
      * @throws OAuth2JSONParseException If the {@code client_id} or client X.509
      *                                  certificate is missing.
      */
-    public static PKITLSClientAuthentication parse(final HTTPRequest httpRequest)
+    public static PKITLSClientAuthentication parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         String query = httpRequest.getQuery();

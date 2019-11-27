@@ -41,8 +41,8 @@ public class ClientSecretPostTest {
 
 		// Test vectors from OAuth 2.0 RFC
 
-		final String id = "s6BhdRkqt3";
-		final String pw = "7Fjfp0ZBr1KtDRbnfVdmIw";
+		String id = "s6BhdRkqt3";
+		String pw = "7Fjfp0ZBr1KtDRbnfVdmIw";
 
 		ClientID clientID = new ClientID(id);
 		Secret secret = new Secret(pw);

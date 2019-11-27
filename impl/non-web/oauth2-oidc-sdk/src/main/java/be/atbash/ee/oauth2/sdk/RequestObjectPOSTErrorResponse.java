@@ -55,7 +55,7 @@ public final class RequestObjectPOSTErrorResponse extends RequestObjectPOSTRespo
      * @param httpStatusCode The HTTP status code. Should be other than
      *                       2xx.
      */
-    public RequestObjectPOSTErrorResponse(final int httpStatusCode) {
+    public RequestObjectPOSTErrorResponse(int httpStatusCode) {
         errorObject = new ErrorObject(null, null, httpStatusCode);
     }
 

@@ -28,7 +28,7 @@ public final class Subject extends Identifier {
      * @param value The subject identifier value. Must not be {@code null}
      *              or empty string.
      */
-    public Subject(final String value) {
+    public Subject(String value) {
 
         super(value);
     }
@@ -41,7 +41,7 @@ public final class Subject extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public Subject(final int byteLength) {
+    public Subject(int byteLength) {
 
         super(byteLength);
     }
@@ -58,7 +58,7 @@ public final class Subject extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof Subject &&
                 this.toString().equals(object.toString());

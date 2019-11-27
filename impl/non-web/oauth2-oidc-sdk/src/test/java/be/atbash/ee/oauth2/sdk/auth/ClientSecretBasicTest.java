@@ -38,8 +38,8 @@ public class ClientSecretBasicTest {
 
         // Test vectors from OAuth 2.0 RFC
 
-        final String id = "s6BhdRkqt3";
-        final String pw = "7Fjfp0ZBr1KtDRbnfVdmIw";
+        String id = "s6BhdRkqt3";
+        String pw = "7Fjfp0ZBr1KtDRbnfVdmIw";
 
         ClientID clientID = new ClientID(id);
         Secret secret = new Secret(pw);
@@ -75,12 +75,12 @@ public class ClientSecretBasicTest {
         assertThat(csb.getClientSecret().getValue()).isEqualTo("7Fjfp0ZBr1KtDRbnfVdmIw");
     }
 
-
+    @Test
     public void testSecretWithBackslashes()
             throws Exception {
 
-        final String id = "IX-1FXURP1U93W11";
-        final String pw = "cXqXbCJTOUJfypCD92ZNNviQxvYitAN6vH0zF8h/nFy6+yH7ERVlPpIZnUqYfCzaHZYkziI7QBCK88juLTC/t9WwjiMi6WbecE3y+tnD2lniI6PK7n4jMTBhaJPNqfHpvdh13GZswc92HtPSLQYbiKxzgAPhnmFa/1hV+GfmnEp+IXnDRukHA8AaX6L3d4x6T608+2dZRnqOM4+DB7K4vFNm+3bYcEpHz5zhBAulXQMp+GziCoKRcWrQfjHx1cSsmh+R/F6BZLHkVvNF6XKaKA2sDlxc9Bx3EwfNFJYojWiGr+WTD8slrDw6yfbZKTYsfgYFCYf0gSUsV8mHIxaZQA==";
+        String id = "IX-1FXURP1U93W11";
+        String pw = "cXqXbCJTOUJfypCD92ZNNviQxvYitAN6vH0zF8h/nFy6+yH7ERVlPpIZnUqYfCzaHZYkziI7QBCK88juLTC/t9WwjiMi6WbecE3y+tnD2lniI6PK7n4jMTBhaJPNqfHpvdh13GZswc92HtPSLQYbiKxzgAPhnmFa/1hV+GfmnEp+IXnDRukHA8AaX6L3d4x6T608+2dZRnqOM4+DB7K4vFNm+3bYcEpHz5zhBAulXQMp+GziCoKRcWrQfjHx1cSsmh+R/F6BZLHkVvNF6XKaKA2sDlxc9Bx3EwfNFJYojWiGr+WTD8slrDw6yfbZKTYsfgYFCYf0gSUsV8mHIxaZQA==";
 
         ClientID clientID = new ClientID(id);
         Secret secret = new Secret(pw);
@@ -104,8 +104,8 @@ public class ClientSecretBasicTest {
         // Test legacy HTTP basic auth without HTTP URL escape of charc in username + password
         // See http://tools.ietf.org/html/rfc6749#section-2.3.1
 
-        final String id = "IX-1FXURP1U93W11";
-        final String pw = "cXqXbCJTOUJfypCD92ZNNviQxvYitAN6vH0zF8h\\/nFy6+yH7ERVlPpIZnUqYfCzaHZYkziI7QBCK88juLTC\\/t9WwjiMi6WbecE3y+tnD2lniI6PK7n4jMTBhaJPNqfHpvdh13GZswc92HtPSLQYbiKxzgAPhnmFa\\/1hV+GfmnEp+IXnDRukHA8AaX6L3d4x6T608+2dZRnqOM4+DB7K4vFNm+3bYcEpHz5zhBAulXQMp+GziCoKRcWrQfjHx1cSsmh+R\\/F6BZLHkVvNF6XKaKA2sDlxc9Bx3EwfNFJYojWiGr+WTD8slrDw6yfbZKTYsfgYFCYf0gSUsV8mHIxaZQA==";
+        String id = "IX-1FXURP1U93W11";
+        String pw = "cXqXbCJTOUJfypCD92ZNNviQxvYitAN6vH0zF8h\\/nFy6+yH7ERVlPpIZnUqYfCzaHZYkziI7QBCK88juLTC\\/t9WwjiMi6WbecE3y+tnD2lniI6PK7n4jMTBhaJPNqfHpvdh13GZswc92HtPSLQYbiKxzgAPhnmFa\\/1hV+GfmnEp+IXnDRukHA8AaX6L3d4x6T608+2dZRnqOM4+DB7K4vFNm+3bYcEpHz5zhBAulXQMp+GziCoKRcWrQfjHx1cSsmh+R\\/F6BZLHkVvNF6XKaKA2sDlxc9Bx3EwfNFJYojWiGr+WTD8slrDw6yfbZKTYsfgYFCYf0gSUsV8mHIxaZQA==";
 
         String credentials = id + ":" + pw;
 
@@ -117,8 +117,8 @@ public class ClientSecretBasicTest {
     @Test
     public void testWithLegacyExample() {
 
-        final String id = "Aladdin";
-        final String pw = "open sesame";
+        String id = "Aladdin";
+        String pw = "open sesame";
 
         ClientSecretBasic cb = new ClientSecretBasic(new ClientID(id), new Secret(pw));
 

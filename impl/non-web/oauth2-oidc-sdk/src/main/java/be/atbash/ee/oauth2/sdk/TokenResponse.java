@@ -65,7 +65,7 @@ public abstract class TokenResponse implements Response {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  token response.
      */
-    public static TokenResponse parse(final JsonObject jsonObject)
+    public static TokenResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         if (jsonObject.containsKey("access_token")) {

@@ -429,9 +429,9 @@ public class IDTokenClaimsVerifierTest {
         assertThat(verifier.getClientID()).isEqualTo(clientID);
         assertThat(verifier.getExpectedNonce()).isEqualTo(nonce);
 
-        final Date now = new Date();
-        final Date oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000L);
-        final Date twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000L);
+        Date now = new Date();
+        Date oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000L);
+        Date twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000L);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .issuer(iss.getValue())
@@ -463,9 +463,9 @@ public class IDTokenClaimsVerifierTest {
         assertThat(verifier.getClientID()).isEqualTo(clientID);
         assertThat(verifier.getExpectedNonce()).isEqualTo(nonce);
 
-        final Date now = new Date();
-        final Date inOneHour = new Date(now.getTime() + 60 * 60 * 1000L);
-        final Date inTwoHours = new Date(now.getTime() + 2 * 60 * 60 * 1000L);
+        Date now = new Date();
+        Date inOneHour = new Date(now.getTime() + 60 * 60 * 1000L);
+        Date inTwoHours = new Date(now.getTime() + 2 * 60 * 60 * 1000L);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .issuer(iss.getValue())
@@ -562,9 +562,9 @@ public class IDTokenClaimsVerifierTest {
         assertThat(verifier.getClientID()).isEqualTo(clientID);
         assertThat(verifier.getExpectedNonce()).isEqualTo(nonce);
 
-        final Date now = new Date();
-        final Date oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000L);
-        final Date before30Seconds = new Date(now.getTime() - 30 * 1000L);
+        Date now = new Date();
+        Date oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000L);
+        Date before30Seconds = new Date(now.getTime() - 30 * 1000L);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .issuer(iss.getValue())

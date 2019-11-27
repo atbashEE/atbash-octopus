@@ -45,7 +45,7 @@ abstract class ExternalClaims {
      *                 {@code null} or empty string.
      * @param names    The claim names. Must not be {@code null} or empty.
      */
-    protected ExternalClaims(final String sourceID, final Set<String> names) {
+    protected ExternalClaims(String sourceID, Set<String> names) {
 
         if (sourceID == null || sourceID.trim().isEmpty()) {
             throw new IllegalArgumentException("The claims source identifier must not be null or empty");

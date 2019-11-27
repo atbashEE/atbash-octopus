@@ -53,7 +53,7 @@ abstract class HTTPMessage {
      */
     public ContentType getContentType() {
 
-        final String value = getHeaderValue("Content-Type");
+        String value = getHeaderValue("Content-Type");
 
         if (value == null) {
             return null;
@@ -74,7 +74,7 @@ abstract class HTTPMessage {
      * @param ct The {@code Content-Type} header value, {@code null} if not
      *           specified.
      */
-    public void setContentType(final ContentType ct) {
+    public void setContentType(ContentType ct) {
 
         setHeader("Content-Type", ct != null ? ct.toString() : null);
     }
@@ -88,7 +88,7 @@ abstract class HTTPMessage {
      * @throws OAuth2JSONParseException If the header value couldn't be parsed to a
      *                                  valid content type.
      */
-    public void setContentType(final String ct)
+    public void setContentType(String ct)
             throws OAuth2JSONParseException {
 
         try {
@@ -127,7 +127,7 @@ abstract class HTTPMessage {
      * @throws OAuth2JSONParseException If the {@code Content-Type} header is missing
      *                                  or its primary and subtype don't match.
      */
-    public void ensureContentType(final ContentType contentType)
+    public void ensureContentType(ContentType contentType)
             throws OAuth2JSONParseException {
 
         ContentTypeUtils.ensureContentType(contentType, getContentType());
@@ -140,7 +140,7 @@ abstract class HTTPMessage {
      * @param name The header name. Must not be {@code null}.
      * @return The first header value, {@code null} if not specified.
      */
-    public String getHeaderValue(final String name) {
+    public String getHeaderValue(String name) {
 
         return MultivaluedMapUtils.getFirstValue(headers, name);
     }
@@ -152,7 +152,7 @@ abstract class HTTPMessage {
      * @param name The header name. Must not be {@code null}.
      * @return The header value(s), {@code null} if not specified.
      */
-    public List<String> getHeaderValues(final String name) {
+    public List<String> getHeaderValues(String name) {
 
         return headers.get(name);
     }
@@ -165,7 +165,7 @@ abstract class HTTPMessage {
      * @param values The header value(s). If {@code null} and a header with
      *               the same name is specified, it will be deleted.
      */
-    public void setHeader(final String name, final String... values) {
+    public void setHeader(String name, String... values) {
 
         if (values != null && values.length > 0) {
             headers.put(name, Arrays.asList(values));
@@ -203,7 +203,7 @@ abstract class HTTPMessage {
      * @param clientIPAddress The client IP address, {@code null} if not
      *                        specified.
      */
-    public void setClientIPAddress(final String clientIPAddress) {
+    public void setClientIPAddress(String clientIPAddress) {
 
         this.clientIPAddress = clientIPAddress;
     }

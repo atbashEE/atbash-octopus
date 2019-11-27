@@ -152,7 +152,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param authzEndpoint The authorisation endpoint URI, {@code null} if
      *                      not specified.
      */
-    public void setAuthorizationEndpointURI(final URI authzEndpoint) {
+    public void setAuthorizationEndpointURI(URI authzEndpoint) {
 
         this.authzEndpoint = authzEndpoint;
     }
@@ -177,7 +177,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param tokenEndpoint The token endpoint URI, {@code null} if not
      *                      specified.
      */
-    public void setTokenEndpointURI(final URI tokenEndpoint) {
+    public void setTokenEndpointURI(URI tokenEndpoint) {
 
         this.tokenEndpoint = tokenEndpoint;
     }
@@ -203,7 +203,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param regEndpoint The client registration endpoint URI,
      *                    {@code null} if not specified.
      */
-    public void setRegistrationEndpointURI(final URI regEndpoint) {
+    public void setRegistrationEndpointURI(URI regEndpoint) {
 
         this.regEndpoint = regEndpoint;
     }
@@ -229,7 +229,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param introspectionEndpoint The token introspection endpoint URI,
      *                              {@code null} if not specified.
      */
-    public void setIntrospectionEndpointURI(final URI introspectionEndpoint) {
+    public void setIntrospectionEndpointURI(URI introspectionEndpoint) {
 
         this.introspectionEndpoint = introspectionEndpoint;
     }
@@ -255,7 +255,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param revocationEndpoint The token revocation endpoint URI,
      *                           {@code null} if not specified.
      */
-    public void setRevocationEndpointURI(final URI revocationEndpoint) {
+    public void setRevocationEndpointURI(URI revocationEndpoint) {
 
         this.revocationEndpoint = revocationEndpoint;
     }
@@ -280,7 +280,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param requestObjectEndpoint The request object endpoint,
      *                              {@code null} if not specified.
      */
-    public void setRequestObjectEndpoint(final URI requestObjectEndpoint) {
+    public void setRequestObjectEndpoint(URI requestObjectEndpoint) {
 
         this.requestObjectEndpoint = requestObjectEndpoint;
     }
@@ -306,7 +306,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param parEndpoint The pushed authorisation request endpoint,
      *                    {@code null} if not specified.
      */
-    public void setPushedAuthorizationRequestEndpoint(final URI parEndpoint) {
+    public void setPushedAuthorizationRequestEndpoint(URI parEndpoint) {
 
         this.parEndpoint = parEndpoint;
     }
@@ -332,7 +332,7 @@ public class AuthorizationServerEndpointMetadata {
      * @param deviceAuthzEndpoint The device authorization endpoint URI,
      *                            {@code null} if not specified.
      */
-    public void setDeviceAuthorizationEndpointURI(final URI deviceAuthzEndpoint) {
+    public void setDeviceAuthorizationEndpointURI(URI deviceAuthzEndpoint) {
 
         this.deviceAuthzEndpoint = deviceAuthzEndpoint;
     }

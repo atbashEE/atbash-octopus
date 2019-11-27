@@ -127,7 +127,7 @@ public class ClientAuthenticationVerifierTest {
                                                           Context<ClientMetadata> context)
 			throws InvalidClientException {
 
-			final Set<ClientAuthenticationMethod> permittedClientAuthMethods =
+			Set<ClientAuthenticationMethod> permittedClientAuthMethods =
 				new HashSet<>(Arrays.asList(
 					ClientAuthenticationMethod.PRIVATE_KEY_JWT,
 					ClientAuthenticationMethod.SELF_SIGNED_TLS_CLIENT_AUTH));

@@ -78,7 +78,7 @@ public class OIDCTokenResponse extends AccessTokenResponse {
      *
      * @param tokens The OpenID Connect tokens. Must not be {@code null}.
      */
-    public OIDCTokenResponse(final OIDCTokens tokens) {
+    public OIDCTokenResponse(OIDCTokens tokens) {
 
         this(tokens, null);
     }
@@ -92,8 +92,8 @@ public class OIDCTokenResponse extends AccessTokenResponse {
      * @param customParams Optional custom parameters, {@code null} if
      *                     none.
      */
-    public OIDCTokenResponse(final OIDCTokens tokens,
-                             final Map<String, Object> customParams) {
+    public OIDCTokenResponse(OIDCTokens tokens,
+                             Map<String, Object> customParams) {
 
         super(tokens, customParams);
 
@@ -155,7 +155,7 @@ public class OIDCTokenResponse extends AccessTokenResponse {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OpenID Connect token response.
      */
-    public static OIDCTokenResponse parse(final JsonObject jsonObject)
+    public static OIDCTokenResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         OIDCTokens tokens = OIDCTokens.parse(jsonObject);
@@ -188,7 +188,7 @@ public class OIDCTokenResponse extends AccessTokenResponse {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  OpenID Connect access token response.
      */
-    public static OIDCTokenResponse parse(final HTTPResponse httpResponse)
+    public static OIDCTokenResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK);

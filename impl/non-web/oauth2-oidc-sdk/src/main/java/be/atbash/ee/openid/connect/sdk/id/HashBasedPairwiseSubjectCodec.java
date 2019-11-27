@@ -54,7 +54,7 @@ public class HashBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
      *
      * @param salt The salt, must not be {@code null}.
      */
-    public HashBasedPairwiseSubjectCodec(final byte[] salt) {
+    public HashBasedPairwiseSubjectCodec(byte[] salt) {
         super(salt);
         if (salt == null) {
             throw new IllegalArgumentException("The salt must not be null");
@@ -67,13 +67,13 @@ public class HashBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
      *
      * @param salt The salt, must not be {@code null}.
      */
-    public HashBasedPairwiseSubjectCodec(final Base64URLValue salt) {
+    public HashBasedPairwiseSubjectCodec(Base64URLValue salt) {
         super(salt.decode());
     }
 
 
     @Override
-    public Subject encode(final SectorID sectorID, final Subject localSub) {
+    public Subject encode(SectorID sectorID, Subject localSub) {
 
         MessageDigest sha256;
         try {

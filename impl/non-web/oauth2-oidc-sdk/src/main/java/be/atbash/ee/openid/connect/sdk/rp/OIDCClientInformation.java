@@ -80,10 +80,10 @@ public final class OIDCClientInformation extends ClientInformation {
      * @param secret    The optional client secret, {@code null} if not
      *                  specified.
      */
-    public OIDCClientInformation(final ClientID id,
-                                 final Date issueDate,
-                                 final OIDCClientMetadata metadata,
-                                 final Secret secret) {
+    public OIDCClientInformation(ClientID id,
+                                 Date issueDate,
+                                 OIDCClientMetadata metadata,
+                                 Secret secret) {
 
         this(id, issueDate, metadata, secret, null, null);
     }
@@ -106,12 +106,12 @@ public final class OIDCClientInformation extends ClientInformation {
      * @param accessToken     The client registration access token,
      *                        {@code null} if not specified.
      */
-    public OIDCClientInformation(final ClientID id,
-                                 final Date issueDate,
-                                 final OIDCClientMetadata metadata,
-                                 final Secret secret,
-                                 final URI registrationURI,
-                                 final BearerAccessToken accessToken) {
+    public OIDCClientInformation(ClientID id,
+                                 Date issueDate,
+                                 OIDCClientMetadata metadata,
+                                 Secret secret,
+                                 URI registrationURI,
+                                 BearerAccessToken accessToken) {
 
         super(id, issueDate, metadata, secret, registrationURI, accessToken);
     }
@@ -149,7 +149,7 @@ public final class OIDCClientInformation extends ClientInformation {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OpenID Connect client information instance.
      */
-    public static OIDCClientInformation parse(final JsonObject jsonObject)
+    public static OIDCClientInformation parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         return new OIDCClientInformation(

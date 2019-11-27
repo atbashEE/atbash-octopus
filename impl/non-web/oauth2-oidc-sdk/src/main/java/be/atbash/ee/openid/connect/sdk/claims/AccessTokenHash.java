@@ -41,7 +41,7 @@ public final class AccessTokenHash extends HashClaim {
      * @return {@code true} if the access token hash is required, else
      * {@code false}.
      */
-    public static boolean isRequiredInIDTokenClaims(final ResponseType responseType) {
+    public static boolean isRequiredInIDTokenClaims(ResponseType responseType) {
 
         // Only required in implicit flow for 'token id_token' and
         // hybrid flow for 'code id_token token'
@@ -57,7 +57,7 @@ public final class AccessTokenHash extends HashClaim {
      *
      * @param value The access token hash value. Must not be {@code null}.
      */
-    public AccessTokenHash(final String value) {
+    public AccessTokenHash(String value) {
 
         super(value);
     }
@@ -73,7 +73,7 @@ public final class AccessTokenHash extends HashClaim {
      * @return The access token hash, or {@code null} if the JWS algorithm
      * is not supported.
      */
-    public static AccessTokenHash compute(final AccessToken accessToken, final JWSAlgorithm alg) {
+    public static AccessTokenHash compute(AccessToken accessToken, JWSAlgorithm alg) {
 
         String value = computeValue(accessToken, alg);
 
@@ -86,7 +86,7 @@ public final class AccessTokenHash extends HashClaim {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof AccessTokenHash &&
                 this.toString().equals(object.toString());

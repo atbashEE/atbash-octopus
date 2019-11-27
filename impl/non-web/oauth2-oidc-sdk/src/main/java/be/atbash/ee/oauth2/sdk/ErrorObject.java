@@ -80,7 +80,7 @@ public class ErrorObject {
      *
      * @param code The error code, {@code null} if not specified.
      */
-    public ErrorObject(final String code) {
+    public ErrorObject(String code) {
 
         this(code, null, 0, null);
     }
@@ -93,7 +93,7 @@ public class ErrorObject {
      * @param description The error description, {@code null} if not
      *                    specified.
      */
-    public ErrorObject(final String code, final String description) {
+    public ErrorObject(String code, String description) {
 
         this(code, description, 0, null);
     }
@@ -108,8 +108,8 @@ public class ErrorObject {
      *                       specified.
      * @param httpStatusCode The HTTP status code, zero if not specified.
      */
-    public ErrorObject(final String code, final String description,
-                       final int httpStatusCode) {
+    public ErrorObject(String code, String description,
+                       int httpStatusCode) {
 
         this(code, description, httpStatusCode, null);
     }
@@ -126,8 +126,8 @@ public class ErrorObject {
      * @param uri            The error page URI, {@code null} if not
      *                       specified.
      */
-    public ErrorObject(final String code, final String description,
-                       final int httpStatusCode, final URI uri) {
+    public ErrorObject(String code, String description,
+                       int httpStatusCode, URI uri) {
 
         this.code = code;
         this.description = description;
@@ -165,7 +165,7 @@ public class ErrorObject {
      *                    specified.
      * @return A copy of this error with the specified description.
      */
-    public ErrorObject setDescription(final String description) {
+    public ErrorObject setDescription(String description) {
 
         return new ErrorObject(getCode(), description, getHTTPStatusCode(), getURI());
     }
@@ -179,7 +179,7 @@ public class ErrorObject {
      * @return A copy of this error with the specified appended
      * description.
      */
-    public ErrorObject appendDescription(final String text) {
+    public ErrorObject appendDescription(String text) {
 
         String newDescription;
 
@@ -210,7 +210,7 @@ public class ErrorObject {
      * @param httpStatusCode The HTTP status code, zero if not specified.
      * @return A copy of this error with the specified HTTP status code.
      */
-    public ErrorObject setHTTPStatusCode(final int httpStatusCode) {
+    public ErrorObject setHTTPStatusCode(int httpStatusCode) {
 
         return new ErrorObject(getCode(), getDescription(), httpStatusCode, getURI());
     }
@@ -233,7 +233,7 @@ public class ErrorObject {
      * @param uri The error page URI, {@code null} if not specified.
      * @return A copy of this error with the specified page URI.
      */
-    public ErrorObject setURI(final URI uri) {
+    public ErrorObject setURI(URI uri) {
 
         return new ErrorObject(getCode(), getDescription(), getHTTPStatusCode(), uri);
     }
@@ -317,7 +317,7 @@ public class ErrorObject {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof ErrorObject &&
                 this.toString().equals(object.toString());
@@ -356,7 +356,7 @@ public class ErrorObject {
      * @param params The parameters. Must not be {@code null}.
      * @return The error object.
      */
-    public static ErrorObject parse(final Map<String, List<String>> params) {
+    public static ErrorObject parse(Map<String, List<String>> params) {
 
         String code = MultivaluedMapUtils.getFirstValue(params, "error");
         String description = MultivaluedMapUtils.getFirstValue(params, "error_description");
@@ -382,7 +382,7 @@ public class ErrorObject {
      *                     {@code null}.
      * @return The error object.
      */
-    public static ErrorObject parse(final HTTPResponse httpResponse) {
+    public static ErrorObject parse(HTTPResponse httpResponse) {
 
         JsonObject jsonObject;
         try {

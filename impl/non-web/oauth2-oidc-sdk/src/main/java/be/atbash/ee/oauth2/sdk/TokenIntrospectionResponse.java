@@ -62,7 +62,7 @@ public abstract class TokenIntrospectionResponse implements Response {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  token introspection response.
      */
-    public static TokenIntrospectionResponse parse(final HTTPResponse httpResponse)
+    public static TokenIntrospectionResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_OK) {

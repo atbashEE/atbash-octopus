@@ -57,7 +57,7 @@ public class Identifier implements Serializable, Comparable<Identifier> {
      * @param value The identifier value. Must not be {@code null} or empty
      *              string.
      */
-    public Identifier(final String value) {
+    public Identifier(String value) {
 
         if (StringUtils.isEmpty(value)) {
             throw new IllegalArgumentException("The value must not be null or empty string");
@@ -74,7 +74,7 @@ public class Identifier implements Serializable, Comparable<Identifier> {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public Identifier(final int byteLength) {
+    public Identifier(int byteLength) {
 
         if (byteLength < 1) {
             throw new IllegalArgumentException("The byte length must be a positive integer");
@@ -132,14 +132,14 @@ public class Identifier implements Serializable, Comparable<Identifier> {
 
 
     @Override
-    public int compareTo(final Identifier other) {
+    public int compareTo(Identifier other) {
 
         return getValue().compareTo(other.getValue());
     }
 
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

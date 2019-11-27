@@ -62,7 +62,7 @@ public class AggregatedClaimsTest {
     }
 
 
-    static JWT createClaimsJWT(final JsonObject claims) {
+    static JWT createClaimsJWT(JsonObject claims) {
 
         try {
             SignedJWT jwt = new SignedJWT(

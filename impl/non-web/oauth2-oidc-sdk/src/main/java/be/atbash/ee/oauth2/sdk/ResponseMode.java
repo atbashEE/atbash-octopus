@@ -107,7 +107,7 @@ public final class ResponseMode extends Identifier {
      *           not known.
      * @return The resolved response mode.
      */
-    public static ResponseMode resolve(final ResponseMode rm, final ResponseType rt) {
+    public static ResponseMode resolve(ResponseMode rm, ResponseType rt) {
 
         if (rm != null) {
             // Explicitly requested response_mode
@@ -136,14 +136,14 @@ public final class ResponseMode extends Identifier {
      *
      * @param value The response mode value. Must not be {@code null}.
      */
-    public ResponseMode(final String value) {
+    public ResponseMode(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof ResponseMode &&
                 this.toString().equals(object.toString());

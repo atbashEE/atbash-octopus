@@ -86,10 +86,10 @@ public final class ClientSecretJWT extends JWTAuthentication {
      * @throws JOSEException If the client secret is too short, or HMAC
      *                       computation failed.
      */
-    public ClientSecretJWT(final ClientID clientID,
-                           final URI tokenEndpoint,
-                           final JWSAlgorithm jwsAlgorithm,
-                           final Secret clientSecret)
+    public ClientSecretJWT(ClientID clientID,
+                           URI tokenEndpoint,
+                           JWSAlgorithm jwsAlgorithm,
+                           Secret clientSecret)
             throws JOSEException {
 
         this(JWTAssertionFactory.create(
@@ -107,7 +107,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
      *                        supported HMAC-protected JWT. Must be signed
      *                        and not {@code null}.
      */
-    public ClientSecretJWT(final SignedJWT clientAssertion) {
+    public ClientSecretJWT(SignedJWT clientAssertion) {
 
         super(ClientAuthenticationMethod.CLIENT_SECRET_JWT, clientAssertion);
 
@@ -131,7 +131,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
      *                                  client secret JSON Web Token (JWT)
      *                                  authentication.
      */
-    public static ClientSecretJWT parse(final Map<String, List<String>> params)
+    public static ClientSecretJWT parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         JWTAuthentication.ensureClientAssertionType(params);
@@ -178,7 +178,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
      *                                  to a client secret JSON Web Token (JWT)
      *                                  authentication.
      */
-    public static ClientSecretJWT parse(final String paramsString)
+    public static ClientSecretJWT parse(String paramsString)
             throws OAuth2JSONParseException {
 
         Map<String, List<String>> params = URLUtils.parseParameters(paramsString);
@@ -203,7 +203,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
      *                                  to a client secret JSON Web Token (JWT)
      *                                  authentication.
      */
-    public static ClientSecretJWT parse(final HTTPRequest httpRequest)
+    public static ClientSecretJWT parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.POST);

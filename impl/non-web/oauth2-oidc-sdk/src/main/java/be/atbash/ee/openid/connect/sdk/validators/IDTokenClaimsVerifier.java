@@ -80,10 +80,10 @@ public class IDTokenClaimsVerifier {
      *                     value), in seconds. Must be zero (no clock skew)
      *                     or positive integer.
      */
-    public IDTokenClaimsVerifier(final Issuer issuer,
-                                 final ClientID clientID,
-                                 final Nonce nonce,
-                                 final int maxClockSkew) {
+    public IDTokenClaimsVerifier(Issuer issuer,
+                                 ClientID clientID,
+                                 Nonce nonce,
+                                 int maxClockSkew) {
 
         if (issuer == null) {
             throw new IllegalArgumentException("The expected ID token issuer must not be null");
@@ -140,7 +140,7 @@ public class IDTokenClaimsVerifier {
     }
 
 
-    public void setMaxClockSkew(final int maxClockSkew) {
+    public void setMaxClockSkew(int maxClockSkew) {
         if (maxClockSkew < 0) {
             throw new IllegalArgumentException("The max clock skew must be zero or positive");
         }
@@ -148,12 +148,12 @@ public class IDTokenClaimsVerifier {
     }
 
 
-    public void verify(final JWTClaimsSet claimsSet)
+    public void verify(JWTClaimsSet claimsSet)
             throws BadJWTException {
 
         // See http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation
 
-        final String tokenIssuer = claimsSet.getIssuer();
+        String tokenIssuer = claimsSet.getIssuer();
 
         if (tokenIssuer == null) {
             throw new BadJWTException("Missing JWT issuer (iss) claim");
@@ -167,7 +167,7 @@ public class IDTokenClaimsVerifier {
             throw new BadJWTException("Missing JWT subject (sub) claim");
         }
 
-        final List<String> tokenAudience = claimsSet.getAudience();
+        List<String> tokenAudience = claimsSet.getAudience();
 
         if (tokenAudience == null || tokenAudience.isEmpty()) {
             throw new BadJWTException("Missing JWT audience (aud) claim");
@@ -180,7 +180,7 @@ public class IDTokenClaimsVerifier {
 
         if (tokenAudience.size() > 1) {
 
-            final String tokenAzp;
+            String tokenAzp;
 
             try {
                 tokenAzp = claimsSet.getStringClaim("azp");
@@ -195,20 +195,20 @@ public class IDTokenClaimsVerifier {
             }
         }
 
-        final Date exp = claimsSet.getExpirationTime();
+        Date exp = claimsSet.getExpirationTime();
 
         if (exp == null) {
             throw new BadJWTException("Missing JWT expiration (exp) claim");
         }
 
-        final Date iat = claimsSet.getIssueTime();
+        Date iat = claimsSet.getIssueTime();
 
         if (iat == null) {
             throw new BadJWTException("Missing JWT issue time (iat) claim");
         }
 
 
-        final Date nowRef = new Date();
+        Date nowRef = new Date();
 
         // Expiration must be after current time, given acceptable clock skew
         if (!DateUtils.isAfter(exp, nowRef, maxClockSkew)) {
@@ -223,7 +223,7 @@ public class IDTokenClaimsVerifier {
 
         if (expectedNonce != null) {
 
-            final String tokenNonce;
+            String tokenNonce;
 
             try {
                 tokenNonce = claimsSet.getStringClaim("nonce");

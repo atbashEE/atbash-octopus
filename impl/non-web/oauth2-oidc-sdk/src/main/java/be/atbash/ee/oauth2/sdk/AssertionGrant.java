@@ -57,7 +57,7 @@ public abstract class AssertionGrant extends AuthorizationGrant {
      *
      * @param type The authorisation grant type. Must not be {@code null}.
      */
-    protected AssertionGrant(final GrantType type) {
+    protected AssertionGrant(GrantType type) {
 
         super(type);
     }

@@ -36,7 +36,7 @@ final class ExternalClaimsUtils {
      * @return The {@code _claims_sources} JSON objects, keyed by source
      * ID, {@code null} if none.
      */
-    static Map<String, JsonObject> getExternalClaimSources(final JsonObject claims) {
+    static Map<String, JsonObject> getExternalClaimSources(JsonObject claims) {
 
         Object o = claims.get("_claim_sources");
 
@@ -82,7 +82,7 @@ final class ExternalClaimsUtils {
      * @param sourceID The source ID. May be {@code null}.
      * @return The claim names, empty set if none are found.
      */
-    static Set<String> getExternalClaimNamesForSource(final JsonObject claims, final String sourceID) {
+    static Set<String> getExternalClaimNamesForSource(JsonObject claims, String sourceID) {
 
         if (claims == null || sourceID == null) {
             return Collections.emptySet();

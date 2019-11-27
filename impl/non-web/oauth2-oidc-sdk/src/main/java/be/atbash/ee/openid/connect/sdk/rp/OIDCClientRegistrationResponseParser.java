@@ -46,7 +46,7 @@ public class OIDCClientRegistrationResponseParser {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  OpenID Connect client registration response.
      */
-    public static ClientRegistrationResponse parse(final HTTPResponse httpResponse)
+    public static ClientRegistrationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         final int statusCode = httpResponse.getStatusCode();

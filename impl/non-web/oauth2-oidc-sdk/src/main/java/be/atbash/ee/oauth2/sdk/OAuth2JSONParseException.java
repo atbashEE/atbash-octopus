@@ -33,7 +33,7 @@ public class OAuth2JSONParseException extends GeneralException {
      *
      * @param message The exception message. May be {@code null}.
      */
-    public OAuth2JSONParseException(final String message) {
+    public OAuth2JSONParseException(String message) {
 
         this(message, null, null, null, null, null);
     }
@@ -45,7 +45,7 @@ public class OAuth2JSONParseException extends GeneralException {
      * @param message The exception message. May be {@code null}.
      * @param cause   The exception cause, {@code null} if not specified.
      */
-    public OAuth2JSONParseException(final String message, final Throwable cause) {
+    public OAuth2JSONParseException(String message, Throwable cause) {
 
         this(message, null, null, null, null, null, cause);
     }
@@ -57,7 +57,7 @@ public class OAuth2JSONParseException extends GeneralException {
      * @param message The exception message. May be {@code null}.
      * @param error   The associated error, {@code null} if not specified.
      */
-    public OAuth2JSONParseException(final String message, final ErrorObject error) {
+    public OAuth2JSONParseException(String message, ErrorObject error) {
 
         this(message, error, null, null, null, null);
     }
@@ -70,9 +70,9 @@ public class OAuth2JSONParseException extends GeneralException {
      * @param error   The associated error, {@code null} if not specified.
      * @param cause   The exception cause, {@code null} if not specified.
      */
-    public OAuth2JSONParseException(final String message,
-                                    final ErrorObject error,
-                                    final Throwable cause) {
+    public OAuth2JSONParseException(String message,
+                                    ErrorObject error,
+                                    Throwable cause) {
 
         this(message, error, null, null, null, null, cause);
     }
@@ -93,12 +93,12 @@ public class OAuth2JSONParseException extends GeneralException {
      * @param state        The optional associated state parameter,
      *                     {@code null} if not specified.
      */
-    public OAuth2JSONParseException(final String message,
-                                    final ErrorObject error,
-                                    final ClientID clientID,
-                                    final URI redirectURI,
-                                    final ResponseMode responseMode,
-                                    final State state) {
+    public OAuth2JSONParseException(String message,
+                                    ErrorObject error,
+                                    ClientID clientID,
+                                    URI redirectURI,
+                                    ResponseMode responseMode,
+                                    State state) {
 
         this(message, error, clientID, redirectURI, responseMode, state, null);
     }
@@ -121,13 +121,13 @@ public class OAuth2JSONParseException extends GeneralException {
      * @param cause        The exception cause, {@code null} if not
      *                     specified.
      */
-    public OAuth2JSONParseException(final String message,
-                                    final ErrorObject error,
-                                    final ClientID clientID,
-                                    final URI redirectURI,
-                                    final ResponseMode responseMode,
-                                    final State state,
-                                    final Throwable cause) {
+    public OAuth2JSONParseException(String message,
+                                    ErrorObject error,
+                                    ClientID clientID,
+                                    URI redirectURI,
+                                    ResponseMode responseMode,
+                                    State state,
+                                    Throwable cause) {
 
         super(message, error, clientID, redirectURI, responseMode, state, cause);
     }

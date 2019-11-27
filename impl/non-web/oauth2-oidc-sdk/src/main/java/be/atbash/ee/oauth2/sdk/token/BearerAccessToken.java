@@ -77,7 +77,7 @@ public class BearerAccessToken extends AccessToken {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public BearerAccessToken(final int byteLength) {
+    public BearerAccessToken(int byteLength) {
 
         this(byteLength, 0L, null);
     }
@@ -90,7 +90,7 @@ public class BearerAccessToken extends AccessToken {
      * @param lifetime The lifetime in seconds, 0 if not specified.
      * @param scope    The scope, {@code null} if not specified.
      */
-    public BearerAccessToken(final long lifetime, final Scope scope) {
+    public BearerAccessToken(long lifetime, Scope scope) {
 
         this(32, lifetime, scope);
     }
@@ -105,7 +105,7 @@ public class BearerAccessToken extends AccessToken {
      * @param lifetime   The lifetime in seconds, 0 if not specified.
      * @param scope      The scope, {@code null} if not specified.
      */
-    public BearerAccessToken(final int byteLength, final long lifetime, final Scope scope) {
+    public BearerAccessToken(int byteLength, long lifetime, Scope scope) {
 
         super(AccessTokenType.BEARER, byteLength, lifetime, scope);
     }
@@ -118,7 +118,7 @@ public class BearerAccessToken extends AccessToken {
      * @param value The access token value. Must not be {@code null} or
      *              empty string.
      */
-    public BearerAccessToken(final String value) {
+    public BearerAccessToken(String value) {
 
         this(value, 0L, null);
     }
@@ -133,7 +133,7 @@ public class BearerAccessToken extends AccessToken {
      * @param lifetime The lifetime in seconds, 0 if not specified.
      * @param scope    The scope, {@code null} if not specified.
      */
-    public BearerAccessToken(final String value, final long lifetime, final Scope scope) {
+    public BearerAccessToken(String value, long lifetime, Scope scope) {
 
         super(AccessTokenType.BEARER, value, lifetime, scope);
     }
@@ -159,7 +159,7 @@ public class BearerAccessToken extends AccessToken {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof BearerAccessToken &&
                 this.toString().equals(object.toString());
@@ -176,7 +176,7 @@ public class BearerAccessToken extends AccessToken {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  bearer access token.
      */
-    public static BearerAccessToken parse(final JsonObject jsonObject)
+    public static BearerAccessToken parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         // Parse and verify type
@@ -237,7 +237,7 @@ public class BearerAccessToken extends AccessToken {
      * @throws OAuth2JSONParseException If the HTTP Authorization header value
      *                                  couldn't be parsed to a bearer access token.
      */
-    public static BearerAccessToken parse(final String header)
+    public static BearerAccessToken parse(String header)
             throws OAuth2JSONParseException {
 
         if (StringUtils.isEmpty(header)) {
@@ -272,7 +272,7 @@ public class BearerAccessToken extends AccessToken {
      * @throws OAuth2JSONParseException If a bearer access token wasn't found in the
      *                                  parameters.
      */
-    public static BearerAccessToken parse(final Map<String, List<String>> parameters)
+    public static BearerAccessToken parse(Map<String, List<String>> parameters)
             throws OAuth2JSONParseException {
 
         if (!parameters.containsKey("access_token")) {
@@ -297,7 +297,7 @@ public class BearerAccessToken extends AccessToken {
      * @throws OAuth2JSONParseException If a bearer access token wasn't found in the
      *                                  HTTP request.
      */
-    public static BearerAccessToken parse(final HTTPRequest request)
+    public static BearerAccessToken parse(HTTPRequest request)
             throws OAuth2JSONParseException {
 
         // See http://tools.ietf.org/html/rfc6750#section-2

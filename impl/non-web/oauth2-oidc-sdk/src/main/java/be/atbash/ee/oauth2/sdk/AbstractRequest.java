@@ -39,7 +39,7 @@ public abstract class AbstractRequest implements Request {
      *            for example, the {@link #toHTTPRequest()} method will not
      *            be used).
      */
-    public AbstractRequest(final URI uri) {
+    public AbstractRequest(URI uri) {
 
         this.uri = uri;
     }

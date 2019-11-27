@@ -65,7 +65,7 @@ public class UserInfoRequest extends ProtectedResourceRequest {
      * @param accessToken An OAuth 2.0 Bearer access token for the request.
      *                    Must not be {@code null}.
      */
-    public UserInfoRequest(final URI uri, final BearerAccessToken accessToken) {
+    public UserInfoRequest(URI uri, BearerAccessToken accessToken) {
 
         this(uri, HTTPRequest.Method.GET, accessToken);
     }
@@ -82,7 +82,7 @@ public class UserInfoRequest extends ProtectedResourceRequest {
      * @param accessToken An OAuth 2.0 Bearer access token for the request.
      *                    Must not be {@code null}.
      */
-    public UserInfoRequest(final URI uri, final HTTPRequest.Method httpMethod, final BearerAccessToken accessToken) {
+    public UserInfoRequest(URI uri, HTTPRequest.Method httpMethod, BearerAccessToken accessToken) {
 
         super(uri, accessToken);
 
@@ -156,7 +156,7 @@ public class UserInfoRequest extends ProtectedResourceRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  UserInfo request.
      */
-    public static UserInfoRequest parse(final HTTPRequest httpRequest)
+    public static UserInfoRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         HTTPRequest.Method httpMethod = httpRequest.getMethod();

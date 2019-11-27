@@ -57,7 +57,7 @@ public class CodeVerifier extends Secret {
      *              characters but not more than 128 characters. Must not
      *              be {@code null} or empty string.
      */
-    public CodeVerifier(final String value) {
+    public CodeVerifier(String value) {
         super(value);
 
         if (value.length() < MIN_LENGTH) {
@@ -103,7 +103,7 @@ public class CodeVerifier extends Secret {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
         return object instanceof CodeVerifier && super.equals(object);
     }
 }

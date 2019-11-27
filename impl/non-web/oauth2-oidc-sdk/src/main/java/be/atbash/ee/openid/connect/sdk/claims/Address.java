@@ -115,7 +115,7 @@ public class Address extends ClaimsSet {
      *
      * @param jsonObject The JSON object. Must not be {@code null}.
      */
-    public Address(final JsonObject jsonObject) {
+    public Address(JsonObject jsonObject) {
 
         super(jsonObject);
     }
@@ -129,7 +129,7 @@ public class Address extends ClaimsSet {
      * @param formatted The full mailing address. {@code null} if not
      *                  specified.
      */
-    public void setFormatted(final String formatted) {
+    public void setFormatted(String formatted) {
 
         setClaim(FORMATTED_CLAIM_NAME, formatted);
     }
@@ -157,7 +157,7 @@ public class Address extends ClaimsSet {
      * @param streetAddress The full street address component. If
      *                      {@code null} the claim will be removed.
      */
-    public void setStreetAddress(final String streetAddress) {
+    public void setStreetAddress(String streetAddress) {
 
         setClaim(STREET_ADDRESS_CLAIM_NAME, streetAddress);
     }
@@ -185,7 +185,7 @@ public class Address extends ClaimsSet {
      * @param locality The city or locality component. If {@code null} the
      *                 claim will be removed.
      */
-    public void setLocality(final String locality) {
+    public void setLocality(String locality) {
 
         setClaim(LOCALITY_CLAIM_NAME, locality);
     }
@@ -211,7 +211,7 @@ public class Address extends ClaimsSet {
      * @param region The state, province, prefecture or region component.
      *               If {@code null} the claim will be removed.
      */
-    public void setRegion(final String region) {
+    public void setRegion(String region) {
 
         setClaim(REGION_CLAIM_NAME, region);
     }
@@ -237,7 +237,7 @@ public class Address extends ClaimsSet {
      * @param postalCode The zip code or postal code component. If
      *                   {@code null} the claim will be removed.
      */
-    public void setPostalCode(final String postalCode) {
+    public void setPostalCode(String postalCode) {
 
         setClaim(POSTAL_CODE_CLAIM_NAME, postalCode);
     }
@@ -263,7 +263,7 @@ public class Address extends ClaimsSet {
      * @param country The country name component. If {@code null} the claim
      *                will be removed.
      */
-    public void setCountry(final String country) {
+    public void setCountry(String country) {
 
         setClaim(COUNTRY_CLAIM_NAME, country);
     }
@@ -289,7 +289,7 @@ public class Address extends ClaimsSet {
      * @return The address claims set.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Address parse(final String json)
+    public static Address parse(String json)
             throws OAuth2JSONParseException, ParseException {
 
         JsonObject jsonObject = JSONObjectUtils.parse(json);

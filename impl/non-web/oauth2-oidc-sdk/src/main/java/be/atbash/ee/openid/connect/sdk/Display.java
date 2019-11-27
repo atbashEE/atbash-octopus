@@ -92,7 +92,7 @@ public enum Display {
      * @throws OAuth2JSONParseException If the parsed string doesn't match a display
      *                                  type.
      */
-    public static Display parse(final String s)
+    public static Display parse(String s)
             throws OAuth2JSONParseException {
 
         if (StringUtils.isEmpty(s)) {

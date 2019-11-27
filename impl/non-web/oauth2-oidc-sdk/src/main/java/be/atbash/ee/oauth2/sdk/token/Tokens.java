@@ -49,7 +49,7 @@ public class Tokens {
      * @param accessToken  The access token. Must not be {@code null}.
      * @param refreshToken The refresh token. If none {@code null}.
      */
-    public Tokens(final AccessToken accessToken, final RefreshToken refreshToken) {
+    public Tokens(AccessToken accessToken, RefreshToken refreshToken) {
 
         if (accessToken == null) {
             throw new IllegalArgumentException("The access token must not be null");
@@ -169,7 +169,7 @@ public class Tokens {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  tokens instance.
      */
-    public static Tokens parse(final JsonObject jsonObject)
+    public static Tokens parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         return new Tokens(AccessToken.parse(jsonObject), RefreshToken.parse(jsonObject));

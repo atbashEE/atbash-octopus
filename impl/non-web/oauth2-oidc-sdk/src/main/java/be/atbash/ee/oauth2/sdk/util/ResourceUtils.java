@@ -32,7 +32,7 @@ public final class ResourceUtils {
      * @return {@code true} if the resource URI is valid, {@code false} if
      * the URI is not absolute or has a query or fragment.
      */
-    public static boolean isValidResourceURI(final URI resourceURI) {
+    public static boolean isValidResourceURI(URI resourceURI) {
 
         return
                 resourceURI.getHost() != null

@@ -39,7 +39,7 @@ public final class Audience extends Identifier {
      * @param value The audience identifier value. Must not be {@code null}
      *              or empty string.
      */
-    public Audience(final String value) {
+    public Audience(String value) {
 
         super(value);
     }
@@ -50,7 +50,7 @@ public final class Audience extends Identifier {
      *
      * @param value The URI value. Must not be {@code null}.
      */
-    public Audience(final URI value) {
+    public Audience(URI value) {
 
         super(value.toString());
     }
@@ -61,7 +61,7 @@ public final class Audience extends Identifier {
      *
      * @param value The value. Must not be {@code null}.
      */
-    public Audience(final Identifier value) {
+    public Audience(Identifier value) {
 
         super(value.getValue());
     }
@@ -81,7 +81,7 @@ public final class Audience extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof Audience &&
                 this.toString().equals(object.toString());
@@ -95,7 +95,7 @@ public final class Audience extends Identifier {
      * @return The string list, {@code null} if the argument was
      * {@code null}.
      */
-    public static List<String> toStringList(final Audience audience) {
+    public static List<String> toStringList(Audience audience) {
 
         if (audience == null) {
             return null;
@@ -111,7 +111,7 @@ public final class Audience extends Identifier {
      * @return The string list, {@code null} if the argument was
      * {@code null}.
      */
-    public static List<String> toStringList(final List<Audience> audienceList) {
+    public static List<String> toStringList(List<Audience> audienceList) {
 
         if (audienceList == null) {
             return null;
@@ -133,7 +133,7 @@ public final class Audience extends Identifier {
      * @return The audience list, {@code null} if the argument was
      * {@code null}.
      */
-    public static List<Audience> create(final List<String> strings) {
+    public static List<Audience> create(List<String> strings) {
 
         if (strings == null) {
             return null;
@@ -155,7 +155,7 @@ public final class Audience extends Identifier {
      * @return The audience list, {@code null} if the argument was
      * {@code null}.
      */
-    public static List<Audience> create(final String... strings) {
+    public static List<Audience> create(String... strings) {
 
         if (strings == null) {
             return null;
@@ -175,7 +175,7 @@ public final class Audience extends Identifier {
      * one matching audience value, {@code false} if there are no
      * matches or either collection is {@code null} or empty.
      */
-    public static boolean matchesAny(final Collection<Audience> c1, final Collection<Audience> c2) {
+    public static boolean matchesAny(Collection<Audience> c1, Collection<Audience> c2) {
 
         if (c1 == null || c2 == null) {
             return false;

@@ -247,7 +247,7 @@ public class UserInfo extends ClaimsSet {
      *
      * @param sub The subject. Must not be {@code null}.
      */
-    public UserInfo(final Subject sub) {
+    public UserInfo(Subject sub) {
 
         setClaim(SUB_CLAIM_NAME, sub.getValue());
     }
@@ -260,7 +260,7 @@ public class UserInfo extends ClaimsSet {
      * @throws IllegalArgumentException If the JSON object doesn't contain
      *                                  a subject {@code sub} string claim.
      */
-    public UserInfo(final JsonObject jsonObject) {
+    public UserInfo(JsonObject jsonObject) {
 
         super(jsonObject);
 
@@ -279,7 +279,7 @@ public class UserInfo extends ClaimsSet {
      *                                  contain a subject {@code sub}
      *                                  string claim.
      */
-    public UserInfo(final JWTClaimsSet jwtClaimsSet) {
+    public UserInfo(JWTClaimsSet jwtClaimsSet) {
 
         this(jwtClaimsSet.toJSONObject());
     }
@@ -297,7 +297,7 @@ public class UserInfo extends ClaimsSet {
      *                                  of the other UserInfo matches an
      *                                  existing source ID.
      */
-    public void putAll(final UserInfo other) {
+    public void putAll(UserInfo other) {
 
         Subject otherSubject = other.getSubject();
 
@@ -395,7 +395,7 @@ public class UserInfo extends ClaimsSet {
      *
      * @param iss The issuer, {@code null} if not specified.
      */
-    public void setIssuer(final Issuer iss) {
+    public void setIssuer(Issuer iss) {
 
         if (iss != null) {
             setClaim(ISS_CLAIM_NAME, iss.getValue());
@@ -423,7 +423,7 @@ public class UserInfo extends ClaimsSet {
      *
      * @param aud The audience, {@code null} if not specified.
      */
-    public void setAudience(final Audience aud) {
+    public void setAudience(Audience aud) {
 
         if (aud != null) {
             setAudience(aud.toSingleAudienceList());
@@ -438,7 +438,7 @@ public class UserInfo extends ClaimsSet {
      *
      * @param audList The audience list, {@code null} if not specified.
      */
-    public void setAudience(final List<Audience> audList) {
+    public void setAudience(List<Audience> audList) {
 
         if (audList != null) {
             setClaim(AUD_CLAIM_NAME, Audience.toStringList(audList));
@@ -468,7 +468,7 @@ public class UserInfo extends ClaimsSet {
      *                the non-tagged entry.
      * @return The full name, {@code null} if not specified.
      */
-    public String getName(final LangTag langTag) {
+    public String getName(LangTag langTag) {
 
         return getStringClaim(NAME_CLAIM_NAME, langTag);
     }
@@ -492,7 +492,7 @@ public class UserInfo extends ClaimsSet {
      * @param name The full name. If {@code null} the claim will be
      *             removed.
      */
-    public void setName(final String name) {
+    public void setName(String name) {
 
         setClaim(NAME_CLAIM_NAME, name);
     }
@@ -506,7 +506,7 @@ public class UserInfo extends ClaimsSet {
      *                removed.
      * @param langTag The language tag, {@code null} if not specified.
      */
-    public void setName(final String name, final LangTag langTag) {
+    public void setName(String name, LangTag langTag) {
 
         setClaim(NAME_CLAIM_NAME, Json.createValue(name), langTag);
     }
@@ -532,7 +532,7 @@ public class UserInfo extends ClaimsSet {
      *                the non-tagged entry.
      * @return The given or first name, {@code null} if not specified.
      */
-    public String getGivenName(final LangTag langTag) {
+    public String getGivenName(LangTag langTag) {
 
         return getStringClaim(GIVEN_NAME_CLAIM_NAME, langTag);
     }
@@ -557,7 +557,7 @@ public class UserInfo extends ClaimsSet {
      * @param givenName The given or first name. If {@code null} the claim
      *                  will be removed.
      */
-    public void setGivenName(final String givenName) {
+    public void setGivenName(String givenName) {
 
         setClaim(GIVEN_NAME_CLAIM_NAME, givenName);
     }
@@ -571,7 +571,7 @@ public class UserInfo extends ClaimsSet {
      *                  claim will be removed.
      * @param langTag   The language tag, {@code null} if not specified.
      */
-    public void setGivenName(final String givenName, final LangTag langTag) {
+    public void setGivenName(String givenName, LangTag langTag) {
 
         setClaim(GIVEN_NAME_CLAIM_NAME, Json.createValue(givenName), langTag);
     }
@@ -597,7 +597,7 @@ public class UserInfo extends ClaimsSet {
      *                the non-tagged entry.
      * @return The surname or last name, {@code null} if not specified.
      */
-    public String getFamilyName(final LangTag langTag) {
+    public String getFamilyName(LangTag langTag) {
 
         return getStringClaim(FAMILY_NAME_CLAIM_NAME, langTag);
     }
@@ -622,7 +622,7 @@ public class UserInfo extends ClaimsSet {
      * @param familyName The surname or last name. If {@code null} the
      *                   claim will be removed.
      */
-    public void setFamilyName(final String familyName) {
+    public void setFamilyName(String familyName) {
 
         setClaim(FAMILY_NAME_CLAIM_NAME, familyName);
     }
@@ -636,7 +636,7 @@ public class UserInfo extends ClaimsSet {
      *                   claim will be removed.
      * @param langTag    The language tag, {@code null} if not specified.
      */
-    public void setFamilyName(final String familyName, final LangTag langTag) {
+    public void setFamilyName(String familyName, LangTag langTag) {
 
         setClaim(FAMILY_NAME_CLAIM_NAME, Json.createValue(familyName), langTag);
     }
@@ -662,7 +662,7 @@ public class UserInfo extends ClaimsSet {
      *                the non-tagged entry.
      * @return The middle name, {@code null} if not specified.
      */
-    public String getMiddleName(final LangTag langTag) {
+    public String getMiddleName(LangTag langTag) {
 
         return getStringClaim(MIDDLE_NAME_CLAIM_NAME, langTag);
     }
@@ -687,7 +687,7 @@ public class UserInfo extends ClaimsSet {
      * @param middleName The middle name. If {@code null} the claim will be
      *                   removed.
      */
-    public void setMiddleName(final String middleName) {
+    public void setMiddleName(String middleName) {
 
         setClaim(MIDDLE_NAME_CLAIM_NAME, middleName);
     }
@@ -701,7 +701,7 @@ public class UserInfo extends ClaimsSet {
      *                   removed.
      * @param langTag    The language tag, {@code null} if not specified.
      */
-    public void setMiddleName(final String middleName, final LangTag langTag) {
+    public void setMiddleName(String middleName, LangTag langTag) {
 
         setClaim(MIDDLE_NAME_CLAIM_NAME, Json.createValue(middleName), langTag);
     }
@@ -727,7 +727,7 @@ public class UserInfo extends ClaimsSet {
      *                the non-tagged entry.
      * @return The casual name, {@code null} if not specified.
      */
-    public String getNickname(final LangTag langTag) {
+    public String getNickname(LangTag langTag) {
 
         return getStringClaim(NICKNAME_CLAIM_NAME, langTag);
     }
@@ -752,7 +752,7 @@ public class UserInfo extends ClaimsSet {
      * @param nickname The casual name. If {@code null} the claim will be
      *                 removed.
      */
-    public void setNickname(final String nickname) {
+    public void setNickname(String nickname) {
 
         setClaim(NICKNAME_CLAIM_NAME, nickname);
     }
@@ -766,7 +766,7 @@ public class UserInfo extends ClaimsSet {
      *                 removed.
      * @param langTag  The language tag, {@code null} if not specified.
      */
-    public void setNickname(final String nickname, final LangTag langTag) {
+    public void setNickname(String nickname, LangTag langTag) {
 
         setClaim(NICKNAME_CLAIM_NAME, Json.createValue(nickname), langTag);
     }
@@ -791,7 +791,7 @@ public class UserInfo extends ClaimsSet {
      * @param preferredUsername The preferred username. If {@code null} the
      *                          claim will be removed.
      */
-    public void setPreferredUsername(final String preferredUsername) {
+    public void setPreferredUsername(String preferredUsername) {
 
         setClaim(PREFERRED_USERNAME_CLAIM_NAME, preferredUsername);
     }
@@ -814,7 +814,7 @@ public class UserInfo extends ClaimsSet {
      * @param profile The profile page URI. If {@code null} the claim will
      *                be removed.
      */
-    public void setProfile(final URI profile) {
+    public void setProfile(URI profile) {
 
         setURIClaim(PROFILE_CLAIM_NAME, profile);
     }
@@ -837,7 +837,7 @@ public class UserInfo extends ClaimsSet {
      * @param picture The picture URI. If {@code null} the claim will be
      *                removed.
      */
-    public void setPicture(final URI picture) {
+    public void setPicture(URI picture) {
 
         setURIClaim(PICTURE_CLAIM_NAME, picture);
     }
@@ -860,7 +860,7 @@ public class UserInfo extends ClaimsSet {
      * @param website The web page or blog URI. If {@code null} the claim
      *                will be removed.
      */
-    public void setWebsite(final URI website) {
+    public void setWebsite(URI website) {
 
         setURIClaim(WEBSITE_CLAIM_NAME, website);
     }
@@ -891,7 +891,7 @@ public class UserInfo extends ClaimsSet {
      *              will be removed.
      */
     @Deprecated
-    public void setEmail(final InternetAddress email) {
+    public void setEmail(InternetAddress email) {
 
         setEmailClaim(EMAIL_CLAIM_NAME, email);
     }
@@ -916,7 +916,7 @@ public class UserInfo extends ClaimsSet {
      * @param email The preferred email address. If {@code null} the claim
      *              will be removed.
      */
-    public void setEmailAddress(final String email) {
+    public void setEmailAddress(String email) {
 
         setClaim(EMAIL_CLAIM_NAME, email);
     }
@@ -942,7 +942,7 @@ public class UserInfo extends ClaimsSet {
      * @param emailVerified The email verification status. If {@code null}
      *                      the claim will be removed.
      */
-    public void setEmailVerified(final Boolean emailVerified) {
+    public void setEmailVerified(Boolean emailVerified) {
 
         setClaim(EMAIL_VERIFIED_CLAIM_NAME, emailVerified);
     }
@@ -970,7 +970,7 @@ public class UserInfo extends ClaimsSet {
      *
      * @param gender The gender. If {@code null} the claim will be removed.
      */
-    public void setGender(final Gender gender) {
+    public void setGender(Gender gender) {
 
         if (gender != null) {
             setClaim(GENDER_CLAIM_NAME, gender.getValue());
@@ -997,7 +997,7 @@ public class UserInfo extends ClaimsSet {
      * @param birthdate The date of birth. If {@code null} the claim will
      *                  be removed.
      */
-    public void setBirthdate(final String birthdate) {
+    public void setBirthdate(String birthdate) {
 
         setClaim(BIRTHDATE_CLAIM_NAME, birthdate);
     }
@@ -1020,7 +1020,7 @@ public class UserInfo extends ClaimsSet {
      * @param zoneinfo The zoneinfo. If {@code null} the claim will be
      *                 removed.
      */
-    public void setZoneinfo(final String zoneinfo) {
+    public void setZoneinfo(String zoneinfo) {
 
         setClaim(ZONEINFO_CLAIM_NAME, zoneinfo);
     }
@@ -1043,7 +1043,7 @@ public class UserInfo extends ClaimsSet {
      * @param locale The locale. If {@code null} the claim will be
      *               removed.
      */
-    public void setLocale(final String locale) {
+    public void setLocale(String locale) {
 
         setClaim(LOCALE_CLAIM_NAME, locale);
     }
@@ -1069,7 +1069,7 @@ public class UserInfo extends ClaimsSet {
      * @param phoneNumber The preferred telephone number. If {@code null}
      *                    the claim will be removed.
      */
-    public void setPhoneNumber(final String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
 
         setClaim(PHONE_NUMBER_CLAIM_NAME, phoneNumber);
     }
@@ -1095,7 +1095,7 @@ public class UserInfo extends ClaimsSet {
      * @param phoneNumberVerified The phone number verification status. If
      *                            {@code null} the claim will be removed.
      */
-    public void setPhoneNumberVerified(final Boolean phoneNumberVerified) {
+    public void setPhoneNumberVerified(Boolean phoneNumberVerified) {
 
         setClaim(PHONE_NUMBER_VERIFIED_CLAIM_NAME, phoneNumberVerified);
     }
@@ -1121,7 +1121,7 @@ public class UserInfo extends ClaimsSet {
      *                the non-tagged entry.
      * @return The preferred address, {@code null} if not specified.
      */
-    public Address getAddress(final LangTag langTag) {
+    public Address getAddress(LangTag langTag) {
 
         String name;
 
@@ -1168,7 +1168,7 @@ public class UserInfo extends ClaimsSet {
      * @param address The preferred address. If {@code null} the claim will
      *                be removed.
      */
-    public void setAddress(final Address address) {
+    public void setAddress(Address address) {
 
         if (address != null) {
             setClaim(ADDRESS_CLAIM_NAME, address.toJSONObject().build());
@@ -1186,7 +1186,7 @@ public class UserInfo extends ClaimsSet {
      *                will be removed.
      * @param langTag The language tag, {@code null} if not specified.
      */
-    public void setAddress(final Address address, final LangTag langTag) {
+    public void setAddress(Address address, LangTag langTag) {
 
         String key = langTag == null ? ADDRESS_CLAIM_NAME : ADDRESS_CLAIM_NAME + "#" + langTag;
 
@@ -1219,7 +1219,7 @@ public class UserInfo extends ClaimsSet {
      *                    updated. If {@code null} the claim will be
      *                    removed.
      */
-    public void setUpdatedTime(final Date updatedTime) {
+    public void setUpdatedTime(Date updatedTime) {
 
         setDateClaim(UPDATED_AT_CLAIM_NAME, updatedTime);
     }
@@ -1232,7 +1232,7 @@ public class UserInfo extends ClaimsSet {
      * @param aggregatedClaims The aggregated claims instance, if
      *                         {@code null} nothing will be added.
      */
-    public void addAggregatedClaims(final AggregatedClaims aggregatedClaims) {
+    public void addAggregatedClaims(AggregatedClaims aggregatedClaims) {
 
         if (aggregatedClaims == null) {
             return;
@@ -1301,7 +1301,7 @@ public class UserInfo extends ClaimsSet {
      * @param distributedClaims The distributed claims instance, if
      *                          {@code null} nothing will be added.
      */
-    public void addDistributedClaims(final DistributedClaims distributedClaims) {
+    public void addDistributedClaims(DistributedClaims distributedClaims) {
 
         if (distributedClaims == null) {
             return;
@@ -1383,7 +1383,7 @@ public class UserInfo extends ClaimsSet {
      * @return The UserInfo claims set.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static UserInfo parse(final String json)
+    public static UserInfo parse(String json)
             throws OAuth2JSONParseException {
 
         JsonObject jsonObject = null;

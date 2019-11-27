@@ -113,7 +113,7 @@ public final class GrantType extends Identifier {
      * @param value The authorisation grant type value. Must not be
      *              {@code null} or empty string.
      */
-    public GrantType(final String value) {
+    public GrantType(String value) {
 
         this(value, false, false, Collections.<String>emptySet());
     }
@@ -131,10 +131,10 @@ public final class GrantType extends Identifier {
      *                           specific to this grant type, empty set or
      *                           {@code null} if none.
      */
-    private GrantType(final String value,
-                      final boolean requiresClientAuth,
-                      final boolean requiresClientID,
-                      final Set<String> requestParamNames) {
+    private GrantType(String value,
+                      boolean requiresClientAuth,
+                      boolean requiresClientID,
+                      Set<String> requestParamNames) {
 
         super(value);
         this.requiresClientAuth = requiresClientAuth;
@@ -182,7 +182,7 @@ public final class GrantType extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof GrantType && this.toString().equals(object.toString());
     }
@@ -195,7 +195,7 @@ public final class GrantType extends Identifier {
      * @return The grant type.
      * @throws OAuth2JSONParseException If string is {@code null}, blank or empty.
      */
-    public static GrantType parse(final String value)
+    public static GrantType parse(String value)
             throws OAuth2JSONParseException {
 
         GrantType grantType;

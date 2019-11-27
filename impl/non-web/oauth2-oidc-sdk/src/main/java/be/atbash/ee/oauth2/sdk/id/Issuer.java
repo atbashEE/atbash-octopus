@@ -37,7 +37,7 @@ public final class Issuer extends Identifier {
      * @return {@code true} if the string represents a valid issuer
      * identifier, else {@code false}.
      */
-    public static boolean isValid(final String value) {
+    public static boolean isValid(String value) {
 
         if (value == null) {
             return false;
@@ -61,7 +61,7 @@ public final class Issuer extends Identifier {
      * @return {@code true} if the value is a valid identifier, else
      * {@code false}.
      */
-    public static boolean isValid(final Issuer value) {
+    public static boolean isValid(Issuer value) {
 
         if (value == null) {
             return false;
@@ -85,7 +85,7 @@ public final class Issuer extends Identifier {
      * @return {@code true} if the values represents a valid issuer
      * identifier, else {@code false}.
      */
-    public static boolean isValid(final URI value) {
+    public static boolean isValid(URI value) {
 
         if (value == null) {
             return false;
@@ -110,7 +110,7 @@ public final class Issuer extends Identifier {
      * @param value The issuer identifier value. Must not be {@code null}
      *              or empty string.
      */
-    public Issuer(final String value) {
+    public Issuer(String value) {
 
         super(value);
     }
@@ -121,7 +121,7 @@ public final class Issuer extends Identifier {
      *
      * @param value The URI value. Must not be {@code null}.
      */
-    public Issuer(final URI value) {
+    public Issuer(URI value) {
 
         super(value.toString());
     }
@@ -132,7 +132,7 @@ public final class Issuer extends Identifier {
      *
      * @param value The value. Must not be {@code null}.
      */
-    public Issuer(final Identifier value) {
+    public Issuer(Identifier value) {
 
         super(value.getValue());
     }
@@ -152,7 +152,7 @@ public final class Issuer extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof Issuer && this.toString().equals(object.toString());
     }

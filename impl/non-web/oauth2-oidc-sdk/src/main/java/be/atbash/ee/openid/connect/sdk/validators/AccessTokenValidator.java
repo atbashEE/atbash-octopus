@@ -47,9 +47,9 @@ public class AccessTokenValidator {
      * @throws InvalidHashException If the access token doesn't match the
      *                              hash.
      */
-    public static void validate(final AccessToken accessToken,
-                                final JWSAlgorithm jwsAlgorithm,
-                                final AccessTokenHash accessTokenHash)
+    public static void validate(AccessToken accessToken,
+                                JWSAlgorithm jwsAlgorithm,
+                                AccessTokenHash accessTokenHash)
             throws InvalidHashException {
 
         AccessTokenHash expectedHash = AccessTokenHash.compute(accessToken, jwsAlgorithm);

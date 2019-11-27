@@ -83,7 +83,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
          * @param value The scope value. Must not be {@code null} or
          *              empty string.
          */
-        public Value(final String value) {
+        public Value(String value) {
 
             this(value, null);
         }
@@ -96,7 +96,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
          * @param requirement The requirement, {@code null} if not
          *                    specified.
          */
-        public Value(final String value, final Requirement requirement) {
+        public Value(String value, Requirement requirement) {
 
             super(value);
 
@@ -116,7 +116,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 
 
         @Override
-        public boolean equals(final Object object) {
+        public boolean equals(Object object) {
 
             return object instanceof Value &&
                     this.toString().equals(object.toString());
@@ -137,7 +137,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      *
      * @param scope The scope. May be {@code null}.
      */
-    public Scope(final Scope scope) {
+    public Scope(Scope scope) {
 
         if (scope == null) {
             return;
@@ -152,7 +152,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      *
      * @param values The string values.
      */
-    public Scope(final String... values) {
+    public Scope(String... values) {
 
         for (String v : values) {
             add(new Value(v));
@@ -165,7 +165,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      *
      * @param values The values.
      */
-    public Scope(final Value... values) {
+    public Scope(Value... values) {
 
         addAll(Arrays.asList(values));
     }
@@ -178,7 +178,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      * @return {@code true} if this scope did not already contain the
      * specified value.
      */
-    public boolean add(final String value) {
+    public boolean add(String value) {
 
         return add(new Value(value));
     }
@@ -190,7 +190,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      * @param value The string value. Must not be {@code null}.
      * @return {@code true} if the value is contained, else {@code false}.
      */
-    public boolean contains(final String value) {
+    public boolean contains(String value) {
 
         return contains(new Value(value));
     }
@@ -245,7 +245,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      *                   specified.
      * @return The scope, {@code null} if not specified.
      */
-    public static Scope parse(final Collection<String> collection) {
+    public static Scope parse(Collection<String> collection) {
 
         if (collection == null) {
             return null;
@@ -267,7 +267,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
      * @param s The scope string, {@code null} if not specified.
      * @return The scope, {@code null} if not specified.
      */
-    public static Scope parse(final String s) {
+    public static Scope parse(String s) {
 
         if (s == null) {
             return null;

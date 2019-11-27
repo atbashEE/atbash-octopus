@@ -39,7 +39,7 @@ public final class SectorID extends Identifier {
      * @param sectorURI The URI. Must have a {@code https} scheme and not
      *                  be {@code null}.
      */
-    public static void ensureHTTPScheme(final URI sectorURI) {
+    public static void ensureHTTPScheme(URI sectorURI) {
 
         if (!"https".equalsIgnoreCase(sectorURI.getScheme())) {
             throw new IllegalArgumentException("The URI must have a https scheme");
@@ -54,7 +54,7 @@ public final class SectorID extends Identifier {
      *                  {@code null}.
      * @return The host component.
      */
-    public static String ensureHostComponent(final URI sectorURI) {
+    public static String ensureHostComponent(URI sectorURI) {
 
         String host = sectorURI.getHost();
 
@@ -71,7 +71,7 @@ public final class SectorID extends Identifier {
      *
      * @param host The host. Must not be empty or {@code null}.
      */
-    public SectorID(final String host) {
+    public SectorID(String host) {
         super(host);
     }
 
@@ -82,7 +82,7 @@ public final class SectorID extends Identifier {
      * @param sectorURI The sector URI. Must contain a host component and
      *                  must not be {@code null}.
      */
-    public SectorID(final URI sectorURI) {
+    public SectorID(URI sectorURI) {
         super(ensureHostComponent(sectorURI));
     }
 }

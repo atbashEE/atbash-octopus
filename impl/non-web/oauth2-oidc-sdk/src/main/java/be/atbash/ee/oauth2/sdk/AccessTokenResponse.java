@@ -72,7 +72,7 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
      *
      * @param tokens The tokens. Must not be {@code null}.
      */
-    public AccessTokenResponse(final Tokens tokens) {
+    public AccessTokenResponse(Tokens tokens) {
 
         this(tokens, null);
     }
@@ -85,8 +85,8 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
      * @param customParams Optional custom parameters, {@code null} if
      *                     none.
      */
-    public AccessTokenResponse(final Tokens tokens,
-                               final Map<String, Object> customParams) {
+    public AccessTokenResponse(Tokens tokens,
+                               Map<String, Object> customParams) {
 
         if (tokens == null) {
             throw new IllegalArgumentException("The tokens must not be null");
@@ -193,7 +193,7 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  access token response.
      */
-    public static AccessTokenResponse parse(final JsonObject jsonObject)
+    public static AccessTokenResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         Tokens tokens = Tokens.parse(jsonObject);
@@ -226,7 +226,7 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  access token response.
      */
-    public static AccessTokenResponse parse(final HTTPResponse httpResponse)
+    public static AccessTokenResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK);

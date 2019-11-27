@@ -87,9 +87,9 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
      * @param token      The access or refresh token to revoke. Must not be
      *                   {@code null}.
      */
-    public TokenRevocationRequest(final URI uri,
-                                  final ClientAuthentication clientAuth,
-                                  final Token token) {
+    public TokenRevocationRequest(URI uri,
+                                  ClientAuthentication clientAuth,
+                                  Token token) {
 
         super(uri, clientAuth);
 
@@ -115,9 +115,9 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
      * @param token    The access or refresh token to revoke. Must not be
      *                 {@code null}.
      */
-    public TokenRevocationRequest(final URI uri,
-                                  final ClientID clientID,
-                                  final Token token) {
+    public TokenRevocationRequest(URI uri,
+                                  ClientID clientID,
+                                  Token token) {
 
         super(uri, clientID);
 
@@ -203,7 +203,7 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  token revocation request.
      */
-    public static TokenRevocationRequest parse(final HTTPRequest httpRequest)
+    public static TokenRevocationRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         // Only HTTP POST accepted
@@ -212,7 +212,7 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
 
         Map<String, List<String>> params = httpRequest.getQueryParameters();
 
-        final String tokenValue = MultivaluedMapUtils.getFirstValue(params, "token");
+        String tokenValue = MultivaluedMapUtils.getFirstValue(params, "token");
 
         if (tokenValue == null || tokenValue.isEmpty()) {
             throw new OAuth2JSONParseException("Missing required token parameter");
@@ -221,7 +221,7 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
         // Detect the token type
         Token token = null;
 
-        final String tokenTypeHint = MultivaluedMapUtils.getFirstValue(params, "token_type_hint");
+        String tokenTypeHint = MultivaluedMapUtils.getFirstValue(params, "token_type_hint");
 
         if (tokenTypeHint == null) {
 
@@ -247,7 +247,7 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
                 }
 
                 @Override
-                public boolean equals(final Object other) {
+                public boolean equals(Object other) {
 
                     return other instanceof Token && other.toString().equals(tokenValue);
                 }
@@ -280,7 +280,7 @@ public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRe
         }
 
         // Public client
-        final String clientIDString = MultivaluedMapUtils.getFirstValue(params, "client_id");
+        String clientIDString = MultivaluedMapUtils.getFirstValue(params, "client_id");
 
         if (StringUtils.isEmpty(clientIDString)) {
             throw new OAuth2JSONParseException("Invalid token revocation request: No client authentication or client_id parameter found");

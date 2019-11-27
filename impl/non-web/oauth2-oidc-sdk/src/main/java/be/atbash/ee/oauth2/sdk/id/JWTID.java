@@ -28,7 +28,7 @@ public final class JWTID extends Identifier {
      * @param value The JWT identifier value. Must not be {@code null} or
      *              empty string.
      */
-    public JWTID(final String value) {
+    public JWTID(String value) {
 
         super(value);
     }
@@ -41,7 +41,7 @@ public final class JWTID extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public JWTID(final int byteLength) {
+    public JWTID(int byteLength) {
 
         super(byteLength);
     }
@@ -58,7 +58,7 @@ public final class JWTID extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof JWTID &&
                 this.toString().equals(object.toString());

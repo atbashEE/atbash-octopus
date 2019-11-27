@@ -94,7 +94,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
          * @throws OAuth2JSONParseException If the parsed string is {@code null}
          *                                  or doesn't match a prompt type.
          */
-        public static Type parse(final String s)
+        public static Type parse(String s)
                 throws OAuth2JSONParseException {
 
             if (StringUtils.isEmpty(s)) {
@@ -130,7 +130,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
      *
      * @param type The prompt types.
      */
-    public Prompt(final Type... type) {
+    public Prompt(Type... type) {
 
         addAll(Arrays.asList(type));
     }
@@ -143,7 +143,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
      * @throws java.lang.IllegalArgumentException If the type value is
      *                                            invalid.
      */
-    public Prompt(final String... values) {
+    public Prompt(String... values) {
 
         for (String v : values) {
 
@@ -229,7 +229,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
      * @throws OAuth2JSONParseException If the string list couldn't be parsed to a
      *                                  valid prompt.
      */
-    public static Prompt parse(final Collection<String> collection)
+    public static Prompt parse(Collection<String> collection)
             throws OAuth2JSONParseException {
 
         if (collection == null) {
@@ -260,7 +260,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
      * @throws OAuth2JSONParseException If the string couldn't be parsed to a valid
      *                                  prompt.
      */
-    public static Prompt parse(final String s)
+    public static Prompt parse(String s)
             throws OAuth2JSONParseException {
 
         if (StringUtils.isEmpty(s)) {

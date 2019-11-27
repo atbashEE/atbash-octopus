@@ -42,7 +42,7 @@ public final class CodeHash extends HashClaim {
      * @return {@code true} if the code hash is required, else
      * {@code false}.
      */
-    public static boolean isRequiredInIDTokenClaims(final ResponseType responseType) {
+    public static boolean isRequiredInIDTokenClaims(ResponseType responseType) {
 
         // Only required in hybrid flow for 'code id_token' and 'code id_token token'
         // Disregard authz / token endpoint!
@@ -58,7 +58,7 @@ public final class CodeHash extends HashClaim {
      * @param value The authorisation code hash value. Must not be
      *              {@code null}.
      */
-    public CodeHash(final String value) {
+    public CodeHash(String value) {
 
         super(value);
     }
@@ -73,7 +73,7 @@ public final class CodeHash extends HashClaim {
      * @return The authorisation code hash, or {@code null} if the JWS
      * algorithm is not supported.
      */
-    public static CodeHash compute(final AuthorizationCode code, final JWSAlgorithm alg) {
+    public static CodeHash compute(AuthorizationCode code, JWSAlgorithm alg) {
 
         String value = computeValue(code, alg);
 
@@ -86,7 +86,7 @@ public final class CodeHash extends HashClaim {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof CodeHash &&
                 this.toString().equals(object.toString());

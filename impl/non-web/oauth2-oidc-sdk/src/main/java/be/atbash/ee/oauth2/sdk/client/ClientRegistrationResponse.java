@@ -65,7 +65,7 @@ public abstract class ClientRegistrationResponse implements Response {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  client registration response.
      */
-    public static ClientRegistrationResponse parse(final HTTPResponse httpResponse)
+    public static ClientRegistrationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_CREATED ||

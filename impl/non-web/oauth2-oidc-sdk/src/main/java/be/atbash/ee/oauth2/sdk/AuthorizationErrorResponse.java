@@ -126,10 +126,10 @@ public class AuthorizationErrorResponse
      * @param rm          The implied response mode, {@code null} if
      *                    unknown.
      */
-    public AuthorizationErrorResponse(final URI redirectURI,
-                                      final ErrorObject error,
-                                      final State state,
-                                      final ResponseMode rm) {
+    public AuthorizationErrorResponse(URI redirectURI,
+                                      ErrorObject error,
+                                      State state,
+                                      ResponseMode rm) {
 
         super(redirectURI, state, rm);
 
@@ -152,9 +152,9 @@ public class AuthorizationErrorResponse
      * @param rm          The implied response mode, {@code null} if
      *                    unknown.
      */
-    public AuthorizationErrorResponse(final URI redirectURI,
-                                      final JWT jwtResponse,
-                                      final ResponseMode rm) {
+    public AuthorizationErrorResponse(URI redirectURI,
+                                      JWT jwtResponse,
+                                      ResponseMode rm) {
 
         super(redirectURI, jwtResponse, rm);
 
@@ -216,8 +216,8 @@ public class AuthorizationErrorResponse
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  authorisation error response.
      */
-    public static AuthorizationErrorResponse parse(final URI redirectURI,
-                                                   final Map<String, List<String>> params)
+    public static AuthorizationErrorResponse parse(URI redirectURI,
+                                                   Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // JARM, ignore other top level params
@@ -273,7 +273,7 @@ public class AuthorizationErrorResponse
      * @throws OAuth2JSONParseException If the URI couldn't be parsed to an
      *                                  authorisation error response.
      */
-    public static AuthorizationErrorResponse parse(final URI uri)
+    public static AuthorizationErrorResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
@@ -298,7 +298,7 @@ public class AuthorizationErrorResponse
      *                                  authorisation error response.
      * @see #parse(HTTPRequest)
      */
-    public static AuthorizationErrorResponse parse(final HTTPResponse httpResponse)
+    public static AuthorizationErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         URI location = httpResponse.getLocation();
@@ -331,7 +331,7 @@ public class AuthorizationErrorResponse
      *                                  authorisation error response.
      * @see #parse(HTTPResponse)
      */
-    public static AuthorizationErrorResponse parse(final HTTPRequest httpRequest)
+    public static AuthorizationErrorResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));

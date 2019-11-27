@@ -190,14 +190,14 @@ public final class AMR extends Identifier {
      *
      * @param value The AMR value. Must not be {@code null}.
      */
-    public AMR(final String value) {
+    public AMR(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof AMR &&
                 this.toString().equals(object.toString());

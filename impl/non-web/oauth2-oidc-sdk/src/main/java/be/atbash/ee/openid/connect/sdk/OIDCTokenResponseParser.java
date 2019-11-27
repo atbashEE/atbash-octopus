@@ -46,7 +46,7 @@ public final class OIDCTokenResponseParser {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  token response.
      */
-    public static TokenResponse parse(final JsonObject jsonObject)
+    public static TokenResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         if (jsonObject.containsKey("error")) {
@@ -66,7 +66,7 @@ public final class OIDCTokenResponseParser {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  token response.
      */
-    public static TokenResponse parse(final HTTPResponse httpResponse)
+    public static TokenResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_OK) {

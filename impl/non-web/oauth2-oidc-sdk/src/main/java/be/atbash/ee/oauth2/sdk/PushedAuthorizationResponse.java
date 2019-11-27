@@ -62,7 +62,7 @@ public abstract class PushedAuthorizationResponse implements Response {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  pushed authorisation response.
      */
-    public static PushedAuthorizationResponse parse(final HTTPResponse httpResponse)
+    public static PushedAuthorizationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_CREATED || httpResponse.getStatusCode() == HTTPResponse.SC_OK) {

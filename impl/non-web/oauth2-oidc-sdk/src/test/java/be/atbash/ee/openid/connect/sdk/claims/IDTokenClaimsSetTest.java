@@ -316,7 +316,7 @@ public class IDTokenClaimsSetTest {
         // See http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
 
         ResponseType rt_code = ResponseType.parse("code");
-        final boolean iatAuthzEndpoint = false;
+        boolean iatAuthzEndpoint = false;
 
         IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
                 new Issuer("iss"),
@@ -343,7 +343,7 @@ public class IDTokenClaimsSetTest {
 
         ResponseType rt_idToken = ResponseType.parse("id_token");
         ResponseType rt_idToken_token = ResponseType.parse("id_token token");
-        final boolean iatAuthzEndpoint = true;
+        boolean iatAuthzEndpoint = true;
 
         IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
                 new Issuer("iss"),

@@ -96,7 +96,7 @@ public class InvalidClientException extends GeneralException {
      *                about why authentication didn't succeed to the
      *                client.
      */
-    public InvalidClientException(final String message) {
+    public InvalidClientException(String message) {
         super(message);
     }
 

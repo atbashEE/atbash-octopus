@@ -116,7 +116,7 @@ public class BearerTokenError extends ErrorObject {
      * @return {@code true} if the error code string contains valid
      * characters, else {@code false}.
      */
-    public static boolean isCodeWithValidChars(final String errorCode) {
+    public static boolean isCodeWithValidChars(String errorCode) {
 
         for (char c : errorCode.toCharArray()) {
 
@@ -139,7 +139,7 @@ public class BearerTokenError extends ErrorObject {
      * @return {@code true} if the error description string contains valid
      * characters, else {@code false}.
      */
-    public static boolean isDescriptionWithValidChars(final String errorDescription) {
+    public static boolean isDescriptionWithValidChars(String errorDescription) {
 
         return isCodeWithValidChars(errorDescription);
     }
@@ -155,7 +155,7 @@ public class BearerTokenError extends ErrorObject {
      * @return {@code true} if the scope contains valid characters, else
      * {@code false}.
      */
-    public static boolean isScopeWithValidChars(final Scope scope) {
+    public static boolean isScopeWithValidChars(Scope scope) {
 
 
         for (Scope.Value sv : scope) {
@@ -226,7 +226,7 @@ public class BearerTokenError extends ErrorObject {
      * @param description The error description, {@code null} if not
      *                    specified.
      */
-    public BearerTokenError(final String code, final String description) {
+    public BearerTokenError(String code, String description) {
 
         this(code, description, 0, null, null, null);
     }
@@ -241,7 +241,7 @@ public class BearerTokenError extends ErrorObject {
      *                       specified.
      * @param httpStatusCode The HTTP status code, zero if not specified.
      */
-    public BearerTokenError(final String code, final String description, final int httpStatusCode) {
+    public BearerTokenError(String code, String description, int httpStatusCode) {
 
         this(code, description, httpStatusCode, null, null, null);
     }
@@ -261,12 +261,12 @@ public class BearerTokenError extends ErrorObject {
      * @param scope          The required scope, {@code null} if not
      *                       specified.
      */
-    public BearerTokenError(final String code,
-                            final String description,
-                            final int httpStatusCode,
-                            final URI uri,
-                            final String realm,
-                            final Scope scope) {
+    public BearerTokenError(String code,
+                            String description,
+                            int httpStatusCode,
+                            URI uri,
+                            String realm,
+                            Scope scope) {
 
         super(code, description, httpStatusCode, uri);
         this.realm = realm;
@@ -287,7 +287,7 @@ public class BearerTokenError extends ErrorObject {
 
 
     @Override
-    public BearerTokenError setDescription(final String description) {
+    public BearerTokenError setDescription(String description) {
 
         return new BearerTokenError(super.getCode(), description, super.getHTTPStatusCode(), super.getURI(), realm, scope);
     }
@@ -309,14 +309,14 @@ public class BearerTokenError extends ErrorObject {
 
 
     @Override
-    public BearerTokenError setHTTPStatusCode(final int httpStatusCode) {
+    public BearerTokenError setHTTPStatusCode(int httpStatusCode) {
 
         return new BearerTokenError(super.getCode(), super.getDescription(), httpStatusCode, super.getURI(), realm, scope);
     }
 
 
     @Override
-    public BearerTokenError setURI(final URI uri) {
+    public BearerTokenError setURI(URI uri) {
 
         return new BearerTokenError(super.getCode(), super.getDescription(), super.getHTTPStatusCode(), uri, realm, scope);
     }
@@ -339,7 +339,7 @@ public class BearerTokenError extends ErrorObject {
      * @param realm realm, {@code null} if not specified.
      * @return A copy of this error with the specified realm.
      */
-    public BearerTokenError setRealm(final String realm) {
+    public BearerTokenError setRealm(String realm) {
 
         return new BearerTokenError(getCode(),
                 getDescription(),
@@ -367,7 +367,7 @@ public class BearerTokenError extends ErrorObject {
      * @param scope The required scope, {@code null} if not specified.
      * @return A copy of this error with the specified required scope.
      */
-    public BearerTokenError setScope(final Scope scope) {
+    public BearerTokenError setScope(Scope scope) {
 
         return new BearerTokenError(getCode(),
                 getDescription(),
@@ -469,7 +469,7 @@ public class BearerTokenError extends ErrorObject {
      * @throws OAuth2JSONParseException If the {@code WWW-Authenticate} header value
      *                                  couldn't be parsed to a Bearer token error.
      */
-    public static BearerTokenError parse(final String wwwAuth)
+    public static BearerTokenError parse(String wwwAuth)
             throws OAuth2JSONParseException {
 
         // We must have a WWW-Authenticate header set to Bearer .*

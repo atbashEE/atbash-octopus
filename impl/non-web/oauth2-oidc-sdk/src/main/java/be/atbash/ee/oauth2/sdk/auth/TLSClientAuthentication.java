@@ -64,9 +64,9 @@ public abstract class TLSClientAuthentication extends ClientAuthentication {
      *                         client certificate(s), {@code null} to use
      *                         the default one.
      */
-    protected TLSClientAuthentication(final ClientAuthenticationMethod method,
-                                      final ClientID clientID,
-                                      final SSLSocketFactory sslSocketFactory) {
+    protected TLSClientAuthentication(ClientAuthenticationMethod method,
+                                      ClientID clientID,
+                                      SSLSocketFactory sslSocketFactory) {
 
         super(method, clientID);
         this.sslSocketFactory = sslSocketFactory;
@@ -85,9 +85,9 @@ public abstract class TLSClientAuthentication extends ClientAuthentication {
      *                    received HTTPS request. Should not be
      *                    {@code null}.
      */
-    protected TLSClientAuthentication(final ClientAuthenticationMethod method,
-                                      final ClientID clientID,
-                                      final X509Certificate certificate) {
+    protected TLSClientAuthentication(ClientAuthenticationMethod method,
+                                      ClientID clientID,
+                                      X509Certificate certificate) {
         super(method, clientID);
         sslSocketFactory = null;
         this.certificate = certificate;
@@ -120,7 +120,7 @@ public abstract class TLSClientAuthentication extends ClientAuthentication {
 
 
     @Override
-    public void applyTo(final HTTPRequest httpRequest) {
+    public void applyTo(HTTPRequest httpRequest) {
 
         if (httpRequest.getMethod() != HTTPRequest.Method.POST) {
             throw new SerializeException("The HTTP request method must be POST");

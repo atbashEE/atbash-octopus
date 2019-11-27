@@ -37,12 +37,12 @@ import java.util.Date;
 
 
 public class X509CertificateGenerator {
-	
-	
-	public static X509Certificate generateCertificate(final Issuer issuer,
-                                                      final Subject subject,
-                                                      final RSAPublicKey rsaPublicKey,
-                                                      final RSAPrivateKey rsaPrivateKey)
+
+
+	public static X509Certificate generateCertificate(Issuer issuer,
+													  Subject subject,
+													  RSAPublicKey rsaPublicKey,
+													  RSAPrivateKey rsaPrivateKey)
 		throws IOException, OperatorCreationException {
 		
 		X500Name certIssuer = new X500Name("cn=" + issuer);
@@ -70,8 +70,8 @@ public class X509CertificateGenerator {
 	 * Technically this is not allowed (a self signed certificate should always be
 	 * self issued), but for tests this is good enough to simulate a PKI certificate.
 	 */
-	public static X509Certificate generateSelfSignedNotSelfIssuedCertificate(final String issuer,
-                                                                             final String subject)
+	public static X509Certificate generateSelfSignedNotSelfIssuedCertificate(String issuer,
+																			 String subject)
 		throws Exception {
 
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -83,10 +83,10 @@ public class X509CertificateGenerator {
 
 		return generateCertificate(new Issuer(issuer), new Subject(subject), rsaPublicKey, rsaPrivateKey);
 	}
-	
-	public static X509Certificate generateSelfSignedCertificate(final Issuer issuer,
-                                                                final RSAPublicKey rsaPublicKey,
-                                                                final RSAPrivateKey rsaPrivateKey)
+
+	public static X509Certificate generateSelfSignedCertificate(Issuer issuer,
+																RSAPublicKey rsaPublicKey,
+																RSAPrivateKey rsaPrivateKey)
 		throws IOException, OperatorCreationException {
 		
 		return generateCertificate(issuer, new Subject(issuer.getValue()), rsaPublicKey, rsaPrivateKey);

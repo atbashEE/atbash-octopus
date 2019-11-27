@@ -85,7 +85,7 @@ public class DistributedClaims extends ExternalClaims {
      *                       source endpoint, {@code null} if not
      *                       specified.
      */
-    public DistributedClaims(final Set<String> names, final URI sourceEndpoint, final AccessToken accessToken) {
+    public DistributedClaims(Set<String> names, URI sourceEndpoint, AccessToken accessToken) {
 
         this(UUID.randomUUID().toString(), names, sourceEndpoint, accessToken);
     }
@@ -104,7 +104,7 @@ public class DistributedClaims extends ExternalClaims {
      *                       source endpoint, {@code null} if not
      *                       specified.
      */
-    public DistributedClaims(final String sourceID, final Set<String> names, final URI sourceEndpoint, final AccessToken accessToken) {
+    public DistributedClaims(String sourceID, Set<String> names, URI sourceEndpoint, AccessToken accessToken) {
 
         super(sourceID, names);
 
@@ -143,7 +143,7 @@ public class DistributedClaims extends ExternalClaims {
 
 
     @Override
-    JsonObject mergeInto(final JsonObject jsonObject) {
+    JsonObject mergeInto(JsonObject jsonObject) {
 
         JsonObjectBuilder result = Json.createObjectBuilder(jsonObject);
         JsonObjectBuilder claimNamesObject = Json.createObjectBuilder();

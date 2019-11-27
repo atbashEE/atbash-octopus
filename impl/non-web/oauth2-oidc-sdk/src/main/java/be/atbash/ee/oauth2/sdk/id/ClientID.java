@@ -40,7 +40,7 @@ public final class ClientID extends Identifier {
      * @param value The client identifier value. Must not be {@code null}
      *              or empty string.
      */
-    public ClientID(final String value) {
+    public ClientID(String value) {
 
         super(value);
     }
@@ -51,7 +51,7 @@ public final class ClientID extends Identifier {
      *
      * @param value The value. Must not be {@code null}.
      */
-    public ClientID(final Identifier value) {
+    public ClientID(Identifier value) {
 
         super(value.getValue());
     }
@@ -64,7 +64,7 @@ public final class ClientID extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public ClientID(final int byteLength) {
+    public ClientID(int byteLength) {
 
         super(byteLength);
     }
@@ -81,7 +81,7 @@ public final class ClientID extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof ClientID &&
                 this.toString().equals(object.toString());

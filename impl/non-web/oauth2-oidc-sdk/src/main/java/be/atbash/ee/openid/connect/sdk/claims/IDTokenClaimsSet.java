@@ -173,11 +173,11 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param exp The expiration time. Must not be {@code null}.
      * @param iat The issue time. Must not be {@code null}.
      */
-    public IDTokenClaimsSet(final Issuer iss,
-                            final Subject sub,
-                            final List<Audience> aud,
-                            final Date exp,
-                            final Date iat) {
+    public IDTokenClaimsSet(Issuer iss,
+                            Subject sub,
+                            List<Audience> aud,
+                            Date exp,
+                            Date iat) {
 
         setClaim(ISS_CLAIM_NAME, iss.getValue());
         setClaim(SUB_CLAIM_NAME, sub.getValue());
@@ -202,7 +202,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @throws OAuth2JSONParseException If the JSON object doesn't represent a valid
      *                                  ID token claims set.
      */
-    private IDTokenClaimsSet(final JsonObject jsonObject)
+    private IDTokenClaimsSet(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         super(jsonObject);
@@ -244,7 +244,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @throws OAuth2JSONParseException If the JWT claims set doesn't represent a
      *                                  valid ID token claims set.
      */
-    public IDTokenClaimsSet(final JWTClaimsSet jwtClaimsSet)
+    public IDTokenClaimsSet(JWTClaimsSet jwtClaimsSet)
             throws OAuth2JSONParseException {
 
         this(jwtClaimsSet.toJSONObject());
@@ -266,7 +266,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @return {@code true} if the required claims are contained, else
      * {@code false}.
      */
-    public boolean hasRequiredClaims(final ResponseType responseType, final boolean iatAuthzEndpoint) {
+    public boolean hasRequiredClaims(ResponseType responseType, boolean iatAuthzEndpoint) {
 
         // Code flow
         // See http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
@@ -363,7 +363,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * {@code false}.
      */
     @Deprecated
-    public boolean hasRequiredClaims(final ResponseType responseType) {
+    public boolean hasRequiredClaims(ResponseType responseType) {
 
         return hasRequiredClaims(responseType, true);
     }
@@ -401,7 +401,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param authTime The authentication time, {@code null} if not
      *                 specified.
      */
-    public void setAuthenticationTime(final Date authTime) {
+    public void setAuthenticationTime(Date authTime) {
 
         setDateClaim(AUTH_TIME_CLAIM_NAME, authTime);
     }
@@ -424,7 +424,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      *
      * @param nonce The nonce, {@code null} if not specified.
      */
-    public void setNonce(final Nonce nonce) {
+    public void setNonce(Nonce nonce) {
 
         setClaim(NONCE_CLAIM_NAME, nonce != null ? nonce.getValue() : null);
     }
@@ -450,7 +450,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      *
      * @param atHash The access token hash, {@code null} if not specified.
      */
-    public void setAccessTokenHash(final AccessTokenHash atHash) {
+    public void setAccessTokenHash(AccessTokenHash atHash) {
 
         setClaim(AT_HASH_CLAIM_NAME, atHash != null ? atHash.getValue() : null);
     }
@@ -477,7 +477,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param cHash The authorisation code hash, {@code null} if not
      *              specified.
      */
-    public void setCodeHash(final CodeHash cHash) {
+    public void setCodeHash(CodeHash cHash) {
 
         setClaim(C_HASH_CLAIM_NAME, cHash != null ? cHash.getValue() : null);
     }
@@ -501,7 +501,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      *
      * @param sHash The state hash, {@code null} if not specified.
      */
-    public void setStateHash(final StateHash sHash) {
+    public void setStateHash(StateHash sHash) {
 
         setClaim(S_HASH_CLAIM_NAME, sHash != null ? sHash.getValue() : null);
     }
@@ -528,7 +528,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param acr The Authentication Context Class Reference (ACR),
      *            {@code null} if not specified.
      */
-    public void setACR(final ACR acr) {
+    public void setACR(ACR acr) {
 
         setClaim(ACR_CLAIM_NAME, acr != null ? acr.getValue() : null);
     }
@@ -566,7 +566,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param amr The Authentication Methods Reference (AMR) list,
      *            {@code null} if not specified.
      */
-    public void setAMR(final List<AMR> amr) {
+    public void setAMR(List<AMR> amr) {
 
         if (amr != null) {
 
@@ -604,7 +604,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      *
      * @param azp The authorised party, {@code null} if not specified.
      */
-    public void setAuthorizedParty(final AuthorizedParty azp) {
+    public void setAuthorizedParty(AuthorizedParty azp) {
 
         setClaim(AZP_CLAIM_NAME, azp != null ? azp.getValue() : null);
     }
@@ -642,7 +642,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @param subJWK The subject's JWK (must be public), {@code null} if
      *               not specified.
      */
-    public void setSubjectJWK(final JWK subJWK) {
+    public void setSubjectJWK(JWK subJWK) {
 
         if (subJWK != null) {
 
@@ -666,7 +666,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @return The ID token claims set.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static IDTokenClaimsSet parse(final JsonObject jsonObject)
+    public static IDTokenClaimsSet parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         try {
@@ -687,7 +687,7 @@ public class IDTokenClaimsSet extends CommonClaimsSet {
      * @return The ID token claims set.
      * @throws ParseException If parsing failed.
      */
-    public static IDTokenClaimsSet parse(final String json)
+    public static IDTokenClaimsSet parse(String json)
             throws OAuth2JSONParseException {
 
         try {

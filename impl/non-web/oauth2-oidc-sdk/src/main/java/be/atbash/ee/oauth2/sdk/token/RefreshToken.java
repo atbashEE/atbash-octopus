@@ -54,7 +54,7 @@ public final class RefreshToken extends Token {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public RefreshToken(final int byteLength) {
+    public RefreshToken(int byteLength) {
 
         super(byteLength);
     }
@@ -66,7 +66,7 @@ public final class RefreshToken extends Token {
      * @param value The refresh token value. Must not be {@code null} or
      *              empty string.
      */
-    public RefreshToken(final String value) {
+    public RefreshToken(String value) {
 
         super(value);
     }
@@ -101,7 +101,7 @@ public final class RefreshToken extends Token {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  refresh token.
      */
-    public static RefreshToken parse(final JsonObject jsonObject)
+    public static RefreshToken parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         String value = jsonObject.getString("refresh_token", null);
@@ -115,7 +115,7 @@ public final class RefreshToken extends Token {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof RefreshToken &&
                 this.toString().equals(object.toString());

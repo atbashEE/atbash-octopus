@@ -78,7 +78,7 @@ public class ClientCredentialsGrant extends AuthorizationGrant {
      * @return The client credentials grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static ClientCredentialsGrant parse(final Map<String, List<String>> params)
+    public static ClientCredentialsGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type

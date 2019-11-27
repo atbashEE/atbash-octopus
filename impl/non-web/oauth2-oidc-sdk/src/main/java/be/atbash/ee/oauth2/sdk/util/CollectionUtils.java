@@ -34,7 +34,7 @@ public final class CollectionUtils {
      * @return {@code true} if the collection is {@code null} or empty,
      * else {@code false}.
      */
-    public static boolean isEmpty(final Collection<?> collection) {
+    public static boolean isEmpty(Collection<?> collection) {
 
         return collection == null || collection.isEmpty();
     }
@@ -47,7 +47,7 @@ public final class CollectionUtils {
      * @return {@code true} if the collection is not empty, else
      * {@code false}.
      */
-    public static boolean isNotEmpty(final Collection<?> collection) {
+    public static boolean isNotEmpty(Collection<?> collection) {
 
         return collection != null && !collection.isEmpty();
     }

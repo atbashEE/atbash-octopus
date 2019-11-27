@@ -29,14 +29,14 @@ public final class AuthorizedParty extends Identifier {
      * @param value The authorised party value. Must not be {@code null}
      *              or empty string.
      */
-    public AuthorizedParty(final String value) {
+    public AuthorizedParty(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof AuthorizedParty &&
                 this.toString().equals(object.toString());

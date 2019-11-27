@@ -56,7 +56,7 @@ public final class ACRRequest {
      * @param voluntaryACRs The requested voluntary ACR values, by order of
      *                      preference, {@code null} if not specified.
      */
-    public ACRRequest(final List<ACR> essentialACRs, final List<ACR> voluntaryACRs) {
+    public ACRRequest(List<ACR> essentialACRs, List<ACR> voluntaryACRs) {
 
         this.essentialACRs = essentialACRs;
         this.voluntaryACRs = voluntaryACRs;
@@ -111,7 +111,7 @@ public final class ACRRequest {
      * @return The ACR request, updated if registered default ACR values
      * were applied.
      */
-    public ACRRequest applyDefaultACRs(final OIDCClientInformation clientInfo) {
+    public ACRRequest applyDefaultACRs(OIDCClientInformation clientInfo) {
 
         // Apply default ACR from client reg store as voluntary?
         if (isEmpty()) {
@@ -137,7 +137,7 @@ public final class ACRRequest {
      * @throws GeneralException If a requested essential ACR value is not
      *                          supported by the OpenID provider.
      */
-    public void ensureACRSupport(final AuthorizationRequest authzRequest, final List<ACR> supportedACRs)
+    public void ensureACRSupport(AuthorizationRequest authzRequest, List<ACR> supportedACRs)
             throws GeneralException {
 
         // Ensure any requested essential ACR is supported
@@ -178,7 +178,7 @@ public final class ACRRequest {
      *                          supported by the OpenID provider.
      */
     @Deprecated
-    public void ensureACRSupport(final AuthenticationRequest authRequest, final OIDCProviderMetadata opMetadata)
+    public void ensureACRSupport(AuthenticationRequest authRequest, OIDCProviderMetadata opMetadata)
             throws GeneralException {
 
         ensureACRSupport(authRequest, opMetadata.getACRs());
@@ -195,7 +195,7 @@ public final class ACRRequest {
      *                     not be {@code null}.
      * @return The resolved ACR request.
      */
-    public static ACRRequest resolve(final AuthorizationRequest authzRequest) {
+    public static ACRRequest resolve(AuthorizationRequest authzRequest) {
 
         List<ACR> essentialACRs = null;
         List<ACR> voluntaryACRs = null;

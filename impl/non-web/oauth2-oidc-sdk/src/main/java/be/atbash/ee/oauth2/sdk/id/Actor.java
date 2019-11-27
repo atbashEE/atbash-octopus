@@ -54,7 +54,7 @@ public final class Actor implements Serializable, Comparable<Actor> {
      *
      * @param subject The subject. Must not be {@code null}.
      */
-    public Actor(final Subject subject) {
+    public Actor(Subject subject) {
         this(subject, null, null);
     }
 
@@ -67,7 +67,7 @@ public final class Actor implements Serializable, Comparable<Actor> {
      *                not specified.
      * @param parent  Optional parent for the actor, {@code null} if none.
      */
-    public Actor(final Subject subject, final Issuer issuer, final Actor parent) {
+    public Actor(Subject subject, Issuer issuer, Actor parent) {
         if (subject == null) {
             throw new IllegalArgumentException("The subject must not be null");
         }
@@ -148,7 +148,7 @@ public final class Actor implements Serializable, Comparable<Actor> {
 
 
     @Override
-    public int compareTo(final Actor other) {
+    public int compareTo(Actor other) {
 
         return toJSONString().compareTo(other.toJSONString());
     }
@@ -221,7 +221,7 @@ public final class Actor implements Serializable, Comparable<Actor> {
      * @return The actor.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Actor parse(final JsonObject jsonObject)
+    public static Actor parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         Subject sub = new Subject(jsonObject.getString("sub"));
@@ -275,7 +275,7 @@ public final class Actor implements Serializable, Comparable<Actor> {
      * @return The actor, {@code null} if not specified.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Actor parseTopLevel(final JsonObject jsonObject)
+    public static Actor parseTopLevel(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         JsonObject actSpec = jsonObject.getJsonObject("act");

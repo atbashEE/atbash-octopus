@@ -140,10 +140,10 @@ public class AuthenticationErrorResponse
      * @param rm          The implied response mode, {@code null} if
      *                    unknown.
      */
-    public AuthenticationErrorResponse(final URI redirectURI,
-                                       final ErrorObject error,
-                                       final State state,
-                                       final ResponseMode rm) {
+    public AuthenticationErrorResponse(URI redirectURI,
+                                       ErrorObject error,
+                                       State state,
+                                       ResponseMode rm) {
 
         super(redirectURI, error, state, rm);
     }
@@ -160,9 +160,9 @@ public class AuthenticationErrorResponse
      * @param rm          The implied response mode, {@code null} if
      *                    unknown.
      */
-    public AuthenticationErrorResponse(final URI redirectURI,
-                                       final JWT jwtResponse,
-                                       final ResponseMode rm) {
+    public AuthenticationErrorResponse(URI redirectURI,
+                                       JWT jwtResponse,
+                                       ResponseMode rm) {
 
         super(redirectURI, jwtResponse, rm);
     }
@@ -188,7 +188,7 @@ public class AuthenticationErrorResponse
      *                      Must not be {@code null}.
      * @return The OpenID authentication error instance.
      */
-    private static AuthenticationErrorResponse toAuthenticationErrorResponse(final AuthorizationErrorResponse errorResponse) {
+    private static AuthenticationErrorResponse toAuthenticationErrorResponse(AuthorizationErrorResponse errorResponse) {
 
         if (errorResponse.getJWTResponse() != null) {
             // JARM
@@ -217,8 +217,8 @@ public class AuthenticationErrorResponse
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  OpenID Connect authentication error response.
      */
-    public static AuthenticationErrorResponse parse(final URI redirectURI,
-                                                    final Map<String, List<String>> params)
+    public static AuthenticationErrorResponse parse(URI redirectURI,
+                                                    Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         return toAuthenticationErrorResponse(AuthorizationErrorResponse.parse(redirectURI, params));
@@ -251,7 +251,7 @@ public class AuthenticationErrorResponse
      * @throws OAuth2JSONParseException If the URI couldn't be parsed to an OpenID
      *                                  Connect authentication error response.
      */
-    public static AuthenticationErrorResponse parse(final URI uri)
+    public static AuthenticationErrorResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
         return toAuthenticationErrorResponse(AuthorizationErrorResponse.parse(uri));
@@ -276,7 +276,7 @@ public class AuthenticationErrorResponse
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  OpenID Connect authentication error response.
      */
-    public static AuthenticationErrorResponse parse(final HTTPResponse httpResponse)
+    public static AuthenticationErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         return toAuthenticationErrorResponse(AuthorizationErrorResponse.parse(httpResponse));
@@ -303,7 +303,7 @@ public class AuthenticationErrorResponse
      *                                  OpenID Connect authentication error response.
      * @see #parse(HTTPResponse)
      */
-    public static AuthenticationErrorResponse parse(final HTTPRequest httpRequest)
+    public static AuthenticationErrorResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));

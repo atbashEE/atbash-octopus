@@ -33,7 +33,7 @@ public final class MapUtils {
      * @return {@code true} if the map is not {@code null} and not empty,
      * else {@code false}.
      */
-    public static boolean isNotEmpty(final Map<?, ?> map) {
+    public static boolean isNotEmpty(Map<?, ?> map) {
 
         return map != null && !map.isEmpty();
     }

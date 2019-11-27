@@ -29,14 +29,14 @@ public final class SessionID extends Identifier {
      *
      * @param value The session identifer value. Must not be {@code null}.
      */
-    public SessionID(final String value) {
+    public SessionID(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof SessionID &&
                 this.toString().equals(object.toString());

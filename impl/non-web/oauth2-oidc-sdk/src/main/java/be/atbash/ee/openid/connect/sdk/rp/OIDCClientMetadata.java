@@ -233,7 +233,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param metadata The base OAuth 2.0 client metadata. Must not be
      *                 {@code null}.
      */
-    public OIDCClientMetadata(final ClientMetadata metadata) {
+    public OIDCClientMetadata(ClientMetadata metadata) {
 
         super(metadata);
     }
@@ -271,7 +271,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param applicationType The client application type, {@code null} if
      *                        not specified.
      */
-    public void setApplicationType(final ApplicationType applicationType) {
+    public void setApplicationType(ApplicationType applicationType) {
 
         this.applicationType = applicationType;
     }
@@ -296,7 +296,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param subjectType The subject identifier type, {@code null} if not
      *                    specified.
      */
-    public void setSubjectType(final SubjectType subjectType) {
+    public void setSubjectType(SubjectType subjectType) {
 
         this.subjectType = subjectType;
     }
@@ -321,7 +321,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param sectorIDURI The sector identifier URI, {@code null} if not
      *                    specified.
      */
-    public void setSectorIDURI(final URI sectorIDURI) {
+    public void setSectorIDURI(URI sectorIDURI) {
 
         if (sectorIDURI != null) {
             SectorID.ensureHTTPScheme(sectorIDURI);
@@ -386,7 +386,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param idTokenJWSAlg The JWS algorithm, {@code null} if not
      *                      specified.
      */
-    public void setIDTokenJWSAlg(final JWSAlgorithm idTokenJWSAlg) {
+    public void setIDTokenJWSAlg(JWSAlgorithm idTokenJWSAlg) {
 
         this.idTokenJWSAlg = idTokenJWSAlg;
     }
@@ -413,7 +413,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param idTokenJWEAlg The JWE algorithm, {@code null} if not
      *                      specified.
      */
-    public void setIDTokenJWEAlg(final JWEAlgorithm idTokenJWEAlg) {
+    public void setIDTokenJWEAlg(JWEAlgorithm idTokenJWEAlg) {
 
         this.idTokenJWEAlg = idTokenJWEAlg;
     }
@@ -439,7 +439,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      *
      * @param idTokenJWEEnc The JWE method, {@code null} if not specified.
      */
-    public void setIDTokenJWEEnc(final EncryptionMethod idTokenJWEEnc) {
+    public void setIDTokenJWEEnc(EncryptionMethod idTokenJWEEnc) {
 
         this.idTokenJWEEnc = idTokenJWEEnc;
     }
@@ -466,7 +466,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param userInfoJWSAlg The JWS algorithm, {@code null} if not
      *                       specified.
      */
-    public void setUserInfoJWSAlg(final JWSAlgorithm userInfoJWSAlg) {
+    public void setUserInfoJWSAlg(JWSAlgorithm userInfoJWSAlg) {
 
         this.userInfoJWSAlg = userInfoJWSAlg;
     }
@@ -493,7 +493,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param userInfoJWEAlg The JWE algorithm, {@code null} if not
      *                       specified.
      */
-    public void setUserInfoJWEAlg(final JWEAlgorithm userInfoJWEAlg) {
+    public void setUserInfoJWEAlg(JWEAlgorithm userInfoJWEAlg) {
 
         this.userInfoJWEAlg = userInfoJWEAlg;
     }
@@ -519,7 +519,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      *
      * @param userInfoJWEEnc The JWE method, {@code null} if not specified.
      */
-    public void setUserInfoJWEEnc(final EncryptionMethod userInfoJWEEnc) {
+    public void setUserInfoJWEEnc(EncryptionMethod userInfoJWEEnc) {
 
         this.userInfoJWEEnc = userInfoJWEEnc;
     }
@@ -545,7 +545,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param defaultMaxAge The default max authentication age, in seconds.
      *                      If not specified -1.
      */
-    public void setDefaultMaxAge(final int defaultMaxAge) {
+    public void setDefaultMaxAge(int defaultMaxAge) {
 
         this.defaultMaxAge = defaultMaxAge;
     }
@@ -573,7 +573,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param requiresAuthTime If {@code true} the {@code auth_Time} claim
      *                         in the ID Token is required by default.
      */
-    public void requiresAuthTime(final boolean requiresAuthTime) {
+    public void requiresAuthTime(boolean requiresAuthTime) {
 
         this.requiresAuthTime = requiresAuthTime;
     }
@@ -601,7 +601,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param defaultACRs The default ACRs, by order of preference,
      *                    {@code null} if not specified.
      */
-    public void setDefaultACRs(final List<ACR> defaultACRs) {
+    public void setDefaultACRs(List<ACR> defaultACRs) {
 
         this.defaultACRs = defaultACRs;
     }
@@ -627,7 +627,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      *
      * @param loginURI The login URI, {@code null} if not specified.
      */
-    public void setInitiateLoginURI(final URI loginURI) {
+    public void setInitiateLoginURI(URI loginURI) {
 
         this.initiateLoginURI = loginURI;
     }
@@ -652,7 +652,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param logoutURIs The logout redirection URIs, {@code null} if not
      *                   specified.
      */
-    public void setPostLogoutRedirectionURIs(final Set<URI> logoutURIs) {
+    public void setPostLogoutRedirectionURIs(Set<URI> logoutURIs) {
 
         postLogoutRedirectURIs = logoutURIs;
     }
@@ -677,7 +677,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param frontChannelLogoutURI The front-channel logout URI,
      *                              {@code null} if not specified.
      */
-    public void setFrontChannelLogoutURI(final URI frontChannelLogoutURI) {
+    public void setFrontChannelLogoutURI(URI frontChannelLogoutURI) {
 
         this.frontChannelLogoutURI = frontChannelLogoutURI;
     }
@@ -732,7 +732,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param backChannelLogoutURI The back-channel logout URI,
      *                             {@code null} if not specified.
      */
-    public void setBackChannelLogoutURI(final URI backChannelLogoutURI) {
+    public void setBackChannelLogoutURI(URI backChannelLogoutURI) {
 
         this.backChannelLogoutURI = backChannelLogoutURI;
     }
@@ -762,7 +762,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @param requiresSession {@code true} if a session identifier is
      *                        required, else {@code false}.
      */
-    public void requiresBackChannelLogoutSession(final boolean requiresSession) {
+    public void requiresBackChannelLogoutSession(boolean requiresSession) {
 
         backChannelLogoutSessionRequired = requiresSession;
     }
@@ -898,7 +898,7 @@ public class OIDCClientMetadata extends ClientMetadata {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OpenID Connect client metadata instance.
      */
-    public static OIDCClientMetadata parse(final JsonObject jsonObject)
+    public static OIDCClientMetadata parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         ClientMetadata baseMetadata = ClientMetadata.parse(jsonObject);

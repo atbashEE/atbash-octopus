@@ -34,7 +34,7 @@ public final class URIUtils {
      * @return The base part of the URI, {@code null} if the original URI
      * is {@code null} or doesn't specify a protocol.
      */
-    public static URI getBaseURI(final URI uri) {
+    public static URI getBaseURI(URI uri) {
 
         if (uri == null) {
             return null;
@@ -57,7 +57,7 @@ public final class URIUtils {
      * @return The URI with stripped query string, {@code null} if the
      * original URI is {@code null} or doesn't specify a protocol.
      */
-    public static URI stripQueryString(final URI uri) {
+    public static URI stripQueryString(URI uri) {
 
         if (uri == null) {
             return null;
@@ -79,7 +79,7 @@ public final class URIUtils {
      * @return The URI with no trailing slash, {@code null} if the original
      * URI is {@code null}.
      */
-    public static URI removeTrailingSlash(final URI uri) {
+    public static URI removeTrailingSlash(URI uri) {
 
         if (uri == null) {
             return null;

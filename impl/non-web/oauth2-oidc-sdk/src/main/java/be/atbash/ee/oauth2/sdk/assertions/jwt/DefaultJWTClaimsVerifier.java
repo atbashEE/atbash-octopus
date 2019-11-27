@@ -102,8 +102,8 @@ public class DefaultJWTClaimsVerifier {
      * @param requiredClaims   The names of the JWT claims that must be
      *                         present, empty set or {@code null} if none.
      */
-    public DefaultJWTClaimsVerifier(final JWTClaimsSet exactMatchClaims,
-                                    final Set<String> requiredClaims) {
+    public DefaultJWTClaimsVerifier(JWTClaimsSet exactMatchClaims,
+                                    Set<String> requiredClaims) {
 
         this(null, exactMatchClaims, requiredClaims, null);
     }
@@ -119,9 +119,9 @@ public class DefaultJWTClaimsVerifier {
      * @param requiredClaims   The names of the JWT claims that must be
      *                         present, empty set or {@code null} if none.
      */
-    public DefaultJWTClaimsVerifier(final String requiredAudience,
-                                    final JWTClaimsSet exactMatchClaims,
-                                    final Set<String> requiredClaims) {
+    public DefaultJWTClaimsVerifier(String requiredAudience,
+                                    JWTClaimsSet exactMatchClaims,
+                                    Set<String> requiredClaims) {
 
         this(requiredAudience != null ? Collections.singleton(requiredAudience) : null,
                 exactMatchClaims,
@@ -144,10 +144,10 @@ public class DefaultJWTClaimsVerifier {
      * @param prohibitedClaims The names of the JWT claims that must not be
      *                         present, empty set or {@code null} if none.
      */
-    public DefaultJWTClaimsVerifier(final Set<String> acceptedAudience,
-                                    final JWTClaimsSet exactMatchClaims,
-                                    final Set<String> requiredClaims,
-                                    final Set<String> prohibitedClaims) {
+    public DefaultJWTClaimsVerifier(Set<String> acceptedAudience,
+                                    JWTClaimsSet exactMatchClaims,
+                                    Set<String> requiredClaims,
+                                    Set<String> prohibitedClaims) {
 
         this.acceptedAudienceValues = acceptedAudience != null ? Collections.unmodifiableSet(acceptedAudience) : null;
 
@@ -217,12 +217,12 @@ public class DefaultJWTClaimsVerifier {
     }
 
 
-    public void setMaxClockSkew(final int maxClockSkewSeconds) {
+    public void setMaxClockSkew(int maxClockSkewSeconds) {
         maxClockSkew = maxClockSkewSeconds;
     }
 
 
-    public void verify(final JWTClaimsSet claimsSet)
+    public void verify(JWTClaimsSet claimsSet)
             throws BadJWTException {
 
         // Check audience
@@ -271,9 +271,9 @@ public class DefaultJWTClaimsVerifier {
         }
 
         // Check time window
-        final Date now = new Date();
+        Date now = new Date();
 
-        final Date exp = claimsSet.getExpirationTime();
+        Date exp = claimsSet.getExpirationTime();
         if (exp != null) {
 
             if (!DateUtils.isAfter(exp, now, maxClockSkew)) {
@@ -281,7 +281,7 @@ public class DefaultJWTClaimsVerifier {
             }
         }
 
-        final Date nbf = claimsSet.getNotBeforeTime();
+        Date nbf = claimsSet.getNotBeforeTime();
         if (nbf != null) {
 
             if (!DateUtils.isBefore(nbf, now, maxClockSkew)) {

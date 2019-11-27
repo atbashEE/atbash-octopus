@@ -65,7 +65,7 @@ public class MockServletRequest implements HttpServletRequest {
 	private String entityBody;
 
 
-	public void setEntityBody(final String entityBody) {
+	public void setEntityBody(String entityBody) {
 
 		this.entityBody = entityBody;
 	}
@@ -89,7 +89,7 @@ public class MockServletRequest implements HttpServletRequest {
 	}
 
 
-	public void setHeader(final String header, final String... value) {
+	public void setHeader(String header, String... value) {
 		
 		headers.put(header.toLowerCase(), Arrays.asList(value));
 	}
@@ -127,7 +127,7 @@ public class MockServletRequest implements HttpServletRequest {
 	}
 
 
-	public void setMethod(final String method) {
+	public void setMethod(String method) {
 
 		this.method = method;
 	}
@@ -158,7 +158,7 @@ public class MockServletRequest implements HttpServletRequest {
 	}
 
 
-	public void setQueryString(final String queryString) {
+	public void setQueryString(String queryString) {
 
 		this.queryString = queryString;
 	}
@@ -195,7 +195,7 @@ public class MockServletRequest implements HttpServletRequest {
 	}
 
 
-	public void setRequestURI(final String requestURI) {
+	public void setRequestURI(String requestURI) {
 
 		this.requestURI = requestURI;
 	}
@@ -388,9 +388,9 @@ public class MockServletRequest implements HttpServletRequest {
 
 		return new BufferedReader(new StringReader(entityBody));
 	}
-	
-	
-	public void setRemoteAddr(final String remoteAddr) {
+
+
+	public void setRemoteAddr(String remoteAddr) {
 		
 		this.remoteAddr = remoteAddr;
 	}
@@ -463,7 +463,7 @@ public class MockServletRequest implements HttpServletRequest {
 	}
 
 
-	public void setLocalAddr(final String addr) {
+	public void setLocalAddr(String addr) {
 
 		this.addr = addr;
 	}
@@ -476,7 +476,7 @@ public class MockServletRequest implements HttpServletRequest {
 	}
 
 
-	public void setLocalPort(final int localPort) {
+	public void setLocalPort(int localPort) {
 
 		this.localPort = localPort;
 	}

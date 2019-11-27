@@ -17,8 +17,6 @@ package be.atbash.ee.oauth2.sdk.auth;
 
 
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
-import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.Test;
 
 import java.security.MessageDigest;
@@ -93,8 +91,8 @@ public class SecretTest {
         assertThat(s1.equals(s2)).isFalse();
 
         // Ensure expiration date is ignored in comparison
-        final Date now = new Date();
-        final Date tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000L);
+        Date now = new Date();
+        Date tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000L);
         assertThat(new Secret("password", tomorrow).equals(new Secret("password", new Date()))).isTrue();
     }
 

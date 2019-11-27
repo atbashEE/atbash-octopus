@@ -233,9 +233,9 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                     be specified. Must not be {@code null}.
      * @param jwkSetURI    The JWK set URI. Must not be {@code null}.
      */
-    public OIDCProviderMetadata(final Issuer issuer,
-                                final List<SubjectType> subjectTypes,
-                                final URI jwkSetURI) {
+    public OIDCProviderMetadata(Issuer issuer,
+                                List<SubjectType> subjectTypes,
+                                URI jwkSetURI) {
 
         super(issuer);
 
@@ -306,7 +306,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param userInfoEndpoint The UserInfo endpoint URI, {@code null} if
      *                         not specified.
      */
-    public void setUserInfoEndpointURI(final URI userInfoEndpoint) {
+    public void setUserInfoEndpointURI(URI userInfoEndpoint) {
 
         this.userInfoEndpoint = userInfoEndpoint;
     }
@@ -331,7 +331,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param checkSessionIframe The check session iframe URI, {@code null}
      *                           if not specified.
      */
-    public void setCheckSessionIframeURI(final URI checkSessionIframe) {
+    public void setCheckSessionIframeURI(URI checkSessionIframe) {
 
         this.checkSessionIframe = checkSessionIframe;
     }
@@ -356,7 +356,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param endSessionEndpoint The logoout endpoint URI, {@code null} if
      *                           not specified.
      */
-    public void setEndSessionEndpointURI(final URI endSessionEndpoint) {
+    public void setEndSessionEndpointURI(URI endSessionEndpoint) {
 
         this.endSessionEndpoint = endSessionEndpoint;
     }
@@ -379,7 +379,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *
      * @param acrValues The supported ACRs, {@code null} if not specified.
      */
-    public void setACRs(final List<ACR> acrValues) {
+    public void setACRs(List<ACR> acrValues) {
 
         this.acrValues = acrValues;
     }
@@ -416,7 +416,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param idTokenJWSAlgs The supported JWS algorithms, {@code null} if
      *                       not specified.
      */
-    public void setIDTokenJWSAlgs(final List<JWSAlgorithm> idTokenJWSAlgs) {
+    public void setIDTokenJWSAlgs(List<JWSAlgorithm> idTokenJWSAlgs) {
 
         this.idTokenJWSAlgs = idTokenJWSAlgs;
     }
@@ -441,7 +441,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param idTokenJWEAlgs The supported JWE algorithms, {@code null} if
      *                       not specified.
      */
-    public void setIDTokenJWEAlgs(final List<JWEAlgorithm> idTokenJWEAlgs) {
+    public void setIDTokenJWEAlgs(List<JWEAlgorithm> idTokenJWEAlgs) {
 
         this.idTokenJWEAlgs = idTokenJWEAlgs;
     }
@@ -467,7 +467,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param idTokenJWEEncs The supported encryption methods, {@code null}
      *                       if not specified.
      */
-    public void setIDTokenJWEEncs(final List<EncryptionMethod> idTokenJWEEncs) {
+    public void setIDTokenJWEEncs(List<EncryptionMethod> idTokenJWEEncs) {
 
         this.idTokenJWEEncs = idTokenJWEEncs;
     }
@@ -492,7 +492,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param userInfoJWSAlgs The supported JWS algorithms, {@code null} if
      *                        not specified.
      */
-    public void setUserInfoJWSAlgs(final List<JWSAlgorithm> userInfoJWSAlgs) {
+    public void setUserInfoJWSAlgs(List<JWSAlgorithm> userInfoJWSAlgs) {
 
         this.userInfoJWSAlgs = userInfoJWSAlgs;
     }
@@ -517,7 +517,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param userInfoJWEAlgs The supported JWE algorithms, {@code null} if
      *                        not specified.
      */
-    public void setUserInfoJWEAlgs(final List<JWEAlgorithm> userInfoJWEAlgs) {
+    public void setUserInfoJWEAlgs(List<JWEAlgorithm> userInfoJWEAlgs) {
 
         this.userInfoJWEAlgs = userInfoJWEAlgs;
     }
@@ -545,7 +545,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param userInfoJWEEncs The supported encryption methods,
      *                        {@code null} if not specified.
      */
-    public void setUserInfoJWEEncs(final List<EncryptionMethod> userInfoJWEEncs) {
+    public void setUserInfoJWEEncs(List<EncryptionMethod> userInfoJWEEncs) {
 
         this.userInfoJWEEncs = userInfoJWEEncs;
     }
@@ -570,7 +570,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param displays The supported displays, {@code null} if not
      *                 specified.
      */
-    public void setDisplays(final List<Display> displays) {
+    public void setDisplays(List<Display> displays) {
 
         this.displays = displays;
     }
@@ -595,7 +595,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param claimTypes The supported claim types, {@code null} if not
      *                   specified.
      */
-    public void setClaimTypes(final List<ClaimType> claimTypes) {
+    public void setClaimTypes(List<ClaimType> claimTypes) {
 
         this.claimTypes = claimTypes;
     }
@@ -620,7 +620,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param claims The supported claims names, {@code null} if not
      *               specified.
      */
-    public void setClaims(final List<String> claims) {
+    public void setClaims(List<String> claims) {
 
         this.claims = claims;
     }
@@ -645,7 +645,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @param claimsLocales The supported claims locales, {@code null} if
      *                      not specified.
      */
-    public void setClaimLocales(final List<LangTag> claimsLocales) {
+    public void setClaimLocales(List<LangTag> claimsLocales) {
 
         this.claimsLocales = claimsLocales;
     }
@@ -674,7 +674,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                             parameter is supported, else
      *                             {@code false}.
      */
-    public void setSupportsClaimsParams(final boolean claimsParamSupported) {
+    public void setSupportsClaimsParams(boolean claimsParamSupported) {
 
         this.claimsParamSupported = claimsParamSupported;
     }
@@ -701,7 +701,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                                    logout is supported, else
      *                                    {@code false}.
      */
-    public void setSupportsFrontChannelLogout(final boolean frontChannelLogoutSupported) {
+    public void setSupportsFrontChannelLogout(boolean frontChannelLogoutSupported) {
 
         this.frontChannelLogoutSupported = frontChannelLogoutSupported;
     }
@@ -731,7 +731,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                                           a session ID is supported,
      *                                           else {@code false}.
      */
-    public void setSupportsFrontChannelLogoutSession(final boolean frontChannelLogoutSessionSupported) {
+    public void setSupportsFrontChannelLogoutSession(boolean frontChannelLogoutSessionSupported) {
 
         this.frontChannelLogoutSessionSupported = frontChannelLogoutSessionSupported;
     }
@@ -758,7 +758,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                                   logout is supported, else
      *                                   {@code false}.
      */
-    public void setSupportsBackChannelLogout(final boolean backChannelLogoutSupported) {
+    public void setSupportsBackChannelLogout(boolean backChannelLogoutSupported) {
 
         this.backChannelLogoutSupported = backChannelLogoutSupported;
     }
@@ -788,7 +788,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                                          session ID is supported,
      *                                          else {@code false}.
      */
-    public void setSupportsBackChannelLogoutSession(final boolean backChannelLogoutSessionSupported) {
+    public void setSupportsBackChannelLogoutSession(boolean backChannelLogoutSessionSupported) {
 
         this.backChannelLogoutSessionSupported = backChannelLogoutSessionSupported;
     }
@@ -988,7 +988,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OpenID Provider metadata.
      */
-    public static OIDCProviderMetadata parse(final JsonObject jsonObject)
+    public static OIDCProviderMetadata parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         AuthorizationServerMetadata as = AuthorizationServerMetadata.parse(jsonObject);
@@ -1256,7 +1256,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @throws OAuth2JSONParseException If the JSON object string couldn't be parsed
      *                                  to an OpenID Provider metadata.
      */
-    public static OIDCProviderMetadata parse(final String s)
+    public static OIDCProviderMetadata parse(String s)
             throws OAuth2JSONParseException {
 
         try {
@@ -1276,7 +1276,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * @return The OpenID Provider metadata URL.
      * @throws GeneralException If the issuer identifier is invalid.
      */
-    public static URL resolveURL(final Issuer issuer)
+    public static URL resolveURL(Issuer issuer)
             throws GeneralException {
 
         try {
@@ -1312,7 +1312,7 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                          metadata are invalid.
      * @throws IOException      On a HTTP exception.
      */
-    public static OIDCProviderMetadata resolve(final Issuer issuer)
+    public static OIDCProviderMetadata resolve(Issuer issuer)
             throws GeneralException, IOException {
 
         return resolve(issuer, 0, 0);
@@ -1337,9 +1337,9 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      *                          metadata are invalid.
      * @throws IOException      On a HTTP exception.
      */
-    public static OIDCProviderMetadata resolve(final Issuer issuer,
-                                               final int connectTimeout,
-                                               final int readTimeout)
+    public static OIDCProviderMetadata resolve(Issuer issuer,
+                                               int connectTimeout,
+                                               int readTimeout)
             throws GeneralException, IOException {
 
         URL configURL = resolveURL(issuer);

@@ -37,7 +37,7 @@ public final class AuthorizationCode extends Identifier {
      * @param value The code value. Must not be {@code null} or empty
      *              string.
      */
-    public AuthorizationCode(final String value) {
+    public AuthorizationCode(String value) {
 
         super(value);
     }
@@ -50,7 +50,7 @@ public final class AuthorizationCode extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public AuthorizationCode(final int byteLength) {
+    public AuthorizationCode(int byteLength) {
 
         super(byteLength);
     }
@@ -67,7 +67,7 @@ public final class AuthorizationCode extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof AuthorizationCode &&
                 this.toString().equals(object.toString());

@@ -84,8 +84,8 @@ public final class RequestObjectPOSTRequest extends AbstractOptionallyAuthentica
      *                      method will not be used.
      * @param requestObject The request object. Must not be {@code null}.
      */
-    public RequestObjectPOSTRequest(final URI uri,
-                                    final JWT requestObject) {
+    public RequestObjectPOSTRequest(URI uri,
+                                    JWT requestObject) {
 
         super(uri, null);
 
@@ -119,9 +119,9 @@ public final class RequestObjectPOSTRequest extends AbstractOptionallyAuthentica
      * @param requestJSONObject The request parameters as plain JSON
      *                          object. Must not be {@code null}.
      */
-    public RequestObjectPOSTRequest(final URI uri,
-                                    final TLSClientAuthentication tlsClientAuth,
-                                    final JsonObject requestJSONObject) {
+    public RequestObjectPOSTRequest(URI uri,
+                                    TLSClientAuthentication tlsClientAuth,
+                                    JsonObject requestJSONObject) {
 
         super(uri, tlsClientAuth);
 
@@ -214,7 +214,7 @@ public final class RequestObjectPOSTRequest extends AbstractOptionallyAuthentica
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  request object POST request.
      */
-    public static RequestObjectPOSTRequest parse(final HTTPRequest httpRequest)
+    public static RequestObjectPOSTRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         // Only HTTP POST accepted

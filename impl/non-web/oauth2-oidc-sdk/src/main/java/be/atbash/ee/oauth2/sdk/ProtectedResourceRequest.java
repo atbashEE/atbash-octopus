@@ -49,7 +49,7 @@ public abstract class ProtectedResourceRequest extends AbstractRequest {
      * @param accessToken An OAuth 2.0 access token for the request,
      *                    {@code null} if none.
      */
-    protected ProtectedResourceRequest(final URI uri, final AccessToken accessToken) {
+    protected ProtectedResourceRequest(URI uri, AccessToken accessToken) {
 
         super(uri);
 

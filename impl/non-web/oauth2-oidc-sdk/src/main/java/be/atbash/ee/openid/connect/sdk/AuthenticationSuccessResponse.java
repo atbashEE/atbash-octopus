@@ -104,13 +104,13 @@ public class AuthenticationSuccessResponse
      * @param rm           The response mode, {@code null} if not
      *                     specified.
      */
-    public AuthenticationSuccessResponse(final URI redirectURI,
-                                         final AuthorizationCode code,
-                                         final JWT idToken,
-                                         final AccessToken accessToken,
-                                         final State state,
-                                         final State sessionState,
-                                         final ResponseMode rm) {
+    public AuthenticationSuccessResponse(URI redirectURI,
+                                         AuthorizationCode code,
+                                         JWT idToken,
+                                         AccessToken accessToken,
+                                         State state,
+                                         State sessionState,
+                                         ResponseMode rm) {
 
         super(redirectURI, code, accessToken, state, rm);
 
@@ -130,9 +130,9 @@ public class AuthenticationSuccessResponse
      *                    {@code null}.
      * @param rm          The response mode, {@code null} if not specified.
      */
-    public AuthenticationSuccessResponse(final URI redirectURI,
-                                         final JWT jwtResponse,
-                                         final ResponseMode rm) {
+    public AuthenticationSuccessResponse(URI redirectURI,
+                                         JWT jwtResponse,
+                                         ResponseMode rm) {
 
         super(redirectURI, jwtResponse, rm);
         idToken = null;
@@ -256,8 +256,8 @@ public class AuthenticationSuccessResponse
      *                                  OpenID Connect authentication success
      *                                  response.
      */
-    public static AuthenticationSuccessResponse parse(final URI redirectURI,
-                                                      final Map<String, List<String>> params)
+    public static AuthenticationSuccessResponse parse(URI redirectURI,
+                                                      Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         AuthorizationSuccessResponse asr = AuthorizationSuccessResponse.parse(redirectURI, params);
@@ -324,7 +324,7 @@ public class AuthenticationSuccessResponse
      *                                  an OpenID Connect authentication success
      *                                  response.
      */
-    public static AuthenticationSuccessResponse parse(final URI uri)
+    public static AuthenticationSuccessResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
@@ -351,7 +351,7 @@ public class AuthenticationSuccessResponse
      *                                  response.
      * @see #parse(HTTPRequest)
      */
-    public static AuthenticationSuccessResponse parse(final HTTPResponse httpResponse)
+    public static AuthenticationSuccessResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         URI location = httpResponse.getLocation();
@@ -385,7 +385,7 @@ public class AuthenticationSuccessResponse
      *                                  response.
      * @see #parse(HTTPResponse)
      */
-    public static AuthenticationSuccessResponse parse(final HTTPRequest httpRequest)
+    public static AuthenticationSuccessResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));

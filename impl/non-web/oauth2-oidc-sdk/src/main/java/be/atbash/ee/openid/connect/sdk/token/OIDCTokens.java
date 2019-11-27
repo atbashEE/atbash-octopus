@@ -55,7 +55,7 @@ public final class OIDCTokens extends Tokens {
      * @param accessToken  The access token. Must not be {@code null}.
      * @param refreshToken The refresh token. If none {@code null}.
      */
-    public OIDCTokens(final JWT idToken, final AccessToken accessToken, final RefreshToken refreshToken) {
+    public OIDCTokens(JWT idToken, AccessToken accessToken, RefreshToken refreshToken) {
 
         super(accessToken, refreshToken);
 
@@ -75,7 +75,7 @@ public final class OIDCTokens extends Tokens {
      * @param accessToken   The access token. Must not be {@code null}.
      * @param refreshToken  The refresh token. If none {@code null}.
      */
-    public OIDCTokens(final String idTokenString, final AccessToken accessToken, final RefreshToken refreshToken) {
+    public OIDCTokens(String idTokenString, AccessToken accessToken, RefreshToken refreshToken) {
 
         super(accessToken, refreshToken);
 
@@ -96,7 +96,7 @@ public final class OIDCTokens extends Tokens {
      * @param accessToken  The access token. Must not be {@code null}.
      * @param refreshToken The refresh token. If none {@code null}.
      */
-    public OIDCTokens(final AccessToken accessToken, final RefreshToken refreshToken) {
+    public OIDCTokens(AccessToken accessToken, RefreshToken refreshToken) {
 
         super(accessToken, refreshToken);
         this.idToken = null;
@@ -194,7 +194,7 @@ public final class OIDCTokens extends Tokens {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OpenID Connect tokens instance.
      */
-    public static OIDCTokens parse(final JsonObject jsonObject)
+    public static OIDCTokens parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         AccessToken accessToken = AccessToken.parse(jsonObject);

@@ -49,14 +49,14 @@ public final class AccessTokenType extends Identifier {
      * @param value The access token type value. Must not be {@code null}
      *              or empty string.
      */
-    public AccessTokenType(final String value) {
+    public AccessTokenType(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof AccessTokenType &&
                 this.toString().equalsIgnoreCase(object.toString());

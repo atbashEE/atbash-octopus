@@ -80,9 +80,9 @@ public class PushedAuthorizationRequest extends AbstractOptionallyAuthenticatedR
      * @param authzRequest The authorisation request. Must not be
      *                     {@code null}.
      */
-    public PushedAuthorizationRequest(final URI uri,
-                                      final ClientAuthentication clientAuth,
-                                      final AuthorizationRequest authzRequest) {
+    public PushedAuthorizationRequest(URI uri,
+                                      ClientAuthentication clientAuth,
+                                      AuthorizationRequest authzRequest) {
         super(uri, clientAuth);
 
         if (clientAuth == null) {
@@ -108,8 +108,8 @@ public class PushedAuthorizationRequest extends AbstractOptionallyAuthenticatedR
      * @param authzRequest The authorisation request. Must not be
      *                     {@code null}.
      */
-    public PushedAuthorizationRequest(final URI uri,
-                                      final AuthorizationRequest authzRequest) {
+    public PushedAuthorizationRequest(URI uri,
+                                      AuthorizationRequest authzRequest) {
 
         super(uri, null);
         if (authzRequest == null) {
@@ -170,7 +170,7 @@ public class PushedAuthorizationRequest extends AbstractOptionallyAuthenticatedR
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  pushed authorisation request.
      */
-    public static PushedAuthorizationRequest parse(final HTTPRequest httpRequest)
+    public static PushedAuthorizationRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         // Only HTTP POST accepted

@@ -46,7 +46,7 @@ public final class URLUtils {
      * @return The base part of the URL, {@code null} if the original URL
      * is {@code null} or doesn't specify a protocol.
      */
-    public static URL getBaseURL(final URL url) {
+    public static URL getBaseURL(URL url) {
 
         if (url == null) {
             return null;
@@ -85,7 +85,7 @@ public final class URLUtils {
      *               {@code null}.
      * @return The serialised URL query string, empty if no parameters.
      */
-    public static String serializeParameters(final Map<String, List<String>> params) {
+    public static String serializeParameters(Map<String, List<String>> params) {
 
         if (params == null || params.isEmpty()) {
             return "";
@@ -153,7 +153,7 @@ public final class URLUtils {
      *               {@code null}.
      * @return The serialised URL query string, empty if no parameters.
      */
-    public static String serializeParametersAlt(final Map<String, String[]> params) {
+    public static String serializeParametersAlt(Map<String, String[]> params) {
 
         if (params == null) {
             return serializeParameters(null);
@@ -196,7 +196,7 @@ public final class URLUtils {
      * @param query The URL query string to parse. May be {@code null}.
      * @return A map of the URL query parameters, empty if none are found.
      */
-    public static Map<String, List<String>> parseParameters(final String query) {
+    public static Map<String, List<String>> parseParameters(String query) {
 
         Map<String, List<String>> params = new HashMap<>();
 

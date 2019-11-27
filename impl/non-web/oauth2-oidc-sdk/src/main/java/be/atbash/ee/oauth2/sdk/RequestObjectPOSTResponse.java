@@ -66,7 +66,7 @@ public abstract class RequestObjectPOSTResponse implements Response {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  request object POST response.
      */
-    public static RequestObjectPOSTResponse parse(final HTTPResponse httpResponse)
+    public static RequestObjectPOSTResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_CREATED || httpResponse.getStatusCode() == HTTPResponse.SC_OK) {

@@ -57,7 +57,7 @@ public final class CodeChallengeMethod extends Identifier {
      * @param value The code challenge method value. Must not be
      *              {@code null} or empty string.
      */
-    public CodeChallengeMethod(final String value) {
+    public CodeChallengeMethod(String value) {
 
         super(value);
     }
@@ -70,7 +70,7 @@ public final class CodeChallengeMethod extends Identifier {
      *              {@code null} or empty string.
      * @return The code challenge method.
      */
-    public static CodeChallengeMethod parse(final String value) {
+    public static CodeChallengeMethod parse(String value) {
 
         if (value.equals(PLAIN.getValue())) {
             return PLAIN;
@@ -83,7 +83,7 @@ public final class CodeChallengeMethod extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof CodeChallengeMethod &&
                 this.toString().equals(object.toString());

@@ -52,7 +52,7 @@ public final class JSONArrayUtils {
      * @throws OAuth2JSONParseException If the string cannot be parsed to a JSON
      *                                  array.
      */
-    public static JsonArray parse(final String data)
+    public static JsonArray parse(String data)
             throws OAuth2JSONParseException {
 
         JsonReader jsonReader = Json.createReader(new StringReader(data));

@@ -69,7 +69,7 @@ public abstract class DeviceAuthorizationResponse implements Response {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  device authorization response.
      */
-    public static DeviceAuthorizationResponse parse(final JsonObject jsonObject) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationResponse parse(JsonObject jsonObject) throws OAuth2JSONParseException {
 
         if (jsonObject.containsKey("device_code")) {
             return DeviceAuthorizationSuccessResponse.parse(jsonObject);
@@ -88,7 +88,7 @@ public abstract class DeviceAuthorizationResponse implements Response {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  device authorization response.
      */
-    public static DeviceAuthorizationResponse parse(final HTTPResponse httpResponse) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationResponse parse(HTTPResponse httpResponse) throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_OK) {
             return DeviceAuthorizationSuccessResponse.parse(httpResponse);

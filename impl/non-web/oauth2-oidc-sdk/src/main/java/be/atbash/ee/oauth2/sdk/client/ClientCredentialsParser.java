@@ -60,7 +60,7 @@ public class ClientCredentialsParser {
      * specified.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Date parseIDIssueDate(final JsonObject jsonObject)
+    public static Date parseIDIssueDate(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         if (jsonObject.containsKey("client_id_issued_at")) {
@@ -79,7 +79,7 @@ public class ClientCredentialsParser {
      * @return The client secret, {@code null} if not specified.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Secret parseSecret(final JsonObject jsonObject)
+    public static Secret parseSecret(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         if (jsonObject.containsKey("client_secret")) {
@@ -111,7 +111,7 @@ public class ClientCredentialsParser {
      * @return The client registration URI, {@code null} if not specified.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static URI parseRegistrationURI(final JsonObject jsonObject)
+    public static URI parseRegistrationURI(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         try {
@@ -131,7 +131,7 @@ public class ClientCredentialsParser {
      * specified.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static BearerAccessToken parseRegistrationAccessToken(final JsonObject jsonObject)
+    public static BearerAccessToken parseRegistrationAccessToken(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         if (jsonObject.containsKey("registration_access_token")) {

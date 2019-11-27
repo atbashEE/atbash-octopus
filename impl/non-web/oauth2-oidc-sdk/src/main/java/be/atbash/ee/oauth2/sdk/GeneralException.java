@@ -64,7 +64,7 @@ public class GeneralException extends Exception {
      *
      * @param message The exception message. May be {@code null}.
      */
-    public GeneralException(final String message) {
+    public GeneralException(String message) {
 
         this(message, null, null, null, null, null, null);
     }
@@ -76,7 +76,7 @@ public class GeneralException extends Exception {
      * @param message The exception message. May be {@code null}.
      * @param cause   The exception cause, {@code null} if not specified.
      */
-    public GeneralException(final String message, final Throwable cause) {
+    public GeneralException(String message, Throwable cause) {
 
         this(message, null, null, null, null, null, cause);
     }
@@ -89,7 +89,7 @@ public class GeneralException extends Exception {
      *              specified, is used to set the exception message. Must
      *              not be {@code null}.
      */
-    public GeneralException(final ErrorObject error) {
+    public GeneralException(ErrorObject error) {
 
         this(error.getDescription(), error, null, null, null, null, null);
     }
@@ -101,8 +101,8 @@ public class GeneralException extends Exception {
      * @param message The exception message. May be {@code null}.
      * @param error   The associated error, {@code null} if not specified.
      */
-    public GeneralException(final String message,
-                            final ErrorObject error) {
+    public GeneralException(String message,
+                            ErrorObject error) {
 
         this(message, error, null, null, null, null, null);
     }
@@ -115,9 +115,9 @@ public class GeneralException extends Exception {
      * @param error   The associated error, {@code null} if not specified.
      * @param cause   The exception cause, {@code null} if not specified.
      */
-    public GeneralException(final String message,
-                            final ErrorObject error,
-                            final Throwable cause) {
+    public GeneralException(String message,
+                            ErrorObject error,
+                            Throwable cause) {
 
         this(message, error, null, null, null, null, cause);
     }
@@ -138,12 +138,12 @@ public class GeneralException extends Exception {
      * @param state        The optional associated state parameter,
      *                     {@code null} if not specified.
      */
-    public GeneralException(final String message,
-                            final ErrorObject error,
-                            final ClientID clientID,
-                            final URI redirectURI,
-                            final ResponseMode responseMode,
-                            final State state) {
+    public GeneralException(String message,
+                            ErrorObject error,
+                            ClientID clientID,
+                            URI redirectURI,
+                            ResponseMode responseMode,
+                            State state) {
 
         this(message, error, clientID, redirectURI, responseMode, state, null);
     }
@@ -166,13 +166,13 @@ public class GeneralException extends Exception {
      * @param cause        The exception cause, {@code null} if not
      *                     specified.
      */
-    public GeneralException(final String message,
-                            final ErrorObject error,
-                            final ClientID clientID,
-                            final URI redirectURI,
-                            final ResponseMode responseMode,
-                            final State state,
-                            final Throwable cause) {
+    public GeneralException(String message,
+                            ErrorObject error,
+                            ClientID clientID,
+                            URI redirectURI,
+                            ResponseMode responseMode,
+                            State state,
+                            Throwable cause) {
 
         super(message, cause);
 

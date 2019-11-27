@@ -92,12 +92,12 @@ public abstract class AssertionDetails {
      * @param id       Unique identifier for the assertion, {@code null} if
      *                 not specified.
      */
-    public AssertionDetails(final Issuer issuer,
-                            final Subject subject,
-                            final List<Audience> audience,
-                            final Date iat,
-                            final Date exp,
-                            final Identifier id) {
+    public AssertionDetails(Issuer issuer,
+                            Subject subject,
+                            List<Audience> audience,
+                            Date iat,
+                            Date exp,
+                            Identifier id) {
         if (issuer == null) {
             throw new IllegalArgumentException("The issuer must not be null");
         }

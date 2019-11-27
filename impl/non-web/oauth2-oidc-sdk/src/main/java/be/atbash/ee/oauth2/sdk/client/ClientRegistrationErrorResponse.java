@@ -114,7 +114,7 @@ public class ClientRegistrationErrorResponse
      *              {@link #getStandardErrors standard errors} for a client
      *              registration error response. Must not be {@code null}.
      */
-    public ClientRegistrationErrorResponse(final ErrorObject error) {
+    public ClientRegistrationErrorResponse(ErrorObject error) {
 
         if (error == null) {
             throw new IllegalArgumentException("The error must not be null");
@@ -212,7 +212,7 @@ public class ClientRegistrationErrorResponse
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  client registration error response.
      */
-    public static ClientRegistrationErrorResponse parse(final HTTPResponse httpResponse)
+    public static ClientRegistrationErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCodeNotOK();

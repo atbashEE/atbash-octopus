@@ -121,7 +121,7 @@ public class OIDCProviderEndpointMetadata extends AuthorizationServerEndpointMet
      * @param userInfoEndpoint The UserInfo endpoint URI, {@code null} if
      *                         not specified.
      */
-    public void setUserInfoEndpointURI(final URI userInfoEndpoint) {
+    public void setUserInfoEndpointURI(URI userInfoEndpoint) {
 
         this.userInfoEndpoint = userInfoEndpoint;
     }
@@ -155,7 +155,7 @@ public class OIDCProviderEndpointMetadata extends AuthorizationServerEndpointMet
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OAuth 2.0 Authorisation Server endpoint metadata.
      */
-    public static OIDCProviderEndpointMetadata parse(final JsonObject jsonObject)
+    public static OIDCProviderEndpointMetadata parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         AuthorizationServerEndpointMetadata as = AuthorizationServerEndpointMetadata.parse(jsonObject);

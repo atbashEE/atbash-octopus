@@ -62,7 +62,7 @@ public final class ClientSecretBasic extends PlainClientSecret {
      * @param clientID The client identifier. Must not be {@code null}.
      * @param secret   The client secret. Must not be {@code null}.
      */
-    public ClientSecretBasic(final ClientID clientID, final Secret secret) {
+    public ClientSecretBasic(ClientID clientID, Secret secret) {
 
         super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, clientID, secret);
     }
@@ -109,7 +109,7 @@ public final class ClientSecretBasic extends PlainClientSecret {
 
 
     @Override
-    public void applyTo(final HTTPRequest httpRequest) {
+    public void applyTo(HTTPRequest httpRequest) {
 
         httpRequest.setAuthorization(toHTTPAuthorizationHeader());
     }
@@ -125,7 +125,7 @@ public final class ClientSecretBasic extends PlainClientSecret {
      * @throws OAuth2JSONParseException If the header couldn't be parsed to a client
      *                                  secret basic authentication.
      */
-    public static ClientSecretBasic parse(final String header)
+    public static ClientSecretBasic parse(String header)
             throws OAuth2JSONParseException {
 
         String[] parts = header.split("\\s");
@@ -171,7 +171,7 @@ public final class ClientSecretBasic extends PlainClientSecret {
      *                                  parsed to a client secret basic
      *                                  authentication.
      */
-    public static ClientSecretBasic parse(final HTTPRequest httpRequest)
+    public static ClientSecretBasic parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         String header = httpRequest.getAuthorization();

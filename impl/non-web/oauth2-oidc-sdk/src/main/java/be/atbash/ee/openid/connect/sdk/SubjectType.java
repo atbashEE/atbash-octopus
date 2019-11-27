@@ -65,7 +65,7 @@ public enum SubjectType {
      * @throws OAuth2JSONParseException If the parsed string is {@code null} or
      *                                  doesn't match a subject identifier type.
      */
-    public static SubjectType parse(final String s)
+    public static SubjectType parse(String s)
             throws OAuth2JSONParseException {
         if (StringUtils.isEmpty(s)) {
             throw new OAuth2JSONParseException("Null or empty subject type string");

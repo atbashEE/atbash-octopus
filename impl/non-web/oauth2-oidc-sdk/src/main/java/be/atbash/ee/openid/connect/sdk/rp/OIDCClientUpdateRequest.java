@@ -85,11 +85,11 @@ public class OIDCClientUpdateRequest extends ClientUpdateRequest {
      * @param secret      The optional client secret, {@code null} if not
      *                    specified.
      */
-    public OIDCClientUpdateRequest(final URI uri,
-                                   final ClientID id,
-                                   final BearerAccessToken accessToken,
-                                   final OIDCClientMetadata metadata,
-                                   final Secret secret) {
+    public OIDCClientUpdateRequest(URI uri,
+                                   ClientID id,
+                                   BearerAccessToken accessToken,
+                                   OIDCClientMetadata metadata,
+                                   Secret secret) {
 
         super(uri, id, accessToken, metadata, secret);
     }
@@ -115,7 +115,7 @@ public class OIDCClientUpdateRequest extends ClientUpdateRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
      *                                  OpenID Connect client update request.
      */
-    public static OIDCClientUpdateRequest parse(final HTTPRequest httpRequest)
+    public static OIDCClientUpdateRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.PUT);

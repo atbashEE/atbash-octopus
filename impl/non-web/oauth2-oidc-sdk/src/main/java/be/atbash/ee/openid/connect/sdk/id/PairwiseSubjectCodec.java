@@ -67,7 +67,7 @@ public abstract class PairwiseSubjectCodec {
      *
      * @param salt The salt, {@code null} if not required.
      */
-    public PairwiseSubjectCodec(final byte[] salt) {
+    public PairwiseSubjectCodec(byte[] salt) {
 
         this.salt = salt;
     }
@@ -100,7 +100,7 @@ public abstract class PairwiseSubjectCodec {
      * @param provider The security provider, {@code null} if not specified
      *                 (implies the default one).
      */
-    public void setProvider(final Provider provider) {
+    public void setProvider(Provider provider) {
         this.provider = provider;
     }
 
@@ -116,7 +116,7 @@ public abstract class PairwiseSubjectCodec {
      *                  {@code null}.
      * @return The pairwise subject identifier.
      */
-    public Subject encode(final URI sectorURI, final Subject localSub) {
+    public Subject encode(URI sectorURI, Subject localSub) {
 
         return encode(new SectorID(sectorURI), localSub);
     }
@@ -132,7 +132,7 @@ public abstract class PairwiseSubjectCodec {
      *                 {@code null}.
      * @return The pairwise subject identifier.
      */
-    public abstract Subject encode(final SectorID sectorID, final Subject localSub);
+    public abstract Subject encode(SectorID sectorID, Subject localSub);
 
 
     /**
@@ -145,7 +145,7 @@ public abstract class PairwiseSubjectCodec {
      *                        valid and not {@code null}.
      * @return The matching sector identifier and local subject.
      */
-    public Map.Entry<SectorID, Subject> decode(final Subject pairwiseSubject)
+    public Map.Entry<SectorID, Subject> decode(Subject pairwiseSubject)
              {
 
         throw new UnsupportedOperationException("Pairwise subject decoding is not supported");

@@ -108,7 +108,7 @@ public class JWTBearerGrant extends AssertionGrant {
      *                  claims are not validated for compliance with the
      *                  standard.
      */
-    public JWTBearerGrant(final SignedJWT assertion) {
+    public JWTBearerGrant(SignedJWT assertion) {
 
         super(GRANT_TYPE);
 
@@ -129,7 +129,7 @@ public class JWTBearerGrant extends AssertionGrant {
      *                  or {@code null}. The JWT claims are not validated
      *                  for compliance with the standard.
      */
-    public JWTBearerGrant(final JWEObject assertion) {
+    public JWTBearerGrant(JWEObject assertion) {
 
         super(GRANT_TYPE);
 
@@ -150,7 +150,7 @@ public class JWTBearerGrant extends AssertionGrant {
      *                  {@code null}. The JWT claims are not validated for
      *                  compliance with the standard.
      */
-    public JWTBearerGrant(final EncryptedJWT assertion) {
+    public JWTBearerGrant(EncryptedJWT assertion) {
 
         this((JWEObject) assertion);
     }
@@ -214,7 +214,7 @@ public class JWTBearerGrant extends AssertionGrant {
      * @return The JWT bearer grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static JWTBearerGrant parse(final Map<String, List<String>> params)
+    public static JWTBearerGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type
@@ -236,7 +236,7 @@ public class JWTBearerGrant extends AssertionGrant {
         }
 
         try {
-            final JOSEObject assertion = JOSEObject.parse(assertionString);
+            JOSEObject assertion = JOSEObject.parse(assertionString);
 
             if (assertion instanceof PlainObject) {
 

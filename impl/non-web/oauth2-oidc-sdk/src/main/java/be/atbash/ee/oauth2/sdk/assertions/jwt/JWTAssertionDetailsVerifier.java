@@ -92,7 +92,7 @@ public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
      *                         for OpenID provider it may also include the
      *                         issuer URI.
      */
-    public JWTAssertionDetailsVerifier(final Set<Audience> expectedAudience) {
+    public JWTAssertionDetailsVerifier(Set<Audience> expectedAudience) {
 
         if (CollectionUtils.isEmpty(expectedAudience)) {
             throw new IllegalArgumentException("The expected audience set must not be null or empty");
@@ -113,7 +113,7 @@ public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
     }
 
 
-    public void verify(final JWTClaimsSet claimsSet)
+    public void verify(JWTClaimsSet claimsSet)
             throws BadJWTException {
 
         super.verify(claimsSet);

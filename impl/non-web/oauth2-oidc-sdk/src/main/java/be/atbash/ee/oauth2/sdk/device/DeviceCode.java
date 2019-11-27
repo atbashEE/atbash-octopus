@@ -36,7 +36,7 @@ public final class DeviceCode extends Identifier {
      * @param value The code value. Must not be {@code null} or empty
      *              string.
      */
-    public DeviceCode(final String value) {
+    public DeviceCode(String value) {
 
         super(value);
     }
@@ -49,7 +49,7 @@ public final class DeviceCode extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public DeviceCode(final int byteLength) {
+    public DeviceCode(int byteLength) {
 
         super(byteLength);
     }
@@ -66,7 +66,7 @@ public final class DeviceCode extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof DeviceCode && this.toString().equals(object.toString());
     }

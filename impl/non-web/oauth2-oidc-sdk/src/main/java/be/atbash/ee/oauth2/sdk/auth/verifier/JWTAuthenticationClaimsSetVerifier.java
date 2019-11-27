@@ -55,14 +55,14 @@ class JWTAuthenticationClaimsSetVerifier extends JWTAssertionDetailsVerifier {
      *                         for OpenID provider it may also include the
      *                         issuer URI.
      */
-    public JWTAuthenticationClaimsSetVerifier(final Set<Audience> expectedAudience) {
+    public JWTAuthenticationClaimsSetVerifier(Set<Audience> expectedAudience) {
 
         super(expectedAudience);
     }
 
 
     @Override
-    public void verify(final JWTClaimsSet claimsSet)
+    public void verify(JWTClaimsSet claimsSet)
             throws BadJWTException {
 
         super.verify(claimsSet);

@@ -112,10 +112,10 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @param scope      The requested scope, {@code null} if not
      *                   specified.
      */
-    public TokenRequest(final URI uri,
-                        final ClientAuthentication clientAuth,
-                        final AuthorizationGrant authzGrant,
-                        final Scope scope) {
+    public TokenRequest(URI uri,
+                        ClientAuthentication clientAuth,
+                        AuthorizationGrant authzGrant,
+                        Scope scope) {
 
         this(uri, clientAuth, authzGrant, scope, null, null);
     }
@@ -139,12 +139,12 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @param customParams Custom parameters to be included in the request
      *                     body, empty map or {@code null} if none.
      */
-    public TokenRequest(final URI uri,
-                        final ClientAuthentication clientAuth,
-                        final AuthorizationGrant authzGrant,
-                        final Scope scope,
-                        final List<URI> resources,
-                        final Map<String, List<String>> customParams) {
+    public TokenRequest(URI uri,
+                        ClientAuthentication clientAuth,
+                        AuthorizationGrant authzGrant,
+                        Scope scope,
+                        List<URI> resources,
+                        Map<String, List<String>> customParams) {
 
         super(uri, clientAuth);
 
@@ -187,9 +187,9 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      *                   {@code null}.
      * @param authzGrant The authorisation grant. Must not be {@code null}.
      */
-    public TokenRequest(final URI uri,
-                        final ClientAuthentication clientAuth,
-                        final AuthorizationGrant authzGrant) {
+    public TokenRequest(URI uri,
+                        ClientAuthentication clientAuth,
+                        AuthorizationGrant authzGrant) {
 
         this(uri, clientAuth, authzGrant, null);
     }
@@ -208,10 +208,10 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @param scope      The requested scope, {@code null} if not
      *                   specified.
      */
-    public TokenRequest(final URI uri,
-                        final ClientID clientID,
-                        final AuthorizationGrant authzGrant,
-                        final Scope scope) {
+    public TokenRequest(URI uri,
+                        ClientID clientID,
+                        AuthorizationGrant authzGrant,
+                        Scope scope) {
 
         this(uri, clientID, authzGrant, scope, null, null, null);
     }
@@ -239,13 +239,13 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @param customParams  Custom parameters to be included in the request
      *                      body, empty map or {@code null} if none.
      */
-    public TokenRequest(final URI uri,
-                        final ClientID clientID,
-                        final AuthorizationGrant authzGrant,
-                        final Scope scope,
-                        final List<URI> resources,
-                        final RefreshToken existingGrant,
-                        final Map<String, List<String>> customParams) {
+    public TokenRequest(URI uri,
+                        ClientID clientID,
+                        AuthorizationGrant authzGrant,
+                        Scope scope,
+                        List<URI> resources,
+                        RefreshToken existingGrant,
+                        Map<String, List<String>> customParams) {
 
         super(uri, clientID);
 
@@ -292,9 +292,9 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      *                   specified.
      * @param authzGrant The authorisation grant. Must not be {@code null}.
      */
-    public TokenRequest(final URI uri,
-                        final ClientID clientID,
-                        final AuthorizationGrant authzGrant) {
+    public TokenRequest(URI uri,
+                        ClientID clientID,
+                        AuthorizationGrant authzGrant) {
 
         this(uri, clientID, authzGrant, null);
     }
@@ -311,9 +311,9 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @param scope      The requested scope, {@code null} if not
      *                   specified.
      */
-    public TokenRequest(final URI uri,
-                        final AuthorizationGrant authzGrant,
-                        final Scope scope) {
+    public TokenRequest(URI uri,
+                        AuthorizationGrant authzGrant,
+                        Scope scope) {
 
         this(uri, (ClientID) null, authzGrant, scope);
     }
@@ -328,8 +328,8 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      *                   will not be used.
      * @param authzGrant The authorisation grant. Must not be {@code null}.
      */
-    public TokenRequest(final URI uri,
-                        final AuthorizationGrant authzGrant) {
+    public TokenRequest(URI uri,
+                        AuthorizationGrant authzGrant) {
 
         this(uri, (ClientID) null, authzGrant, null);
     }
@@ -405,7 +405,7 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter value(s), {@code null} if not specified.
      */
-    public List<String> getCustomParameter(final String name) {
+    public List<String> getCustomParameter(String name) {
 
         return customParams.get(name);
     }
@@ -480,7 +480,7 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  token request.
      */
-    public static TokenRequest parse(final HTTPRequest httpRequest)
+    public static TokenRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         // Only HTTP POST accepted

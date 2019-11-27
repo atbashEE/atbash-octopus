@@ -85,14 +85,14 @@ public class ResponseType extends HashSet<ResponseType.Value> {
          * @param value The response type value. Must not be
          *              {@code null} or empty string.
          */
-        public Value(final String value) {
+        public Value(String value) {
 
             super(value);
         }
 
 
         @Override
-        public boolean equals(final Object object) {
+        public boolean equals(Object object) {
 
             return object instanceof Value &&
                     this.toString().equals(object.toString());
@@ -127,7 +127,7 @@ public class ResponseType extends HashSet<ResponseType.Value> {
      *
      * @param values The string values. Must not be {@code null}.
      */
-    public ResponseType(final String... values) {
+    public ResponseType(String... values) {
 
         for (String v : values) {
             add(new Value(v));
@@ -140,7 +140,7 @@ public class ResponseType extends HashSet<ResponseType.Value> {
      *
      * @param values The values. Must not be {@code null}.
      */
-    public ResponseType(final Value... values) {
+    public ResponseType(Value... values) {
 
         addAll(Arrays.asList(values));
     }
@@ -167,7 +167,7 @@ public class ResponseType extends HashSet<ResponseType.Value> {
      * @throws OAuth2JSONParseException If the parsed string is {@code null} or
      *                                  empty.
      */
-    public static ResponseType parse(final String s)
+    public static ResponseType parse(String s)
             throws OAuth2JSONParseException {
 
         if (StringUtils.isEmpty(s)) {
@@ -243,7 +243,7 @@ public class ResponseType extends HashSet<ResponseType.Value> {
      * @param value The string value. Must not be {@code null}.
      * @return {@code true} if the value is contained, else {@code false}.
      */
-    public boolean contains(final String value) {
+    public boolean contains(String value) {
 
         return contains(new Value(value));
     }

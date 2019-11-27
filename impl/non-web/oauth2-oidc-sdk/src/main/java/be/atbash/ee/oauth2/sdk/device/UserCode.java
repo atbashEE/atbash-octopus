@@ -53,7 +53,7 @@ public final class UserCode extends Identifier {
      *                identifier can only contain characters from this set.
      *                If {@code null}, all characters are allowed.
      */
-    public UserCode(final String value, final String charset) {
+    public UserCode(String value, String charset) {
 
         super(value);
 
@@ -68,7 +68,7 @@ public final class UserCode extends Identifier {
      * @param value The code value. Must not be {@code null} or empty
      *              string.
      */
-    public UserCode(final String value) {
+    public UserCode(String value) {
 
         this(value, LETTER_CHAR_SET);
     }
@@ -89,7 +89,7 @@ public final class UserCode extends Identifier {
      * Creates a new user code with a randomly generated value from the
      * specified charset and length. A dash is added every 4 characters.
      */
-    public UserCode(final String charset, final int length) {
+    public UserCode(String charset, int length) {
 
         this(generateValue(charset, length), charset);
     }
@@ -104,7 +104,7 @@ public final class UserCode extends Identifier {
      *                Must not be {@code null} or empty string.
      * @param length  The length of the value to generate.
      */
-    private static String generateValue(final String charset, final int length) {
+    private static String generateValue(String charset, int length) {
 
         if (StringUtils.isEmpty(charset)) {
             throw new IllegalArgumentException("The charset must not be null or empty string");
@@ -144,7 +144,7 @@ public final class UserCode extends Identifier {
 
 
     @Override
-    public int compareTo(final Identifier other) {
+    public int compareTo(Identifier other) {
 
         // fallback to default compare for other identifiers
         if (!(other instanceof UserCode)) {
@@ -163,7 +163,7 @@ public final class UserCode extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof UserCode
                 && this.getStrippedValue().equals(((UserCode) object).getStrippedValue());
@@ -179,7 +179,7 @@ public final class UserCode extends Identifier {
      *                {@code null} all characters are retained.
      * @return The {@code value} with all invalid characters removed.
      */
-    public static String stripIllegalChars(final String value, final String charset) {
+    public static String stripIllegalChars(String value, String charset) {
 
         if (charset == null) {
             return value.toUpperCase();

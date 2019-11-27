@@ -62,7 +62,7 @@ public abstract class UserInfoResponse implements Response {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  UserInfo response.
      */
-    public static UserInfoResponse parse(final HTTPResponse httpResponse)
+    public static UserInfoResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         if (httpResponse.getStatusCode() == HTTPResponse.SC_OK) {

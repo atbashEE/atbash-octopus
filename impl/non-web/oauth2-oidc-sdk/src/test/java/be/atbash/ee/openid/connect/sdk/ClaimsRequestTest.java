@@ -40,8 +40,8 @@ import static org.junit.Assert.fail;
 public class ClaimsRequestTest {
 
 
-    private static boolean containsVoluntaryClaimsRequestEntry(final Collection<ClaimsRequest.Entry> entries,
-                                                               final String claimName) {
+    private static boolean containsVoluntaryClaimsRequestEntry(Collection<ClaimsRequest.Entry> entries,
+                                                               String claimName) {
 
         for (ClaimsRequest.Entry en : entries) {
 
@@ -58,8 +58,8 @@ public class ClaimsRequestTest {
     }
 
 
-    private static boolean containsEssentialClaimsRequestEntry(final Collection<ClaimsRequest.Entry> entries,
-                                                               final String claimName) {
+    private static boolean containsEssentialClaimsRequestEntry(Collection<ClaimsRequest.Entry> entries,
+                                                               String claimName) {
 
         for (ClaimsRequest.Entry en : entries) {
 

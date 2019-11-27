@@ -71,14 +71,14 @@ public final class ACR extends Identifier {
      *
      * @param value The ACR value. Must not be {@code null}.
      */
-    public ACR(final String value) {
+    public ACR(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof ACR &&
                 this.toString().equals(object.toString());

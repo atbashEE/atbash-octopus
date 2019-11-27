@@ -134,7 +134,7 @@ public final class ClientAuthenticationMethod extends Identifier {
      * @param value The authentication method value. Must not be
      *              {@code null} or empty string.
      */
-    public ClientAuthenticationMethod(final String value) {
+    public ClientAuthenticationMethod(String value) {
 
         super(value);
     }
@@ -147,7 +147,7 @@ public final class ClientAuthenticationMethod extends Identifier {
      *              {@code null} or empty string.
      * @return The client authentication method.
      */
-    public static ClientAuthenticationMethod parse(final String value) {
+    public static ClientAuthenticationMethod parse(String value) {
 
         if (value.equals(CLIENT_SECRET_BASIC.getValue())) {
             return CLIENT_SECRET_BASIC;
@@ -170,7 +170,7 @@ public final class ClientAuthenticationMethod extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof ClientAuthenticationMethod &&
                 this.toString().equals(object.toString());

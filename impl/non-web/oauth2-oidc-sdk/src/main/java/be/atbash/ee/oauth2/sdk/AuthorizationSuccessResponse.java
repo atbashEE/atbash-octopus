@@ -93,11 +93,11 @@ public class AuthorizationSuccessResponse
      * @param state       The state, {@code null} if not specified.
      * @param rm          The response mode, {@code null} if not specified.
      */
-    public AuthorizationSuccessResponse(final URI redirectURI,
-                                        final AuthorizationCode code,
-                                        final AccessToken accessToken,
-                                        final State state,
-                                        final ResponseMode rm) {
+    public AuthorizationSuccessResponse(URI redirectURI,
+                                        AuthorizationCode code,
+                                        AccessToken accessToken,
+                                        State state,
+                                        ResponseMode rm) {
 
         super(redirectURI, state, rm);
         this.code = code;
@@ -115,9 +115,9 @@ public class AuthorizationSuccessResponse
      *                    {@code null}.
      * @param rm          The response mode, {@code null} if not specified.
      */
-    public AuthorizationSuccessResponse(final URI redirectURI,
-                                        final JWT jwtResponse,
-                                        final ResponseMode rm) {
+    public AuthorizationSuccessResponse(URI redirectURI,
+                                        JWT jwtResponse,
+                                        ResponseMode rm) {
 
         super(redirectURI, jwtResponse, rm);
         code = null;
@@ -235,8 +235,8 @@ public class AuthorizationSuccessResponse
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  authorisation success response.
      */
-    public static AuthorizationSuccessResponse parse(final URI redirectURI,
-                                                     final Map<String, List<String>> params)
+    public static AuthorizationSuccessResponse parse(URI redirectURI,
+                                                     Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // JARM, ignore other top level params
@@ -301,7 +301,7 @@ public class AuthorizationSuccessResponse
      * @throws OAuth2JSONParseException If the redirection URI couldn't be parsed to
      *                                  an authorisation success response.
      */
-    public static AuthorizationSuccessResponse parse(final URI uri)
+    public static AuthorizationSuccessResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
@@ -326,7 +326,7 @@ public class AuthorizationSuccessResponse
      *                                  authorisation success response.
      * @see #parse(HTTPRequest)
      */
-    public static AuthorizationSuccessResponse parse(final HTTPResponse httpResponse)
+    public static AuthorizationSuccessResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         URI location = httpResponse.getLocation();
@@ -359,7 +359,7 @@ public class AuthorizationSuccessResponse
      *                                  authorisation success response.
      * @see #parse(HTTPResponse)
      */
-    public static AuthorizationSuccessResponse parse(final HTTPRequest httpRequest)
+    public static AuthorizationSuccessResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));

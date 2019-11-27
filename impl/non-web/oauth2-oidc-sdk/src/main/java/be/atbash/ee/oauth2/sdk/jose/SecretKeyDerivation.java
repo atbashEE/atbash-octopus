@@ -48,9 +48,9 @@ public class SecretKeyDerivation {
      * @throws JOSEException If the JWE algorithm or method is not
      *                       supported.
      */
-    public static SecretKey deriveSecretKey(final Secret clientSecret,
-                                            final JWEAlgorithm alg,
-                                            final EncryptionMethod enc)
+    public static SecretKey deriveSecretKey(Secret clientSecret,
+                                            JWEAlgorithm alg,
+                                            EncryptionMethod enc)
             throws JOSEException {
 
         if (JWEAlgorithm.DIR.equals(alg)) {
@@ -96,7 +96,7 @@ public class SecretKeyDerivation {
      * @return The matching secret key (with algorithm set to "AES").
      * @throws JOSEException If the secret key bit size it not supported.
      */
-    public static SecretKey deriveSecretKey(final Secret clientSecret, final int bits)
+    public static SecretKey deriveSecretKey(Secret clientSecret, int bits)
             throws JOSEException {
 
         final int hashBitLength;

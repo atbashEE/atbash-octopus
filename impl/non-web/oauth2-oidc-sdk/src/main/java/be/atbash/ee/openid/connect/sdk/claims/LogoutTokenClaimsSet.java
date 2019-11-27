@@ -120,12 +120,12 @@ public class LogoutTokenClaimsSet extends CommonClaimsSet {
      * @param sid The session ID. Must not be {@code null} unless the
      *            subject is set.
      */
-    public LogoutTokenClaimsSet(final Issuer iss,
-                                final Subject sub,
-                                final List<Audience> aud,
-                                final Date iat,
-                                final JWTID jti,
-                                final SessionID sid) {
+    public LogoutTokenClaimsSet(Issuer iss,
+                                Subject sub,
+                                List<Audience> aud,
+                                Date iat,
+                                JWTID jti,
+                                SessionID sid) {
 
         if (sub == null && sid == null) {
             throw new IllegalArgumentException("Either the subject or the session ID must be set, or both");
@@ -169,7 +169,7 @@ public class LogoutTokenClaimsSet extends CommonClaimsSet {
      * @throws OAuth2JSONParseException If the JSON object doesn't represent a valid
      *                                  logout token claims set.
      */
-    private LogoutTokenClaimsSet(final JsonObject jsonObject)
+    private LogoutTokenClaimsSet(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         super(jsonObject);
@@ -219,7 +219,7 @@ public class LogoutTokenClaimsSet extends CommonClaimsSet {
      * @throws OAuth2JSONParseException If the JWT claims set doesn't represent a
      *                                  valid logout token claims set.
      */
-    public LogoutTokenClaimsSet(final JWTClaimsSet jwtClaimsSet)
+    public LogoutTokenClaimsSet(JWTClaimsSet jwtClaimsSet)
             throws OAuth2JSONParseException {
 
         this(jwtClaimsSet.toJSONObject());
@@ -269,7 +269,7 @@ public class LogoutTokenClaimsSet extends CommonClaimsSet {
      * @return The logout token claims set.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static LogoutTokenClaimsSet parse(final String json)
+    public static LogoutTokenClaimsSet parse(String json)
             throws OAuth2JSONParseException {
 
         JsonObject jsonObject = null;

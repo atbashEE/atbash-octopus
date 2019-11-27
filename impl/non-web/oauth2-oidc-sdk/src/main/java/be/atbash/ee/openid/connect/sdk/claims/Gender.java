@@ -43,14 +43,14 @@ public class Gender extends Identifier {
      *
      * @param value The gender value. Must not be {@code null}.
      */
-    public Gender(final String value) {
+    public Gender(String value) {
 
         super(value);
     }
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof Gender &&
                 this.toString().equals(object.toString());

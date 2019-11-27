@@ -30,7 +30,7 @@ public class BadJWTException extends OAuth2JSONParseException {
      *
      * @param message The exception message.
      */
-    public BadJWTException(final String message) {
+    public BadJWTException(String message) {
 
         super(message);
     }
@@ -42,7 +42,7 @@ public class BadJWTException extends OAuth2JSONParseException {
      * @param message The exception message.
      * @param cause   The exception cause.
      */
-    public BadJWTException(final String message, final Throwable cause) {
+    public BadJWTException(String message, Throwable cause) {
 
         super(message, cause);
     }

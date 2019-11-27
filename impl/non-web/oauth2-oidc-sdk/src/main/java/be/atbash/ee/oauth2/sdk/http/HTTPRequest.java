@@ -100,13 +100,13 @@ public class HTTPRequest extends HTTPMessage {
     /**
      * The request method.
      */
-    private final Method method;
+    private Method method;
 
 
     /**
      * The request URL.
      */
-    private final URL url;
+    private URL url;
 
 
     /**
@@ -192,7 +192,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param method The HTTP request method. Must not be {@code null}.
      * @param url    The HTTP request URL. Must not be {@code null}.
      */
-    public HTTPRequest(final Method method, final URL url) {
+    public HTTPRequest(Method method, URL url) {
 
         if (method == null) {
             throw new IllegalArgumentException("The HTTP method must not be null");
@@ -253,7 +253,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param expectedMethod The expected method. Must not be {@code null}.
      * @throws OAuth2JSONParseException If the method doesn't match the expected.
      */
-    public void ensureMethod(final Method expectedMethod)
+    public void ensureMethod(Method expectedMethod)
             throws OAuth2JSONParseException {
 
         if (method != expectedMethod) {
@@ -280,7 +280,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param authz The {@code Authorization} header value, {@code null} if
      *              not specified.
      */
-    public void setAuthorization(final String authz) {
+    public void setAuthorization(String authz) {
 
         setHeader("Authorization", authz);
     }
@@ -304,7 +304,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param accept The {@code Accept} header value, {@code null} if not
      *               specified.
      */
-    public void setAccept(final String accept) {
+    public void setAccept(String accept) {
 
         setHeader("Accept", accept);
     }
@@ -354,7 +354,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param query For HTTP GET requests the URL query string, for HTTP
      *              POST requests the body. {@code null} if not specified.
      */
-    public void setQuery(final String query) {
+    public void setQuery(String query) {
 
         this.query = query;
     }
@@ -429,7 +429,7 @@ public class HTTPRequest extends HTTPMessage {
      *
      * @param fragment The request fragment, {@code null} if not specified.
      */
-    public void setFragment(final String fragment) {
+    public void setFragment(String fragment) {
 
         this.fragment = fragment;
     }
@@ -453,7 +453,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param connectTimeout The HTTP connect timeout, in milliseconds.
      *                       Zero implies no timeout. Must not be negative.
      */
-    public void setConnectTimeout(final int connectTimeout) {
+    public void setConnectTimeout(int connectTimeout) {
 
         if (connectTimeout < 0) {
             throw new IllegalArgumentException("The HTTP connect timeout must be zero or positive");
@@ -481,7 +481,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param readTimeout The HTTP response read timeout, in milliseconds.
      *                    Zero implies no timeout. Must not be negative.
      */
-    public void setReadTimeout(final int readTimeout) {
+    public void setReadTimeout(int readTimeout) {
 
         if (readTimeout < 0) {
             throw new IllegalArgumentException("The HTTP response read timeout must be zero or positive");
@@ -510,7 +510,7 @@ public class HTTPRequest extends HTTPMessage {
      *
      * @param follow Whether or not to follow HTTP redirects.
      */
-    public void setFollowRedirects(final boolean follow) {
+    public void setFollowRedirects(boolean follow) {
 
         followRedirects = follow;
     }
@@ -535,7 +535,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param clientX509Certificate The client X.509 certificate,
      *                              {@code null} if not specified.
      */
-    public void setClientX509Certificate(final X509Certificate clientX509Certificate) {
+    public void setClientX509Certificate(X509Certificate clientX509Certificate) {
 
         this.clientX509Certificate = clientX509Certificate;
     }
@@ -559,7 +559,7 @@ public class HTTPRequest extends HTTPMessage {
      *
      * @param subjectDN The subject DN, {@code null} if not specified.
      */
-    public void setClientX509CertificateSubjectDN(final String subjectDN) {
+    public void setClientX509CertificateSubjectDN(String subjectDN) {
 
         this.clientX509CertificateSubjectDN = subjectDN;
     }
@@ -583,7 +583,7 @@ public class HTTPRequest extends HTTPMessage {
      *
      * @param rootDN The root DN, {@code null} if not specified.
      */
-    public void setClientX509CertificateRootDN(final String rootDN) {
+    public void setClientX509CertificateRootDN(String rootDN) {
 
         this.clientX509CertificateRootDN = rootDN;
     }
@@ -609,7 +609,7 @@ public class HTTPRequest extends HTTPMessage {
      *                         {@link #getDefaultHostnameVerifier() default
      *                         one}.
      */
-    public void setHostnameVerifier(final HostnameVerifier hostnameVerifier) {
+    public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
 
         this.hostnameVerifier = hostnameVerifier;
     }
@@ -632,7 +632,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param sslSocketFactory The SSL factory, {@code null} implies use of
      *                         the default one.
      */
-    public void setSSLSocketFactory(final SSLSocketFactory sslSocketFactory) {
+    public void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
 
         this.sslSocketFactory = sslSocketFactory;
     }
@@ -657,7 +657,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param defaultHostnameVerifier The hostname verifier. Must not be
      *                                {@code null}.
      */
-    public static void setDefaultHostnameVerifier(final HostnameVerifier defaultHostnameVerifier) {
+    public static void setDefaultHostnameVerifier(HostnameVerifier defaultHostnameVerifier) {
 
         if (defaultHostnameVerifier == null) {
             throw new IllegalArgumentException("The hostname verifier must not be null");
@@ -686,7 +686,7 @@ public class HTTPRequest extends HTTPMessage {
      * @param sslSocketFactory The SSL socket factory. Must not be
      *                         {@code null}.
      */
-    public static void setDefaultSSLSocketFactory(final SSLSocketFactory sslSocketFactory) {
+    public static void setDefaultSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
 
         if (sslSocketFactory == null) {
             throw new IllegalArgumentException("The SSL socket factory must not be null");
@@ -716,8 +716,8 @@ public class HTTPRequest extends HTTPMessage {
      *                     network or other error.
      */
     @Deprecated
-    public HttpURLConnection toHttpURLConnection(final HostnameVerifier hostnameVerifier,
-                                                 final SSLSocketFactory sslSocketFactory)
+    public HttpURLConnection toHttpURLConnection(HostnameVerifier hostnameVerifier,
+                                                 SSLSocketFactory sslSocketFactory)
             throws IOException {
 
         HostnameVerifier savedHostnameVerifier = getHostnameVerifier();
@@ -844,8 +844,8 @@ public class HTTPRequest extends HTTPMessage {
      *                     network or other error.
      */
     @Deprecated
-    public HTTPResponse send(final HostnameVerifier hostnameVerifier,
-                             final SSLSocketFactory sslSocketFactory)
+    public HTTPResponse send(HostnameVerifier hostnameVerifier,
+                             SSLSocketFactory sslSocketFactory)
             throws IOException {
 
         HostnameVerifier savedHostnameVerifier = getHostnameVerifier();
@@ -944,7 +944,7 @@ public class HTTPRequest extends HTTPMessage {
 
         closeStreams(conn);
 
-        final String bodyContent = body.toString();
+        String bodyContent = body.toString();
         if (!bodyContent.isEmpty()) {
             response.setContent(bodyContent);
         }
@@ -961,7 +961,7 @@ public class HTTPRequest extends HTTPMessage {
      *
      * @param conn The HTTP URL connection. May be {@code null}.
      */
-    private static void closeStreams(final HttpURLConnection conn) {
+    private static void closeStreams(HttpURLConnection conn) {
 
         if (conn == null) {
             return;

@@ -72,7 +72,7 @@ public class PushedAuthorizationSuccessResponse extends PushedAuthorizationRespo
      * @param lifetime   The request lifetime, in seconds. Must be a
      *                   positive integer.
      */
-    public PushedAuthorizationSuccessResponse(final URI requestURI, final long lifetime) {
+    public PushedAuthorizationSuccessResponse(URI requestURI, long lifetime) {
         if (requestURI == null) {
             throw new IllegalArgumentException("The request URI must not be null");
         }
@@ -154,7 +154,7 @@ public class PushedAuthorizationSuccessResponse extends PushedAuthorizationRespo
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  pushed authorisation success response.
      */
-    public static PushedAuthorizationSuccessResponse parse(final JsonObject jsonObject)
+    public static PushedAuthorizationSuccessResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         URI requestURI = null;
@@ -183,7 +183,7 @@ public class PushedAuthorizationSuccessResponse extends PushedAuthorizationRespo
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  pushed authorisation success response.
      */
-    public static PushedAuthorizationSuccessResponse parse(final HTTPResponse httpResponse)
+    public static PushedAuthorizationSuccessResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_CREATED, HTTPResponse.SC_OK);

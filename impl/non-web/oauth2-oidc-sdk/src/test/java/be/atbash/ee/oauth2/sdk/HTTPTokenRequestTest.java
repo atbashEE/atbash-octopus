@@ -58,7 +58,7 @@ public class HTTPTokenRequestTest {
     public void testPOST()
             throws Exception {
 
-        final AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://example.com/cb"));
+        AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://example.com/cb"));
         TokenRequest tokenRequest = new TokenRequest(URI.create("http://localhost:" + port() + "/token"), new ClientSecretBasic(new ClientID("123"), new Secret("secret")), codeGrant);
 
         BearerAccessToken token = new BearerAccessToken("xyz");

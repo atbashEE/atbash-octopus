@@ -65,9 +65,9 @@ public interface ClientCredentialsSelector<T> {
      * @return The selected client secret candidates, empty list if none.
      * @throws InvalidClientException If the client is invalid.
      */
-    List<Secret> selectClientSecrets(final ClientID claimedClientID,
-                                     final ClientAuthenticationMethod authMethod,
-                                     final Context<T> context)
+    List<Secret> selectClientSecrets(ClientID claimedClientID,
+                                     ClientAuthenticationMethod authMethod,
+                                     Context<T> context)
             throws InvalidClientException;
 
 
@@ -91,10 +91,10 @@ public interface ClientCredentialsSelector<T> {
      * @return The selected public key candidates, empty list if none.
      * @throws InvalidClientException If the client is invalid.
      */
-    List<? extends PublicKey> selectPublicKeys(final ClientID claimedClientID,
-                                               final ClientAuthenticationMethod authMethod,
-                                               final JWSHeader jwsHeader,
-                                               final boolean forceRefresh,
-                                               final Context<T> context)
+    List<? extends PublicKey> selectPublicKeys(ClientID claimedClientID,
+                                               ClientAuthenticationMethod authMethod,
+                                               JWSHeader jwsHeader,
+                                               boolean forceRefresh,
+                                               Context<T> context)
             throws InvalidClientException;
 }

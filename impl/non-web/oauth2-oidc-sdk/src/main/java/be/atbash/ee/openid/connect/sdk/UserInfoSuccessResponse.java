@@ -79,7 +79,7 @@ public class UserInfoSuccessResponse
      *
      * @param claimsSet The UserInfo claims set. Must not be {@code null}.
      */
-    public UserInfoSuccessResponse(final UserInfo claimsSet) {
+    public UserInfoSuccessResponse(UserInfo claimsSet) {
 
         if (claimsSet == null) {
             throw new IllegalArgumentException("The claims must not be null");
@@ -97,7 +97,7 @@ public class UserInfoSuccessResponse
      *
      * @param jwt The UserInfo claims set. Must not be {@code null}.
      */
-    public UserInfoSuccessResponse(final JWT jwt) {
+    public UserInfoSuccessResponse(JWT jwt) {
 
         if (jwt == null) {
             throw new IllegalArgumentException("The claims JWT must not be null");
@@ -212,7 +212,7 @@ public class UserInfoSuccessResponse
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  UserInfo response.
      */
-    public static UserInfoSuccessResponse parse(final HTTPResponse httpResponse)
+    public static UserInfoSuccessResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK);

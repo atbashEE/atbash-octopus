@@ -27,7 +27,7 @@ public class SerializeException extends RuntimeException {
      *
      * @param message The exception message. May be {@code null}.
      */
-    public SerializeException(final String message) {
+    public SerializeException(String message) {
 
         this(message, null);
     }
@@ -39,7 +39,7 @@ public class SerializeException extends RuntimeException {
      * @param message The exception message. May be {@code null}.
      * @param cause   The exception cause, {@code null} if not specified.
      */
-    public SerializeException(final String message, final Throwable cause) {
+    public SerializeException(String message, Throwable cause) {
 
         super(message, cause);
     }

@@ -58,7 +58,7 @@ public class OIDCProviderConfigurationRequest extends AbstractRequest {
      *
      * @param issuer The issuer. Must represent a valid URL.
      */
-    public OIDCProviderConfigurationRequest(final Issuer issuer) {
+    public OIDCProviderConfigurationRequest(Issuer issuer) {
         super(URI.create(URIUtils.removeTrailingSlash(URI.create(issuer.getValue())) + OPENID_PROVIDER_WELL_KNOWN_PATH));
     }
 

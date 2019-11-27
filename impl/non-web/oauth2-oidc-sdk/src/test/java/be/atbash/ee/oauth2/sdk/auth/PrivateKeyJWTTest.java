@@ -83,9 +83,9 @@ public class PrivateKeyJWTTest {
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue()).isEqualTo(tokenEndpoint.toString());
 
         // 4 min < exp < 6 min
-        final long now = new Date().getTime();
-        final Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
-        final Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
+        long now = new Date().getTime();
+        Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
+        Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().after(fourMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().before(sixMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getJWTID()).isNotNull();
@@ -120,9 +120,9 @@ public class PrivateKeyJWTTest {
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue()).isEqualTo(tokenEndpoint.toString());
 
         // 4 min < exp < 6 min
-        final long now = new Date().getTime();
-        final Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
-        final Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
+        long now = new Date().getTime();
+        Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
+        Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().after(fourMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().before(sixMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getJWTID()).isNotNull();
@@ -154,9 +154,9 @@ public class PrivateKeyJWTTest {
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue()).isEqualTo(tokenEndpoint.toString());
 
         // 4 min < exp < 6 min
-        final long now = new Date().getTime();
-        final Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
-        final Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
+        long now = new Date().getTime();
+        Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
+        Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().after(fourMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().before(sixMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getJWTID()).isNotNull();
@@ -191,9 +191,9 @@ public class PrivateKeyJWTTest {
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue()).isEqualTo(tokenEndpoint.toString());
 
         // 4 min < exp < 6 min
-        final long now = new Date().getTime();
-        final Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
-        final Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
+        long now = new Date().getTime();
+        Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
+        Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().after(fourMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getExpirationTime().before(sixMinutesFromNow)).isTrue();
         assertThat(privateKeyJWT.getJWTAuthenticationClaimsSet().getJWTID()).isNotNull();

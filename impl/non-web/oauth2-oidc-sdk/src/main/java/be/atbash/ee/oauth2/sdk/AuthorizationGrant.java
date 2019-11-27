@@ -59,7 +59,7 @@ public abstract class AuthorizationGrant {
      * @param type The authorisation grant type. Must not be
      *             {@code null}.
      */
-    protected AuthorizationGrant(final GrantType type) {
+    protected AuthorizationGrant(GrantType type) {
 
         if (type == null) {
             throw new IllegalArgumentException("The grant type must not be null");
@@ -97,7 +97,7 @@ public abstract class AuthorizationGrant {
      * @throws OAuth2JSONParseException If parsing failed or the grant type is not
      *                                  supported.
      */
-    public static AuthorizationGrant parse(final Map<String, List<String>> params)
+    public static AuthorizationGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type

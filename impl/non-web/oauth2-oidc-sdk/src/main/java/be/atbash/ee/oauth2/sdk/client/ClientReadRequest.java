@@ -62,7 +62,7 @@ public class ClientReadRequest extends ProtectedResourceRequest {
      * @param accessToken An OAuth 2.0 Bearer access token for the request.
      *                    Must not be {@code null}.
      */
-    public ClientReadRequest(final URI uri, final BearerAccessToken accessToken) {
+    public ClientReadRequest(URI uri, BearerAccessToken accessToken) {
 
         super(uri, accessToken);
 
@@ -103,7 +103,7 @@ public class ClientReadRequest extends ProtectedResourceRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  client read request.
      */
-    public static ClientReadRequest parse(final HTTPRequest httpRequest)
+    public static ClientReadRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.GET);

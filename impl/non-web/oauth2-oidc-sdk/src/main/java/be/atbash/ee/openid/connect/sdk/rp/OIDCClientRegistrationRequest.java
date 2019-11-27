@@ -83,9 +83,9 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
      * @param accessToken An OAuth 2.0 Bearer access token for the request,
      *                    {@code null} if none.
      */
-    public OIDCClientRegistrationRequest(final URI uri,
-                                         final OIDCClientMetadata metadata,
-                                         final BearerAccessToken accessToken) {
+    public OIDCClientRegistrationRequest(URI uri,
+                                         OIDCClientMetadata metadata,
+                                         BearerAccessToken accessToken) {
 
         super(uri, metadata, accessToken);
     }
@@ -108,10 +108,10 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
      * @param accessToken       An OAuth 2.0 Bearer access token for the
      *                          request, {@code null} if none.
      */
-    public OIDCClientRegistrationRequest(final URI uri,
-                                         final OIDCClientMetadata metadata,
-                                         final SignedJWT softwareStatement,
-                                         final BearerAccessToken accessToken) {
+    public OIDCClientRegistrationRequest(URI uri,
+                                         OIDCClientMetadata metadata,
+                                         SignedJWT softwareStatement,
+                                         BearerAccessToken accessToken) {
 
         super(uri, metadata, softwareStatement, accessToken);
     }
@@ -137,7 +137,7 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
      *                                  OpenID Connect client registration request.
      */
-    public static OIDCClientRegistrationRequest parse(final HTTPRequest httpRequest)
+    public static OIDCClientRegistrationRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.POST);

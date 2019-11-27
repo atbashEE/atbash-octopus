@@ -37,7 +37,7 @@ public abstract class HashClaim extends Identifier {
      *
      * @param value The claim value. Must not be {@code null}.
      */
-    protected HashClaim(final String value) {
+    protected HashClaim(String value) {
 
         super(value);
     }
@@ -51,7 +51,7 @@ public abstract class HashClaim extends Identifier {
      * @return The SHA-2 message digest, {@code null} if the JWS algorithm
      * or its corresponding SHA-2 message digest are not supported.
      */
-    public static MessageDigest getMessageDigestInstance(final JWSAlgorithm alg) {
+    public static MessageDigest getMessageDigestInstance(JWSAlgorithm alg) {
 
         String mdAlg;
 
@@ -103,7 +103,7 @@ public abstract class HashClaim extends Identifier {
      * or {@code null} if the JWS algorithm or its corresponding
      * SHA-2 message digest are not supported.
      */
-    public static String computeValue(final Identifier identifier, final JWSAlgorithm alg) {
+    public static String computeValue(Identifier identifier, JWSAlgorithm alg) {
 
         MessageDigest md = getMessageDigestInstance(alg);
 

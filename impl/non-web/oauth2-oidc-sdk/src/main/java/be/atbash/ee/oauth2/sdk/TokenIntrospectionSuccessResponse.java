@@ -67,7 +67,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @param active {@code true} if the token is active, else
          *               {@code false}.
          */
-        public Builder(final boolean active) {
+        public Builder(boolean active) {
 
             params.add("active", active);
         }
@@ -80,7 +80,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @param response The response which parameters to use. Not
          *                 {@code null}.
          */
-        public Builder(final TokenIntrospectionSuccessResponse response) {
+        public Builder(TokenIntrospectionSuccessResponse response) {
 
             params.addAll(Json.createObjectBuilder(response.params));
         }
@@ -92,7 +92,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @param scope The token scope, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder scope(final Scope scope) {
+        public Builder scope(Scope scope) {
             if (scope != null) {
                 params.add("scope", scope.toString());
             } else {
@@ -110,7 +110,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *                 specified.
          * @return This builder.
          */
-        public Builder clientID(final ClientID clientID) {
+        public Builder clientID(ClientID clientID) {
             if (clientID != null) {
                 params.add("client_id", clientID.getValue());
             } else {
@@ -127,7 +127,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @param username The username, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder username(final String username) {
+        public Builder username(String username) {
             if (username != null) {
                 params.add("username", username);
             } else {
@@ -144,7 +144,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *                  specified.
          * @return This builder.
          */
-        public Builder tokenType(final AccessTokenType tokenType) {
+        public Builder tokenType(AccessTokenType tokenType) {
             if (tokenType != null) {
                 params.add("token_type", tokenType.getValue());
             } else {
@@ -161,7 +161,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *            specified.
          * @return This builder.
          */
-        public Builder expirationTime(final Date exp) {
+        public Builder expirationTime(Date exp) {
             if (exp != null) {
                 params.add("exp", DateUtils.toSecondsSinceEpoch(exp));
             } else {
@@ -178,7 +178,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *            specified.
          * @return This builder.
          */
-        public Builder issueTime(final Date iat) {
+        public Builder issueTime(Date iat) {
             if (iat != null) {
                 params.add("iat", DateUtils.toSecondsSinceEpoch(iat));
             } else {
@@ -195,7 +195,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *            specified.
          * @return This builder.
          */
-        public Builder notBeforeTime(final Date nbf) {
+        public Builder notBeforeTime(Date nbf) {
             if (nbf != null) {
                 params.add("nbf", DateUtils.toSecondsSinceEpoch(nbf));
             } else {
@@ -211,7 +211,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @param sub The token subject, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder subject(final Subject sub) {
+        public Builder subject(Subject sub) {
             if (sub != null) {
                 params.add("sub", sub.getValue());
             } else {
@@ -228,7 +228,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *                specified.
          * @return This builder.
          */
-        public Builder audience(final List<Audience> audList) {
+        public Builder audience(List<Audience> audList) {
             if (audList != null) {
                 params.add("aud", JSONObjectUtils.asJsonArray(Audience.toStringList(audList)));
             } else {
@@ -244,7 +244,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @param iss The token issuer, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder issuer(final Issuer iss) {
+        public Builder issuer(Issuer iss) {
             if (iss != null) {
                 params.add("iss", iss.getValue());
             } else {
@@ -261,7 +261,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *            specified.
          * @return This builder.
          */
-        public Builder jwtID(final JWTID jti) {
+        public Builder jwtID(JWTID jti) {
             if (jti != null) {
                 params.add("jti", jti.getValue());
             } else {
@@ -281,7 +281,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          * @return This builder.
          */
         @Deprecated
-        public Builder x509CertificateSHA256Thumbprint(final Base64URLValue x5t) {
+        public Builder x509CertificateSHA256Thumbprint(Base64URLValue x5t) {
 
             /*
             if (x5t != null) {
@@ -318,7 +318,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *            {@code null} if not specified.
          * @return This builder.
          */
-        public Builder x509CertificateConfirmation(final X509CertificateConfirmation cnf) {
+        public Builder x509CertificateConfirmation(X509CertificateConfirmation cnf) {
 
             if (cnf != null) {
                 Map.Entry<String, JsonObject> param = cnf.toJWTClaim();
@@ -338,7 +338,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
          *              If {@code null} not specified.
          * @return This builder.
          */
-        public Builder parameter(final String name, final Object value) {
+        public Builder parameter(String name, Object value) {
             if (value != null) {
                 JSONObjectUtils.addValue(params, name, value);
             } else {
@@ -373,7 +373,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      *               required {@code active} parameter and not be
      *               {@code null}.
      */
-    public TokenIntrospectionSuccessResponse(final JsonObject params) {
+    public TokenIntrospectionSuccessResponse(JsonObject params) {
 
         if (!(JSONObjectUtils.getJsonValueAsObject(params.get("active")) instanceof Boolean)) {
             throw new IllegalArgumentException("Missing / invalid boolean active parameter");
@@ -606,7 +606,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The parameter value, {@code null} if not specified or if
      * parsing failed.
      */
-    public String getStringParameter(final String name) {
+    public String getStringParameter(String name) {
 
         return params.getString(name, null);
     }
@@ -618,7 +618,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter value.
      */
-    public boolean getBooleanParameter(final String name) throws OAuth2JSONParseException {
+    public boolean getBooleanParameter(String name) throws OAuth2JSONParseException {
         if (JSONObjectUtils.hasValue(params, name) &&
                 (params.get(name).getValueType() == JsonValue.ValueType.TRUE || params.get(name).getValueType() == JsonValue.ValueType.FALSE)) {
             return params.getBoolean(name);
@@ -634,7 +634,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The parameter value, {@code null} if not specified or
      * parsing failed.
      */
-    public Number getNumberParameter(final String name) {
+    public Number getNumberParameter(String name) {
         if (JSONObjectUtils.hasValue(params, name) && params.get(name).getValueType() == JsonValue.ValueType.NUMBER) {
             return params.getJsonNumber(name).numberValue();
         }
@@ -649,7 +649,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The parameter value, {@code null} if not specified or if
      * parsing failed.
      */
-    public List<String> getStringListParameter(final String name) {
+    public List<String> getStringListParameter(String name) {
 
         if (JSONObjectUtils.hasValue(params, name) && params.get(name).getValueType() == JsonValue.ValueType.ARRAY) {
             return JSONObjectUtils.getStringList(params, name);
@@ -665,7 +665,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @return The parameter value, {@code null} if not specified or if
      * parsing failed.
      */
-    public JsonObject getJSONObjectParameter(final String name) {
+    public JsonObject getJSONObjectParameter(String name) {
         if (JSONObjectUtils.hasValue(params, name) && params.get(name).getValueType() == JsonValue.ValueType.OBJECT) {
             return params.getJsonObject(name);
         }
@@ -739,7 +739,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  token introspection success response.
      */
-    public static TokenIntrospectionSuccessResponse parse(final JsonObject jsonObject)
+    public static TokenIntrospectionSuccessResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         try {
@@ -759,7 +759,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
      * @throws ParseException If the HTTP response couldn't be parsed to a
      *                        token introspection success response.
      */
-    public static TokenIntrospectionSuccessResponse parse(final HTTPResponse httpResponse)
+    public static TokenIntrospectionSuccessResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK);

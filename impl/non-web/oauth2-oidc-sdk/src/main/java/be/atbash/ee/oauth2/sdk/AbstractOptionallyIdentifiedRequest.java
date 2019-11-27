@@ -59,8 +59,8 @@ public abstract class AbstractOptionallyIdentifiedRequest extends AbstractOption
      *                   {@link #toHTTPRequest()} method will not be used).
      * @param clientAuth The client authentication, {@code null} if none.
      */
-    public AbstractOptionallyIdentifiedRequest(final URI uri,
-                                               final ClientAuthentication clientAuth) {
+    public AbstractOptionallyIdentifiedRequest(URI uri,
+                                               ClientAuthentication clientAuth) {
 
         super(uri, clientAuth);
         clientID = null;
@@ -77,8 +77,8 @@ public abstract class AbstractOptionallyIdentifiedRequest extends AbstractOption
      * @param clientID The client identifier, {@code null} if not
      *                 specified.
      */
-    public AbstractOptionallyIdentifiedRequest(final URI uri,
-                                               final ClientID clientID) {
+    public AbstractOptionallyIdentifiedRequest(URI uri,
+                                               ClientID clientID) {
 
         super(uri, null);
         this.clientID = clientID;

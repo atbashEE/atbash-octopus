@@ -47,9 +47,9 @@ public abstract class PlainClientSecret extends ClientAuthentication {
      * @param clientID The client identifier. Must not be {@code null}.
      * @param secret   The client secret. Must not be {@code null}.
      */
-    protected PlainClientSecret(final ClientAuthenticationMethod method,
-                                final ClientID clientID,
-                                final Secret secret) {
+    protected PlainClientSecret(ClientAuthenticationMethod method,
+                                ClientID clientID,
+                                Secret secret) {
 
         super(method, clientID);
 

@@ -36,7 +36,7 @@ public final class JWTClaimsSetUtils {
      * @param params The multi-valued parameters. Must not be {@code null}.
      * @return The JWT claims set.
      */
-    public static JWTClaimsSet toJWTClaimsSet(final Map<String, List<String>> params) {
+    public static JWTClaimsSet toJWTClaimsSet(Map<String, List<String>> params) {
 
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
 

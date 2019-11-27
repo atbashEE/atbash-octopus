@@ -36,7 +36,7 @@ public final class X509CertificateUtils {
      * @return {@code true} if the issuer DN and and subject DN match, else
      * {@code false}.
      */
-    public static boolean hasMatchingIssuerAndSubject(final X509Certificate cert) {
+    public static boolean hasMatchingIssuerAndSubject(X509Certificate cert) {
 
         Principal issuer = cert.getIssuerDN();
         Principal subject = cert.getSubjectDN();
@@ -54,7 +54,7 @@ public final class X509CertificateUtils {
      * @return {@code true} if the X.509 certificate is self-issued, else
      * {@code false}.
      */
-    public static boolean isSelfIssued(final X509Certificate cert) {
+    public static boolean isSelfIssued(X509Certificate cert) {
 
         return hasMatchingIssuerAndSubject(cert) && isSelfSigned(cert);
     }
@@ -69,7 +69,7 @@ public final class X509CertificateUtils {
      * @return {@code true} if the X.509 certificate is self-signed, else
      * {@code false}.
      */
-    public static boolean isSelfSigned(final X509Certificate cert) {
+    public static boolean isSelfSigned(X509Certificate cert) {
 
         PublicKey publicKey = cert.getPublicKey();
 
@@ -86,8 +86,8 @@ public final class X509CertificateUtils {
      *               {@code null}.
      * @return {@code true} if the signature is valid, else {@code false}.
      */
-    public static boolean hasValidSignature(final X509Certificate cert,
-                                            final PublicKey pubKey) {
+    public static boolean hasValidSignature(X509Certificate cert,
+                                            PublicKey pubKey) {
 
         try {
             cert.verify(pubKey);
@@ -108,8 +108,8 @@ public final class X509CertificateUtils {
      * @return {@code true} if the two public keys match, else
      * {@code false}.
      */
-    public static boolean publicKeyMatches(final X509Certificate cert,
-                                           final PublicKey pubKey) {
+    public static boolean publicKeyMatches(X509Certificate cert,
+                                           PublicKey pubKey) {
 
         PublicKey certPubKey = cert.getPublicKey();
 

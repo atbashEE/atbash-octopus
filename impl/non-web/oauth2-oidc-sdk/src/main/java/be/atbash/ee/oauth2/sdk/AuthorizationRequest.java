@@ -294,7 +294,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                 {@code client_id} parameter. Must not be
          *                 {@code null}.
          */
-        public Builder(final ResponseType rt, final ClientID clientID) {
+        public Builder(ResponseType rt, ClientID clientID) {
 
             if (rt == null) {
                 throw new IllegalArgumentException("The response type must not be null");
@@ -317,7 +317,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param requestObject The request object. Must not be
          *                      {@code null}.
          */
-        public Builder(final JWT requestObject) {
+        public Builder(JWT requestObject) {
 
             if (requestObject == null) {
                 throw new IllegalArgumentException("The request object must not be null");
@@ -333,7 +333,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param requestURI The request object URI. Must not be
          *                   {@code null}.
          */
-        public Builder(final URI requestURI) {
+        public Builder(URI requestURI) {
 
             if (requestURI == null) {
                 throw new IllegalArgumentException("The request URI must not be null");
@@ -350,7 +350,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param request The authorisation request. Must not be
          *                {@code null}.
          */
-        public Builder(final AuthorizationRequest request) {
+        public Builder(AuthorizationRequest request) {
 
             uri = request.getEndpointURI();
             scope = request.scope;
@@ -377,7 +377,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param rt The response type. Must not be {@code null}.
          * @return This builder.
          */
-        public Builder responseType(final ResponseType rt) {
+        public Builder responseType(ResponseType rt) {
 
             if (rt == null) {
                 throw new IllegalArgumentException("The response type must not be null");
@@ -396,7 +396,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                 {@code null}.
          * @return This builder.
          */
-        public Builder clientID(final ClientID clientID) {
+        public Builder clientID(ClientID clientID) {
 
             if (clientID == null) {
                 throw new IllegalArgumentException("The client ID must not be null");
@@ -415,7 +415,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                    specified.
          * @return This builder.
          */
-        public Builder redirectionURI(final URI redirectURI) {
+        public Builder redirectionURI(URI redirectURI) {
 
             this.redirectURI = redirectURI;
             return this;
@@ -429,7 +429,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param scope The scope, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder scope(final Scope scope) {
+        public Builder scope(Scope scope) {
 
             this.scope = scope;
             return this;
@@ -443,7 +443,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param state The state, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder state(final State state) {
+        public Builder state(State state) {
 
             this.state = state;
             return this;
@@ -459,7 +459,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param rm The response mode, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder responseMode(final ResponseMode rm) {
+        public Builder responseMode(ResponseMode rm) {
 
             this.rm = rm;
             return this;
@@ -477,7 +477,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @return This builder.
          */
         @Deprecated
-        public Builder codeChallenge(final CodeChallenge codeChallenge, final CodeChallengeMethod codeChallengeMethod) {
+        public Builder codeChallenge(CodeChallenge codeChallenge, CodeChallengeMethod codeChallengeMethod) {
 
             this.codeChallenge = codeChallenge;
             this.codeChallengeMethod = codeChallengeMethod;
@@ -500,7 +500,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                            if a code verifier is specified.
          * @return This builder.
          */
-        public Builder codeChallenge(final CodeVerifier codeVerifier, final CodeChallengeMethod codeChallengeMethod) {
+        public Builder codeChallenge(CodeVerifier codeVerifier, CodeChallengeMethod codeChallengeMethod) {
 
             if (codeVerifier != null) {
                 CodeChallengeMethod method = codeChallengeMethod != null ? codeChallengeMethod : CodeChallengeMethod.getDefault();
@@ -521,7 +521,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                  specified.
          * @return This builder.
          */
-        public Builder resources(final URI... resources) {
+        public Builder resources(URI... resources) {
             if (resources != null) {
                 this.resources = Arrays.asList(resources);
             } else {
@@ -538,7 +538,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                             incremental authorisation.
          * @return This builder.
          */
-        public Builder includeGrantedScopes(final boolean includeGrantedScopes) {
+        public Builder includeGrantedScopes(boolean includeGrantedScopes) {
 
             this.includeGrantedScopes = includeGrantedScopes;
             return this;
@@ -554,7 +554,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                      specified.
          * @return This builder.
          */
-        public Builder requestObject(final JWT requestObject) {
+        public Builder requestObject(JWT requestObject) {
 
             this.requestObject = requestObject;
             return this;
@@ -570,7 +570,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *                   not specified.
          * @return This builder.
          */
-        public Builder requestURI(final URI requestURI) {
+        public Builder requestURI(URI requestURI) {
 
             this.requestURI = requestURI;
             return this;
@@ -585,7 +585,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *               specified.
          * @return This builder.
          */
-        public Builder prompt(final Prompt prompt) {
+        public Builder prompt(Prompt prompt) {
 
             this.prompt = prompt;
             return this;
@@ -600,7 +600,7 @@ public class AuthorizationRequest extends AbstractRequest {
          *               specified.
          * @return This builder.
          */
-        public Builder customParameter(final String name, final String... values) {
+        public Builder customParameter(String name, String... values) {
 
             if (values == null || values.length == 0) {
                 customParams.remove(name);
@@ -619,7 +619,7 @@ public class AuthorizationRequest extends AbstractRequest {
          * @param uri The endpoint URI, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder endpointURI(final URI uri) {
+        public Builder endpointURI(URI uri) {
 
             this.uri = uri;
             return this;
@@ -659,9 +659,9 @@ public class AuthorizationRequest extends AbstractRequest {
      *                 {@code client_id} parameter. Must not be
      *                 {@code null}.
      */
-    public AuthorizationRequest(final URI uri,
-                                final ResponseType rt,
-                                final ClientID clientID) {
+    public AuthorizationRequest(URI uri,
+                                ResponseType rt,
+                                ClientID clientID) {
 
         this(uri, rt, null, clientID, null, null, null, null, null, null, false, null, null, null, null);
     }
@@ -695,13 +695,13 @@ public class AuthorizationRequest extends AbstractRequest {
      *                    {@code state} parameter. {@code null} if
      *                    not specified.
      */
-    public AuthorizationRequest(final URI uri,
-                                final ResponseType rt,
-                                final ResponseMode rm,
-                                final ClientID clientID,
-                                final URI redirectURI,
-                                final Scope scope,
-                                final State state) {
+    public AuthorizationRequest(URI uri,
+                                ResponseType rt,
+                                ResponseMode rm,
+                                ClientID clientID,
+                                URI redirectURI,
+                                Scope scope,
+                                State state) {
 
         this(uri, rt, rm, clientID, redirectURI, scope, state, null, null, null, false, null, null, null, null);
     }
@@ -761,21 +761,21 @@ public class AuthorizationRequest extends AbstractRequest {
      * @param customParams         Custom parameters, empty map or
      *                             {@code null} if none.
      */
-    public AuthorizationRequest(final URI uri,
-                                final ResponseType rt,
-                                final ResponseMode rm,
-                                final ClientID clientID,
-                                final URI redirectURI,
-                                final Scope scope,
-                                final State state,
-                                final CodeChallenge codeChallenge,
-                                final CodeChallengeMethod codeChallengeMethod,
-                                final List<URI> resources,
-                                final boolean includeGrantedScopes,
-                                final JWT requestObject,
-                                final URI requestURI,
-                                final Prompt prompt,
-                                final Map<String, List<String>> customParams) {
+    public AuthorizationRequest(URI uri,
+                                ResponseType rt,
+                                ResponseMode rm,
+                                ClientID clientID,
+                                URI redirectURI,
+                                Scope scope,
+                                State state,
+                                CodeChallenge codeChallenge,
+                                CodeChallengeMethod codeChallengeMethod,
+                                List<URI> resources,
+                                boolean includeGrantedScopes,
+                                JWT requestObject,
+                                URI requestURI,
+                                Prompt prompt,
+                                Map<String, List<String>> customParams) {
 
         super(uri);
 
@@ -1047,7 +1047,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter value(s), {@code null} if not specified.
      */
-    public List<String> getCustomParameter(final String name) {
+    public List<String> getCustomParameter(String name) {
 
         return customParams.get(name);
     }
@@ -1227,7 +1227,7 @@ public class AuthorizationRequest extends AbstractRequest {
      *               not be {@code null}.
      * @return The HTTP request.
      */
-    public HTTPRequest toHTTPRequest(final HTTPRequest.Method method) {
+    public HTTPRequest toHTTPRequest(HTTPRequest.Method method) {
 
         if (getEndpointURI() == null) {
             throw new SerializeException("The endpoint URI is not specified");
@@ -1289,7 +1289,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  authorisation request.
      */
-    public static AuthorizationRequest parse(final Map<String, List<String>> params)
+    public static AuthorizationRequest parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         return parse(null, params);
@@ -1317,7 +1317,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  authorisation request.
      */
-    public static AuthorizationRequest parse(final URI uri, final Map<String, List<String>> params)
+    public static AuthorizationRequest parse(URI uri, Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse response_mode, response_type, client_id, redirect_uri and state first,
@@ -1534,7 +1534,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to an
      *                                  authorisation request.
      */
-    public static AuthorizationRequest parse(final String query)
+    public static AuthorizationRequest parse(String query)
             throws OAuth2JSONParseException {
 
         return parse(null, URLUtils.parseParameters(query));
@@ -1562,7 +1562,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to an
      *                                  authorisation request.
      */
-    public static AuthorizationRequest parse(final URI uri, final String query)
+    public static AuthorizationRequest parse(URI uri, String query)
             throws OAuth2JSONParseException {
 
         return parse(uri, URLUtils.parseParameters(query));
@@ -1587,7 +1587,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the URI couldn't be parsed to an
      *                                  authorisation request.
      */
-    public static AuthorizationRequest parse(final URI uri)
+    public static AuthorizationRequest parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getRawQuery()));
@@ -1612,7 +1612,7 @@ public class AuthorizationRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
      *                                  authorisation request.
      */
-    public static AuthorizationRequest parse(final HTTPRequest httpRequest)
+    public static AuthorizationRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         String query = httpRequest.getQuery();

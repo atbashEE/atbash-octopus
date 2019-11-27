@@ -62,8 +62,8 @@ public class JWTAuthenticationClaimsSetVerifierTest {
     }
 
 
-    private static void ensureRejected(final JWTClaimsSet claimsSet,
-                                       final String expectedMessage) {
+    private static void ensureRejected(JWTClaimsSet claimsSet,
+                                       String expectedMessage) {
 
         try {
             createForAS().verify(claimsSet);

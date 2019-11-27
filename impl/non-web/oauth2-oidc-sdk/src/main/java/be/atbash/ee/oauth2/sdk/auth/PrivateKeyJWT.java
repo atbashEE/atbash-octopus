@@ -115,12 +115,12 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                      use the default one.
      * @throws JOSEException If RSA signing failed.
      */
-    public PrivateKeyJWT(final ClientID clientID,
-                         final URI tokenEndpoint,
-                         final JWSAlgorithm jwsAlgorithm,
-                         final RSAPrivateKey rsaPrivateKey,
-                         final String keyID,
-                         final Provider jcaProvider)
+    public PrivateKeyJWT(ClientID clientID,
+                         URI tokenEndpoint,
+                         JWSAlgorithm jwsAlgorithm,
+                         RSAPrivateKey rsaPrivateKey,
+                         String keyID,
+                         Provider jcaProvider)
             throws JOSEException {
 
         this(new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
@@ -149,11 +149,11 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                         to use the default one.
      * @throws JOSEException If RSA signing failed.
      */
-    public PrivateKeyJWT(final JWTAuthenticationClaimsSet jwtAuthClaimsSet,
-                         final JWSAlgorithm jwsAlgorithm,
-                         final RSAPrivateKey rsaPrivateKey,
-                         final String keyID,
-                         final Provider jcaProvider)
+    public PrivateKeyJWT(JWTAuthenticationClaimsSet jwtAuthClaimsSet,
+                         JWSAlgorithm jwsAlgorithm,
+                         RSAPrivateKey rsaPrivateKey,
+                         String keyID,
+                         Provider jcaProvider)
             throws JOSEException {
 
         this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, rsaPrivateKey, keyID, jcaProvider));
@@ -182,12 +182,12 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                      use the default one.
      * @throws JOSEException If RSA signing failed.
      */
-    public PrivateKeyJWT(final ClientID clientID,
-                         final URI tokenEndpoint,
-                         final JWSAlgorithm jwsAlgorithm,
-                         final ECPrivateKey ecPrivateKey,
-                         final String keyID,
-                         final Provider jcaProvider)
+    public PrivateKeyJWT(ClientID clientID,
+                         URI tokenEndpoint,
+                         JWSAlgorithm jwsAlgorithm,
+                         ECPrivateKey ecPrivateKey,
+                         String keyID,
+                         Provider jcaProvider)
             throws JOSEException {
 
         this(new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
@@ -216,11 +216,11 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                         to use the default one.
      * @throws JOSEException If RSA signing failed.
      */
-    public PrivateKeyJWT(final JWTAuthenticationClaimsSet jwtAuthClaimsSet,
-                         final JWSAlgorithm jwsAlgorithm,
-                         final ECPrivateKey ecPrivateKey,
-                         final String keyID,
-                         final Provider jcaProvider)
+    public PrivateKeyJWT(JWTAuthenticationClaimsSet jwtAuthClaimsSet,
+                         JWSAlgorithm jwsAlgorithm,
+                         ECPrivateKey ecPrivateKey,
+                         String keyID,
+                         Provider jcaProvider)
             throws JOSEException {
 
         this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, ecPrivateKey, keyID, jcaProvider));
@@ -235,7 +235,7 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                        supported RSA or ECDSA-signed JWT. Must be
      *                        signed and not {@code null}.
      */
-    public PrivateKeyJWT(final SignedJWT clientAssertion) {
+    public PrivateKeyJWT(SignedJWT clientAssertion) {
 
         super(ClientAuthenticationMethod.PRIVATE_KEY_JWT, clientAssertion);
 
@@ -261,7 +261,7 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                                  private key JSON Web Token (JWT)
      *                                  authentication.
      */
-    public static PrivateKeyJWT parse(final Map<String, List<String>> params)
+    public static PrivateKeyJWT parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         JWTAuthentication.ensureClientAssertionType(params);
@@ -308,7 +308,7 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                                  to a private key JSON Web Token (JWT)
      *                                  authentication.
      */
-    public static PrivateKeyJWT parse(final String paramsString)
+    public static PrivateKeyJWT parse(String paramsString)
             throws OAuth2JSONParseException {
 
         Map<String, List<String>> params = URLUtils.parseParameters(paramsString);
@@ -333,7 +333,7 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      *                                  to a private key JSON Web Token (JWT)
      *                                  authentication.
      */
-    public static PrivateKeyJWT parse(final HTTPRequest httpRequest)
+    public static PrivateKeyJWT parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.POST);

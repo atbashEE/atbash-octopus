@@ -31,11 +31,9 @@ import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
-import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
 import org.junit.Test;
 
-import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
 import java.net.URL;
@@ -553,11 +551,11 @@ public class TokenRequestTest  {
 	
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		
-		final String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
+
+		String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
 		httpRequest.setAuthorization("Basic " + authBasicString);
-		
-		final String postBody =
+
+		String postBody =
 			"grant_type=refresh_token" +
 			"&refresh_token=tGzv3JOkF0XG5Qx2TlKWIA";
 		
@@ -591,7 +589,7 @@ public class TokenRequestTest  {
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		final String postBody = "grant_type=password&username=johndoe&password=A3ddj3w";
+		String postBody = "grant_type=password&username=johndoe&password=A3ddj3w";
 
 		httpRequest.setQuery(postBody);
 
@@ -627,10 +625,10 @@ public class TokenRequestTest  {
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		final String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
+		String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
 		httpRequest.setAuthorization("Basic " + authBasicString);
 
-		final String postBody = "grant_type=password&username=johndoe&password=A3ddj3w";
+		String postBody = "grant_type=password&username=johndoe&password=A3ddj3w";
 
 		httpRequest.setQuery(postBody);
 
@@ -668,10 +666,10 @@ public class TokenRequestTest  {
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		final String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
+		String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
 		httpRequest.setAuthorization("Basic " + authBasicString);
 
-		final String postBody = "grant_type=client_credentials";
+		String postBody = "grant_type=client_credentials";
 
 		httpRequest.setQuery(postBody);
 
@@ -703,7 +701,7 @@ public class TokenRequestTest  {
 
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		final String postBody = "grant_type=client_credentials";
+		String postBody = "grant_type=client_credentials";
 
 		httpRequest.setQuery(postBody);
 

@@ -54,8 +54,8 @@ public class URLUtilsTest {
     public void testJavaURLDecoder()
             throws Exception {
 
-        final String decodedPlus = URLDecoder.decode("abc+def", "utf-8");
-        final String decodedPerCent20 = URLDecoder.decode("abc%20def", "utf-8");
+        String decodedPlus = URLDecoder.decode("abc+def", "utf-8");
+        String decodedPerCent20 = URLDecoder.decode("abc%20def", "utf-8");
 
         assertThat(decodedPlus).isEqualTo("abc def");
         assertThat(decodedPerCent20).isEqualTo("abc def");

@@ -187,7 +187,7 @@ public abstract class ClaimsSet {
      * none. A {@code null} key indicates the value has no language
      * tag (corresponds to the base name).
      */
-    public <T> Map<LangTag, T> getLangTaggedClaim(final String name, final Class<T> clazz) {
+    public <T> Map<LangTag, T> getLangTaggedClaim(String name, Class<T> clazz) {
 
         Map<LangTag, Object> matches = LangTagUtils.find(name, claims);
         Map<LangTag, T> out = new HashMap<>();
@@ -221,7 +221,7 @@ public abstract class ClaimsSet {
      *              {@code null} any existing claim with the same name will
      *              be removed.
      */
-    public void setClaim(final String name, final Object value) {
+    public void setClaim(String name, Object value) {
         validateBuildMode();
         if (value != null) {
             JSONObjectUtils.addValue(claimsBuilder, name, value);
@@ -241,7 +241,7 @@ public abstract class ClaimsSet {
      * @param langTag The language tag of the claim value, {@code null} if
      *                not tagged.
      */
-    public void setClaim(final String name, final JsonValue value, final LangTag langTag) {
+    public void setClaim(String name, JsonValue value, LangTag langTag) {
         String keyName = langTag != null ? name + "#" + langTag : name;
         setClaim(keyName, value);
     }
@@ -254,7 +254,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or casting
      * failed.
      */
-    public String getStringClaim(final String name) {
+    public String getStringClaim(String name) {
         ensureReadMode();
         return claims.get(name) != null && claims.get(name).getValueType() == JsonValue.ValueType.STRING ? claims.getString(name) : null;
 
@@ -270,7 +270,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or casting
      * failed.
      */
-    public String getStringClaim(final String name, final LangTag langTag) {
+    public String getStringClaim(String name, LangTag langTag) {
         ensureReadMode();
         return langTag == null ? getStringClaim(name) : getStringClaim(name + '#' + langTag);
     }
@@ -283,7 +283,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or casting
      * failed.
      */
-    public Boolean getBooleanClaim(final String name) {
+    public Boolean getBooleanClaim(String name) {
         ensureReadMode();
         return JSONObjectUtils.hasValue(claims, name) ? claims.getBoolean(name) : null;
     }
@@ -296,7 +296,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or casting
      * failed.
      */
-    public Number getNumberClaim(final String name) {
+    public Number getNumberClaim(String name) {
         ensureReadMode();
         return claims.get(name).getValueType() == JsonValue.ValueType.NUMBER ? claims.getJsonNumber(name).numberValue() : null;
     }
@@ -309,7 +309,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or parsing
      * failed.
      */
-    public URL getURLClaim(final String name) {
+    public URL getURLClaim(String name) {
         ensureReadMode();
         try {
             return new URL(claims.getString(name));
@@ -326,7 +326,7 @@ public abstract class ClaimsSet {
      * @param value The claim value. If {@code null} any existing claim
      *              with the same name will be removed.
      */
-    public void setURLClaim(final String name, final URL value) {
+    public void setURLClaim(String name, URL value) {
         validateBuildMode();
         if (value != null) {
             setClaim(name, value.toString());
@@ -343,7 +343,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or parsing
      * failed.
      */
-    public URI getURIClaim(final String name) {
+    public URI getURIClaim(String name) {
         ensureReadMode();
         try {
             return JSONObjectUtils.getURI(claims, name);
@@ -360,7 +360,7 @@ public abstract class ClaimsSet {
      * @param value The claim value. If {@code null} any existing claim
      *              with the same name will be removed.
      */
-    public void setURIClaim(final String name, final URI value) {
+    public void setURIClaim(String name, URI value) {
         validateBuildMode();
         if (value != null) {
             setClaim(name, value.toString());
@@ -378,7 +378,7 @@ public abstract class ClaimsSet {
      * failed.
      */
     @Deprecated
-    public InternetAddress getEmailClaim(final String name) {
+    public InternetAddress getEmailClaim(String name) {
         ensureReadMode();
         if (!JSONObjectUtils.hasValue(claims, name)) {
             return null;
@@ -399,7 +399,7 @@ public abstract class ClaimsSet {
      *              with the same name will be removed.
      */
     @Deprecated
-    public void setEmailClaim(final String name, final InternetAddress value) {
+    public void setEmailClaim(String name, InternetAddress value) {
         validateBuildMode();
         if (value != null) {
             setClaim(name, value.getAddress());
@@ -417,7 +417,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or parsing
      * failed.
      */
-    public Date getDateClaim(final String name) {
+    public Date getDateClaim(String name) {
         ensureReadMode();
         try {
             return DateUtils.fromSecondsSinceEpoch(claims.getJsonNumber(name).longValue());
@@ -435,7 +435,7 @@ public abstract class ClaimsSet {
      * @param value The claim value. If {@code null} any existing claim
      *              with the same name will be removed.
      */
-    public void setDateClaim(final String name, final Date value) {
+    public void setDateClaim(String name, Date value) {
         validateBuildMode();
         if (value != null) {
             setClaim(name, DateUtils.toSecondsSinceEpoch(value));
@@ -452,7 +452,7 @@ public abstract class ClaimsSet {
      * @return The claim value, {@code null} if not specified or parsing
      * failed.
      */
-    public List<String> getStringListClaim(final String name) {
+    public List<String> getStringListClaim(String name) {
         ensureReadMode();
         return claims.get(name) != null && claims.get(name).getValueType() == JsonValue.ValueType.ARRAY ? JSONObjectUtils.getStringList(claims, name) : null;
 

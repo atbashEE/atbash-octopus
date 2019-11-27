@@ -60,7 +60,7 @@ public class AggregatedClaims extends ExternalClaims {
      * @param names     The claim names. Must not be {@code null} or empty.
      * @param claimsJWT The claims JWT. Must not be {@code null}.
      */
-    public AggregatedClaims(final Set<String> names, final JWT claimsJWT) {
+    public AggregatedClaims(Set<String> names, JWT claimsJWT) {
 
         this(UUID.randomUUID().toString(), names, claimsJWT);
     }
@@ -74,7 +74,7 @@ public class AggregatedClaims extends ExternalClaims {
      * @param names     The claim names. Must not be {@code null} or empty.
      * @param claimsJWT The claims JWT. Must not be {@code null}.
      */
-    public AggregatedClaims(final String sourceID, final Set<String> names, final JWT claimsJWT) {
+    public AggregatedClaims(String sourceID, Set<String> names, JWT claimsJWT) {
 
         super(sourceID, names);
 
@@ -97,7 +97,7 @@ public class AggregatedClaims extends ExternalClaims {
 
 
     @Override
-    JsonObject mergeInto(final JsonObject jsonObject) {
+    JsonObject mergeInto(JsonObject jsonObject) {
 
         JsonObjectBuilder result = Json.createObjectBuilder(jsonObject);
 

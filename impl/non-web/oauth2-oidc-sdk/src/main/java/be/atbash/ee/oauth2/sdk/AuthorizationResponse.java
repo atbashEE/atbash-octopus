@@ -81,7 +81,7 @@ public abstract class AuthorizationResponse implements Response {
      * @param state       The state, {@code null} if not requested.
      * @param rm          The response mode, {@code null} if not specified.
      */
-    protected AuthorizationResponse(final URI redirectURI, final State state, final ResponseMode rm) {
+    protected AuthorizationResponse(URI redirectURI, State state, ResponseMode rm) {
 
         if (redirectURI == null) {
             throw new IllegalArgumentException("The redirection URI must not be null");
@@ -105,7 +105,7 @@ public abstract class AuthorizationResponse implements Response {
      * @param jwtResponse The JWT response. Must not be {@code null}.
      * @param rm          The response mode, {@code null} if not specified.
      */
-    protected AuthorizationResponse(final URI redirectURI, final JWT jwtResponse, final ResponseMode rm) {
+    protected AuthorizationResponse(URI redirectURI, JWT jwtResponse, ResponseMode rm) {
 
         if (redirectURI == null) {
             throw new IllegalArgumentException("The redirection URI must not be null");
@@ -347,8 +347,8 @@ public abstract class AuthorizationResponse implements Response {
      *                                  if validation of the JWT secured response
      *                                  failed.
      */
-    public static AuthorizationResponse parse(final URI redirectURI,
-                                              final Map<String, List<String>> params)
+    public static AuthorizationResponse parse(URI redirectURI,
+                                              Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         Map<String, List<String>> workParams = params;
@@ -393,7 +393,7 @@ public abstract class AuthorizationResponse implements Response {
      * @throws OAuth2JSONParseException If no authorisation response parameters were
      *                                  found in the URL.
      */
-    public static AuthorizationResponse parse(final URI uri)
+    public static AuthorizationResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
@@ -418,7 +418,7 @@ public abstract class AuthorizationResponse implements Response {
      *                                  authorisation response.
      * @see #parse(HTTPRequest)
      */
-    public static AuthorizationResponse parse(final HTTPResponse httpResponse)
+    public static AuthorizationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         URI location = httpResponse.getLocation();
@@ -450,7 +450,7 @@ public abstract class AuthorizationResponse implements Response {
      *                                  authorisation response.
      * @see #parse(HTTPResponse)
      */
-    public static AuthorizationResponse parse(final HTTPRequest httpRequest)
+    public static AuthorizationResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));
@@ -465,7 +465,7 @@ public abstract class AuthorizationResponse implements Response {
      * @return The authorisation response parameters.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Map<String, List<String>> parseResponseParameters(final URI uri)
+    public static Map<String, List<String>> parseResponseParameters(URI uri)
             throws OAuth2JSONParseException {
 
         if (uri.getRawFragment() != null) {
@@ -486,7 +486,7 @@ public abstract class AuthorizationResponse implements Response {
      * @return The authorisation response parameters.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static Map<String, List<String>> parseResponseParameters(final HTTPRequest httpRequest)
+    public static Map<String, List<String>> parseResponseParameters(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         if (httpRequest.getQuery() != null) {

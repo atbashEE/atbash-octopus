@@ -39,7 +39,7 @@ public class IdentifierTest  {
 
 		assertThat((new Identifier() {
 
-			public boolean equals(final Object object) {
+			public boolean equals(Object object) {
 				return true;
 			}
 

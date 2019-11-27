@@ -81,7 +81,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
      * @throws IllegalArgumentException If the client identifier couldn't
      *                                  be parsed.
      */
-    private static ClientID parseClientID(final SignedJWT jwt) {
+    private static ClientID parseClientID(SignedJWT jwt) {
 
         String subjectValue;
         String issuerValue;
@@ -124,8 +124,8 @@ public abstract class JWTAuthentication extends ClientAuthentication {
      *                                  signed or doesn't conform to the
      *                                  expected format.
      */
-    protected JWTAuthentication(final ClientAuthenticationMethod method,
-                                final SignedJWT clientAssertion) {
+    protected JWTAuthentication(ClientAuthenticationMethod method,
+                                SignedJWT clientAssertion) {
 
         super(method, parseClientID(clientAssertion));
 
@@ -204,7 +204,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 
 
     @Override
-    public void applyTo(final HTTPRequest httpRequest) {
+    public void applyTo(HTTPRequest httpRequest) {
 
         if (httpRequest.getMethod() != HTTPRequest.Method.POST) {
             throw new SerializeException("The HTTP request method must be POST");
@@ -242,7 +242,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
      * @throws OAuth2JSONParseException If expected "client_assertion_type" entry
      *                                  wasn't found.
      */
-    protected static void ensureClientAssertionType(final Map<String, List<String>> params)
+    protected static void ensureClientAssertionType(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         final String clientAssertionType = MultivaluedMapUtils.getFirstValue(params, "client_assertion_type");
@@ -271,7 +271,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
      * @throws OAuth2JSONParseException If a "client_assertion" entry couldn't be
      *                                  retrieved from the parameters map.
      */
-    protected static SignedJWT parseClientAssertion(final Map<String, List<String>> params)
+    protected static SignedJWT parseClientAssertion(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         final String clientAssertion = MultivaluedMapUtils.getFirstValue(params, "client_assertion");
@@ -301,7 +301,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
      *               {@code application/x-www-form-urlencoded} encoded.
      * @return The client identifier, {@code null} if not specified.
      */
-    protected static ClientID parseClientID(final Map<String, List<String>> params) {
+    protected static ClientID parseClientID(Map<String, List<String>> params) {
 
         String clientIDString = MultivaluedMapUtils.getFirstValue(params, "client_id");
 
@@ -323,7 +323,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
      *                                  authentication couldn't be retrieved from the
      *                                  HTTP request.
      */
-    public static JWTAuthentication parse(final HTTPRequest httpRequest)
+    public static JWTAuthentication parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.POST);

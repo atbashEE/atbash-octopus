@@ -73,8 +73,8 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
      *                    parameter was included in the authorisation
      *                    request, else {@code null}.
      */
-    public AuthorizationCodeGrant(final AuthorizationCode code,
-                                  final URI redirectURI) {
+    public AuthorizationCodeGrant(AuthorizationCode code,
+                                  URI redirectURI) {
 
         this(code, redirectURI, null);
     }
@@ -91,9 +91,9 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
      * @param codeVerifier The authorisation code verifier for PKCE,
      *                     {@code null} if not specified.
      */
-    public AuthorizationCodeGrant(final AuthorizationCode code,
-                                  final URI redirectURI,
-                                  final CodeVerifier codeVerifier) {
+    public AuthorizationCodeGrant(AuthorizationCode code,
+                                  URI redirectURI,
+                                  CodeVerifier codeVerifier) {
 
         super(GRANT_TYPE);
 
@@ -214,7 +214,7 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
      * @return The authorisation code grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static AuthorizationCodeGrant parse(final Map<String, List<String>> params)
+    public static AuthorizationCodeGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type

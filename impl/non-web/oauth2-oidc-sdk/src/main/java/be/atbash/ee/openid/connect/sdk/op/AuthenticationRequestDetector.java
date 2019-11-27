@@ -37,7 +37,7 @@ public class AuthenticationRequestDetector {
      * @return {@code true} for a likely OpenID authentication request,
      * else {@code false}.
      */
-    public static boolean isLikelyOpenID(final Map<String, List<String>> queryParams) {
+    public static boolean isLikelyOpenID(Map<String, List<String>> queryParams) {
 
         Scope scope = Scope.parse(MultivaluedMapUtils.getFirstValue(queryParams, "scope"));
 

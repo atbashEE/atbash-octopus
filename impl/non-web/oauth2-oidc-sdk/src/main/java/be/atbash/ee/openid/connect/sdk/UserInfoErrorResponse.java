@@ -103,7 +103,7 @@ public class UserInfoErrorResponse
      *              the {@link #getStandardErrors standard errors} for a
      *              UserInfo error response. Must not be {@code null}.
      */
-    public UserInfoErrorResponse(final BearerTokenError error) {
+    public UserInfoErrorResponse(BearerTokenError error) {
 
         this((ErrorObject) error);
     }
@@ -114,7 +114,7 @@ public class UserInfoErrorResponse
      *
      * @param error The error. Must not be {@code null}.
      */
-    public UserInfoErrorResponse(final ErrorObject error) {
+    public UserInfoErrorResponse(ErrorObject error) {
 
         if (error == null) {
             throw new IllegalArgumentException("The error must not be null");
@@ -186,7 +186,7 @@ public class UserInfoErrorResponse
      *                                  couldn't be parsed to a UserInfo error
      *                                  response.
      */
-    public static UserInfoErrorResponse parse(final String wwwAuth)
+    public static UserInfoErrorResponse parse(String wwwAuth)
             throws OAuth2JSONParseException {
 
         BearerTokenError error = BearerTokenError.parse(wwwAuth);
@@ -207,7 +207,7 @@ public class UserInfoErrorResponse
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  UserInfo error response.
      */
-    public static UserInfoErrorResponse parse(final HTTPResponse httpResponse)
+    public static UserInfoErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCodeNotOK();

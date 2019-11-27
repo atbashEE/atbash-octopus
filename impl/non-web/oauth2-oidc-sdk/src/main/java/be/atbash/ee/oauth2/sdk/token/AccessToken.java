@@ -64,7 +64,7 @@ public abstract class AccessToken extends Token {
      *
      * @param type The access token type. Must not be {@code null}.
      */
-    public AccessToken(final AccessTokenType type) {
+    public AccessToken(AccessTokenType type) {
 
         this(type, 32);
     }
@@ -79,7 +79,7 @@ public abstract class AccessToken extends Token {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public AccessToken(final AccessTokenType type, final int byteLength) {
+    public AccessToken(AccessTokenType type, int byteLength) {
 
         this(type, byteLength, 0L, null);
     }
@@ -93,9 +93,9 @@ public abstract class AccessToken extends Token {
      * @param lifetime The lifetime in seconds, 0 if not specified.
      * @param scope    The scope, {@code null} if not specified.
      */
-    public AccessToken(final AccessTokenType type,
-                       final long lifetime,
-                       final Scope scope) {
+    public AccessToken(AccessTokenType type,
+                       long lifetime,
+                       Scope scope) {
 
         this(type, 32, lifetime, scope);
     }
@@ -112,10 +112,10 @@ public abstract class AccessToken extends Token {
      * @param lifetime   The lifetime in seconds, 0 if not specified.
      * @param scope      The scope, {@code null} if not specified.
      */
-    public AccessToken(final AccessTokenType type,
-                       final int byteLength,
-                       final long lifetime,
-                       final Scope scope) {
+    public AccessToken(AccessTokenType type,
+                       int byteLength,
+                       long lifetime,
+                       Scope scope) {
 
         super(byteLength);
 
@@ -138,7 +138,7 @@ public abstract class AccessToken extends Token {
      * @param value The access token value. Must not be {@code null} or
      *              empty string.
      */
-    public AccessToken(final AccessTokenType type, final String value) {
+    public AccessToken(AccessTokenType type, String value) {
 
         this(type, value, 0L, null);
     }
@@ -154,10 +154,10 @@ public abstract class AccessToken extends Token {
      * @param lifetime The lifetime in seconds, 0 if not specified.
      * @param scope    The scope, {@code null} if not specified.
      */
-    public AccessToken(final AccessTokenType type,
-                       final String value,
-                       final long lifetime,
-                       final Scope scope) {
+    public AccessToken(AccessTokenType type,
+                       String value,
+                       long lifetime,
+                       Scope scope) {
 
         super(value);
 
@@ -271,7 +271,7 @@ public abstract class AccessToken extends Token {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  access token.
      */
-    public static AccessToken parse(final JsonObject jsonObject)
+    public static AccessToken parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         return BearerAccessToken.parse(jsonObject);
@@ -288,7 +288,7 @@ public abstract class AccessToken extends Token {
      * @throws OAuth2JSONParseException If the {@code Authorization} header value
      *                                  couldn't be parsed to an access token.
      */
-    public static AccessToken parse(final String header)
+    public static AccessToken parse(String header)
             throws OAuth2JSONParseException {
 
         return BearerAccessToken.parse(header);

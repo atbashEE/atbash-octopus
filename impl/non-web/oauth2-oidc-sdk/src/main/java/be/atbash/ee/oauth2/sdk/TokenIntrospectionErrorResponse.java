@@ -97,7 +97,7 @@ public class TokenIntrospectionErrorResponse extends TokenIntrospectionResponse 
      *
      * @param error The error, {@code null} if not specified.
      */
-    public TokenIntrospectionErrorResponse(final ErrorObject error) {
+    public TokenIntrospectionErrorResponse(ErrorObject error) {
 
         this.error = error;
     }
@@ -154,7 +154,7 @@ public class TokenIntrospectionErrorResponse extends TokenIntrospectionResponse 
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  token introspection error response.
      */
-    public static TokenIntrospectionErrorResponse parse(final HTTPResponse httpResponse)
+    public static TokenIntrospectionErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCodeNotOK();

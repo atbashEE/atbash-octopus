@@ -56,7 +56,7 @@ public class PushedAuthorizationErrorResponse extends PushedAuthorizationRespons
      *
      * @param error The error. Must not be {@code null}.
      */
-    public PushedAuthorizationErrorResponse(final ErrorObject error) {
+    public PushedAuthorizationErrorResponse(ErrorObject error) {
 
         if (error == null) {
             throw new IllegalArgumentException("The error must not be null");
@@ -104,7 +104,7 @@ public class PushedAuthorizationErrorResponse extends PushedAuthorizationRespons
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  pushed authorisation error response.
      */
-    public static PushedAuthorizationErrorResponse parse(final HTTPResponse httpResponse)
+    public static PushedAuthorizationErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         int statusCode = httpResponse.getStatusCode();

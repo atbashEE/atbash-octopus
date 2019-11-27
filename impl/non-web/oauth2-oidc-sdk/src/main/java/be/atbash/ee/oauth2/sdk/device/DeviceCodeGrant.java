@@ -58,7 +58,7 @@ public class DeviceCodeGrant extends AuthorizationGrant {
      *
      * @param deviceCode The device code. Must not be {@code null}.
      */
-    public DeviceCodeGrant(final DeviceCode deviceCode) {
+    public DeviceCodeGrant(DeviceCode deviceCode) {
 
         super(GRANT_TYPE);
 
@@ -106,7 +106,7 @@ public class DeviceCodeGrant extends AuthorizationGrant {
      * @return The device code grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static DeviceCodeGrant parse(final Map<String, List<String>> params) throws OAuth2JSONParseException {
+    public static DeviceCodeGrant parse(Map<String, List<String>> params) throws OAuth2JSONParseException {
 
         // Parse grant type
         String grantTypeString = MultivaluedMapUtils.getFirstValue(params, "grant_type");

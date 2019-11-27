@@ -31,7 +31,7 @@ public final class State extends Identifier {
      * @param value The state value. Must not be {@code null} or empty
      *              string.
      */
-    public State(final String value) {
+    public State(String value) {
 
         super(value);
     }
@@ -44,7 +44,7 @@ public final class State extends Identifier {
      * @param byteLength The byte length of the value to generate. Must be
      *                   greater than one.
      */
-    public State(final int byteLength) {
+    public State(int byteLength) {
 
         super(byteLength);
     }
@@ -61,7 +61,7 @@ public final class State extends Identifier {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof State &&
                 this.toString().equals(object.toString());
@@ -76,7 +76,7 @@ public final class State extends Identifier {
      * @return The state, {@code null} if the parsed string was
      * {@code null} or empty.
      */
-    public static State parse(final String data) {
+    public static State parse(String data) {
 
         if (StringUtils.isEmpty(data)) {
 

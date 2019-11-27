@@ -26,7 +26,6 @@ import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.Date;
@@ -98,10 +97,10 @@ public final class RequestObjectPOSTSuccessResponse extends RequestObjectPOSTRes
      * @param exp        The request URI expiration time. Must not be
      *                   {@code null}.
      */
-    public RequestObjectPOSTSuccessResponse(final Issuer iss,
-                                            final Audience aud,
-                                            final URI requestURI,
-                                            final Date exp) {
+    public RequestObjectPOSTSuccessResponse(Issuer iss,
+                                            Audience aud,
+                                            URI requestURI,
+                                            Date exp) {
         if (iss == null) {
             throw new IllegalArgumentException("The issuer must not be null");
         }
@@ -209,7 +208,7 @@ public final class RequestObjectPOSTSuccessResponse extends RequestObjectPOSTRes
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  request object POST success response.
      */
-    public static RequestObjectPOSTSuccessResponse parse(final JsonObject jsonObject)
+    public static RequestObjectPOSTSuccessResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         if (!JSONObjectUtils.hasValue(jsonObject, "iss")) {
@@ -245,7 +244,7 @@ public final class RequestObjectPOSTSuccessResponse extends RequestObjectPOSTRes
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  request object POST success response.
      */
-    public static RequestObjectPOSTSuccessResponse parse(final HTTPResponse httpResponse)
+    public static RequestObjectPOSTSuccessResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_CREATED, HTTPResponse.SC_OK);

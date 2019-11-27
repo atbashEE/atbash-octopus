@@ -93,9 +93,9 @@ public class ClientAuthenticationVerifier<T> {
      *                                  for OpenID provider it may also
      *                                  include the issuer URI.
      */
-    public ClientAuthenticationVerifier(final ClientCredentialsSelector<T> clientCredentialsSelector,
-                                        final PKIClientX509CertificateBindingVerifier<T> pkiCertBindingVerifier,
-                                        final Set<Audience> expectedAudience) {
+    public ClientAuthenticationVerifier(ClientCredentialsSelector<T> clientCredentialsSelector,
+                                        PKIClientX509CertificateBindingVerifier<T> pkiCertBindingVerifier,
+                                        Set<Audience> expectedAudience) {
 
         claimsSetVerifier = new JWTAuthenticationClaimsSetVerifier(expectedAudience);
 
@@ -161,7 +161,7 @@ public class ClientAuthenticationVerifier<T> {
      *                                internal JOSE / JWT processing
      *                                exception.
      */
-    public void verify(final ClientAuthentication clientAuth, final Set<Hint> hints, final Context<T> context)
+    public void verify(ClientAuthentication clientAuth, Set<Hint> hints, Context<T> context)
             throws InvalidClientException, JOSEException {
 
         if (clientAuth instanceof PlainClientSecret) {

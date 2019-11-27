@@ -60,7 +60,7 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
      * @param accessToken An OAuth 2.0 Bearer access token for the request,
      *                    {@code null} if none.
      */
-    public ClientDeleteRequest(final URI uri, final BearerAccessToken accessToken) {
+    public ClientDeleteRequest(URI uri, BearerAccessToken accessToken) {
 
         super(uri, accessToken);
 
@@ -102,7 +102,7 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  client delete request.
      */
-    public static ClientDeleteRequest parse(final HTTPRequest httpRequest)
+    public static ClientDeleteRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.DELETE);

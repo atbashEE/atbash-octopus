@@ -37,7 +37,7 @@ public class StateHash extends HashClaim {
      *
      * @param value The state hash value. Must not be {@code null}.
      */
-    public StateHash(final String value) {
+    public StateHash(String value) {
 
         super(value);
     }
@@ -52,7 +52,7 @@ public class StateHash extends HashClaim {
      * @return The state hash, or {@code null} if the JWS algorithm is not
      * supported.
      */
-    public static StateHash compute(final State state, final JWSAlgorithm alg) {
+    public static StateHash compute(State state, JWSAlgorithm alg) {
 
         String value = computeValue(state, alg);
 
@@ -65,7 +65,7 @@ public class StateHash extends HashClaim {
 
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
 
         return object instanceof StateHash &&
                 this.toString().equals(object.toString());

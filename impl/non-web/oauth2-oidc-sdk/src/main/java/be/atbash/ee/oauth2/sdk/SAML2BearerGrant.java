@@ -66,7 +66,7 @@ public class SAML2BearerGrant extends AssertionGrant {
      * @param assertion The SAML 2.0 bearer assertion. Must not be
      *                  {@code null}.
      */
-    public SAML2BearerGrant(final Base64URLValue assertion) {
+    public SAML2BearerGrant(Base64URLValue assertion) {
 
         super(GRANT_TYPE);
 
@@ -144,7 +144,7 @@ public class SAML2BearerGrant extends AssertionGrant {
      * @return The SAML 2.0 bearer grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static SAML2BearerGrant parse(final Map<String, List<String>> params)
+    public static SAML2BearerGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type

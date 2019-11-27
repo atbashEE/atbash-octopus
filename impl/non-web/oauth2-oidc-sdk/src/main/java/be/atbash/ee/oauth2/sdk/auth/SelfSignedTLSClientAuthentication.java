@@ -58,8 +58,8 @@ public class SelfSignedTLSClientAuthentication extends TLSClientAuthentication {
      *                         client certificate(s), {@code null} to use
      *                         the default one.
      */
-    public SelfSignedTLSClientAuthentication(final ClientID clientID,
-                                             final SSLSocketFactory sslSocketFactory) {
+    public SelfSignedTLSClientAuthentication(ClientID clientID,
+                                             SSLSocketFactory sslSocketFactory) {
 
         super(ClientAuthenticationMethod.SELF_SIGNED_TLS_CLIENT_AUTH, clientID, sslSocketFactory);
     }
@@ -74,8 +74,8 @@ public class SelfSignedTLSClientAuthentication extends TLSClientAuthentication {
      * @param certificate The validated client X.509 certificate from the
      *                    received HTTPS request. Must not be {@code null}.
      */
-    public SelfSignedTLSClientAuthentication(final ClientID clientID,
-                                             final X509Certificate certificate) {
+    public SelfSignedTLSClientAuthentication(ClientID clientID,
+                                             X509Certificate certificate) {
 
         super(ClientAuthenticationMethod.SELF_SIGNED_TLS_CLIENT_AUTH, clientID, certificate);
 
@@ -97,7 +97,7 @@ public class SelfSignedTLSClientAuthentication extends TLSClientAuthentication {
      * @throws OAuth2JSONParseException If the {@code client_id} or client X.509
      *                                  certificate is missing.
      */
-    public static SelfSignedTLSClientAuthentication parse(final HTTPRequest httpRequest)
+    public static SelfSignedTLSClientAuthentication parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         String query = httpRequest.getQuery();

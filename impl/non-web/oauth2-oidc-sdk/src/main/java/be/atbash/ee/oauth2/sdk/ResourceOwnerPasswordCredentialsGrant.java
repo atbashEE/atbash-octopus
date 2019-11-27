@@ -64,8 +64,8 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
      * @param password The resource owner's password. Must not be
      *                 {@code null}.
      */
-    public ResourceOwnerPasswordCredentialsGrant(final String username,
-                                                 final Secret password) {
+    public ResourceOwnerPasswordCredentialsGrant(String username,
+                                                 Secret password) {
 
         super(GRANT_TYPE);
 
@@ -156,7 +156,7 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
      * @return The resource owner password credentials grant.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static ResourceOwnerPasswordCredentialsGrant parse(final Map<String, List<String>> params)
+    public static ResourceOwnerPasswordCredentialsGrant parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse grant type

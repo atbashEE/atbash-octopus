@@ -134,7 +134,7 @@ public class HTTPResponse extends HTTPMessage {
      *
      * @param statusCode The HTTP status code.
      */
-    public HTTPResponse(final int statusCode) {
+    public HTTPResponse(int statusCode) {
 
         this.statusCode = statusCode;
     }
@@ -171,7 +171,7 @@ public class HTTPResponse extends HTTPMessage {
      * @throws OAuth2JSONParseException If the status code of this HTTP response
      *                                  doesn't match the expected.
      */
-    public void ensureStatusCode(final int... expectedStatusCode)
+    public void ensureStatusCode(int... expectedStatusCode)
             throws OAuth2JSONParseException {
 
         for (int c : expectedStatusCode) {
@@ -221,7 +221,7 @@ public class HTTPResponse extends HTTPMessage {
      * @param message The HTTP status message, {@code null} if not
      *                specified.
      */
-    public void setStatusMessage(final String message) {
+    public void setStatusMessage(String message) {
 
         this.statusMessage = message;
     }
@@ -254,7 +254,7 @@ public class HTTPResponse extends HTTPMessage {
      *
      * @param location The header value, {@code null} if not specified.
      */
-    public void setLocation(final URI location) {
+    public void setLocation(URI location) {
 
         setHeader("Location", location != null ? location.toString() : null);
     }
@@ -276,7 +276,7 @@ public class HTTPResponse extends HTTPMessage {
      *
      * @param cacheControl The header value, {@code null} if not specified.
      */
-    public void setCacheControl(final String cacheControl) {
+    public void setCacheControl(String cacheControl) {
 
         setHeader("Cache-Control", cacheControl);
     }
@@ -298,7 +298,7 @@ public class HTTPResponse extends HTTPMessage {
      *
      * @param pragma The header value, {@code null} if not specified.
      */
-    public void setPragma(final String pragma) {
+    public void setPragma(String pragma) {
 
         setHeader("Pragma", pragma);
     }
@@ -321,7 +321,7 @@ public class HTTPResponse extends HTTPMessage {
      * @param wwwAuthenticate The header value, {@code null} if not
      *                        specified.
      */
-    public void setWWWAuthenticate(final String wwwAuthenticate) {
+    public void setWWWAuthenticate(String wwwAuthenticate) {
 
         setHeader("WWW-Authenticate", wwwAuthenticate);
     }
@@ -427,7 +427,7 @@ public class HTTPResponse extends HTTPMessage {
      *
      * @param content The raw response content, {@code null} if none.
      */
-    public void setContent(final String content) {
+    public void setContent(String content) {
 
         this.content = content;
     }

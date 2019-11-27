@@ -312,7 +312,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *               scheme with no query or fragment component. Must not
      *               be {@code null}.
      */
-    public AuthorizationServerMetadata(final Issuer issuer) {
+    public AuthorizationServerMetadata(Issuer issuer) {
 
         URI uri;
         try {
@@ -363,7 +363,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *
      * @param jwkSetURI The JWK set URI, {@code null} if not specified.
      */
-    public void setJWKSetURI(final URI jwkSetURI) {
+    public void setJWKSetURI(URI jwkSetURI) {
 
         this.jwkSetURI = jwkSetURI;
     }
@@ -388,7 +388,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param scope The supported scope values, {@code null} if not
      *              specified.
      */
-    public void setScopes(final Scope scope) {
+    public void setScopes(Scope scope) {
 
         this.scope = scope;
     }
@@ -414,7 +414,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param rts The supported response type values, {@code null} if not
      *            specified.
      */
-    public void setResponseTypes(final List<ResponseType> rts) {
+    public void setResponseTypes(List<ResponseType> rts) {
 
         this.rts = rts;
     }
@@ -440,7 +440,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param rms The supported response mode values, {@code null} if not
      *            specified.
      */
-    public void setResponseModes(final List<ResponseMode> rms) {
+    public void setResponseModes(List<ResponseMode> rms) {
 
         this.rms = rms;
     }
@@ -464,7 +464,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *
      * @param gts The supported grant types, {@code null} if not specified.
      */
-    public void setGrantTypes(final List<GrantType> gts) {
+    public void setGrantTypes(List<GrantType> gts) {
 
         this.gts = gts;
     }
@@ -492,7 +492,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param codeChallengeMethods The supported code challenge methods,
      *                             {@code null} if not specified.
      */
-    public void setCodeChallengeMethods(final List<CodeChallengeMethod> codeChallengeMethods) {
+    public void setCodeChallengeMethods(List<CodeChallengeMethod> codeChallengeMethods) {
 
         this.codeChallengeMethods = codeChallengeMethods;
     }
@@ -520,7 +520,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param authMethods The supported token endpoint authentication
      *                    methods, {@code null} if not specified.
      */
-    public void setTokenEndpointAuthMethods(final List<ClientAuthenticationMethod> authMethods) {
+    public void setTokenEndpointAuthMethods(List<ClientAuthenticationMethod> authMethods) {
 
         this.tokenEndpointAuthMethods = authMethods;
     }
@@ -552,7 +552,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                specified. Must not contain the {@code none}
      *                algorithm.
      */
-    public void setTokenEndpointJWSAlgs(final List<JWSAlgorithm> jwsAlgs) {
+    public void setTokenEndpointJWSAlgs(List<JWSAlgorithm> jwsAlgs) {
 
         if (jwsAlgs != null && jwsAlgs.contains(Algorithm.NONE)) {
             throw new IllegalArgumentException("The \"none\" algorithm is not accepted");
@@ -586,7 +586,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                    authentication methods, {@code null} if not
      *                    specified.
      */
-    public void setIntrospectionEndpointAuthMethods(final List<ClientAuthenticationMethod> authMethods) {
+    public void setIntrospectionEndpointAuthMethods(List<ClientAuthenticationMethod> authMethods) {
 
         this.introspectionEndpointAuthMethods = authMethods;
     }
@@ -618,7 +618,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                specified. Must not contain the {@code none}
      *                algorithm.
      */
-    public void setIntrospectionEndpointJWSAlgs(final List<JWSAlgorithm> jwsAlgs) {
+    public void setIntrospectionEndpointJWSAlgs(List<JWSAlgorithm> jwsAlgs) {
 
         if (jwsAlgs != null && jwsAlgs.contains(Algorithm.NONE)) {
             throw new IllegalArgumentException("The \"none\" algorithm is not accepted");
@@ -650,7 +650,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param authMethods The supported revocation endpoint authentication
      *                    methods, {@code null} if not specified.
      */
-    public void setRevocationEndpointAuthMethods(final List<ClientAuthenticationMethod> authMethods) {
+    public void setRevocationEndpointAuthMethods(List<ClientAuthenticationMethod> authMethods) {
 
         revocationEndpointAuthMethods = authMethods;
     }
@@ -713,7 +713,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param requestObjectJWSAlgs The supported JWS algorithms,
      *                             {@code null} if not specified.
      */
-    public void setRequestObjectJWSAlgs(final List<JWSAlgorithm> requestObjectJWSAlgs) {
+    public void setRequestObjectJWSAlgs(List<JWSAlgorithm> requestObjectJWSAlgs) {
 
         this.requestObjectJWSAlgs = requestObjectJWSAlgs;
     }
@@ -740,7 +740,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param requestObjectJWEAlgs The supported JWE algorithms,
      *                             {@code null} if not specified.
      */
-    public void setRequestObjectJWEAlgs(final List<JWEAlgorithm> requestObjectJWEAlgs) {
+    public void setRequestObjectJWEAlgs(List<JWEAlgorithm> requestObjectJWEAlgs) {
 
         this.requestObjectJWEAlgs = requestObjectJWEAlgs;
     }
@@ -770,7 +770,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param requestObjectJWEEncs The supported encryption methods,
      *                             {@code null} if not specified.
      */
-    public void setRequestObjectJWEEncs(final List<EncryptionMethod> requestObjectJWEEncs) {
+    public void setRequestObjectJWEEncs(List<EncryptionMethod> requestObjectJWEEncs) {
 
         this.requestObjectJWEEncs = requestObjectJWEEncs;
     }
@@ -799,7 +799,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                              parameter is supported, else
      *                              {@code false}.
      */
-    public void setSupportsRequestParam(final boolean requestParamSupported) {
+    public void setSupportsRequestParam(boolean requestParamSupported) {
 
         this.requestParamSupported = requestParamSupported;
     }
@@ -828,7 +828,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                                 {@code request_uri} parameter is
      *                                 supported, else {@code false}.
      */
-    public void setSupportsRequestURIParam(final boolean requestURIParamSupported) {
+    public void setSupportsRequestURIParam(boolean requestURIParamSupported) {
 
         this.requestURIParamSupported = requestURIParamSupported;
     }
@@ -857,7 +857,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                             parameter values must be pre-registered,
      *                             else {@code false}.
      */
-    public void setRequiresRequestURIRegistration(final boolean requireRequestURIReg) {
+    public void setRequiresRequestURIRegistration(boolean requireRequestURIReg) {
 
         this.requireRequestURIReg = requireRequestURIReg;
     }
@@ -882,7 +882,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param uiLocales The supported UI locales, {@code null} if not
      *                  specified.
      */
-    public void setUILocales(final List<LangTag> uiLocales) {
+    public void setUILocales(List<LangTag> uiLocales) {
 
         this.uiLocales = uiLocales;
     }
@@ -908,7 +908,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param serviceDocsURI The service documentation URI, {@code null} if
      *                       not specified.
      */
-    public void setServiceDocsURI(final URI serviceDocsURI) {
+    public void setServiceDocsURI(URI serviceDocsURI) {
 
         this.serviceDocsURI = serviceDocsURI;
     }
@@ -932,7 +932,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *
      * @param policyURI The policy URI, {@code null} if not specified.
      */
-    public void setPolicyURI(final URI policyURI) {
+    public void setPolicyURI(URI policyURI) {
 
         this.policyURI = policyURI;
     }
@@ -957,7 +957,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param tosURI The terms of service URI, {@code null} if not
      *               specified.
      */
-    public void setTermsOfServiceURI(final URI tosURI) {
+    public void setTermsOfServiceURI(URI tosURI) {
 
         this.tosURI = tosURI;
     }
@@ -1013,7 +1013,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                                 certificate bound access tokens are
      *                                 supported, else {@code false}.
      */
-    public void setSupportsTLSClientCertificateBoundAccessTokens(final boolean tlsClientCertBoundTokens) {
+    public void setSupportsTLSClientCertificateBoundAccessTokens(boolean tlsClientCertBoundTokens) {
 
         tlsClientCertificateBoundAccessTokens = tlsClientCertBoundTokens;
     }
@@ -1046,7 +1046,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                                               {@code false}.
      */
     @Deprecated
-    public void setSupportsMutualTLSSenderConstrainedAccessTokens(final boolean mutualTLSSenderConstrainedAccessTokens) {
+    public void setSupportsMutualTLSSenderConstrainedAccessTokens(boolean mutualTLSSenderConstrainedAccessTokens) {
 
         setSupportsTLSClientCertificateBoundAccessTokens(mutualTLSSenderConstrainedAccessTokens);
     }
@@ -1073,7 +1073,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param authzJWSAlgs The supported JWS algorithms, {@code null} if
      *                     not specified.
      */
-    public void setAuthorizationJWSAlgs(final List<JWSAlgorithm> authzJWSAlgs) {
+    public void setAuthorizationJWSAlgs(List<JWSAlgorithm> authzJWSAlgs) {
 
         this.authzJWSAlgs = authzJWSAlgs;
     }
@@ -1102,7 +1102,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param authzJWEAlgs The supported JWE algorithms, {@code null} if
      *                     not specified.
      */
-    public void setAuthorizationJWEAlgs(final List<JWEAlgorithm> authzJWEAlgs) {
+    public void setAuthorizationJWEAlgs(List<JWEAlgorithm> authzJWEAlgs) {
 
         this.authzJWEAlgs = authzJWEAlgs;
     }
@@ -1132,7 +1132,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param authzJWEEncs The supported encryption methods, {@code null}
      *                     if not specified.
      */
-    public void setAuthorizationJWEEncs(final List<EncryptionMethod> authzJWEEncs) {
+    public void setAuthorizationJWEEncs(List<EncryptionMethod> authzJWEEncs) {
 
         this.authzJWEEncs = authzJWEEncs;
     }
@@ -1156,7 +1156,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter value, {@code null} if not specified.
      */
-    public Object getCustomParameter(final String name) {
+    public Object getCustomParameter(String name) {
         ensureReadMode();
         return JSONObjectUtils.getJsonValueAsObject(customParameters.get(name));
     }
@@ -1168,7 +1168,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter URI value, {@code null} if not specified.
      */
-    public URI getCustomURIParameter(final String name) {
+    public URI getCustomURIParameter(String name) {
         ensureReadMode();
         try {
             return JSONObjectUtils.getURI(customParameters, name);
@@ -1184,7 +1184,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @param name  The parameter name. Must not be {@code null}.
      * @param value The parameter value, {@code null} if not specified.
      */
-    public void setCustomParameter(final String name, final Object value) {
+    public void setCustomParameter(String name, Object value) {
         validateBuildMode();
         if (REGISTERED_PARAMETER_NAMES.contains(name)) {
             throw new IllegalArgumentException("The " + name + " parameter is registered");
@@ -1477,7 +1477,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OAuth 2.0 Authorisation Server metadata.
      */
-    public static AuthorizationServerMetadata parse(final JsonObject jsonObject)
+    public static AuthorizationServerMetadata parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         // Parse issuer and subject_types_supported first
@@ -1821,7 +1821,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                        to an OAuth 2.0 Authorisation Server
      *                        metadata.
      */
-    public static AuthorizationServerMetadata parse(final String s)
+    public static AuthorizationServerMetadata parse(String s)
             throws OAuth2JSONParseException {
 
         try {
@@ -1841,7 +1841,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * @return The OAuth 2.0 authorisation server metadata URL.
      * @throws GeneralException If the issuer identifier is invalid.
      */
-    public static URL resolveURL(final Issuer issuer)
+    public static URL resolveURL(Issuer issuer)
             throws GeneralException {
 
         try {
@@ -1876,7 +1876,7 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                          metadata are invalid.
      * @throws IOException      On a HTTP exception.
      */
-    public static AuthorizationServerMetadata resolve(final Issuer issuer)
+    public static AuthorizationServerMetadata resolve(Issuer issuer)
             throws GeneralException, IOException {
 
         return resolve(issuer, 0, 0);
@@ -1900,9 +1900,9 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      *                          metadata are invalid.
      * @throws IOException      On a HTTP exception.
      */
-    public static AuthorizationServerMetadata resolve(final Issuer issuer,
-                                                      final int connectTimeout,
-                                                      final int readTimeout)
+    public static AuthorizationServerMetadata resolve(Issuer issuer,
+                                                      int connectTimeout,
+                                                      int readTimeout)
             throws GeneralException, IOException {
 
         URL configURL = resolveURL(issuer);

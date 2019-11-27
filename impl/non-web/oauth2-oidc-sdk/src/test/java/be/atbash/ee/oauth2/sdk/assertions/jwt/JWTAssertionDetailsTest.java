@@ -69,9 +69,9 @@ public class JWTAssertionDetailsTest {
         assertThat(claimsSet.getAudience().get(0)).isEqualTo(aud);
 
         // 4 min < exp < 6 min
-        final long now = new Date().getTime();
-        final Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
-        final Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
+        long now = new Date().getTime();
+        Date fourMinutesFromNow = new Date(now + 4 * 60 * 1000L);
+        Date sixMinutesFromNow = new Date(now + 6 * 60 * 1000L);
         assertThat(claimsSet.getExpirationTime().after(fourMinutesFromNow)).isTrue();
         assertThat(claimsSet.getExpirationTime().before(sixMinutesFromNow)).isTrue();
 

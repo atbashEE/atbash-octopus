@@ -92,10 +92,10 @@ public class LogoutRequest extends AbstractRequest {
      *                              post-logout redirection URI,
      *                              {@code null} if not specified.
      */
-    public LogoutRequest(final URI uri,
-                         final JWT idTokenHint,
-                         final URI postLogoutRedirectURI,
-                         final State state) {
+    public LogoutRequest(URI uri,
+                         JWT idTokenHint,
+                         URI postLogoutRedirectURI,
+                         State state) {
 
         super(uri);
 
@@ -121,8 +121,8 @@ public class LogoutRequest extends AbstractRequest {
      * @param idTokenHint The ID token hint (recommended), {@code null} if
      *                    not specified.
      */
-    public LogoutRequest(final URI uri,
-                         final JWT idTokenHint) {
+    public LogoutRequest(URI uri,
+                         JWT idTokenHint) {
 
         this(uri, idTokenHint, null, null);
     }
@@ -135,7 +135,7 @@ public class LogoutRequest extends AbstractRequest {
      * @param uri The URI of the end-session endpoint. May be {@code null}
      *            if the {@link #toHTTPRequest} method will not be used.
      */
-    public LogoutRequest(final URI uri) {
+    public LogoutRequest(URI uri) {
 
         this(uri, null, null, null);
     }
@@ -313,7 +313,7 @@ public class LogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to a
      *                                  logout request.
      */
-    public static LogoutRequest parse(final Map<String, List<String>> params)
+    public static LogoutRequest parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         return parse(null, params);
@@ -340,7 +340,7 @@ public class LogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to a
      *                                  logout request.
      */
-    public static LogoutRequest parse(final URI uri, final Map<String, List<String>> params)
+    public static LogoutRequest parse(URI uri, Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         String v = MultivaluedMapUtils.getFirstValue(params, "id_token_hint");
@@ -397,7 +397,7 @@ public class LogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to a
      *                                  logout request.
      */
-    public static LogoutRequest parse(final String query)
+    public static LogoutRequest parse(String query)
             throws OAuth2JSONParseException {
 
         return parse(null, URLUtils.parseParameters(query));
@@ -423,7 +423,7 @@ public class LogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to a
      *                                  logout request.
      */
-    public static LogoutRequest parse(final URI uri, final String query)
+    public static LogoutRequest parse(URI uri, String query)
             throws OAuth2JSONParseException {
 
         return parse(uri, URLUtils.parseParameters(query));
@@ -447,7 +447,7 @@ public class LogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the URI couldn't be parsed to a logout
      *                                  request.
      */
-    public static LogoutRequest parse(final URI uri)
+    public static LogoutRequest parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getRawQuery()));
@@ -471,7 +471,7 @@ public class LogoutRequest extends AbstractRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  logout request.
      */
-    public static LogoutRequest parse(final HTTPRequest httpRequest)
+    public static LogoutRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         String query = httpRequest.getQuery();

@@ -48,9 +48,9 @@ public class AuthorizationCodeValidator {
      * @throws InvalidHashException If the authorisation code doesn't match
      *                              the hash.
      */
-    public static void validate(final AuthorizationCode code,
-                                final JWSAlgorithm jwsAlgorithm,
-                                final CodeHash codeHash)
+    public static void validate(AuthorizationCode code,
+                                JWSAlgorithm jwsAlgorithm,
+                                CodeHash codeHash)
             throws InvalidHashException {
 
         CodeHash expectedHash = CodeHash.compute(code, jwsAlgorithm);

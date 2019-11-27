@@ -123,10 +123,10 @@ public class ClientInformation {
      * @param secret    The optional client secret, {@code null} if
      *                  not specified.
      */
-    public ClientInformation(final ClientID id,
-                             final Date issueDate,
-                             final ClientMetadata metadata,
-                             final Secret secret) {
+    public ClientInformation(ClientID id,
+                             Date issueDate,
+                             ClientMetadata metadata,
+                             Secret secret) {
 
         this(id, issueDate, metadata, secret, null, null);
     }
@@ -149,12 +149,12 @@ public class ClientInformation {
      * @param accessToken     The client registration access token,
      *                        {@code null} if not specified.
      */
-    public ClientInformation(final ClientID id,
-                             final Date issueDate,
-                             final ClientMetadata metadata,
-                             final Secret secret,
-                             final URI registrationURI,
-                             final BearerAccessToken accessToken) {
+    public ClientInformation(ClientID id,
+                             Date issueDate,
+                             ClientMetadata metadata,
+                             Secret secret,
+                             URI registrationURI,
+                             BearerAccessToken accessToken) {
 
         if (id == null) {
             throw new IllegalArgumentException("The client identifier must not be null");
@@ -329,7 +329,7 @@ public class ClientInformation {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to a
      *                                  client information instance.
      */
-    public static ClientInformation parse(final JsonObject jsonObject)
+    public static ClientInformation parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         return new ClientInformation(

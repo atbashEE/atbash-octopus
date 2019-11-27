@@ -342,10 +342,10 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                    the optional {@code request_object} /
          *                    {@code request_uri} parameter.
          */
-        public Builder(final ResponseType rt,
-                       final Scope scope,
-                       final ClientID clientID,
-                       final URI redirectURI) {
+        public Builder(ResponseType rt,
+                       Scope scope,
+                       ClientID clientID,
+                       URI redirectURI) {
 
             if (rt == null) {
                 throw new IllegalArgumentException("The response type must not be null");
@@ -383,7 +383,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param requestObject The request object. Must not be
          *                      {@code null}.
          */
-        public Builder(final JWT requestObject) {
+        public Builder(JWT requestObject) {
 
             if (requestObject == null) {
                 throw new IllegalArgumentException("The request object must not be null");
@@ -400,7 +400,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param requestURI The request object URI. Must not be
          *                   {@code null}.
          */
-        public Builder(final URI requestURI) {
+        public Builder(URI requestURI) {
 
             if (requestURI == null) {
                 throw new IllegalArgumentException("The request URI must not be null");
@@ -417,7 +417,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param request The OpenID Connect authentication request.
          *                Must not be {@code null}.
          */
-        public Builder(final AuthenticationRequest request) {
+        public Builder(AuthenticationRequest request) {
 
             uri = request.getEndpointURI();
             rt = request.getResponseType();
@@ -453,7 +453,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param rt The response type. Must not be {@code null}.
          * @return This builder.
          */
-        public Builder responseType(final ResponseType rt) {
+        public Builder responseType(ResponseType rt) {
 
             if (rt == null) {
                 throw new IllegalArgumentException("The response type must not be null");
@@ -470,7 +470,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param scope The scope. Must not be {@code null}.
          * @return This builder.
          */
-        public Builder scope(final Scope scope) {
+        public Builder scope(Scope scope) {
 
             if (scope == null) {
                 throw new IllegalArgumentException("The scope must not be null");
@@ -493,7 +493,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                 {@code null}.
          * @return This builder.
          */
-        public Builder clientID(final ClientID clientID) {
+        public Builder clientID(ClientID clientID) {
 
             if (clientID == null) {
                 throw new IllegalArgumentException("The client ID must not be null");
@@ -512,7 +512,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                    {@code null}.
          * @return This builder.
          */
-        public Builder redirectionURI(final URI redirectURI) {
+        public Builder redirectionURI(URI redirectURI) {
 
             if (redirectURI == null) {
                 throw new IllegalArgumentException("The redirection URI must not be null");
@@ -530,7 +530,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param state The state, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder state(final State state) {
+        public Builder state(State state) {
 
             this.state = state;
             return this;
@@ -544,7 +544,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param uri The endpoint URI, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder endpointURI(final URI uri) {
+        public Builder endpointURI(URI uri) {
 
             this.uri = uri;
             return this;
@@ -558,7 +558,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param nonce The nonce, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder nonce(final Nonce nonce) {
+        public Builder nonce(Nonce nonce) {
 
             this.nonce = nonce;
             return this;
@@ -573,7 +573,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                not specified.
          * @return This builder.
          */
-        public Builder display(final Display display) {
+        public Builder display(Display display) {
 
             this.display = display;
             return this;
@@ -588,7 +588,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *               specified.
          * @return This builder.
          */
-        public Builder prompt(final Prompt prompt) {
+        public Builder prompt(Prompt prompt) {
 
             this.prompt = prompt;
             return this;
@@ -603,7 +603,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *               if not specified.
          * @return This builder.
          */
-        public Builder maxAge(final int maxAge) {
+        public Builder maxAge(int maxAge) {
 
             this.maxAge = maxAge;
             return this;
@@ -619,7 +619,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                  not specified.
          * @return This builder.
          */
-        public Builder uiLocales(final List<LangTag> uiLocales) {
+        public Builder uiLocales(List<LangTag> uiLocales) {
 
             this.uiLocales = uiLocales;
             return this;
@@ -635,7 +635,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                      {@code null} if not specified.
          * @return This builder.
          */
-        public Builder claimsLocales(final List<LangTag> claimsLocales) {
+        public Builder claimsLocales(List<LangTag> claimsLocales) {
 
             this.claimsLocales = claimsLocales;
             return this;
@@ -650,7 +650,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                    specified.
          * @return This builder.
          */
-        public Builder idTokenHint(final JWT idTokenHint) {
+        public Builder idTokenHint(JWT idTokenHint) {
 
             this.idTokenHint = idTokenHint;
             return this;
@@ -665,7 +665,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                  specified.
          * @return This builder.
          */
-        public Builder loginHint(final String loginHint) {
+        public Builder loginHint(String loginHint) {
 
             this.loginHint = loginHint;
             return this;
@@ -681,7 +681,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                  not specified.
          * @return This builder.
          */
-        public Builder acrValues(final List<ACR> acrValues) {
+        public Builder acrValues(List<ACR> acrValues) {
 
             this.acrValues = acrValues;
             return this;
@@ -696,7 +696,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *               {@code null} if not specified.
          * @return This builder.
          */
-        public Builder claims(final ClaimsRequest claims) {
+        public Builder claims(ClaimsRequest claims) {
 
             this.claims = claims;
             return this;
@@ -712,7 +712,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                      specified.
          * @return This builder.
          */
-        public Builder requestObject(final JWT requestObject) {
+        public Builder requestObject(JWT requestObject) {
 
             this.requestObject = requestObject;
             return this;
@@ -728,7 +728,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                   not specified.
          * @return This builder.
          */
-        public Builder requestURI(final URI requestURI) {
+        public Builder requestURI(URI requestURI) {
 
             this.requestURI = requestURI;
             return this;
@@ -744,7 +744,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @param rm The response mode, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder responseMode(final ResponseMode rm) {
+        public Builder responseMode(ResponseMode rm) {
 
             this.rm = rm;
             return this;
@@ -762,7 +762,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * @return This builder.
          */
         @Deprecated
-        public Builder codeChallenge(final CodeChallenge codeChallenge, final CodeChallengeMethod codeChallengeMethod) {
+        public Builder codeChallenge(CodeChallenge codeChallenge, CodeChallengeMethod codeChallengeMethod) {
 
             this.codeChallenge = codeChallenge;
             this.codeChallengeMethod = codeChallengeMethod;
@@ -785,7 +785,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                            if a code verifier is specified.
          * @return This builder.
          */
-        public Builder codeChallenge(final CodeVerifier codeVerifier, final CodeChallengeMethod codeChallengeMethod) {
+        public Builder codeChallenge(CodeVerifier codeVerifier, CodeChallengeMethod codeChallengeMethod) {
 
             if (codeVerifier != null) {
                 CodeChallengeMethod method = codeChallengeMethod != null ? codeChallengeMethod : CodeChallengeMethod.getDefault();
@@ -806,7 +806,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                  specified.
          * @return This builder.
          */
-        public Builder resources(final URI... resources) {
+        public Builder resources(URI... resources) {
             if (resources != null) {
                 this.resources = Arrays.asList(resources);
             } else {
@@ -823,7 +823,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *                             incremental authorisation.
          * @return This builder.
          */
-        public Builder includeGrantedScopes(final boolean includeGrantedScopes) {
+        public Builder includeGrantedScopes(boolean includeGrantedScopes) {
 
             this.includeGrantedScopes = includeGrantedScopes;
             return this;
@@ -838,7 +838,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
          *               specified.
          * @return This builder.
          */
-        public Builder customParameter(final String name, final String... values) {
+        public Builder customParameter(String name, String... values) {
 
             if (values == null || values.length == 0) {
                 customParams.remove(name);
@@ -900,13 +900,13 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @param nonce       The nonce. Corresponds to the {@code nonce}
      *                    parameter. May be {@code null} for code flow.
      */
-    public AuthenticationRequest(final URI uri,
-                                 final ResponseType rt,
-                                 final Scope scope,
-                                 final ClientID clientID,
-                                 final URI redirectURI,
-                                 final State state,
-                                 final Nonce nonce) {
+    public AuthenticationRequest(URI uri,
+                                 ResponseType rt,
+                                 Scope scope,
+                                 ClientID clientID,
+                                 URI redirectURI,
+                                 State state,
+                                 Nonce nonce) {
 
         // Not specified: display, prompt, maxAge, uiLocales, claimsLocales,
         // idTokenHint, loginHint, acrValues, claims
@@ -1013,30 +1013,30 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @param customParams         Additional custom parameters, empty map
      *                             or {@code null} if none.
      */
-    public AuthenticationRequest(final URI uri,
-                                 final ResponseType rt,
-                                 final ResponseMode rm,
-                                 final Scope scope,
-                                 final ClientID clientID,
-                                 final URI redirectURI,
-                                 final State state,
-                                 final Nonce nonce,
-                                 final Display display,
-                                 final Prompt prompt,
-                                 final int maxAge,
-                                 final List<LangTag> uiLocales,
-                                 final List<LangTag> claimsLocales,
-                                 final JWT idTokenHint,
-                                 final String loginHint,
-                                 final List<ACR> acrValues,
-                                 final ClaimsRequest claims,
-                                 final JWT requestObject,
-                                 final URI requestURI,
-                                 final CodeChallenge codeChallenge,
-                                 final CodeChallengeMethod codeChallengeMethod,
-                                 final List<URI> resources,
-                                 final boolean includeGrantedScopes,
-                                 final Map<String, List<String>> customParams) {
+    public AuthenticationRequest(URI uri,
+                                 ResponseType rt,
+                                 ResponseMode rm,
+                                 Scope scope,
+                                 ClientID clientID,
+                                 URI redirectURI,
+                                 State state,
+                                 Nonce nonce,
+                                 Display display,
+                                 Prompt prompt,
+                                 int maxAge,
+                                 List<LangTag> uiLocales,
+                                 List<LangTag> claimsLocales,
+                                 JWT idTokenHint,
+                                 String loginHint,
+                                 List<ACR> acrValues,
+                                 ClaimsRequest claims,
+                                 JWT requestObject,
+                                 URI requestURI,
+                                 CodeChallenge codeChallenge,
+                                 CodeChallengeMethod codeChallengeMethod,
+                                 List<URI> resources,
+                                 boolean includeGrantedScopes,
+                                 Map<String, List<String>> customParams) {
 
         super(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod, resources, includeGrantedScopes, requestObject, requestURI, prompt, customParams);
 
@@ -1350,7 +1350,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  OpenID Connect authentication request.
      */
-    public static AuthenticationRequest parse(final Map<String, List<String>> params)
+    public static AuthenticationRequest parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         return parse(null, params);
@@ -1380,7 +1380,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @throws OAuth2JSONParseException If the parameters couldn't be parsed to an
      *                                  OpenID Connect authentication request.
      */
-    public static AuthenticationRequest parse(final URI uri, final Map<String, List<String>> params)
+    public static AuthenticationRequest parse(URI uri, Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         // Parse and validate the core OAuth 2.0 autz request params in
@@ -1614,7 +1614,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to an
      *                                  OpenID Connect authentication request.
      */
-    public static AuthenticationRequest parse(final String query)
+    public static AuthenticationRequest parse(String query)
             throws OAuth2JSONParseException {
 
         return parse(null, URLUtils.parseParameters(query));
@@ -1644,7 +1644,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to an
      *                                  OpenID Connect authentication request.
      */
-    public static AuthenticationRequest parse(final URI uri, final String query)
+    public static AuthenticationRequest parse(URI uri, String query)
             throws OAuth2JSONParseException {
 
         return parse(uri, URLUtils.parseParameters(query));
@@ -1672,7 +1672,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @throws OAuth2JSONParseException If the query string couldn't be parsed to an
      *                                  OpenID Connect authentication request.
      */
-    public static AuthenticationRequest parse(final URI uri)
+    public static AuthenticationRequest parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getRawQuery()));
@@ -1700,7 +1700,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
      *                                  OpenID Connect authentication request.
      */
-    public static AuthenticationRequest parse(final HTTPRequest httpRequest)
+    public static AuthenticationRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         String query = httpRequest.getQuery();

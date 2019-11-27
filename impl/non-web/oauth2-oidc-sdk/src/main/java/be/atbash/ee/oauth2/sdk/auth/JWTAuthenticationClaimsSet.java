@@ -69,8 +69,8 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
      *                 authorisation server's Token endpoint. Must not be
      *                 {@code null}.
      */
-    public JWTAuthenticationClaimsSet(final ClientID clientID,
-                                      final Audience aud) {
+    public JWTAuthenticationClaimsSet(ClientID clientID,
+                                      Audience aud) {
 
         this(clientID, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5 * 60 * 1000L), null, null, new JWTID());
     }
@@ -93,12 +93,12 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
      * @param jti      Unique identifier for the JWT, {@code null} if
      *                 not specified.
      */
-    public JWTAuthenticationClaimsSet(final ClientID clientID,
-                                      final List<Audience> aud,
-                                      final Date exp,
-                                      final Date nbf,
-                                      final Date iat,
-                                      final JWTID jti) {
+    public JWTAuthenticationClaimsSet(ClientID clientID,
+                                      List<Audience> aud,
+                                      Date exp,
+                                      Date nbf,
+                                      Date iat,
+                                      JWTID jti) {
 
         super(new Issuer(clientID.getValue()), new Subject(clientID.getValue()), aud, exp, nbf, iat, jti, null);
     }
@@ -122,7 +122,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
      * @param jsonObject The JSON object. Must not be {@code null}.
      * @return The client authentication claims set.
      */
-    public static JWTAuthenticationClaimsSet parse(final JsonObject jsonObject) {
+    public static JWTAuthenticationClaimsSet parse(JsonObject jsonObject) {
 
         JWTAssertionDetails assertion = JWTAssertionDetails.parse(jsonObject);
 
@@ -145,7 +145,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
      * @throws OAuth2JSONParseException If the JWT claims set couldn't be parsed to a
      *                                  client authentication claims set.
      */
-    public static JWTAuthenticationClaimsSet parse(final JWTClaimsSet jwtClaimsSet)
+    public static JWTAuthenticationClaimsSet parse(JWTClaimsSet jwtClaimsSet)
             throws OAuth2JSONParseException {
 
         return parse(jwtClaimsSet.toJSONObject());

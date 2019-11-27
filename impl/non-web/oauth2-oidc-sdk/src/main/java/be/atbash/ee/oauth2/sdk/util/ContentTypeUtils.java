@@ -39,7 +39,7 @@ public final class ContentTypeUtils {
      *                                  it primary and subtype and doesn't match the
      *                                  expected.
      */
-    public static void ensureContentType(final ContentType expected, final ContentType found)
+    public static void ensureContentType(ContentType expected, ContentType found)
             throws OAuth2JSONParseException {
 
         if (found == null) {

@@ -116,7 +116,7 @@ public class DeviceAuthorizationErrorResponse extends DeviceAuthorizationRespons
      *              {@link #getStandardErrors standard errors} for a token
      *              error response. Must not be {@code null}.
      */
-    public DeviceAuthorizationErrorResponse(final ErrorObject error) {
+    public DeviceAuthorizationErrorResponse(ErrorObject error) {
 
         if (error == null) {
             throw new IllegalArgumentException("The error must not be null");
@@ -201,7 +201,7 @@ public class DeviceAuthorizationErrorResponse extends DeviceAuthorizationRespons
      *                                  OAuth 2.0 device authorization error
      *                                  response.
      */
-    public static DeviceAuthorizationErrorResponse parse(final JsonObject jsonObject) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationErrorResponse parse(JsonObject jsonObject) throws OAuth2JSONParseException {
 
         // No error code?
         if (!jsonObject.containsKey("error")) {
@@ -238,7 +238,7 @@ public class DeviceAuthorizationErrorResponse extends DeviceAuthorizationRespons
      *                                  OAuth 2.0 device authorization error
      *                                  response.
      */
-    public static DeviceAuthorizationErrorResponse parse(final HTTPResponse httpResponse) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationErrorResponse parse(HTTPResponse httpResponse) throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCodeNotOK();
         return new DeviceAuthorizationErrorResponse(ErrorObject.parse(httpResponse));

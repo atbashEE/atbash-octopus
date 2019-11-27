@@ -34,7 +34,7 @@ public final class MultivaluedMapUtils {
      * @param map The multi-valued map, {@code null} if not specified.
      * @return The single-valued map, {@code null} if no map was specified.
      */
-    public static <K, V> Map<K, V> toSingleValuedMap(final Map<K, List<V>> map) {
+    public static <K, V> Map<K, V> toSingleValuedMap(Map<K, List<V>> map) {
 
         if (map == null) {
             return null;
@@ -62,7 +62,7 @@ public final class MultivaluedMapUtils {
      * @param key The key. Must not be {@code null}.
      * @return The first value, {@code null} if not set.
      */
-    public static <K, V> V getFirstValue(final Map<K, List<V>> map, final K key) {
+    public static <K, V> V getFirstValue(Map<K, List<V>> map, K key) {
 
         List<V> valueList = map.get(key);
 
@@ -81,7 +81,7 @@ public final class MultivaluedMapUtils {
      * @param key The key. Must not be {@code null}.
      * @return The first value, {@code null} if not set.
      */
-    public static <K, V> V removeAndReturnFirstValue(final Map<K, List<V>> map, final String key) {
+    public static <K, V> V removeAndReturnFirstValue(Map<K, List<V>> map, String key) {
 
         List<V> valueList = map.remove(key);
 

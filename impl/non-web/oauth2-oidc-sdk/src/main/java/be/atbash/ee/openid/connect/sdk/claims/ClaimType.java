@@ -71,7 +71,7 @@ public enum ClaimType {
      * @return The claim type.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static ClaimType parse(final String s)
+    public static ClaimType parse(String s)
             throws OAuth2JSONParseException {
 
         if (s.equals("normal")) {

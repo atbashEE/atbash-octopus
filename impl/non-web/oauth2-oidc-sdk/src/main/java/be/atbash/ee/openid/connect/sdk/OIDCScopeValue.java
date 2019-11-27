@@ -134,9 +134,9 @@ public class OIDCScopeValue extends Scope.Value {
      * @param claims      The names of the associated claims, {@code null}
      *                    if not applicable.
      */
-    private OIDCScopeValue(final String value,
-                           final Scope.Value.Requirement requirement,
-                           final String[] claims) {
+    private OIDCScopeValue(String value,
+                           Scope.Value.Requirement requirement,
+                           String[] claims) {
 
         super(value, requirement);
 
@@ -156,8 +156,8 @@ public class OIDCScopeValue extends Scope.Value {
      * @param claims The names of the associated claims. Must not be
      *               {@code null}.
      */
-    private OIDCScopeValue(final String value,
-                           final String[] claims) {
+    private OIDCScopeValue(String value,
+                           String[] claims) {
 
         this(value, Scope.Value.Requirement.OPTIONAL, claims);
     }

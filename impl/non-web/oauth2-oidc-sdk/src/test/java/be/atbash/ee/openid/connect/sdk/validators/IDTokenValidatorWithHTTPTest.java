@@ -65,14 +65,14 @@ public class IDTokenValidatorWithHTTPTest {
         pairGen.initialize(2048);
         KeyPair keyPair = pairGen.generateKeyPair();
 
-        final RSAKey rsaJWK1 = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+        RSAKey rsaJWK1 = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
                 .privateKey((RSAPrivateKey) keyPair.getPrivate())
                 .keyID("1")
                 .build();
 
         keyPair = pairGen.generateKeyPair();
 
-        final RSAKey rsaJWK2 = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+        RSAKey rsaJWK2 = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
                 .privateKey((RSAPrivateKey) keyPair.getPrivate())
                 .keyID("2")
                 .build();

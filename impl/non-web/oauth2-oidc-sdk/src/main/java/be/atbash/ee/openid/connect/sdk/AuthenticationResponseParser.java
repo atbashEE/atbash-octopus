@@ -59,8 +59,8 @@ public class AuthenticationResponseParser {
      *                                  OpenID Connect authentication response, or if
      *                                  validation of the JWT response failed.
      */
-    public static AuthenticationResponse parse(final URI redirectURI,
-                                               final Map<String, List<String>> params)
+    public static AuthenticationResponse parse(URI redirectURI,
+                                               Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         Map<String, List<String>> workParams = params;
@@ -112,7 +112,7 @@ public class AuthenticationResponseParser {
      * @throws OAuth2JSONParseException If the redirection URI couldn't be parsed to
      *                                  an OpenID Connect authentication response.
      */
-    public static AuthenticationResponse parse(final URI uri)
+    public static AuthenticationResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
         return parse(URIUtils.getBaseURI(uri), AuthorizationResponse.parseResponseParameters(uri));
@@ -137,7 +137,7 @@ public class AuthenticationResponseParser {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  OpenID Connect authentication response.
      */
-    public static AuthenticationResponse parse(final HTTPResponse httpResponse)
+    public static AuthenticationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         URI location = httpResponse.getLocation();
@@ -170,7 +170,7 @@ public class AuthenticationResponseParser {
      *                                  OpenID Connect authentication response.
      * @see #parse(HTTPResponse)
      */
-    public static AuthenticationResponse parse(final HTTPRequest httpRequest)
+    public static AuthenticationResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         return parse(httpRequest.getURI(), AuthorizationResponse.parseResponseParameters(httpRequest));

@@ -51,7 +51,7 @@ public final class ClientSecretPost extends PlainClientSecret {
      * @param clientID The client identifier. Must not be {@code null}.
      * @param secret   The client secret. Must not be {@code null}.
      */
-    public ClientSecretPost(final ClientID clientID, final Secret secret) {
+    public ClientSecretPost(ClientID clientID, Secret secret) {
 
         super(ClientAuthenticationMethod.CLIENT_SECRET_POST, clientID, secret);
     }
@@ -82,7 +82,7 @@ public final class ClientSecretPost extends PlainClientSecret {
 
 
     @Override
-    public void applyTo(final HTTPRequest httpRequest) {
+    public void applyTo(HTTPRequest httpRequest) {
 
         if (httpRequest.getMethod() != HTTPRequest.Method.POST) {
             throw new SerializeException("The HTTP request method must be POST");
@@ -120,7 +120,7 @@ public final class ClientSecretPost extends PlainClientSecret {
      * @throws OAuth2JSONParseException If the parameters map couldn't be parsed to a
      *                                  client secret post authentication.
      */
-    public static ClientSecretPost parse(final Map<String, List<String>> params)
+    public static ClientSecretPost parse(Map<String, List<String>> params)
             throws OAuth2JSONParseException {
 
         String clientIDString = MultivaluedMapUtils.getFirstValue(params, "client_id");
@@ -151,7 +151,7 @@ public final class ClientSecretPost extends PlainClientSecret {
      * @throws OAuth2JSONParseException If the parameters string couldn't be parsed to
      *                                  a client secret post authentication.
      */
-    public static ClientSecretPost parse(final String paramsString)
+    public static ClientSecretPost parse(String paramsString)
             throws OAuth2JSONParseException {
 
         Map<String, List<String>> params = URLUtils.parseParameters(paramsString);
@@ -174,7 +174,7 @@ public final class ClientSecretPost extends PlainClientSecret {
      * @throws OAuth2JSONParseException If the HTTP request header couldn't be parsed
      *                                  to a valid client secret post authentication.
      */
-    public static ClientSecretPost parse(final HTTPRequest httpRequest)
+    public static ClientSecretPost parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.POST);

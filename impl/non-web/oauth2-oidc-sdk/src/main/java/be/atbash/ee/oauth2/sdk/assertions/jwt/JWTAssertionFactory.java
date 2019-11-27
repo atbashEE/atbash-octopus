@@ -76,9 +76,9 @@ public class JWTAssertionFactory {
      * @throws JOSEException If the client secret is too short, or HMAC
      *                       computation failed.
      */
-    public static SignedJWT create(final JWTAssertionDetails details,
-                                   final JWSAlgorithm jwsAlgorithm,
-                                   final Secret secret)
+    public static SignedJWT create(JWTAssertionDetails details,
+                                   JWSAlgorithm jwsAlgorithm,
+                                   Secret secret)
             throws JOSEException {
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), details.toJWTClaimsSet());
@@ -105,11 +105,11 @@ public class JWTAssertionFactory {
      * @return The JWT bearer assertion.
      * @throws JOSEException If RSA signing failed.
      */
-    public static SignedJWT create(final JWTAssertionDetails details,
-                                   final JWSAlgorithm jwsAlgorithm,
-                                   final RSAPrivateKey rsaPrivateKey,
-                                   final String keyID,
-                                   final Provider jcaProvider)
+    public static SignedJWT create(JWTAssertionDetails details,
+                                   JWSAlgorithm jwsAlgorithm,
+                                   RSAPrivateKey rsaPrivateKey,
+                                   String keyID,
+                                   Provider jcaProvider)
             throws JOSEException {
 
         SignedJWT signedJWT = new SignedJWT(
@@ -141,11 +141,11 @@ public class JWTAssertionFactory {
      * @return The JWT bearer assertion.
      * @throws JOSEException If RSA signing failed.
      */
-    public static SignedJWT create(final JWTAssertionDetails details,
-                                   final JWSAlgorithm jwsAlgorithm,
-                                   final ECPrivateKey ecPrivateKey,
-                                   final String keyID,
-                                   final Provider jcaProvider)
+    public static SignedJWT create(JWTAssertionDetails details,
+                                   JWSAlgorithm jwsAlgorithm,
+                                   ECPrivateKey ecPrivateKey,
+                                   String keyID,
+                                   Provider jcaProvider)
             throws JOSEException {
 
         SignedJWT signedJWT = new SignedJWT(

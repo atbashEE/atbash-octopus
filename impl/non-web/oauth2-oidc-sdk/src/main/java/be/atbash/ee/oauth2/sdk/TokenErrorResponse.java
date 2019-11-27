@@ -118,7 +118,7 @@ public class TokenErrorResponse extends TokenResponse implements ErrorResponse {
      *              {@link #getStandardErrors standard errors} for a token
      *              error response. Must not be {@code null}.
      */
-    public TokenErrorResponse(final ErrorObject error) {
+    public TokenErrorResponse(ErrorObject error) {
 
         if (error == null) {
             throw new IllegalArgumentException("The error must not be null");
@@ -207,7 +207,7 @@ public class TokenErrorResponse extends TokenResponse implements ErrorResponse {
      * @throws OAuth2JSONParseException If the JSON object couldn't be parsed to an
      *                                  OAuth 2.0 Token Error response.
      */
-    public static TokenErrorResponse parse(final JsonObject jsonObject)
+    public static TokenErrorResponse parse(JsonObject jsonObject)
             throws OAuth2JSONParseException {
 
         // No error code?
@@ -243,7 +243,7 @@ public class TokenErrorResponse extends TokenResponse implements ErrorResponse {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  OAuth 2.0 Token Error response.
      */
-    public static TokenErrorResponse parse(final HTTPResponse httpResponse)
+    public static TokenErrorResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCodeNotOK();

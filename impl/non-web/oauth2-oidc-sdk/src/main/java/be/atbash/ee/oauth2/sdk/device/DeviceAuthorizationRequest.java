@@ -129,7 +129,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
          * @param clientID The client identifier. Corresponds to the {@code client_id}
          *                 parameter. Must not be {@code null}.
          */
-        public Builder(final ClientID clientID) {
+        public Builder(ClientID clientID) {
 
             if (clientID == null) {
                 throw new IllegalArgumentException("The client ID must not be null");
@@ -147,7 +147,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
          * @param clientAuth The client authentication. Must not be
          *                   {@code null}.
          */
-        public Builder(final ClientAuthentication clientAuth) {
+        public Builder(ClientAuthentication clientAuth) {
 
             if (clientAuth == null) {
                 throw new IllegalArgumentException("The client authentication must not be null");
@@ -165,7 +165,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
          * @param request The device authorization request. Must not be
          *                {@code null}.
          */
-        public Builder(final DeviceAuthorizationRequest request) {
+        public Builder(DeviceAuthorizationRequest request) {
 
             uri = request.getEndpointURI();
             clientAuth = request.getClientAuthentication();
@@ -182,7 +182,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
          * @param scope The scope, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder scope(final Scope scope) {
+        public Builder scope(Scope scope) {
 
             this.scope = scope;
             return this;
@@ -197,7 +197,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
          *               specified.
          * @return This builder.
          */
-        public Builder customParameter(final String name, final String... values) {
+        public Builder customParameter(String name, String... values) {
 
             if (values == null || values.length == 0) {
                 customParams.remove(name);
@@ -216,7 +216,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
          * @param uri The endpoint URI, {@code null} if not specified.
          * @return This builder.
          */
-        public Builder endpointURI(final URI uri) {
+        public Builder endpointURI(URI uri) {
 
             this.uri = uri;
             return this;
@@ -253,7 +253,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
      *                 {@code client_id} parameter. Must not be
      *                 {@code null}.
      */
-    public DeviceAuthorizationRequest(final URI uri, final ClientID clientID) {
+    public DeviceAuthorizationRequest(URI uri, ClientID clientID) {
 
         this(uri, clientID, null, null);
     }
@@ -271,7 +271,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
      *                 {@code scope} parameter. {@code null} if not
      *                 specified.
      */
-    public DeviceAuthorizationRequest(final URI uri, final ClientID clientID, final Scope scope) {
+    public DeviceAuthorizationRequest(URI uri, ClientID clientID, Scope scope) {
 
         this(uri, clientID, scope, null);
     }
@@ -293,10 +293,10 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
      * @param customParams Custom parameters, empty map or {@code null} if
      *                     none.
      */
-    public DeviceAuthorizationRequest(final URI uri,
-                                      final ClientID clientID,
-                                      final Scope scope,
-                                      final Map<String, List<String>> customParams) {
+    public DeviceAuthorizationRequest(URI uri,
+                                      ClientID clientID,
+                                      Scope scope,
+                                      Map<String, List<String>> customParams) {
 
         super(uri, clientID);
 
@@ -329,10 +329,10 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
      * @param customParams Custom parameters, empty map or {@code null} if
      *                     none.
      */
-    public DeviceAuthorizationRequest(final URI uri,
-                                      final ClientAuthentication clientAuth,
-                                      final Scope scope,
-                                      final Map<String, List<String>> customParams) {
+    public DeviceAuthorizationRequest(URI uri,
+                                      ClientAuthentication clientAuth,
+                                      Scope scope,
+                                      Map<String, List<String>> customParams) {
 
         super(uri, clientAuth);
 
@@ -392,7 +392,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
      * @param name The parameter name. Must not be {@code null}.
      * @return The parameter value(s), {@code null} if not specified.
      */
-    public List<String> getCustomParameter(final String name) {
+    public List<String> getCustomParameter(String name) {
 
         return customParams.get(name);
     }
@@ -465,7 +465,7 @@ public class DeviceAuthorizationRequest extends AbstractOptionallyIdentifiedRequ
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
      *                                  device authorization request.
      */
-    public static DeviceAuthorizationRequest parse(final HTTPRequest httpRequest) throws OAuth2JSONParseException {
+    public static DeviceAuthorizationRequest parse(HTTPRequest httpRequest) throws OAuth2JSONParseException {
 
         // Only HTTP POST accepted
         URI uri;

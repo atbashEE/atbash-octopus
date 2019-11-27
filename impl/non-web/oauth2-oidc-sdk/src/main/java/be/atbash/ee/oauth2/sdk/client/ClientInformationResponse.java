@@ -77,7 +77,7 @@ public class ClientInformationResponse
      *
      * @param clientInfo The client information. Must not be {@code null}.
      */
-    public ClientInformationResponse(final ClientInformation clientInfo) {
+    public ClientInformationResponse(ClientInformation clientInfo) {
 
         if (clientInfo == null) {
             throw new IllegalArgumentException("The client information must not be null");
@@ -126,7 +126,7 @@ public class ClientInformationResponse
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to a
      *                                  client information response.
      */
-    public static ClientInformationResponse parse(final HTTPResponse httpResponse)
+    public static ClientInformationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK, HTTPResponse.SC_CREATED);

@@ -42,7 +42,7 @@ public class CodeChallenge extends Identifier {
      * @param value The code challenge value. Must not be {@code null} or
      *              empty string.
      */
-    private CodeChallenge(final String value) {
+    private CodeChallenge(String value) {
         super(value);
     }
 
@@ -55,7 +55,7 @@ public class CodeChallenge extends Identifier {
      * @param codeVerifier The code verifier. Must not be {@code null}.
      * @return The computed code challenge.
      */
-    public static CodeChallenge compute(final CodeChallengeMethod method, final CodeVerifier codeVerifier) {
+    public static CodeChallenge compute(CodeChallengeMethod method, CodeVerifier codeVerifier) {
 
         if (CodeChallengeMethod.PLAIN.equals(method)) {
             return new CodeChallenge(codeVerifier.getValue());
@@ -87,7 +87,7 @@ public class CodeChallenge extends Identifier {
      * @return The code challenge.
      * @throws OAuth2JSONParseException If parsing failed.
      */
-    public static CodeChallenge parse(final String value)
+    public static CodeChallenge parse(String value)
             throws OAuth2JSONParseException {
 
         try {

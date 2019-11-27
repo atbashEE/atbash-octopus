@@ -32,7 +32,7 @@ class OIDCResponseTypeValidator {
      * @throws IllegalArgumentException If the response type wasn't a valid
      *                                  OpenID Connect response type.
      */
-    public static void validate(final ResponseType rt) {
+    public static void validate(ResponseType rt) {
 
         if (rt.isEmpty()) {
             throw new IllegalArgumentException("The response type must contain at least one value");

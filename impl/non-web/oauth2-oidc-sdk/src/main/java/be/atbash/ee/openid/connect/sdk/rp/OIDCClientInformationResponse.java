@@ -73,7 +73,7 @@ public class OIDCClientInformationResponse extends ClientInformationResponse {
      * @param clientInfo The OpenID Connect client information. Must not be
      *                   {@code null}.
      */
-    public OIDCClientInformationResponse(final OIDCClientInformation clientInfo) {
+    public OIDCClientInformationResponse(OIDCClientInformation clientInfo) {
 
         super(clientInfo);
     }
@@ -99,7 +99,7 @@ public class OIDCClientInformationResponse extends ClientInformationResponse {
      * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
      *                                  OpenID Connect client information response.
      */
-    public static OIDCClientInformationResponse parse(final HTTPResponse httpResponse)
+    public static OIDCClientInformationResponse parse(HTTPResponse httpResponse)
             throws OAuth2JSONParseException {
 
         httpResponse.ensureStatusCode(HTTPResponse.SC_OK, HTTPResponse.SC_CREATED);

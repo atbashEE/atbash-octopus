@@ -28,7 +28,6 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSObject;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.util.StringUtils;
 
-import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.net.MalformedURLException;
@@ -112,9 +111,9 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
      * @param accessToken An OAuth 2.0 Bearer access token for the request,
      *                    {@code null} if none.
      */
-    public ClientRegistrationRequest(final URI uri,
-                                     final ClientMetadata metadata,
-                                     final BearerAccessToken accessToken) {
+    public ClientRegistrationRequest(URI uri,
+                                     ClientMetadata metadata,
+                                     BearerAccessToken accessToken) {
 
         this(uri, metadata, null, accessToken);
     }
@@ -137,10 +136,10 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
      * @param accessToken       An OAuth 2.0 Bearer access token for the
      *                          request, {@code null} if none.
      */
-    public ClientRegistrationRequest(final URI uri,
-                                     final ClientMetadata metadata,
-                                     final SignedJWT softwareStatement,
-                                     final BearerAccessToken accessToken) {
+    public ClientRegistrationRequest(URI uri,
+                                     ClientMetadata metadata,
+                                     SignedJWT softwareStatement,
+                                     BearerAccessToken accessToken) {
 
         super(uri, accessToken);
 
@@ -250,7 +249,7 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  client registration request.
      */
-    public static ClientRegistrationRequest parse(final HTTPRequest httpRequest)
+    public static ClientRegistrationRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.POST);

@@ -46,7 +46,7 @@ public final class X509CertificateConfirmation {
      *
      * @param x5tS256 The X.509 certificate SHA-256 thumbprint.
      */
-    public X509CertificateConfirmation(final Base64URLValue x5tS256) {
+    public X509CertificateConfirmation(Base64URLValue x5tS256) {
 
         if (x5tS256 == null) {
             throw new IllegalArgumentException("The X.509 certificate thumbprint must not be null");
@@ -122,7 +122,7 @@ public final class X509CertificateConfirmation {
      * @param jwtClaimsSet The JWT claims set.
      * @return The modified JWT claims set.
      */
-    public JWTClaimsSet applyTo(final JWTClaimsSet jwtClaimsSet) {
+    public JWTClaimsSet applyTo(JWTClaimsSet jwtClaimsSet) {
 
         Map.Entry<String, JsonObject> cnfClaim = toJWTClaim();
 
@@ -139,7 +139,7 @@ public final class X509CertificateConfirmation {
 
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -165,7 +165,7 @@ public final class X509CertificateConfirmation {
      * @return The X.509 certificate confirmation, {@code null} if not
      * found.
      */
-    public static X509CertificateConfirmation parse(final JWTClaimsSet jwtClaimsSet) {
+    public static X509CertificateConfirmation parse(JWTClaimsSet jwtClaimsSet) {
 
         JsonObject cnf;
         try {
@@ -186,7 +186,7 @@ public final class X509CertificateConfirmation {
      * @return The X.509 certificate confirmation, {@code null} if not
      * found.
      */
-    public static X509CertificateConfirmation parse(final JsonObject jsonObject) {
+    public static X509CertificateConfirmation parse(JsonObject jsonObject) {
 
         if (!jsonObject.containsKey("cnf")) {
             return null;
@@ -204,7 +204,7 @@ public final class X509CertificateConfirmation {
      * @return The X.509 certificate confirmation, {@code null} if not
      * found.
      */
-    public static X509CertificateConfirmation parseFromConfirmationJSONObject(final JsonObject cnf) {
+    public static X509CertificateConfirmation parseFromConfirmationJSONObject(JsonObject cnf) {
 
         if (cnf == null) {
             return null;
@@ -227,7 +227,7 @@ public final class X509CertificateConfirmation {
      * @param x509Cert The X.509 certificate.
      * @return The X.509 certificate confirmation.
      */
-    public static X509CertificateConfirmation of(final X509Certificate x509Cert) {
+    public static X509CertificateConfirmation of(X509Certificate x509Cert) {
 
         return new X509CertificateConfirmation(X509CertUtils.computeSHA256Thumbprint(x509Cert));
     }

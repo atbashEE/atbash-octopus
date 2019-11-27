@@ -105,11 +105,11 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
      * @param secret      The optional client secret, {@code null} if not
      *                    specified.
      */
-    public ClientUpdateRequest(final URI uri,
-                               final ClientID id,
-                               final BearerAccessToken accessToken,
-                               final ClientMetadata metadata,
-                               final Secret secret) {
+    public ClientUpdateRequest(URI uri,
+                               ClientID id,
+                               BearerAccessToken accessToken,
+                               ClientMetadata metadata,
+                               Secret secret) {
 
         super(uri, accessToken);
 
@@ -209,7 +209,7 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to a
      *                                  client update request.
      */
-    public static ClientUpdateRequest parse(final HTTPRequest httpRequest)
+    public static ClientUpdateRequest parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
         httpRequest.ensureMethod(HTTPRequest.Method.PUT);
