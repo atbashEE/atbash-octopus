@@ -27,6 +27,7 @@ import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.ByteUtils;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.debug.CorrelationCounter;
@@ -37,7 +38,6 @@ import be.atbash.util.exception.AtbashUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
@@ -78,7 +78,7 @@ public class TokenRequestor extends AbstractRequestor {
             TokenRequest tokenRequest;
             if (algorithm != null) {
                 ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(configuration.getSSOClientId())
-                        , tokenEndPoint, algorithm, new Secret(new String(configuration.getSSOClientSecret(), StandardCharsets.UTF_8)));
+                        , tokenEndPoint, algorithm, new Secret(Base64URLValue.encode(configuration.getSSOClientSecret())));
                 tokenRequest = new TokenRequest(tokenEndPoint, clientAuth, passwordGrant, Scope.parse(configuration.getSSOScopes()));
             } else {
                 tokenRequest = new TokenRequest(tokenEndPoint, passwordGrant, Scope.parse(configuration.getSSOScopes()));

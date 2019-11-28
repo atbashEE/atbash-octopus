@@ -19,10 +19,13 @@ package be.atbash.ee.oauth2.sdk.auth;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -174,5 +177,23 @@ public class SecretTest {
         assertThat(secret.equalsSHA256Based(anotherSecret)).isFalse();
 
         assertThat(secret.equalsSHA256Based(null)).isFalse();
+    }
+
+    @Test
+    public void testStringValue() {
+        String value = "NotSoGoodSecret1234";
+        Secret secret = new Secret(value);
+        assertThat(secret.getValue()).isEqualTo(value);
+        assertThat(secret.getValueBytes()).isEqualTo(value.getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void testBase64Value()  {
+        byte[] key = new byte[32];
+        new Random().nextBytes(key);
+        Base64URLValue value = Base64URLValue.encode(key);
+        Secret secret = new Secret(value);
+        assertThat(secret.getValue()).isEqualTo(value.toString());
+        assertThat(secret.getValueBytes()).isEqualTo(key);
     }
 }

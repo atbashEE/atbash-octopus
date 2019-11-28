@@ -20,6 +20,7 @@ import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.client.SSOFlow;
@@ -72,7 +73,7 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
             throw new ConfigurationException("Value for {SSO.application}SSO.clientSecret parameter is empty");
         }
         if (ssoClientSecret != null && !ssoClientSecret.trim().isEmpty()) {
-            byte[] result = new Base64Value(ssoClientSecret).decode();
+            byte[] result = new Base64URLValue(ssoClientSecret).decode();
             if (result.length < 32) {
                 throw new ConfigurationException("value for {SSO.application}SSO.clientSecret must be at least 32 byte (256 bit)");
             }
@@ -89,7 +90,7 @@ public class OctopusSSOClientConfiguration extends AbstractConfiguration impleme
             throw new ConfigurationException("Value for {SSO.application}SSO.idTokenSecret parameter is empty");
         }
 
-        byte[] result = new Base64Value(tokenSecret).decode();
+        byte[] result = new Base64URLValue(tokenSecret).decode();
 
         if (result.length < 32) {
             throw new ConfigurationException("value for {SSO.application}SSO.idTokenSecret must be at least 32 byte (256 bit)");

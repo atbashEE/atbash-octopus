@@ -96,7 +96,7 @@ public class OctopusSSOServerClientConfiguration extends AbstractConfiguration i
     public byte[] getSSOClientSecret() {
         String ssoClientSecret = defineConfigValue("SSO.clientSecret");
         if (StringUtils.hasText(ssoClientSecret)) {
-            byte[] result = Base64.getDecoder().decode(ssoClientSecret);
+            byte[] result = Base64.getUrlDecoder().decode(ssoClientSecret);
             if (result.length < 32) {
                 throw new ConfigurationException("value for {SSO.application}SSO.clientSecret must be at least 32 byte (256 bit)");
             }
@@ -113,7 +113,7 @@ public class OctopusSSOServerClientConfiguration extends AbstractConfiguration i
             throw new ConfigurationException("Value for {SSO.application}SSO.idTokenSecret parameter is empty");
         }
 
-        byte[] result = Base64.getDecoder().decode(tokenSecret);
+        byte[] result = Base64.getUrlDecoder().decode(tokenSecret);
 
         if (result.length < 32) {
             throw new ConfigurationException("value for {SSO.application}SSO.idTokenSecret must be at least 32 byte (256 bit)");

@@ -16,6 +16,7 @@
 package be.atbash.ee.oauth2.sdk.token;
 
 
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class RefreshTokenTest {
 	public void testGeneratorConstructor() {
 
 		RefreshToken rt = new RefreshToken(16);
-		assertThat(new Base64Value(rt.getValue()).decode().length).isEqualTo(16);
+		assertThat(new Base64URLValue(rt.getValue()).decode().length).isEqualTo(16);
 		assertThat(rt.getParameterNames()).contains("refresh_token");
 		assertThat(rt.getParameterNames()).hasSize(1);
 	}

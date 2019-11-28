@@ -34,6 +34,7 @@ import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.sso.client.JWSAlgorithmFactory;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
@@ -50,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -91,7 +91,7 @@ public class ExchangeForAccessCode {
 
             // Token Endpoint is protected by authentication
             ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(serverConfiguration.getSSOClientId())
-                    , tokenEndPoint, algorithm, new Secret(new String(serverConfiguration.getSSOClientSecret(), StandardCharsets.UTF_8)));
+                    , tokenEndPoint, algorithm, new Secret(Base64URLValue.encode(serverConfiguration.getSSOClientSecret())));
 
             TokenRequest tokenRequest = new TokenRequest(tokenEndPoint, clientAuth, grant, null);
 

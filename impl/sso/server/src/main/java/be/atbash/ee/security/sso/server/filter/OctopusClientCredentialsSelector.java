@@ -22,6 +22,7 @@ import be.atbash.ee.oauth2.sdk.auth.verifier.Context;
 import be.atbash.ee.oauth2.sdk.auth.verifier.InvalidClientException;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 
@@ -48,10 +49,7 @@ public class OctopusClientCredentialsSelector implements ClientCredentialsSelect
             throw InvalidClientException.BAD_ID;
         }
         ArrayList<Secret> result = new ArrayList<>();
-        // For Octopus SSO, there the secret is a Base64 encoded array
-        result.add(new Secret(new String(clientInfo.getClientSecretByte(), StandardCharsets.UTF_8)));
-        // For Octopus as OAuth2 (like Google) provider replacement. There It is the plain text
-        result.add(new Secret(clientInfo.getClientSecret()));  // TODO ? Is this correct
+        result.add(new Secret(new Base64URLValue(clientInfo.getClientSecret())));
         return result;
 
     }

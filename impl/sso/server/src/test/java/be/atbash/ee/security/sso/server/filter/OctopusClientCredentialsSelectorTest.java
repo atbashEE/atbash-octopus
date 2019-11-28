@@ -34,7 +34,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,9 +53,7 @@ public class OctopusClientCredentialsSelectorTest {
     @Test
     public void selectClientSecrets() throws JOSEException, InvalidClientException, URISyntaxException {
 
-        byte[] clientSecret = new Base64URLValue(clientSecretBase64Encoded).decode();
-
-        Secret secret = new Secret(new String(clientSecret, StandardCharsets.UTF_8));
+        Secret secret = new Secret(new Base64URLValue(clientSecretBase64Encoded));
 
         ClientID clientId = new ClientID("junit_client");
         ClientSecretJWT clientAuthentication = new ClientSecretJWT(clientId, new URI("http://some.server/oidc"), JWSAlgorithm.HS256, secret);
