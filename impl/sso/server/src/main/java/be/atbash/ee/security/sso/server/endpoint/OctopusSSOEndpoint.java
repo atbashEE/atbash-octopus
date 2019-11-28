@@ -264,7 +264,9 @@ public class OctopusSSOEndpoint {
                 // due to octopusSSOTokenConverter.fromIdToken(jwtClaimsSet); earlier, there was a conversion from jwtClaimsSet to JSonObject
                 // Which converted the Audience List to a single String.  If we don't put it in the correct type again, the new SignedJWT 3 statements further on
                 // Will fail on the audience and leave it out from the SignedJWT.
-                claimSetBuilder.claim(entry.getKey(), Collections.singletonList(entry.getValue()));
+                // FIXME Is this always the case (so is it possible to get a List here or not?)
+                // FIXME simplify the joggling between String and Array for aud.
+                claimSetBuilder.claim(entry.getKey(), Collections.singletonList(JSONObjectUtils.getJsonValueAsObject(entry.getValue())));
             } else {
                 claimSetBuilder.claim(entry.getKey(), JSONObjectUtils.getJsonValueAsObject(entry.getValue()));
             }
