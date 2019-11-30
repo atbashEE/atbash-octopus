@@ -23,6 +23,7 @@ import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
@@ -118,7 +119,7 @@ public class SSOLogoutFilter extends AuthorizationFilter {
                 return false;
             }
 
-            byte[] clientSecret = new Base64Value(clientInfo.getClientSecret()).decode();
+            byte[] clientSecret = new Base64URLValue(clientInfo.getClientSecret()).decode();
             MACVerifier verifier = new MACVerifier(clientSecret);
             if (!idTokenHint.verify(verifier)) {
                 // TODO Add error codes

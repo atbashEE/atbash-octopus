@@ -99,7 +99,7 @@ public class SSOLogoutFilterTest {
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
+        clientInfo.setClientSecret(Base64.getUrlEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
@@ -126,7 +126,7 @@ public class SSOLogoutFilterTest {
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, "theAccessCode", "http://some.server/logout"));
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
+        clientInfo.setClientSecret(Base64.getUrlEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
@@ -197,7 +197,7 @@ public class SSOLogoutFilterTest {
 
         ClientInfo clientInfo = new ClientInfo();
         secret = defineSecret(256 / 8 + 1);  // another secret
-        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
+        clientInfo.setClientSecret(Base64.getUrlEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
@@ -226,7 +226,7 @@ public class SSOLogoutFilterTest {
         when(httpServletRequestMock.getQueryString()).thenReturn(createQueryString(clientId, secret, clientId, "http://some.server/logout"));
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setClientSecret(Base64.getEncoder().withoutPadding().encodeToString(secret));
+        clientInfo.setClientSecret(Base64.getUrlEncoder().withoutPadding().encodeToString(secret));
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
