@@ -16,7 +16,6 @@
 package be.atbash.ee.oauth2.sdk.client;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.GrantType;
 import be.atbash.ee.oauth2.sdk.Scope;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
@@ -232,7 +231,6 @@ public class ClientRegistrationRequestTest  {
 			+ "    \"redirect_uris\":[\"https://client.example.org/callback\","
 			+ "       \"https://client.example.org/callback2\"],"
 			+ "    \"client_name\":\"My Example Client\","
-			+ "    \"client_name#ja-Jpan-JP\":\"\\u30AF\\u30E9\\u30A4\\u30A2\\u30F3\\u30C8\\u540D\","
 			+ "    \"token_endpoint_auth_method\":\"client_secret_basic\","
 			+ "    \"scope\":\"read write dolphin\","
 			+ "    \"logo_uri\":\"https://client.example.org/logo.png\","
@@ -254,9 +252,8 @@ public class ClientRegistrationRequestTest  {
 		assertThat(redirectURIs).hasSize(2);
 		
 		assertThat(metadata.getName()).isEqualTo("My Example Client");
-		assertThat(metadata.getName(LangTag.parse("ja-Jpan-JP"))).isEqualTo("\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D");
-		
-		assertThat(metadata.getTokenEndpointAuthMethod()).isEqualTo(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+
+        assertThat(metadata.getTokenEndpointAuthMethod()).isEqualTo(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
 		
 		assertThat(metadata.getScope()).isEqualTo(Scope.parse("read write dolphin"));
 		

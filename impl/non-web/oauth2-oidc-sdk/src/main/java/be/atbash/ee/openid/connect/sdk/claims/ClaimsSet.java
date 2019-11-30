@@ -16,8 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.claims;
 
 
-import be.atbash.ee.langtag.LangTag;
-import be.atbash.ee.langtag.LangTagUtils;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
@@ -33,7 +31,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,10 +42,13 @@ public abstract class ClaimsSet {
 
 
     /**
-     * The JSON object Builder. Null when claims are
+     * The JSON object Builder. Null when claims are in read mode by the `JsonObject claims`.
      */
-    protected JsonObjectBuilder claimsBuilder;
+    JsonObjectBuilder claimsBuilder;
 
+    /**
+     * The Json Claims. Null when  claims are in 'build' mode and defined by `claimsBuilder.
+     */
     protected JsonObject claims;
 
     /**
@@ -157,62 +157,6 @@ public abstract class ClaimsSet {
 
 
     /**
-     * Returns a map of all instances, including language-tagged, of a
-     * claim with the specified base name.
-     *
-     * <p>Example JSON serialised claims set:
-     *
-     * <pre>
-     * {
-     *   "month"    : "January",
-     *   "month#de" : "Januar"
-     *   "month#es" : "enero",
-     *   "month#it" : "gennaio"
-     * }
-     * </pre>
-     *
-     * <p>The "month" claim instances as java.util.Map:
-     *
-     * <pre>
-     * null = "January" (no language tag)
-     * "de" = "Januar"
-     * "es" = "enero"
-     * "it" = "gennaio"
-     * </pre>
-     *
-     * @param name  The claim name. Must not be {@code null}.
-     * @param clazz The Java class that the claim values should cast to.
-     *              Must not be {@code null}.
-     * @return The matching language-tagged claim values, empty map if
-     * none. A {@code null} key indicates the value has no language
-     * tag (corresponds to the base name).
-     */
-    public <T> Map<LangTag, T> getLangTaggedClaim(String name, Class<T> clazz) {
-
-        Map<LangTag, Object> matches = LangTagUtils.find(name, claims);
-        Map<LangTag, T> out = new HashMap<>();
-
-        for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
-
-            LangTag langTag = entry.getKey();
-            String compositeKey = name + (langTag != null ? "#" + langTag : "");
-
-            /*
-            try {
-                out.put(langTag, JSONObjectUtils.getGeneric(claimsBuilder, compositeKey, clazz));
-            } catch (OAuth2ParseException e) {
-                // skip
-            }
-
-             */
-            throw new IllegalArgumentException("Not converted yet");
-        }
-
-        return out;
-    }
-
-
-    /**
      * Sets a claim.
      *
      * @param name  The claim name, with an optional language tag. Must not
@@ -232,22 +176,6 @@ public abstract class ClaimsSet {
 
 
     /**
-     * Sets a claim with an optional language tag.
-     *
-     * @param name    The claim name. Must not be {@code null}.
-     * @param value   The claim value. Should serialise to a JSON entity.
-     *                If {@code null} any existing claim with the same name
-     *                and language tag (if any) will be removed.
-     * @param langTag The language tag of the claim value, {@code null} if
-     *                not tagged.
-     */
-    public void setClaim(String name, JsonValue value, LangTag langTag) {
-        String keyName = langTag != null ? name + "#" + langTag : name;
-        setClaim(keyName, value);
-    }
-
-
-    /**
      * Gets a string-based claim.
      *
      * @param name The claim name. Must not be {@code null}.
@@ -259,22 +187,6 @@ public abstract class ClaimsSet {
         return claims.get(name) != null && claims.get(name).getValueType() == JsonValue.ValueType.STRING ? claims.getString(name) : null;
 
     }
-
-
-    /**
-     * Gets a string-based claim with an optional language tag.
-     *
-     * @param name    The claim name. Must not be {@code null}.
-     * @param langTag The language tag of the claim value, {@code null} to
-     *                get the non-tagged value.
-     * @return The claim value, {@code null} if not specified or casting
-     * failed.
-     */
-    public String getStringClaim(String name, LangTag langTag) {
-        ensureReadMode();
-        return langTag == null ? getStringClaim(name) : getStringClaim(name + '#' + langTag);
-    }
-
 
     /**
      * Gets a boolean-based claim.

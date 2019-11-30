@@ -16,7 +16,6 @@
 package be.atbash.ee.oauth2.sdk.as;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
@@ -113,9 +112,7 @@ public class AuthorizationServerMetadataTest {
                 " \"response_types_supported\":" +
                 "   [\"code\", \"code token\"]," +
                 " \"service_documentation\":" +
-                "   \"http://server.example.com/service_documentation.html\"," +
-                " \"ui_locales_supported\":" +
-                "   [\"en-US\", \"en-GB\", \"en-CA\", \"fr-FR\", \"fr-CA\"]" +
+                "   \"http://server.example.com/service_documentation.html\"" +
                 "}";
 
         AuthorizationServerMetadata as = AuthorizationServerMetadata.parse(json);
@@ -130,7 +127,6 @@ public class AuthorizationServerMetadataTest {
         assertThat(as.getScopes()).isEqualTo(new Scope("openid", "profile", "email", "address", "phone", "offline_access"));
         assertThat(as.getResponseTypes()).isEqualTo(Arrays.asList(new ResponseType("code"), new ResponseType("code", "token")));
         assertThat(as.getServiceDocsURI()).isEqualTo(new URI("http://server.example.com/service_documentation.html"));
-        assertThat(as.getUILocales()).isEqualTo(Arrays.asList(LangTag.parse("en-US"), LangTag.parse("en-GB"), LangTag.parse("en-CA"), LangTag.parse("fr-FR"), LangTag.parse("fr-CA")));
     }
 
     @Test

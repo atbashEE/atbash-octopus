@@ -16,8 +16,6 @@
 package be.atbash.ee.openid.connect.sdk;
 
 
-import be.atbash.ee.langtag.LangTag;
-import be.atbash.ee.langtag.LangTagUtils;
 import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
@@ -144,12 +142,10 @@ public class AuthenticationRequestTest {
         assertThat(request.getDisplay()).isNull();
         assertThat(request.getPrompt()).isNull();
         assertThat(request.getMaxAge()).isEqualTo(-1);
-        assertThat(request.getUILocales()).isNull();
         assertThat(request.getIDTokenHint()).isNull();
         assertThat(request.getLoginHint()).isNull();
         assertThat(request.getACRValues()).isNull();
         assertThat(request.getClaims()).isNull();
-        assertThat(request.getClaimsLocales()).isNull();
         assertThat(request.getRequestObject()).isNull();
         assertThat(request.getRequestURI()).isNull();
         assertThat(request.getCodeChallenge()).isNull();
@@ -189,12 +185,10 @@ public class AuthenticationRequestTest {
         assertThat(request.getDisplay()).isNull();
         assertThat(request.getPrompt()).isNull();
         assertThat(request.getMaxAge()).isEqualTo(-1);
-        assertThat(request.getUILocales()).isNull();
         assertThat(request.getIDTokenHint()).isNull();
         assertThat(request.getLoginHint()).isNull();
         assertThat(request.getACRValues()).isNull();
         assertThat(request.getClaims()).isNull();
-        assertThat(request.getClaimsLocales()).isNull();
         assertThat(request.getRequestObject()).isNull();
         assertThat(request.getRequestURI()).isNull();
         assertThat(request.getCodeChallenge()).isNull();
@@ -299,14 +293,6 @@ public class AuthenticationRequestTest {
 
         int maxAge = 3600;
 
-        List<LangTag> uiLocales = new LinkedList<>();
-        uiLocales.add(LangTag.parse("en-US"));
-        uiLocales.add(LangTag.parse("en-GB"));
-
-        List<LangTag> claimsLocales = new LinkedList<>();
-        claimsLocales.add(LangTag.parse("en-US"));
-        claimsLocales.add(LangTag.parse("en-GB"));
-
         JWT idTokenHint = JWTParser.parse(EXAMPLE_JWT_STRING);
 
         String loginHint = "alice123";
@@ -332,7 +318,7 @@ public class AuthenticationRequestTest {
 
         AuthenticationRequest request = new AuthenticationRequest(
                 uri, rts, rm, scope, clientID, redirectURI, state, nonce,
-                display, prompt, maxAge, uiLocales, claimsLocales,
+                display, prompt, maxAge,
                 idTokenHint, loginHint, acrValues, claims, null, null,
                 codeChallenge, codeChallengeMethod,
                 resources,
@@ -371,16 +357,6 @@ public class AuthenticationRequestTest {
         assertThat(promptOut.size()).isEqualTo(2);
 
         assertThat(request.getMaxAge()).isEqualTo(3600);
-
-        uiLocales = request.getUILocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(uiLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(uiLocales.get(1));
-        assertThat(uiLocales.size()).isEqualTo(2);
-
-        claimsLocales = request.getClaimsLocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(claimsLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(claimsLocales.get(1));
-        assertThat(claimsLocales.size()).isEqualTo(2);
 
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
 
@@ -447,15 +423,6 @@ public class AuthenticationRequestTest {
 
         assertThat(request.getMaxAge()).isEqualTo(3600);
 
-        uiLocales = request.getUILocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(uiLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(uiLocales.get(1));
-        assertThat(uiLocales.size()).isEqualTo(2);
-
-        claimsLocales = request.getClaimsLocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(claimsLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(claimsLocales.get(1));
-        assertThat(claimsLocales.size()).isEqualTo(2);
 
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
 
@@ -515,14 +482,6 @@ public class AuthenticationRequestTest {
 
         int maxAge = 3600;
 
-        List<LangTag> uiLocales = new LinkedList<>();
-        uiLocales.add(LangTag.parse("en-US"));
-        uiLocales.add(LangTag.parse("en-GB"));
-
-        List<LangTag> claimsLocales = new LinkedList<>();
-        claimsLocales.add(LangTag.parse("en-US"));
-        claimsLocales.add(LangTag.parse("en-GB"));
-
         JWT idTokenHint = JWTParser.parse(EXAMPLE_JWT_STRING);
 
         String loginHint = "alice123";
@@ -539,7 +498,7 @@ public class AuthenticationRequestTest {
 
         AuthenticationRequest request = new AuthenticationRequest(
                 uri, rts, null, scope, clientID, redirectURI, state, nonce,
-                display, prompt, maxAge, uiLocales, claimsLocales,
+                display, prompt, maxAge,
                 idTokenHint, loginHint, acrValues, claims, requestObject, null,
                 null, null, null, false, null);
 
@@ -574,16 +533,6 @@ public class AuthenticationRequestTest {
         assertThat(promptOut.size()).isEqualTo(2);
 
         assertThat(request.getMaxAge()).isEqualTo(3600);
-
-        uiLocales = request.getUILocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(uiLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(uiLocales.get(1));
-        assertThat(uiLocales.size()).isEqualTo(2);
-
-        claimsLocales = request.getClaimsLocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(claimsLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(claimsLocales.get(1));
-        assertThat(claimsLocales.size()).isEqualTo(2);
 
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
 
@@ -643,15 +592,6 @@ public class AuthenticationRequestTest {
 
         assertThat(request.getMaxAge()).isEqualTo(3600);
 
-        uiLocales = request.getUILocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(uiLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(uiLocales.get(1));
-        assertThat(uiLocales.size()).isEqualTo(2);
-
-        claimsLocales = request.getClaimsLocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(claimsLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(claimsLocales.get(1));
-        assertThat(claimsLocales.size()).isEqualTo(2);
 
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
 
@@ -701,14 +641,6 @@ public class AuthenticationRequestTest {
 
         int maxAge = 3600;
 
-        List<LangTag> uiLocales = new LinkedList<>();
-        uiLocales.add(LangTag.parse("en-US"));
-        uiLocales.add(LangTag.parse("en-GB"));
-
-        List<LangTag> claimsLocales = new LinkedList<>();
-        claimsLocales.add(LangTag.parse("en-US"));
-        claimsLocales.add(LangTag.parse("en-GB"));
-
         JWT idTokenHint = JWTParser.parse(EXAMPLE_JWT_STRING);
 
         String loginHint = "alice123";
@@ -725,7 +657,7 @@ public class AuthenticationRequestTest {
 
         AuthenticationRequest request = new AuthenticationRequest(
                 uri, rts, null, scope, clientID, redirectURI, state, nonce,
-                display, prompt, maxAge, uiLocales, claimsLocales,
+                display, prompt, maxAge,
                 idTokenHint, loginHint, acrValues, claims, null, requestURI,
                 null, null, null, false, null);
 
@@ -760,16 +692,6 @@ public class AuthenticationRequestTest {
         assertThat(promptOut.size()).isEqualTo(2);
 
         assertThat(request.getMaxAge()).isEqualTo(3600);
-
-        uiLocales = request.getUILocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(uiLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(uiLocales.get(1));
-        assertThat(uiLocales.size()).isEqualTo(2);
-
-        claimsLocales = request.getClaimsLocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(claimsLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(claimsLocales.get(1));
-        assertThat(claimsLocales.size()).isEqualTo(2);
 
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
 
@@ -829,15 +751,6 @@ public class AuthenticationRequestTest {
 
         assertThat(request.getMaxAge()).isEqualTo(3600);
 
-        uiLocales = request.getUILocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(uiLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(uiLocales.get(1));
-        assertThat(uiLocales.size()).isEqualTo(2);
-
-        claimsLocales = request.getClaimsLocales();
-        assertThat(LangTag.parse("en-US")).isEqualTo(claimsLocales.get(0));
-        assertThat(LangTag.parse("en-GB")).isEqualTo(claimsLocales.get(1));
-        assertThat(claimsLocales.size()).isEqualTo(2);
 
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
 
@@ -878,8 +791,6 @@ public class AuthenticationRequestTest {
         assertThat(request.getDisplay()).isNull();
         assertThat(request.getPrompt()).isNull();
         assertThat(request.getMaxAge()).isEqualTo(-1);
-        assertThat(request.getUILocales()).isNull();
-        assertThat(request.getClaimsLocales()).isNull();
         assertThat(request.getIDTokenHint()).isNull();
         assertThat(request.getLoginHint()).isNull();
         assertThat(request.getACRValues()).isNull();
@@ -917,8 +828,6 @@ public class AuthenticationRequestTest {
                 .display(Display.POPUP)
                 .prompt(new Prompt(Prompt.Type.NONE))
                 .maxAge(3600)
-                .uiLocales(Arrays.asList(LangTag.parse("en-GB"), LangTag.parse("en-US")))
-                .claimsLocales(Arrays.asList(LangTag.parse("bg-BG"), LangTag.parse("fr-FR")))
                 .idTokenHint(JWTParser.parse(EXAMPLE_JWT_STRING))
                 .loginHint("alice@wonderland.net")
                 .acrValues(acrValues)
@@ -944,8 +853,6 @@ public class AuthenticationRequestTest {
         assertThat(request.getDisplay()).isEqualTo(Display.POPUP);
         assertThat(request.getPrompt()).isEqualTo(new Prompt(Prompt.Type.NONE));
         assertThat(request.getMaxAge()).isEqualTo(3600);
-        assertThat(request.getUILocales()).isEqualTo(Arrays.asList(LangTag.parse("en-GB"), LangTag.parse("en-US")));
-        assertThat(request.getClaimsLocales()).isEqualTo(Arrays.asList(LangTag.parse("bg-BG"), LangTag.parse("fr-FR")));
         assertThat(request.getIDTokenHint().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
         assertThat(request.getLoginHint()).isEqualTo("alice@wonderland.net");
         assertThat(request.getACRValues()).isEqualTo(acrValues);
@@ -1384,9 +1291,9 @@ public class AuthenticationRequestTest {
         assertThat(r.getScope()).isEqualTo(new Scope("openid"));
         assertThat(r.getNonce()).isEqualTo(new Nonce("CvJam5c9fpY"));
         assertThat(r.getMaxAge()).isEqualTo(-1);
-        assertThat(r.getClaims().getIDTokenClaimNames(false).contains("family_name")).isTrue();
-        assertThat(r.getClaims().getIDTokenClaimNames(false).contains("given_name")).isTrue();
-        assertThat(r.getClaims().getIDTokenClaimNames(false)).hasSize(2);
+        assertThat(r.getClaims().getIDTokenClaimNames().contains("family_name")).isTrue();
+        assertThat(r.getClaims().getIDTokenClaimNames().contains("given_name")).isTrue();
+        assertThat(r.getClaims().getIDTokenClaimNames()).hasSize(2);
         assertThat(r.getRedirectionURI()).isEqualTo(URI.create("https://example.com:9090/example/implicitFlow"));
         assertThat(r.getCustomParameter("context")).isEqualTo(Collections.singletonList("MS-GLOBAL01")); // custom
         assertThat(r.getCustomParameter("language")).isEqualTo(Collections.singletonList("zh")); // custom
@@ -1593,8 +1500,6 @@ public class AuthenticationRequestTest {
                 .display(Display.POPUP)
                 .prompt(new Prompt(Prompt.Type.NONE))
                 .maxAge(900)
-                .uiLocales(LangTagUtils.parseLangTagList("en", "de"))
-                .claimsLocales(LangTagUtils.parseLangTagList("fr", "bg"))
                 .idTokenHint(JWTParser.parse(EXAMPLE_JWT_STRING))
                 .loginHint("alice@wonderland.net")
                 .acrValues(Arrays.asList(new ACR("0"), new ACR("1")))
@@ -1617,8 +1522,6 @@ public class AuthenticationRequestTest {
         assertThat(out.getDisplay()).isEqualTo(in.getDisplay());
         assertThat(out.getPrompt()).isEqualTo(in.getPrompt());
         assertThat(out.getMaxAge()).isEqualTo(in.getMaxAge());
-        assertThat(out.getUILocales()).isEqualTo(in.getUILocales());
-        assertThat(out.getClaimsLocales()).isEqualTo(in.getClaimsLocales());
         assertThat(out.getIDTokenHint()).isEqualTo(in.getIDTokenHint());
         assertThat(out.getLoginHint()).isEqualTo(in.getLoginHint());
         assertThat(out.getACRValues()).isEqualTo(in.getACRValues());
@@ -1649,8 +1552,6 @@ public class AuthenticationRequestTest {
                 .display(Display.POPUP)
                 .prompt(new Prompt(Prompt.Type.NONE))
                 .maxAge(900)
-                .uiLocales(LangTagUtils.parseLangTagList("en", "de"))
-                .claimsLocales(LangTagUtils.parseLangTagList("fr", "bg"))
                 .idTokenHint(JWTParser.parse(EXAMPLE_JWT_STRING))
                 .loginHint("alice@wonderland.net")
                 .acrValues(Arrays.asList(new ACR("0"), new ACR("1")))
@@ -1673,8 +1574,6 @@ public class AuthenticationRequestTest {
         assertThat(out.getDisplay()).isEqualTo(in.getDisplay());
         assertThat(out.getPrompt()).isEqualTo(in.getPrompt());
         assertThat(out.getMaxAge()).isEqualTo(in.getMaxAge());
-        assertThat(out.getUILocales()).isEqualTo(in.getUILocales());
-        assertThat(out.getClaimsLocales()).isEqualTo(in.getClaimsLocales());
         assertThat(out.getIDTokenHint()).isEqualTo(in.getIDTokenHint());
         assertThat(out.getLoginHint()).isEqualTo(in.getLoginHint());
         assertThat(out.getACRValues()).isEqualTo(in.getACRValues());

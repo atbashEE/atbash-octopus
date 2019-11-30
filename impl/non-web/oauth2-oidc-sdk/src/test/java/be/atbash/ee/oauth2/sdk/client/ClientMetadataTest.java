@@ -16,7 +16,6 @@
 package be.atbash.ee.oauth2.sdk.client;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.GrantType;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.ResponseType;
@@ -121,32 +120,17 @@ public class ClientMetadataTest {
         String name = "My Example App";
         meta.setName(name);
 
-        String nameDE = "Mein Beispiel App";
-        meta.setName(nameDE, LangTag.parse("de"));
-
         URI logo = new URI("http://example.com/logo.png");
         meta.setLogoURI(logo);
-
-        URI logoDE = new URI("http://example.com/de/logo.png");
-        meta.setLogoURI(logoDE, LangTag.parse("de"));
 
         URI uri = new URI("http://example.com");
         meta.setURI(uri);
 
-        URI uriDE = new URI("http://example.com/de");
-        meta.setURI(uriDE, LangTag.parse("de"));
-
         URI policy = new URI("http://example.com/policy");
         meta.setPolicyURI(policy);
 
-        URI policyDE = new URI("http://example.com/de/policy");
-        meta.setPolicyURI(policyDE, LangTag.parse("de"));
-
         URI tos = new URI("http://example.com/tos");
         meta.setTermsOfServiceURI(tos);
-
-        URI tosDE = new URI("http://example.com/de/tos");
-        meta.setTermsOfServiceURI(tosDE, LangTag.parse("de"));
 
         ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_JWT;
         meta.setTokenEndpointAuthMethod(authMethod);
@@ -216,20 +200,10 @@ public class ClientMetadataTest {
         assertThat(meta.getGrantTypes()).isEqualTo(grantTypes);
         assertThat(meta.getEmailContacts()).isEqualTo(contacts);
         assertThat(meta.getName()).isEqualTo(name);
-        assertThat(meta.getName(LangTag.parse("de"))).isEqualTo(nameDE);
-        assertThat(meta.getNameEntries()).hasSize(2);
         assertThat(meta.getLogoURI()).isEqualTo(logo);
-        assertThat(meta.getLogoURI(LangTag.parse("de"))).isEqualTo(logoDE);
-        assertThat(meta.getLogoURIEntries()).hasSize(2);
         assertThat(meta.getURI()).isEqualTo(uri);
-        assertThat(meta.getURI(LangTag.parse("de"))).isEqualTo(uriDE);
-        assertThat(meta.getURIEntries()).hasSize(2);
         assertThat(meta.getPolicyURI()).isEqualTo(policy);
-        assertThat(meta.getPolicyURI(LangTag.parse("de"))).isEqualTo(policyDE);
-        assertThat(meta.getPolicyURIEntries()).hasSize(2);
         assertThat(meta.getTermsOfServiceURI()).isEqualTo(tos);
-        assertThat(meta.getTermsOfServiceURI(LangTag.parse("de"))).isEqualTo(tosDE);
-        assertThat(meta.getTermsOfServiceURIEntries()).hasSize(2);
         assertThat(meta.getTokenEndpointAuthMethod()).isEqualTo(authMethod);
         assertThat(meta.getTokenEndpointAuthJWSAlg()).isEqualTo(authJWSAlg);
         assertThat(meta.getJWKSetURI()).isEqualTo(jwksURI);
@@ -268,20 +242,10 @@ public class ClientMetadataTest {
         assertThat(meta.getGrantTypes()).isEqualTo(grantTypes);
         assertThat(meta.getEmailContacts()).isEqualTo(contacts);
         assertThat(meta.getName()).isEqualTo(name);
-        assertThat(meta.getName(LangTag.parse("de"))).isEqualTo(nameDE);
-        assertThat(meta.getNameEntries()).hasSize(2);
         assertThat(meta.getLogoURI()).isEqualTo(logo);
-        assertThat(meta.getLogoURI(LangTag.parse("de"))).isEqualTo(logoDE);
-        assertThat(meta.getLogoURIEntries()).hasSize(2);
         assertThat(meta.getURI()).isEqualTo(uri);
-        assertThat(meta.getURI(LangTag.parse("de"))).isEqualTo(uriDE);
-        assertThat(meta.getURIEntries()).hasSize(2);
         assertThat(meta.getPolicyURI()).isEqualTo(policy);
-        assertThat(meta.getPolicyURI(LangTag.parse("de"))).isEqualTo(policyDE);
-        assertThat(meta.getPolicyURIEntries()).hasSize(2);
         assertThat(meta.getTermsOfServiceURI()).isEqualTo(tos);
-        assertThat(meta.getTermsOfServiceURI(LangTag.parse("de"))).isEqualTo(tosDE);
-        assertThat(meta.getTermsOfServiceURIEntries()).hasSize(2);
         assertThat(meta.getTokenEndpointAuthMethod()).isEqualTo(authMethod);
         assertThat(meta.getTokenEndpointAuthJWSAlg()).isEqualTo(authJWSAlg);
         assertThat(meta.getJWKSetURI()).isEqualTo(jwksURI);
@@ -338,32 +302,17 @@ public class ClientMetadataTest {
         String name = "My Example App";
         meta.setName(name);
 
-        String nameDE = "Mein Beispiel App";
-        meta.setName(nameDE, LangTag.parse("de"));
-
         URI logo = new URI("http://example.com/logo.png");
         meta.setLogoURI(logo);
-
-        URI logoDE = new URI("http://example.com/de/logo.png");
-        meta.setLogoURI(logoDE, LangTag.parse("de"));
 
         URI uri = new URI("http://example.com");
         meta.setURI(uri);
 
-        URI uriDE = new URI("http://example.com/de");
-        meta.setURI(uriDE, LangTag.parse("de"));
-
         URI policy = new URI("http://example.com/policy");
         meta.setPolicyURI(policy);
 
-        URI policyDE = new URI("http://example.com/de/policy");
-        meta.setPolicyURI(policyDE, LangTag.parse("de"));
-
         URI tos = new URI("http://example.com/tos");
         meta.setTermsOfServiceURI(tos);
-
-        URI tosDE = new URI("http://example.com/de/tos");
-        meta.setTermsOfServiceURI(tosDE, LangTag.parse("de"));
 
         ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_JWT;
         meta.setTokenEndpointAuthMethod(authMethod);
@@ -390,20 +339,10 @@ public class ClientMetadataTest {
         assertThat(meta.getGrantTypes()).isEqualTo(grantTypes);
         assertThat(meta.getContacts()).isEqualTo(contacts);
         assertThat(meta.getName()).isEqualTo(name);
-        assertThat(meta.getName(LangTag.parse("de"))).isEqualTo(nameDE);
-        assertThat(meta.getNameEntries()).hasSize(2);
         assertThat(meta.getLogoURI()).isEqualTo(logo);
-        assertThat(meta.getLogoURI(LangTag.parse("de"))).isEqualTo(logoDE);
-        assertThat(meta.getLogoURIEntries()).hasSize(2);
         assertThat(meta.getURI()).isEqualTo(uri);
-        assertThat(meta.getURI(LangTag.parse("de"))).isEqualTo(uriDE);
-        assertThat(meta.getURIEntries()).hasSize(2);
         assertThat(meta.getPolicyURI()).isEqualTo(policy);
-        assertThat(meta.getPolicyURI(LangTag.parse("de"))).isEqualTo(policyDE);
-        assertThat(meta.getPolicyURIEntries()).hasSize(2);
         assertThat(meta.getTermsOfServiceURI()).isEqualTo(tos);
-        assertThat(meta.getTermsOfServiceURI(LangTag.parse("de"))).isEqualTo(tosDE);
-        assertThat(meta.getTermsOfServiceURIEntries()).hasSize(2);
         assertThat(meta.getTokenEndpointAuthMethod()).isEqualTo(authMethod);
         assertThat(meta.getTokenEndpointAuthJWSAlg()).isEqualTo(authJWSAlg);
         assertThat(meta.getJWKSetURI()).isEqualTo(jwksURI);
@@ -428,20 +367,10 @@ public class ClientMetadataTest {
         assertThat(meta.getGrantTypes()).isEqualTo(grantTypes);
         assertThat(meta.getContacts()).isEqualTo(contacts);
         assertThat(meta.getName()).isEqualTo(name);
-        assertThat(meta.getName(LangTag.parse("de"))).isEqualTo(nameDE);
-        assertThat(meta.getNameEntries()).hasSize(2);
         assertThat(meta.getLogoURI()).isEqualTo(logo);
-        assertThat(meta.getLogoURI(LangTag.parse("de"))).isEqualTo(logoDE);
-        assertThat(meta.getLogoURIEntries()).hasSize(2);
         assertThat(meta.getURI()).isEqualTo(uri);
-        assertThat(meta.getURI(LangTag.parse("de"))).isEqualTo(uriDE);
-        assertThat(meta.getURIEntries()).hasSize(2);
         assertThat(meta.getPolicyURI()).isEqualTo(policy);
-        assertThat(meta.getPolicyURI(LangTag.parse("de"))).isEqualTo(policyDE);
-        assertThat(meta.getPolicyURIEntries()).hasSize(2);
         assertThat(meta.getTermsOfServiceURI()).isEqualTo(tos);
-        assertThat(meta.getTermsOfServiceURI(LangTag.parse("de"))).isEqualTo(tosDE);
-        assertThat(meta.getTermsOfServiceURIEntries()).hasSize(2);
         assertThat(meta.getTokenEndpointAuthMethod()).isEqualTo(authMethod);
         assertThat(meta.getTokenEndpointAuthJWSAlg()).isEqualTo(authJWSAlg);
         assertThat(meta.getJWKSetURI()).isEqualTo(jwksURI);
@@ -485,32 +414,17 @@ public class ClientMetadataTest {
         String name = "My Example App";
         meta.setName(name);
 
-        String nameDE = "Mein Beispiel App";
-        meta.setName(nameDE, LangTag.parse("de"));
-
         URI logo = new URI("http://example.com/logo.png");
         meta.setLogoURI(logo);
-
-        URI logoDE = new URI("http://example.com/de/logo.png");
-        meta.setLogoURI(logoDE, LangTag.parse("de"));
 
         URI uri = new URI("http://example.com");
         meta.setURI(uri);
 
-        URI uriDE = new URI("http://example.com/de");
-        meta.setURI(uriDE, LangTag.parse("de"));
-
         URI policy = new URI("http://example.com/policy");
         meta.setPolicyURI(policy);
 
-        URI policyDE = new URI("http://example.com/de/policy");
-        meta.setPolicyURI(policyDE, LangTag.parse("de"));
-
         URI tos = new URI("http://example.com/tos");
         meta.setTermsOfServiceURI(tos);
-
-        URI tosDE = new URI("http://example.com/de/tos");
-        meta.setTermsOfServiceURI(tosDE, LangTag.parse("de"));
 
         ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_JWT;
         meta.setTokenEndpointAuthMethod(authMethod);
@@ -572,20 +486,10 @@ public class ClientMetadataTest {
         assertThat(copy.getGrantTypes()).isEqualTo(grantTypes);
         assertThat(copy.getEmailContacts()).isEqualTo(contacts);
         assertThat(copy.getName()).isEqualTo(name);
-        assertThat(copy.getName(LangTag.parse("de"))).isEqualTo(nameDE);
-        assertThat(copy.getNameEntries()).hasSize(2);
         assertThat(copy.getLogoURI()).isEqualTo(logo);
-        assertThat(copy.getLogoURI(LangTag.parse("de"))).isEqualTo(logoDE);
-        assertThat(copy.getLogoURIEntries()).hasSize(2);
         assertThat(copy.getURI()).isEqualTo(uri);
-        assertThat(copy.getURI(LangTag.parse("de"))).isEqualTo(uriDE);
-        assertThat(copy.getURIEntries()).hasSize(2);
         assertThat(copy.getPolicyURI()).isEqualTo(policy);
-        assertThat(copy.getPolicyURI(LangTag.parse("de"))).isEqualTo(policyDE);
-        assertThat(copy.getPolicyURIEntries()).hasSize(2);
         assertThat(copy.getTermsOfServiceURI()).isEqualTo(tos);
-        assertThat(copy.getTermsOfServiceURI(LangTag.parse("de"))).isEqualTo(tosDE);
-        assertThat(copy.getTermsOfServiceURIEntries()).hasSize(2);
         assertThat(copy.getTokenEndpointAuthMethod()).isEqualTo(authMethod);
         assertThat(copy.getTokenEndpointAuthJWSAlg()).isEqualTo(authJWSAlg);
         assertThat(copy.getJWKSetURI()).isEqualTo(jwksURI);
@@ -622,20 +526,10 @@ public class ClientMetadataTest {
         assertThat(copy.getGrantTypes()).isEqualTo(grantTypes);
         assertThat(copy.getEmailContacts()).isEqualTo(contacts);
         assertThat(copy.getName()).isEqualTo(name);
-        assertThat(copy.getName(LangTag.parse("de"))).isEqualTo(nameDE);
-        assertThat(copy.getNameEntries()).hasSize(2);
         assertThat(copy.getLogoURI()).isEqualTo(logo);
-        assertThat(copy.getLogoURI(LangTag.parse("de"))).isEqualTo(logoDE);
-        assertThat(copy.getLogoURIEntries()).hasSize(2);
         assertThat(copy.getURI()).isEqualTo(uri);
-        assertThat(copy.getURI(LangTag.parse("de"))).isEqualTo(uriDE);
-        assertThat(copy.getURIEntries()).hasSize(2);
         assertThat(copy.getPolicyURI()).isEqualTo(policy);
-        assertThat(copy.getPolicyURI(LangTag.parse("de"))).isEqualTo(policyDE);
-        assertThat(copy.getPolicyURIEntries()).hasSize(2);
         assertThat(copy.getTermsOfServiceURI()).isEqualTo(tos);
-        assertThat(copy.getTermsOfServiceURI(LangTag.parse("de"))).isEqualTo(tosDE);
-        assertThat(copy.getTermsOfServiceURIEntries()).hasSize(2);
         assertThat(copy.getTokenEndpointAuthMethod()).isEqualTo(authMethod);
         assertThat(copy.getTokenEndpointAuthJWSAlg()).isEqualTo(authJWSAlg);
         assertThat(copy.getJWKSetURI()).isEqualTo(jwksURI);

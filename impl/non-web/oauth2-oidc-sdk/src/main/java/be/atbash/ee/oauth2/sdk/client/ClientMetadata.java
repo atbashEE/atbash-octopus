@@ -15,9 +15,6 @@
  */
 package be.atbash.ee.oauth2.sdk.client;
 
-
-import be.atbash.ee.langtag.LangTag;
-import be.atbash.ee.langtag.LangTagUtils;
 import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
 import be.atbash.ee.oauth2.sdk.id.SoftwareID;
@@ -27,6 +24,7 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.EncryptionMethod;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
+import be.atbash.util.StringUtils;
 
 import javax.json.*;
 import javax.mail.internet.AddressException;
@@ -145,31 +143,31 @@ public class ClientMetadata {
     /**
      * The client name.
      */
-    private final Map<LangTag, String> nameEntries;
+    private String name;
 
 
     /**
      * The client application logo.
      */
-    private final Map<LangTag, URI> logoURIEntries;
+    private URI logoURI;
 
 
     /**
      * The client URI entries.
      */
-    private final Map<LangTag, URI> uriEntries;
+    private URI uri;
 
 
     /**
      * The client policy for use of end-user data.
      */
-    private Map<LangTag, URI> policyURIEntries;
+    private URI policyURI;
 
 
     /**
      * The client terms of service.
      */
-    private final Map<LangTag, URI> tosURIEntries;
+    private URI tosURI;
 
 
     /**
@@ -312,12 +310,6 @@ public class ClientMetadata {
      */
     public ClientMetadata() {
 
-        nameEntries = new HashMap<>();
-        logoURIEntries = new HashMap<>();
-        uriEntries = new HashMap<>();
-        policyURIEntries = new HashMap<>();
-        policyURIEntries = new HashMap<>();
-        tosURIEntries = new HashMap<>();
         customFields = Json.createObjectBuilder().build();
     }
 
@@ -336,11 +328,11 @@ public class ClientMetadata {
         responseTypes = metadata.responseTypes;
         grantTypes = metadata.grantTypes;
         contacts = metadata.contacts;
-        nameEntries = metadata.nameEntries;
-        logoURIEntries = metadata.logoURIEntries;
-        uriEntries = metadata.uriEntries;
-        policyURIEntries = metadata.policyURIEntries;
-        tosURIEntries = metadata.tosURIEntries;
+        name = metadata.name;
+        logoURI = metadata.logoURI;
+        uri = metadata.uri;
+        policyURI = metadata.policyURI;
+        tosURI = metadata.tosURI;
         authMethod = metadata.authMethod;
         authJWSAlg = metadata.authJWSAlg;
         jwkSetURI = metadata.jwkSetURI;
@@ -650,35 +642,8 @@ public class ClientMetadata {
      */
     public String getName() {
 
-        return getName(null);
+        return name;
     }
-
-
-    /**
-     * Gets the client name. Corresponds to the {@code client_name} client
-     * metadata field, with an optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The client name, {@code null} if not specified.
-     */
-    public String getName(LangTag langTag) {
-
-        return nameEntries.get(langTag);
-    }
-
-
-    /**
-     * Gets the client name entries. Corresponds to the {@code client_name}
-     * client metadata field.
-     *
-     * @return The client name entries, empty map if none.
-     */
-    public Map<LangTag, String> getNameEntries() {
-
-        return nameEntries;
-    }
-
 
     /**
      * Sets the client name. Corresponds to the {@code client_name} client
@@ -688,20 +653,7 @@ public class ClientMetadata {
      */
     public void setName(String name) {
 
-        nameEntries.put(null, name);
-    }
-
-
-    /**
-     * Sets the client name. Corresponds to the {@code client_name} client
-     * metadata field, with an optional language tag.
-     *
-     * @param name    The client name. Must not be {@code null}.
-     * @param langTag The language tag, {@code null} if not specified.
-     */
-    public void setName(String name, LangTag langTag) {
-
-        nameEntries.put(langTag, name);
+        this.name = name;
     }
 
 
@@ -714,35 +666,8 @@ public class ClientMetadata {
      */
     public URI getLogoURI() {
 
-        return getLogoURI(null);
+        return logoURI;
     }
-
-
-    /**
-     * Gets the client application logo. Corresponds to the
-     * {@code logo_uri} client metadata field, with an optional
-     * language tag.
-     *
-     * @param langTag The language tag, {@code null} if not specified.
-     * @return The logo URI, {@code null} if not specified.
-     */
-    public URI getLogoURI(LangTag langTag) {
-
-        return logoURIEntries.get(langTag);
-    }
-
-
-    /**
-     * Gets the client application logo entries. Corresponds to the
-     * {@code logo_uri} client metadata field.
-     *
-     * @return The logo URI entries, empty map if none.
-     */
-    public Map<LangTag, URI> getLogoURIEntries() {
-
-        return logoURIEntries;
-    }
-
 
     /**
      * Sets the client application logo. Corresponds to the
@@ -753,21 +678,7 @@ public class ClientMetadata {
      */
     public void setLogoURI(URI logoURI) {
 
-        logoURIEntries.put(null, logoURI);
-    }
-
-
-    /**
-     * Sets the client application logo. Corresponds to the
-     * {@code logo_uri} client metadata field, with an optional
-     * language tag.
-     *
-     * @param logoURI The logo URI. Must not be {@code null}.
-     * @param langTag The language tag, {@code null} if not specified.
-     */
-    public void setLogoURI(URI logoURI, LangTag langTag) {
-
-        logoURIEntries.put(langTag, logoURI);
+        this.logoURI = logoURI;
     }
 
 
@@ -779,34 +690,8 @@ public class ClientMetadata {
      */
     public URI getURI() {
 
-        return getURI(null);
+        return uri;
     }
-
-
-    /**
-     * Gets the client home page. Corresponds to the {@code client_uri}
-     * client metadata field, with an optional language tag.
-     *
-     * @param langTag The language tag, {@code null} if not specified.
-     * @return The client URI, {@code null} if not specified.
-     */
-    public URI getURI(LangTag langTag) {
-
-        return uriEntries.get(langTag);
-    }
-
-
-    /**
-     * Gets the client home page entries. Corresponds to the
-     * {@code client_uri} client metadata field.
-     *
-     * @return The client URI entries, empty map if none.
-     */
-    public Map<LangTag, URI> getURIEntries() {
-
-        return uriEntries;
-    }
-
 
     /**
      * Sets the client home page. Corresponds to the {@code client_uri}
@@ -816,22 +701,8 @@ public class ClientMetadata {
      */
     public void setURI(URI uri) {
 
-        uriEntries.put(null, uri);
+        this.uri = uri;
     }
-
-
-    /**
-     * Sets the client home page. Corresponds to the {@code client_uri}
-     * client metadata field, with an optional language tag.
-     *
-     * @param uri     The URI. Must not be {@code null}.
-     * @param langTag The language tag, {@code null} if not specified.
-     */
-    public void setURI(URI uri, LangTag langTag) {
-
-        uriEntries.put(langTag, uri);
-    }
-
 
     /**
      * Gets the client policy for use of end-user data. Corresponds to the
@@ -842,35 +713,8 @@ public class ClientMetadata {
      */
     public URI getPolicyURI() {
 
-        return getPolicyURI(null);
+        return policyURI;
     }
-
-
-    /**
-     * Gets the client policy for use of end-user data. Corresponds to the
-     * {@code policy_uri} client metadata field, with an optional
-     * language tag.
-     *
-     * @param langTag The language tag, {@code null} if not specified.
-     * @return The policy URI, {@code null} if not specified.
-     */
-    public URI getPolicyURI(LangTag langTag) {
-
-        return policyURIEntries.get(langTag);
-    }
-
-
-    /**
-     * Gets the client policy entries for use of end-user data.
-     * Corresponds to the {@code policy_uri} client metadata field.
-     *
-     * @return The policy URI entries, empty map if none.
-     */
-    public Map<LangTag, URI> getPolicyURIEntries() {
-
-        return policyURIEntries;
-    }
-
 
     /**
      * Sets the client policy for use of end-user data. Corresponds to the
@@ -881,21 +725,7 @@ public class ClientMetadata {
      */
     public void setPolicyURI(URI policyURI) {
 
-        policyURIEntries.put(null, policyURI);
-    }
-
-
-    /**
-     * Sets the client policy for use of end-user data. Corresponds to the
-     * {@code policy_uri} client metadata field, with an optional
-     * language tag.
-     *
-     * @param policyURI The policy URI. Must not be {@code null}.
-     * @param langTag   The language tag, {@code null} if not specified.
-     */
-    public void setPolicyURI(URI policyURI, LangTag langTag) {
-
-        policyURIEntries.put(langTag, policyURI);
+        this.policyURI = policyURI;
     }
 
 
@@ -907,36 +737,8 @@ public class ClientMetadata {
      * @return The terms of service URI, {@code null} if not specified.
      */
     public URI getTermsOfServiceURI() {
-
-        return getTermsOfServiceURI(null);
+        return tosURI;
     }
-
-
-    /**
-     * Gets the client's terms of service. Corresponds to the
-     * {@code tos_uri} client metadata field, with an optional
-     * language tag.
-     *
-     * @param langTag The language tag, {@code null} if not specified.
-     * @return The terms of service URI, {@code null} if not specified.
-     */
-    public URI getTermsOfServiceURI(LangTag langTag) {
-
-        return tosURIEntries.get(langTag);
-    }
-
-
-    /**
-     * Gets the client's terms of service entries. Corresponds to the
-     * {@code tos_uri} client metadata field.
-     *
-     * @return The terms of service URI entries, empty map if none.
-     */
-    public Map<LangTag, URI> getTermsOfServiceURIEntries() {
-
-        return tosURIEntries;
-    }
-
 
     /**
      * Sets the client's terms of service. Corresponds to the
@@ -948,23 +750,8 @@ public class ClientMetadata {
      */
     public void setTermsOfServiceURI(URI tosURI) {
 
-        tosURIEntries.put(null, tosURI);
+        this.tosURI = tosURI;
     }
-
-
-    /**
-     * Sets the client's terms of service. Corresponds to the
-     * {@code tos_uri} client metadata field, with an optional
-     * language tag.
-     *
-     * @param tosURI  The terms of service URI. Must not be {@code null}.
-     * @param langTag The language tag, {@code null} if not specified.
-     */
-    public void setTermsOfServiceURI(URI tosURI, LangTag langTag) {
-
-        tosURIEntries.put(langTag, tosURI);
-    }
-
 
     /**
      * Gets the Token endpoint authentication method. Corresponds to the
@@ -1749,103 +1536,28 @@ public class ClientMetadata {
         }
 
 
-        if (!nameEntries.isEmpty()) {
-
-            for (Map.Entry<LangTag, String> entry : nameEntries.entrySet()) {
-
-                LangTag langTag = entry.getKey();
-                String name = entry.getValue();
-
-                if (name == null) {
-                    continue;
-                }
-
-                if (langTag == null) {
-                    result.add("client_name", entry.getValue());
-                } else {
-                    result.add("client_name#" + langTag, entry.getValue());
-                }
-            }
+        if (StringUtils.hasText(name)) {
+            result.add("client_name", name);
         }
 
 
-        if (!logoURIEntries.isEmpty()) {
-
-            for (Map.Entry<LangTag, URI> entry : logoURIEntries.entrySet()) {
-
-                LangTag langTag = entry.getKey();
-                URI uri = entry.getValue();
-
-                if (uri == null) {
-                    continue;
-                }
-
-                if (langTag == null) {
-                    result.add("logo_uri", entry.getValue().toString());
-                } else {
-                    result.add("logo_uri#" + langTag, entry.getValue().toString());
-                }
-            }
+        if (logoURI != null) {
+            result.add("logo_uri", logoURI.toString());
         }
 
 
-        if (!uriEntries.isEmpty()) {
-
-            for (Map.Entry<LangTag, URI> entry : uriEntries.entrySet()) {
-
-                LangTag langTag = entry.getKey();
-                URI uri = entry.getValue();
-
-                if (uri == null) {
-                    continue;
-                }
-
-                if (langTag == null) {
-                    result.add("client_uri", entry.getValue().toString());
-                } else {
-                    result.add("client_uri#" + langTag, entry.getValue().toString());
-                }
-            }
+        if (uri != null) {
+            result.add("client_uri", uri.toString());
         }
 
 
-        if (!policyURIEntries.isEmpty()) {
-
-            for (Map.Entry<LangTag, URI> entry : policyURIEntries.entrySet()) {
-
-                LangTag langTag = entry.getKey();
-                URI uri = entry.getValue();
-
-                if (uri == null) {
-                    continue;
-                }
-
-                if (langTag == null) {
-                    result.add("policy_uri", entry.getValue().toString());
-                } else {
-                    result.add("policy_uri#" + langTag, entry.getValue().toString());
-                }
-            }
+        if (policyURI != null) {
+            result.add("policy_uri", policyURI.toString());
         }
 
 
-        if (!tosURIEntries.isEmpty()) {
-
-            for (Map.Entry<LangTag, URI> entry : tosURIEntries.entrySet()) {
-
-                LangTag langTag = entry.getKey();
-                URI uri = entry.getValue();
-
-                if (uri == null) {
-                    continue;
-                }
-
-                if (langTag == null) {
-                    result.add("tos_uri", entry.getValue().toString());
-                } else {
-                    result.add("tos_uri#" + langTag, entry.getValue().toString());
-                }
-            }
+        if (tosURI != null) {
+            result.add("tos_uri", tosURI.toString());
         }
 
 
@@ -2049,104 +1761,54 @@ public class ClientMetadata {
                 keys.remove("contacts");
             }
 
-
-            // Find lang-tagged client_name params
-            Map<LangTag, Object> matches = LangTagUtils.find("client_name", jsonObject);
-
-            for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
-
-                try {
-                    metadata.setName((String) entry.getValue(), entry.getKey());
-
-                } catch (ClassCastException e) {
-
-                    throw new OAuth2JSONParseException("Invalid \"client_name\" (language tag) parameter");
-                }
-
-                keys.remove(createJsonObjectKey("client_name", entry.getKey()));
+            if (JSONObjectUtils.hasValue(jsonObject, "client_name")) {
+                metadata.setName(jsonObject.getString("client_name"));
+                keys.remove("client_name");
             }
 
 
-            matches = LangTagUtils.find("logo_uri", jsonObject);
-
-            for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
-
-                if (entry.getValue() == null) {
-                    continue;
-                }
-
+            if (JSONObjectUtils.hasValue(jsonObject, "logo_uri")) {
                 try {
-                    metadata.setLogoURI(new URI((String) entry.getValue()), entry.getKey());
-
+                    metadata.setLogoURI(new URI(jsonObject.getString("logo_uri")));
                 } catch (Exception e) {
 
-                    throw new OAuth2JSONParseException("Invalid \"logo_uri\" (language tag) parameter");
+                    throw new OAuth2JSONParseException("Invalid \"logo_uri\"  parameter");
                 }
 
-                keys.remove(createJsonObjectKey("logo_uri", entry.getKey()));
+                keys.remove("logo_uri");
             }
 
-
-            matches = LangTagUtils.find("client_uri", jsonObject);
-
-            for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
-
-                if (entry.getValue() == null) {
-                    continue;
-                }
-
+            if (JSONObjectUtils.hasValue(jsonObject, "client_uri")) {
                 try {
-                    metadata.setURI(new URI((String) entry.getValue()), entry.getKey());
-
-
+                    metadata.setURI(new URI(jsonObject.getString("client_uri")));
                 } catch (Exception e) {
 
-                    throw new OAuth2JSONParseException("Invalid \"client_uri\" (language tag) parameter");
+                    throw new OAuth2JSONParseException("Invalid \"client_uri\" parameter");
                 }
 
-                keys.remove(createJsonObjectKey("client_uri", entry.getKey()));
+                keys.remove("client_uri");
             }
-
-
-            matches = LangTagUtils.find("policy_uri", jsonObject);
-
-            for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
-
-                if (entry.getValue() == null) {
-                    continue;
-                }
-
+            if (JSONObjectUtils.hasValue(jsonObject, "policy_uri")) {
                 try {
-                    metadata.setPolicyURI(new URI((String) entry.getValue()), entry.getKey());
-
+                    metadata.setPolicyURI(new URI(jsonObject.getString("policy_uri")));
                 } catch (Exception e) {
 
-                    throw new OAuth2JSONParseException("Invalid \"policy_uri\" (language tag) parameter");
+                    throw new OAuth2JSONParseException("Invalid \"policy_uri\"  parameter");
                 }
 
-                keys.remove(createJsonObjectKey("policy_uri", entry.getKey()));
+                keys.remove("policy_uri");
             }
 
-
-            matches = LangTagUtils.find("tos_uri", jsonObject);
-
-            for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
-
-                if (entry.getValue() == null) {
-                    continue;
-                }
-
+            if (JSONObjectUtils.hasValue(jsonObject, "tos_uri")) {
                 try {
-                    metadata.setTermsOfServiceURI(new URI((String) entry.getValue()), entry.getKey());
-
+                    metadata.setTermsOfServiceURI(new URI(jsonObject.getString("tos_uri")));
                 } catch (Exception e) {
 
-                    throw new OAuth2JSONParseException("Invalid \"tos_uri\" (language tag) parameter");
+                    throw new OAuth2JSONParseException("Invalid \"tos_uri\"  parameter");
                 }
 
-                keys.remove(createJsonObjectKey("tos_uri", entry.getKey()));
+                keys.remove("tos_uri");
             }
-
 
             if (JSONObjectUtils.hasValue(jsonObject, "token_endpoint_auth_method")) {
                 metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.parse(
@@ -2295,12 +1957,5 @@ public class ClientMetadata {
         return metadata;
     }
 
-    private static String createJsonObjectKey(String key, LangTag langTag) {
-        StringBuilder result = new StringBuilder();
-        result.append(key);
-        if (langTag != null) {
-            result.append('#').append(langTag.toString());
-        }
-        return result.toString();
-    }
+
 }

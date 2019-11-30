@@ -33,6 +33,7 @@ import java.util.List;
 /**
  * Resolved authentication Context Class Reference (ACR) request.
  */
+// FIXME Remove as not used in Octopus.
 public final class ACRRequest {
 
 

@@ -16,7 +16,6 @@
 package be.atbash.ee.openid.connect.sdk;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.ResponseType;
 import be.atbash.ee.oauth2.sdk.Scope;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
@@ -47,7 +46,6 @@ public class ClaimsRequestTest {
 
             if (en.getClaimName().equals(claimName) &&
                     en.getClaimRequirement().equals(ClaimRequirement.VOLUNTARY) &&
-                    en.getLangTag() == null &&
                     en.getValue() == null &&
                     en.getValues() == null) {
                 return true;
@@ -65,7 +63,6 @@ public class ClaimsRequestTest {
 
             if (en.getClaimName().equals(claimName) &&
                     en.getClaimRequirement().equals(ClaimRequirement.ESSENTIAL) &&
-                    en.getLangTag() == null &&
                     en.getValue() == null &&
                     en.getValues() == null) {
                 return true;
@@ -148,10 +145,10 @@ public class ClaimsRequestTest {
 
         assertThat(userInfoClaims).hasSize(19);
 
-        Set<String> claimNames = cr.getIDTokenClaimNames(false);
+        Set<String> claimNames = cr.getIDTokenClaimNames();
         assertThat(claimNames.isEmpty()).isTrue();
 
-        claimNames = cr.getUserInfoClaimNames(false);
+        claimNames = cr.getUserInfoClaimNames();
 
         assertThat(claimNames.contains("email")).isTrue();
         assertThat(claimNames.contains("email_verified")).isTrue();
@@ -214,10 +211,10 @@ public class ClaimsRequestTest {
 
         assertThat(idTokenClaims).hasSize(19);
 
-        Set<String> claimNames = cr.getUserInfoClaimNames(false);
+        Set<String> claimNames = cr.getUserInfoClaimNames();
         assertThat(claimNames.isEmpty()).isTrue();
 
-        claimNames = cr.getIDTokenClaimNames(false);
+        claimNames = cr.getIDTokenClaimNames();
 
         assertThat(claimNames.contains("email")).isTrue();
         assertThat(claimNames.contains("email_verified")).isTrue();
@@ -327,10 +324,10 @@ public class ClaimsRequestTest {
         assertThat(userInfoClaims).hasSize(16);
 
 
-        Set<String> claimNames = cr.getIDTokenClaimNames(false);
+        Set<String> claimNames = cr.getIDTokenClaimNames();
         assertThat(claimNames.isEmpty()).isTrue();
 
-        claimNames = cr.getUserInfoClaimNames(false);
+        claimNames = cr.getUserInfoClaimNames();
 
         assertThat(claimNames.contains("email")).isTrue();
         assertThat(claimNames.contains("email_verified")).isTrue();
@@ -369,7 +366,7 @@ public class ClaimsRequestTest {
 
         assertThat(claimsRequest.getIDTokenClaims().isEmpty()).isTrue();
 
-        Set<String> userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+        Set<String> userInfoClaims = claimsRequest.getUserInfoClaimNames();
         assertThat(userInfoClaims.contains("email")).isTrue();
         assertThat(userInfoClaims.contains("email_verified")).isTrue();
         assertThat(userInfoClaims).hasSize(2);
@@ -382,7 +379,7 @@ public class ClaimsRequestTest {
 
         assertThat(claimsRequest.getIDTokenClaims().isEmpty()).isTrue();
 
-        userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+        userInfoClaims = claimsRequest.getUserInfoClaimNames();
         assertThat(userInfoClaims.contains("email")).isTrue();
         assertThat(userInfoClaims.contains("email_verified")).isTrue();
         assertThat(userInfoClaims).hasSize(2);
@@ -405,7 +402,7 @@ public class ClaimsRequestTest {
 
         assertThat(claimsRequest.getUserInfoClaims().isEmpty()).isTrue();
 
-        Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+        Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames();
         assertThat(idTokenClaims.contains("email")).isTrue();
         assertThat(idTokenClaims.contains("email_verified")).isTrue();
         assertThat(idTokenClaims).hasSize(2);
@@ -418,7 +415,7 @@ public class ClaimsRequestTest {
 
         assertThat(claimsRequest.getUserInfoClaims().isEmpty()).isTrue();
 
-        idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+        idTokenClaims = claimsRequest.getIDTokenClaimNames();
         assertThat(idTokenClaims.contains("email")).isTrue();
         assertThat(idTokenClaims.contains("email_verified")).isTrue();
         assertThat(idTokenClaims).hasSize(2);
@@ -439,7 +436,7 @@ public class ClaimsRequestTest {
 
         ClaimsRequest claimsRequest = ClaimsRequest.resolve(authRequest);
 
-        Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+        Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames();
         assertThat(idTokenClaims.contains("email")).isTrue();
         assertThat(idTokenClaims).hasSize(1);
 
@@ -450,7 +447,7 @@ public class ClaimsRequestTest {
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        Set<String> userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+        Set<String> userInfoClaims = claimsRequest.getUserInfoClaimNames();
         assertThat(userInfoClaims.contains("email")).isTrue();
         assertThat(userInfoClaims.contains("email_verified")).isTrue();
         assertThat(userInfoClaims).hasSize(2);
@@ -462,7 +459,7 @@ public class ClaimsRequestTest {
 
         claimsRequest = ClaimsRequest.resolve(authRequest);
 
-        idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+        idTokenClaims = claimsRequest.getIDTokenClaimNames();
         assertThat(idTokenClaims.contains("email")).isTrue();
         assertThat(idTokenClaims).hasSize(1);
 
@@ -473,7 +470,7 @@ public class ClaimsRequestTest {
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+        userInfoClaims = claimsRequest.getUserInfoClaimNames();
         assertThat(userInfoClaims.contains("email")).isTrue();
         assertThat(userInfoClaims.contains("email_verified")).isTrue();
         assertThat(userInfoClaims).hasSize(2);
@@ -504,21 +501,19 @@ public class ClaimsRequestTest {
 
         ClaimsRequest claimsRequest = ClaimsRequest.parse(jsonObject);
 
-        Set<String> idTokenClaimNames = claimsRequest.getIDTokenClaimNames(false);
+        Set<String> idTokenClaimNames = claimsRequest.getIDTokenClaimNames();
         assertThat(idTokenClaimNames.contains("auth_time")).isTrue();
         assertThat(idTokenClaimNames.contains("acr")).isTrue();
         assertThat(idTokenClaimNames).hasSize(2);
 
-        ClaimsRequest.Entry entry = claimsRequest.removeIDTokenClaim("auth_time", null);
+        ClaimsRequest.Entry entry = claimsRequest.removeIDTokenClaim("auth_time");
         assertThat(entry.getClaimName()).isEqualTo("auth_time");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeIDTokenClaim("acr", null);
+        entry = claimsRequest.removeIDTokenClaim("acr");
         assertThat(entry.getClaimName()).isEqualTo("acr");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues().contains("urn:mace:incommon:iap:silver")).isTrue();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
@@ -526,7 +521,7 @@ public class ClaimsRequestTest {
         assertThat(claimsRequest.getIDTokenClaims().isEmpty()).isTrue();
 
 
-        Set<String> userInfoClaimNames = claimsRequest.getUserInfoClaimNames(false);
+        Set<String> userInfoClaimNames = claimsRequest.getUserInfoClaimNames();
         assertThat(userInfoClaimNames.contains("given_name")).isTrue();
         assertThat(userInfoClaimNames.contains("nickname")).isTrue();
         assertThat(userInfoClaimNames.contains("email")).isTrue();
@@ -535,44 +530,38 @@ public class ClaimsRequestTest {
         assertThat(userInfoClaimNames.contains("http://example.info/claims/groups")).isTrue();
         assertThat(userInfoClaimNames).hasSize(6);
 
-        entry = claimsRequest.removeUserInfoClaim("given_name", null);
+        entry = claimsRequest.removeUserInfoClaim("given_name");
         assertThat(entry.getClaimName()).isEqualTo("given_name");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeUserInfoClaim("nickname", null);
+        entry = claimsRequest.removeUserInfoClaim("nickname");
         assertThat(entry.getClaimName()).isEqualTo("nickname");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
 
-        entry = claimsRequest.removeUserInfoClaim("email", null);
+        entry = claimsRequest.removeUserInfoClaim("email");
         assertThat(entry.getClaimName()).isEqualTo("email");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeUserInfoClaim("email_verified", null);
+        entry = claimsRequest.removeUserInfoClaim("email_verified");
         assertThat(entry.getClaimName()).isEqualTo("email_verified");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeUserInfoClaim("picture", null);
+        entry = claimsRequest.removeUserInfoClaim("picture");
         assertThat(entry.getClaimName()).isEqualTo("picture");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
 
-        entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/groups", null);
+        entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/groups");
         assertThat(entry.getClaimName()).isEqualTo("http://example.info/claims/groups");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
@@ -593,7 +582,7 @@ public class ClaimsRequestTest {
                 "     \"email_verified\": {\"essential\": true},\n" +
                 "     \"picture\": null,\n" +
                 "     \"http://example.info/claims/groups\": null,\n" +
-                "     \"http://example.info/claims/additionalInfo#de\": {\"info\" : \"custom information\"}\n" +
+                "     \"http://example.info/claims/additionalInfo\": {\"info\" : \"custom information\"}\n" +
                 "    },\n" +
                 "   \"id_token\":\n" +
                 "    {\n" +
@@ -606,21 +595,19 @@ public class ClaimsRequestTest {
 
         ClaimsRequest claimsRequest = ClaimsRequest.parse(jsonObject);
 
-        Set<String> idTokenClaimNames = claimsRequest.getIDTokenClaimNames(false);
+        Set<String> idTokenClaimNames = claimsRequest.getIDTokenClaimNames();
         assertThat(idTokenClaimNames.contains("auth_time")).isTrue();
         assertThat(idTokenClaimNames.contains("acr")).isTrue();
         assertThat(idTokenClaimNames).hasSize(2);
 
-        ClaimsRequest.Entry entry = claimsRequest.removeIDTokenClaim("auth_time", null);
+        ClaimsRequest.Entry entry = claimsRequest.removeIDTokenClaim("auth_time");
         assertThat(entry.getClaimName()).isEqualTo("auth_time");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeIDTokenClaim("acr", null);
+        entry = claimsRequest.removeIDTokenClaim("acr");
         assertThat(entry.getClaimName()).isEqualTo("acr");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues().contains("urn:mace:incommon:iap:silver")).isTrue();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
@@ -628,7 +615,7 @@ public class ClaimsRequestTest {
         assertThat(claimsRequest.getIDTokenClaims().isEmpty()).isTrue();
 
 
-        Set<String> userInfoClaimNames = claimsRequest.getUserInfoClaimNames(false);
+        Set<String> userInfoClaimNames = claimsRequest.getUserInfoClaimNames();
         assertThat(userInfoClaimNames.contains("given_name")).isTrue();
         assertThat(userInfoClaimNames.contains("nickname")).isTrue();
         assertThat(userInfoClaimNames.contains("email")).isTrue();
@@ -638,51 +625,44 @@ public class ClaimsRequestTest {
         assertThat(userInfoClaimNames.contains("http://example.info/claims/additionalInfo")).isTrue();
         assertThat(userInfoClaimNames).hasSize(7);
 
-        entry = claimsRequest.removeUserInfoClaim("given_name", null);
+        entry = claimsRequest.removeUserInfoClaim("given_name");
         assertThat(entry.getClaimName()).isEqualTo("given_name");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeUserInfoClaim("nickname", null);
+        entry = claimsRequest.removeUserInfoClaim("nickname");
         assertThat(entry.getClaimName()).isEqualTo("nickname");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
 
-        entry = claimsRequest.removeUserInfoClaim("email", null);
+        entry = claimsRequest.removeUserInfoClaim("email");
         assertThat(entry.getClaimName()).isEqualTo("email");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeUserInfoClaim("email_verified", null);
+        entry = claimsRequest.removeUserInfoClaim("email_verified");
         assertThat(entry.getClaimName()).isEqualTo("email_verified");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
 
-        entry = claimsRequest.removeUserInfoClaim("picture", null);
+        entry = claimsRequest.removeUserInfoClaim("picture");
         assertThat(entry.getClaimName()).isEqualTo("picture");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
 
-        entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/groups", null);
+        entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/groups");
         assertThat(entry.getClaimName()).isEqualTo("http://example.info/claims/groups");
-        assertThat(entry.getLangTag()).isNull();
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
 
-        entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/additionalInfo", LangTag.parse("de"));
+        entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/additionalInfo");
         assertThat(entry.getClaimName()).isEqualTo("http://example.info/claims/additionalInfo");
-        assertThat(entry.getLangTag()).isEqualTo(LangTag.parse("de"));
         assertThat(entry.getValue()).isNull();
         assertThat(entry.getValues()).isNull();
         Map<String, Object> additionalInformation = entry.getAdditionalInformation();
@@ -704,12 +684,12 @@ public class ClaimsRequestTest {
         r.addIDTokenClaim("name");
         Map<String, Object> additionalInformationClaimA1 = new HashMap<>();
         additionalInformationClaimA1.put("info", "custom information");
-        r.addIDTokenClaim("a-1", ClaimRequirement.ESSENTIAL, null, "a1", additionalInformationClaimA1);
+        r.addIDTokenClaim("a-1", ClaimRequirement.ESSENTIAL, "a1", additionalInformationClaimA1);
 
 
-        assertThat(r.getIDTokenClaimNames(false).contains("email")).isTrue();
-        assertThat(r.getIDTokenClaimNames(false).contains("name")).isTrue();
-        assertThat(r.getIDTokenClaimNames(false).contains("a-1")).isTrue();
+        assertThat(r.getIDTokenClaimNames().contains("email")).isTrue();
+        assertThat(r.getIDTokenClaimNames().contains("name")).isTrue();
+        assertThat(r.getIDTokenClaimNames().contains("a-1")).isTrue();
         assertThat(r.getIDTokenClaims()).hasSize(3);
 
         JsonObject object = r.toJSONObject();
@@ -728,9 +708,9 @@ public class ClaimsRequestTest {
         r.removeIDTokenClaims("name");
         r.removeIDTokenClaims("a-1");
 
-        assertThat(r.getIDTokenClaimNames(false).contains("email")).isFalse();
-        assertThat(r.getIDTokenClaimNames(false).contains("name")).isFalse();
-        assertThat(r.getIDTokenClaimNames(false).contains("a-1")).isFalse();
+        assertThat(r.getIDTokenClaimNames().contains("email")).isFalse();
+        assertThat(r.getIDTokenClaimNames().contains("name")).isFalse();
+        assertThat(r.getIDTokenClaimNames().contains("a-1")).isFalse();
         assertThat(r.getIDTokenClaims()).hasSize(0);
 
         object = r.toJSONObject();
@@ -747,11 +727,11 @@ public class ClaimsRequestTest {
         r.addUserInfoClaim("name");
         Map<String, Object> additionalInformationClaimA1 = new HashMap<>();
         additionalInformationClaimA1.put("info", "custom information");
-        r.addUserInfoClaim("a-1", ClaimRequirement.ESSENTIAL, null, "a1", additionalInformationClaimA1);
+        r.addUserInfoClaim("a-1", ClaimRequirement.ESSENTIAL, "a1", additionalInformationClaimA1);
 
-        assertThat(r.getUserInfoClaimNames(false).contains("email")).isTrue();
-        assertThat(r.getUserInfoClaimNames(false).contains("name")).isTrue();
-        assertThat(r.getUserInfoClaimNames(false).contains("a-1")).isTrue();
+        assertThat(r.getUserInfoClaimNames().contains("email")).isTrue();
+        assertThat(r.getUserInfoClaimNames().contains("name")).isTrue();
+        assertThat(r.getUserInfoClaimNames().contains("a-1")).isTrue();
         assertThat(r.getUserInfoClaims()).hasSize(3);
 
         JsonObject object = r.toJSONObject();
@@ -770,9 +750,9 @@ public class ClaimsRequestTest {
         r.removeUserInfoClaims("name");
         r.removeUserInfoClaims("a-1");
 
-        assertThat(r.getUserInfoClaimNames(false).contains("email")).isFalse();
-        assertThat(r.getUserInfoClaimNames(false).contains("name")).isFalse();
-        assertThat(r.getUserInfoClaimNames(false).contains("a-1")).isFalse();
+        assertThat(r.getUserInfoClaimNames().contains("email")).isFalse();
+        assertThat(r.getUserInfoClaimNames().contains("name")).isFalse();
+        assertThat(r.getUserInfoClaimNames().contains("a-1")).isFalse();
         assertThat(r.getUserInfoClaims()).hasSize(0);
 
         object = r.toJSONObject();
@@ -803,59 +783,53 @@ public class ClaimsRequestTest {
 
         ClaimsRequest claimsRequest = ClaimsRequest.parse(json);
 
-        assertThat(claimsRequest.getUserInfoClaimNames(false).contains("given_name")).isTrue();
-        assertThat(claimsRequest.getUserInfoClaimNames(false).contains("nickname")).isTrue();
-        assertThat(claimsRequest.getUserInfoClaimNames(false).contains("email")).isTrue();
-        assertThat(claimsRequest.getUserInfoClaimNames(false).contains("email_verified")).isTrue();
-        assertThat(claimsRequest.getUserInfoClaimNames(false).contains("picture")).isTrue();
-        assertThat(claimsRequest.getUserInfoClaimNames(false).contains("http://example.info/claims/groups")).isTrue();
-        assertThat(claimsRequest.getUserInfoClaimNames(false)).hasSize(6);
+        assertThat(claimsRequest.getUserInfoClaimNames().contains("given_name")).isTrue();
+        assertThat(claimsRequest.getUserInfoClaimNames().contains("nickname")).isTrue();
+        assertThat(claimsRequest.getUserInfoClaimNames().contains("email")).isTrue();
+        assertThat(claimsRequest.getUserInfoClaimNames().contains("email_verified")).isTrue();
+        assertThat(claimsRequest.getUserInfoClaimNames().contains("picture")).isTrue();
+        assertThat(claimsRequest.getUserInfoClaimNames().contains("http://example.info/claims/groups")).isTrue();
+        assertThat(claimsRequest.getUserInfoClaimNames()).hasSize(6);
 
-        assertThat(claimsRequest.getIDTokenClaimNames(false).contains("auth_time")).isTrue();
-        assertThat(claimsRequest.getIDTokenClaimNames(false).contains("acr")).isTrue();
-        assertThat(claimsRequest.getIDTokenClaimNames(false)).hasSize(2);
+        assertThat(claimsRequest.getIDTokenClaimNames().contains("auth_time")).isTrue();
+        assertThat(claimsRequest.getIDTokenClaimNames().contains("acr")).isTrue();
+        assertThat(claimsRequest.getIDTokenClaimNames()).hasSize(2);
 
         for (ClaimsRequest.Entry entry : claimsRequest.getUserInfoClaims()) {
 
             if (entry.getClaimName().equals("given_name")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
             } else if (entry.getClaimName().equals("nickname")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
             } else if (entry.getClaimName().equals("email")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
             } else if (entry.getClaimName().equals("email_verified")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
             } else if (entry.getClaimName().equals("picture")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
             } else if (entry.getClaimName().equals("http://example.info/claims/groups")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
@@ -869,14 +843,12 @@ public class ClaimsRequestTest {
             if (entry.getClaimName().equals("auth_time")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.ESSENTIAL);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues()).isNull();
 
             } else if (entry.getClaimName().equals("acr")) {
 
                 assertThat(entry.getClaimRequirement()).isEqualTo(ClaimRequirement.VOLUNTARY);
-                assertThat(entry.getLangTag()).isNull();
                 assertThat(entry.getValue()).isNull();
                 assertThat(entry.getValues().contains("urn:mace:incommon:iap:silver")).isTrue();
                 assertThat(entry.getValues()).hasSize(1);

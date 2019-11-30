@@ -16,7 +16,6 @@
 package be.atbash.ee.oauth2.sdk.client;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.GrantType;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.Scope;
@@ -57,9 +56,7 @@ public class ClientUpdateRequestTest  {
 			+ "    \"token_endpoint_auth_method\": \"client_secret_basic\","
 			+ "    \"jwks_uri\": \"https://client.example.org/my_public_keys.jwks\","
 			+ "    \"client_name\":\"My New Example\","
-			+ "    \"client_name#fr\":\"Mon Nouvel Exemple\","
-			+ "    \"logo_uri\":\"https://client.example.org/newlogo.png\","
-			+ "    \"logo_uri#fr\":\"https://client.example.org/fr/newlogo.png\""
+				+ "    \"logo_uri\":\"https://client.example.org/newlogo.png\""
 			+ "   }";
 
 		httpRequest.setQuery(json);
@@ -93,18 +90,10 @@ public class ClientUpdateRequestTest  {
 		assertThat(metadata.getJWKSetURI()).isEqualTo(new URI("https://client.example.org/my_public_keys.jwks"));
 		
 		assertThat(metadata.getName()).isEqualTo("My New Example");
-		assertThat(metadata.getName(null)).isEqualTo("My New Example");
-		
-		assertThat(metadata.getName(LangTag.parse("fr"))).isEqualTo("Mon Nouvel Exemple");
-		
-		assertThat(metadata.getNameEntries()).hasSize(2);
-		
+
+
 		assertThat(metadata.getLogoURI()).isEqualTo(new URI("https://client.example.org/newlogo.png"));
-		assertThat(metadata.getLogoURI(null)).isEqualTo(new URI("https://client.example.org/newlogo.png"));
-		
-		assertThat(metadata.getLogoURI(LangTag.parse("fr"))).isEqualTo(new URI("https://client.example.org/fr/newlogo.png"));
-		
-		assertThat(metadata.getLogoURIEntries()).hasSize(2);
+
 	}
 
 	@Test

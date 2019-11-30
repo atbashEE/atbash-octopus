@@ -16,7 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.rp;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.GrantType;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.ResponseType;
@@ -115,7 +114,6 @@ public class OIDCClientMetadataTest {
                 + "   \"application_type\": \"web\","
                 + "   \"redirect_uris\":[\"https://client.example.org/callback\",\"https://client.example.org/callback2\"],"
                 + "   \"client_name\": \"My Example\","
-                + "   \"client_name#ja-Jpan-JP\":\"クライアント名\","
                 + "   \"logo_uri\": \"https://client.example.org/logo.png\","
                 + "   \"subject_type\": \"pairwise\","
                 + "   \"sector_identifier_uri\":\"https://other.example.net/file_of_redirect_uris.json\","
@@ -141,7 +139,6 @@ public class OIDCClientMetadataTest {
         assertThat(redirectURIs).hasSize(2);
 
         assertThat(clientMetadata.getName()).isEqualTo("My Example");
-        assertThat(clientMetadata.getName(LangTag.parse("ja-Jpan-JP"))).isEqualTo("クライアント名");
 
         assertThat(clientMetadata.getLogoURI().toString()).isEqualTo(new URL("https://client.example.org/logo.png").toString());
 

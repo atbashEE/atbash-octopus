@@ -146,7 +146,7 @@ public class ACRRequestTest {
         List<String> essentialACRs = new ArrayList<>();
         essentialACRs.add("A");
         essentialACRs.add("B");
-        claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
+        claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, essentialACRs);
 
         AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
                 new ResponseType("code"),
@@ -176,7 +176,7 @@ public class ACRRequestTest {
         List<String> essentialACRs = new ArrayList<>();
         essentialACRs.add("A");
         essentialACRs.add("B");
-        claims.addIDTokenClaim("acr", ClaimRequirement.VOLUNTARY, null, essentialACRs);
+        claims.addIDTokenClaim("acr", ClaimRequirement.VOLUNTARY, essentialACRs);
 
         AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
                 new ResponseType("code"),
@@ -210,7 +210,7 @@ public class ACRRequestTest {
         List<String> essentialACRs = new ArrayList<>();
         essentialACRs.add("A");
         essentialACRs.add("B");
-        claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
+        claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, essentialACRs);
 
         AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
                 new ResponseType("code"),
@@ -358,14 +358,14 @@ public class ACRRequestTest {
 
         acrRequest.ensureACRSupport(authRequest, opMetadata);
 
-        acrRequest.ensureACRSupport((AuthorizationRequest) authRequest, opMetadata.getACRs());
+        acrRequest.ensureACRSupport(authRequest, opMetadata.getACRs());
     }
 
     @Test
     public void testEnsureACRSupport_noEssentialACRsSupported() {
 
         ClaimsRequest claimsRequest = new ClaimsRequest();
-        claimsRequest.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, "1");
+        claimsRequest.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, "1");
 
         AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
                 new ResponseType("code"),
@@ -392,7 +392,7 @@ public class ACRRequestTest {
         }
 
         try {
-            acrRequest.ensureACRSupport((AuthorizationRequest) authRequest, opMetadata.getACRs());
+            acrRequest.ensureACRSupport(authRequest, opMetadata.getACRs());
         } catch (GeneralException e) {
             assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.ACCESS_DENIED);
             assertThat(e.getErrorObject().getDescription()).isEqualTo("Access denied by resource owner or authorization server: Requested essential ACR(s) not supported");
@@ -404,7 +404,7 @@ public class ACRRequestTest {
     public void testEnsureACRSupport_essentialACRsSupported() {
 
         ClaimsRequest claimsRequest = new ClaimsRequest();
-        claimsRequest.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, "1");
+        claimsRequest.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, "1");
 
         AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
                 new ResponseType("code"),

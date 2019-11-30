@@ -108,7 +108,7 @@ public class OctopusLogoutHandlerTest {
     private void defineClientSecret() {
         byte[] value = new byte[32];
         random.nextBytes(value);
-        TestConfig.addConfigValue("SSO.clientSecret", Base64.getEncoder().withoutPadding().encodeToString(value));
+        TestConfig.addConfigValue("SSO.clientSecret", Base64.getUrlEncoder().withoutPadding().encodeToString(value));
     }
 
     private static class QueryStringMatcher extends BaseMatcher<String> {

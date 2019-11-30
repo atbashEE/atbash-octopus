@@ -16,7 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.op;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.as.AuthorizationServerEndpointMetadata;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
@@ -173,9 +172,7 @@ public class OIDCProviderMetadataTest {
                 "   \"claims_parameter_supported\":\n" +
                 "     true,\n" +
                 "   \"service_documentation\":\n" +
-                "     \"http://server.example.com/connect/service_documentation.html\",\n" +
-                "   \"ui_locales_supported\":\n" +
-                "     [\"en-US\", \"en-GB\", \"en-CA\", \"fr-FR\", \"fr-CA\"]\n" +
+                "     \"http://server.example.com/connect/service_documentation.html\"\n" +
                 "  }";
 
         OIDCProviderMetadata op = OIDCProviderMetadata.parse(s);
@@ -317,14 +314,6 @@ public class OIDCProviderMetadataTest {
         assertThat(op.supportsClaimsParam()).isTrue();
 
         assertThat(op.getServiceDocsURI().toString()).isEqualTo("http://server.example.com/connect/service_documentation.html");
-
-        List<LangTag> uiLocales = op.getUILocales();
-        assertThat(uiLocales.contains(LangTag.parse("en-US"))).isTrue();
-        assertThat(uiLocales.contains(LangTag.parse("en-GB"))).isTrue();
-        assertThat(uiLocales.contains(LangTag.parse("en-CA"))).isTrue();
-        assertThat(uiLocales.contains(LangTag.parse("fr-FR"))).isTrue();
-        assertThat(uiLocales.contains(LangTag.parse("fr-CA"))).isTrue();
-        assertThat(uiLocales).hasSize(5);
 
         // logout channels
         assertThat(op.supportsFrontChannelLogout()).isFalse();
@@ -509,16 +498,6 @@ public class OIDCProviderMetadataTest {
         assertThat(meta.getClaims().get(1)).isEqualTo("email");
         assertThat(meta.getClaims()).hasSize(2);
 
-        List<LangTag> claimLocales = new LinkedList<>();
-        claimLocales.add(LangTag.parse("en-GB"));
-        meta.setClaimLocales(claimLocales);
-        assertThat(meta.getClaimsLocales().get(0).toString()).isEqualTo("en-GB");
-
-        List<LangTag> uiLocales = new LinkedList<>();
-        uiLocales.add(LangTag.parse("bg-BG"));
-        meta.setUILocales(uiLocales);
-        assertThat(meta.getUILocales().get(0).toString()).isEqualTo("bg-BG");
-
         meta.setServiceDocsURI(new URI("https://c2id.com/docs"));
         assertThat(meta.getServiceDocsURI().toString()).isEqualTo("https://c2id.com/docs");
 
@@ -677,10 +656,6 @@ public class OIDCProviderMetadataTest {
         assertThat(meta.getClaims().get(0)).isEqualTo("name");
         assertThat(meta.getClaims().get(1)).isEqualTo("email");
         assertThat(meta.getClaims()).hasSize(2);
-
-        assertThat(meta.getClaimsLocales().get(0).toString()).isEqualTo("en-GB");
-
-        assertThat(meta.getUILocales().get(0).toString()).isEqualTo("bg-BG");
 
         assertThat(meta.getServiceDocsURI().toString()).isEqualTo("https://c2id.com/docs");
 

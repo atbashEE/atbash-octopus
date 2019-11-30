@@ -16,7 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.claims;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
@@ -387,93 +386,57 @@ public class UserInfoTest {
     }
 
     @Test
-    @Ignore // FIXME
     public void testLanguageTaggedGettersAndSetters()
             throws Exception {
 
         UserInfo userInfo = new UserInfo(new Subject("sub"));
 
-        userInfo.setName("name#en", LangTag.parse("en"));
-        userInfo.setName("name#bg", LangTag.parse("bg"));
+        userInfo.setName("name");
 
-        userInfo.setGivenName("given_name#en", LangTag.parse("en"));
-        userInfo.setGivenName("given_name#bg", LangTag.parse("bg"));
+        userInfo.setGivenName("given_name");
 
-        userInfo.setFamilyName("family_name#en", LangTag.parse("en"));
-        userInfo.setFamilyName("family_name#bg", LangTag.parse("bg"));
+        userInfo.setFamilyName("family_name");
 
-        userInfo.setMiddleName("middle_name#en", LangTag.parse("en"));
-        userInfo.setMiddleName("middle_name#bg", LangTag.parse("bg"));
+        userInfo.setMiddleName("middle_name");
 
-        userInfo.setNickname("nickname#en", LangTag.parse("en"));
-        userInfo.setNickname("nickname#bg", LangTag.parse("bg"));
+        userInfo.setNickname("nickname");
 
         Address address = new Address();
-        address.setFormatted("formatted#en");
+        address.setFormatted("formatted");
 
-        userInfo.setAddress(address, LangTag.parse("en"));
+        userInfo.setAddress(address);
 
-        address = new Address();
-        address.setFormatted("formatted#bg");
+        assertThat(userInfo.getName()).isEqualTo("name");
 
-        userInfo.setAddress(address, LangTag.parse("bg"));
+        assertThat(userInfo.getGivenName()).isEqualTo("given_name");
 
-        assertThat(userInfo.getName(LangTag.parse("en"))).isEqualTo("name#en");
-        assertThat(userInfo.getName(LangTag.parse("bg"))).isEqualTo("name#bg");
-        assertThat(userInfo.getNameEntries()).hasSize(2);
+        assertThat(userInfo.getFamilyName()).isEqualTo("family_name");
 
-        assertThat(userInfo.getGivenName(LangTag.parse("en"))).isEqualTo("given_name#en");
-        assertThat(userInfo.getGivenName(LangTag.parse("bg"))).isEqualTo("given_name#bg");
-        assertThat(userInfo.getGivenNameEntries()).hasSize(2);
+        assertThat(userInfo.getMiddleName()).isEqualTo("middle_name");
 
-        assertThat(userInfo.getFamilyName(LangTag.parse("en"))).isEqualTo("family_name#en");
-        assertThat(userInfo.getFamilyName(LangTag.parse("bg"))).isEqualTo("family_name#bg");
-        assertThat(userInfo.getFamilyNameEntries()).hasSize(2);
+        assertThat(userInfo.getNickname()).isEqualTo("nickname");
 
-        assertThat(userInfo.getMiddleName(LangTag.parse("en"))).isEqualTo("middle_name#en");
-        assertThat(userInfo.getMiddleName(LangTag.parse("bg"))).isEqualTo("middle_name#bg");
-        assertThat(userInfo.getMiddleNameEntries()).hasSize(2);
+        assertThat(userInfo.getAddress().getFormatted()).isEqualTo("formatted");
 
-        assertThat(userInfo.getNickname(LangTag.parse("en"))).isEqualTo("nickname#en");
-        assertThat(userInfo.getNickname(LangTag.parse("bg"))).isEqualTo("nickname#bg");
-        assertThat(userInfo.getNicknameEntries()).hasSize(2);
-
-        assertThat(userInfo.getAddress(LangTag.parse("en")).getFormatted()).isEqualTo("formatted#en");
-        assertThat(userInfo.getAddress(LangTag.parse("bg")).getFormatted()).isEqualTo("formatted#bg");
-        assertThat(userInfo.getAddressEntries()).hasSize(2);
-
-        String json = userInfo.toJSONObject().toString();
+        String json = userInfo.toJSONObject().build().toString();
 
         userInfo = UserInfo.parse(json);
 
-        assertThat(userInfo.getName(LangTag.parse("en"))).isEqualTo("name#en");
-        assertThat(userInfo.getName(LangTag.parse("bg"))).isEqualTo("name#bg");
-        assertThat(userInfo.getNameEntries()).hasSize(2);
+        assertThat(userInfo.getName()).isEqualTo("name");
 
-        assertThat(userInfo.getGivenName(LangTag.parse("en"))).isEqualTo("given_name#en");
-        assertThat(userInfo.getGivenName(LangTag.parse("bg"))).isEqualTo("given_name#bg");
-        assertThat(userInfo.getGivenNameEntries()).hasSize(2);
+        assertThat(userInfo.getGivenName()).isEqualTo("given_name");
 
-        assertThat(userInfo.getFamilyName(LangTag.parse("en"))).isEqualTo("family_name#en");
-        assertThat(userInfo.getFamilyName(LangTag.parse("bg"))).isEqualTo("family_name#bg");
-        assertThat(userInfo.getFamilyNameEntries()).hasSize(2);
+        assertThat(userInfo.getFamilyName()).isEqualTo("family_name");
 
-        assertThat(userInfo.getMiddleName(LangTag.parse("en"))).isEqualTo("middle_name#en");
-        assertThat(userInfo.getMiddleName(LangTag.parse("bg"))).isEqualTo("middle_name#bg");
-        assertThat(userInfo.getMiddleNameEntries()).hasSize(2);
+        assertThat(userInfo.getMiddleName()).isEqualTo("middle_name");
 
-        assertThat(userInfo.getNickname(LangTag.parse("en"))).isEqualTo("nickname#en");
-        assertThat(userInfo.getNickname(LangTag.parse("bg"))).isEqualTo("nickname#bg");
-        assertThat(userInfo.getNicknameEntries()).hasSize(2);
+        assertThat(userInfo.getNickname()).isEqualTo("nickname");
 
-        assertThat(userInfo.getAddress(LangTag.parse("en")).getFormatted()).isEqualTo("formatted#en");
-        assertThat(userInfo.getAddress(LangTag.parse("bg")).getFormatted()).isEqualTo("formatted#bg");
-        assertThat(userInfo.getAddressEntries()).hasSize(2);
+        assertThat(userInfo.getAddress().getFormatted()).isEqualTo("formatted");
     }
 
     @Test
-    public void testPutAll()
-            throws Exception {
+    public void testPutAll() {
 
         Subject alice = new Subject("alice");
 

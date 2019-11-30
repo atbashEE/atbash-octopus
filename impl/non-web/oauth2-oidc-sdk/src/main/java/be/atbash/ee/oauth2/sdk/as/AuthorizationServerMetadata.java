@@ -16,8 +16,6 @@
 package be.atbash.ee.oauth2.sdk.as;
 
 
-import be.atbash.ee.langtag.LangTag;
-import be.atbash.ee.langtag.LangTagException;
 import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
@@ -58,6 +56,7 @@ import java.util.*;
  *         (draft-ietf-oauth-device-flow-14)
  * </ul>
  */
+// FIXME Is this used for OAuth2 communication. Apparently not! It can be removed as also used in OpenID Connect Discovery which we do not support.
 public class AuthorizationServerMetadata extends AuthorizationServerEndpointMetadata {
 
     /**
@@ -233,12 +232,6 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
      * pre-registered with the provider, else not.
      */
     private boolean requireRequestURIReg = false;
-
-
-    /**
-     * The supported UI locales.
-     */
-    private List<LangTag> uiLocales;
 
 
     /**
@@ -862,32 +855,6 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
         this.requireRequestURIReg = requireRequestURIReg;
     }
 
-
-    /**
-     * Gets the supported UI locales. Corresponds to the
-     * {@code ui_locales_supported} metadata field.
-     *
-     * @return The supported UI locales, {@code null} if not specified.
-     */
-    public List<LangTag> getUILocales() {
-
-        return uiLocales;
-    }
-
-
-    /**
-     * Sets the supported UI locales. Corresponds to the
-     * {@code ui_locales_supported} metadata field.
-     *
-     * @param uiLocales The supported UI locales, {@code null} if not
-     *                  specified.
-     */
-    public void setUILocales(List<LangTag> uiLocales) {
-
-        this.uiLocales = uiLocales;
-    }
-
-
     /**
      * Gets the service documentation URI. Corresponds to the
      * {@code service_documentation} metadata field.
@@ -1394,16 +1361,6 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
             result.add("request_object_encryption_enc_values_supported", arrayBuilder);
         }
 
-        if (uiLocales != null) {
-
-            arrayBuilder = Json.createArrayBuilder();
-
-            for (LangTag l : uiLocales) {
-                arrayBuilder.add(l.toString());
-            }
-            result.add("ui_locales_supported", arrayBuilder);
-        }
-
         if (serviceDocsURI != null) {
             result.add("service_documentation", serviceDocsURI.toString());
         }
@@ -1701,25 +1658,6 @@ public class AuthorizationServerMetadata extends AuthorizationServerEndpointMeta
 
 
         // Misc
-
-        if (jsonObject.get("ui_locales_supported") != null) {
-
-            as.uiLocales = new ArrayList<>();
-
-            for (String v : JSONObjectUtils.getStringList(jsonObject, "ui_locales_supported")) {
-
-                if (v != null) {
-
-                    try {
-                        as.uiLocales.add(LangTag.parse(v));
-
-                    } catch (LangTagException e) {
-
-                        throw new OAuth2JSONParseException("Invalid ui_locales_supported field: " + e.getMessage(), e);
-                    }
-                }
-            }
-        }
 
         try {
             if (jsonObject.get("service_documentation") != null) {

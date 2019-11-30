@@ -16,8 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.op;
 
 
-import be.atbash.ee.langtag.LangTag;
-import be.atbash.ee.langtag.LangTagException;
 import be.atbash.ee.oauth2.sdk.GeneralException;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.as.AuthorizationServerEndpointMetadata;
@@ -64,6 +62,7 @@ import java.util.*;
  *         OAuth 2.0 (JARM)
  * </ul>
  */
+// FIXME Remove as part of OpenID Connect Discovery which we do not support.
 public class OIDCProviderMetadata extends AuthorizationServerMetadata {
 
 
@@ -181,12 +180,6 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
      * The supported claims names.
      */
     private List<String> claims;
-
-
-    /**
-     * The supported claims locales.
-     */
-    private List<LangTag> claimsLocales;
 
 
     /**
@@ -625,32 +618,6 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
         this.claims = claims;
     }
 
-
-    /**
-     * Gets the supported claims locales. Corresponds to the
-     * {@code claims_locales_supported} metadata field.
-     *
-     * @return The supported claims locales, {@code null} if not specified.
-     */
-    public List<LangTag> getClaimsLocales() {
-
-        return claimsLocales;
-    }
-
-
-    /**
-     * Sets the supported claims locales. Corresponds to the
-     * {@code claims_locales_supported} metadata field.
-     *
-     * @param claimsLocales The supported claims locales, {@code null} if
-     *                      not specified.
-     */
-    public void setClaimLocales(List<LangTag> claimsLocales) {
-
-        this.claimsLocales = claimsLocales;
-    }
-
-
     /**
      * Gets the support for the {@code claims} authorisation request
      * parameter. Corresponds to the {@code claims_parameter_supported}
@@ -949,17 +916,6 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
             result.add("claims_supported", JSONObjectUtils.asJsonArray(claims));
         }
 
-        if (claimsLocales != null) {
-
-            arrayBuilder = Json.createArrayBuilder();
-
-            for (LangTag l : claimsLocales) {
-                arrayBuilder.add(l.toString());
-            }
-
-            result.add("claims_locales_supported", arrayBuilder);
-        }
-
         result.add("claims_parameter_supported", claimsParamSupported);
 
         // optional front and back-channel logout
@@ -1179,26 +1135,6 @@ public class OIDCProviderMetadata extends AuthorizationServerMetadata {
             }
         }
 
-        if (jsonObject.get("claims_locales_supported") != null) {
-
-            op.claimsLocales = new ArrayList<>();
-
-            for (String v : JSONObjectUtils.getStringList(jsonObject, "claims_locales_supported")) {
-
-                if (v != null) {
-
-                    try {
-                        op.claimsLocales.add(LangTag.parse(v));
-
-                    } catch (LangTagException e) {
-
-                        throw new OAuth2JSONParseException("Invalid claims_locales_supported field: " + e.getMessage(), e);
-                    }
-                }
-            }
-        }
-
-        op.setUILocales(as.getUILocales());
         op.setServiceDocsURI(as.getServiceDocsURI());
         op.setPolicyURI(as.getPolicyURI());
         op.setTermsOfServiceURI(as.getTermsOfServiceURI());

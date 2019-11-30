@@ -16,8 +16,6 @@
 package be.atbash.ee.openid.connect.sdk;
 
 
-import be.atbash.ee.langtag.LangTag;
-import be.atbash.ee.langtag.LangTagException;
 import be.atbash.ee.oauth2.sdk.*;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
@@ -120,20 +118,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
     /**
-     * The end-user's preferred languages and scripts for the user
-     * interface (optional).
-     */
-    private final List<LangTag> uiLocales;
-
-
-    /**
-     * The end-user's preferred languages and scripts for claims being
-     * returned (optional).
-     */
-    private final List<LangTag> claimsLocales;
-
-
-    /**
      * Previously issued ID Token passed to the authorisation server as a
      * hint about the end-user's current or past authenticated session with
      * the client (optional). Should be present when {@code prompt=none} is
@@ -229,21 +213,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
          * not specified, zero implies prompt=login (optional).
          */
         private int maxAge = -1;
-
-
-        /**
-         * The end-user's preferred languages and scripts for the user
-         * interface (optional).
-         */
-        private List<LangTag> uiLocales;
-
-
-        /**
-         * The end-user's preferred languages and scripts for claims
-         * being returned (optional).
-         */
-        private List<LangTag> claimsLocales;
-
 
         /**
          * Previously issued ID Token passed to the authorisation
@@ -429,8 +398,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
             display = request.getDisplay();
             prompt = request.getPrompt();
             maxAge = request.getMaxAge();
-            uiLocales = request.getUILocales();
-            claimsLocales = request.getClaimsLocales();
             idTokenHint = request.getIDTokenHint();
             loginHint = request.getLoginHint();
             acrValues = request.getACRValues();
@@ -608,39 +575,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
             this.maxAge = maxAge;
             return this;
         }
-
-
-        /**
-         * Sets the end-user's preferred languages and scripts for the
-         * user interface, ordered by preference. Corresponds to the
-         * optional {@code ui_locales} parameter.
-         *
-         * @param uiLocales The preferred UI locales, {@code null} if
-         *                  not specified.
-         * @return This builder.
-         */
-        public Builder uiLocales(List<LangTag> uiLocales) {
-
-            this.uiLocales = uiLocales;
-            return this;
-        }
-
-
-        /**
-         * Sets the end-user's preferred languages and scripts for the
-         * claims being returned, ordered by preference. Corresponds to
-         * the optional {@code claims_locales} parameter.
-         *
-         * @param claimsLocales The preferred claims locales,
-         *                      {@code null} if not specified.
-         * @return This builder.
-         */
-        public Builder claimsLocales(List<LangTag> claimsLocales) {
-
-            this.claimsLocales = claimsLocales;
-            return this;
-        }
-
 
         /**
          * Sets the ID Token hint. Corresponds to the conditionally
@@ -860,7 +794,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
             try {
                 return new AuthenticationRequest(
                         uri, rt, rm, scope, clientID, redirectURI, state, nonce,
-                        display, prompt, maxAge, uiLocales, claimsLocales,
+                        display, prompt, maxAge,
                         idTokenHint, loginHint, acrValues, claims,
                         requestObject, requestURI,
                         codeChallenge, codeChallengeMethod,
@@ -912,9 +846,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
         // idTokenHint, loginHint, acrValues, claims
         // codeChallenge, codeChallengeMethod
         this(uri, rt, null, scope, clientID, redirectURI, state, nonce,
-                null, null, -1, null, null,
-                null, null, null, null, null, null,
-                null, null,
+                null, null, -1, null, null, null, null,
+                null, null, null, null,
                 null, false, null);
     }
 
@@ -967,15 +900,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
      *                             {@code max_age} parameter. -1 if not
      *                             specified, zero implies
      *                             {@code prompt=login}.
-     * @param uiLocales            The preferred languages and scripts for
-     *                             the user interface. Corresponds to the
-     *                             optional {@code ui_locales} parameter.
-     *                             {@code null} if not specified.
-     * @param claimsLocales        The preferred languages and scripts for
-     *                             claims being returned. Corresponds to
-     *                             the optional {@code claims_locales}
-     *                             parameter. {@code null} if not
-     *                             specified.
      * @param idTokenHint          The ID Token hint. Corresponds to the
      *                             optional {@code id_token_hint}
      *                             parameter. {@code null} if not
@@ -1024,8 +948,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
                                  Display display,
                                  Prompt prompt,
                                  int maxAge,
-                                 List<LangTag> uiLocales,
-                                 List<LangTag> claimsLocales,
                                  JWT idTokenHint,
                                  String loginHint,
                                  List<ACR> acrValues,
@@ -1069,18 +991,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
         // Optional parameters
         this.display = display;
         this.maxAge = maxAge;
-
-        if (uiLocales != null) {
-            this.uiLocales = Collections.unmodifiableList(uiLocales);
-        } else {
-            this.uiLocales = null;
-        }
-
-        if (claimsLocales != null) {
-            this.claimsLocales = Collections.unmodifiableList(claimsLocales);
-        } else {
-            this.claimsLocales = null;
-        }
 
         this.idTokenHint = idTokenHint;
         this.loginHint = loginHint;
@@ -1142,32 +1052,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
     public int getMaxAge() {
 
         return maxAge;
-    }
-
-
-    /**
-     * Gets the end-user's preferred languages and scripts for the user
-     * interface, ordered by preference. Corresponds to the optional
-     * {@code ui_locales} parameter.
-     *
-     * @return The preferred UI locales, {@code null} if not specified.
-     */
-    public List<LangTag> getUILocales() {
-
-        return uiLocales;
-    }
-
-
-    /**
-     * Gets the end-user's preferred languages and scripts for the claims
-     * being returned, ordered by preference. Corresponds to the optional
-     * {@code claims_locales} parameter.
-     *
-     * @return The preferred claims locales, {@code null} if not specified.
-     */
-    public List<LangTag> getClaimsLocales() {
-
-        return claimsLocales;
     }
 
 
@@ -1235,38 +1119,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
         if (maxAge >= 0) {
             params.put("max_age", Collections.singletonList("" + maxAge));
-        }
-
-        if (uiLocales != null) {
-
-            StringBuilder sb = new StringBuilder();
-
-            for (LangTag locale : uiLocales) {
-
-                if (sb.length() > 0) {
-                    sb.append(' ');
-                }
-
-                sb.append(locale.toString());
-            }
-
-            params.put("ui_locales", Collections.singletonList(sb.toString()));
-        }
-
-        if (claimsLocales != null) {
-
-            StringBuilder sb = new StringBuilder();
-
-            for (LangTag locale : claimsLocales) {
-
-                if (sb.length() > 0) {
-                    sb.append(' ');
-                }
-
-                sb.append(locale.toString());
-            }
-
-            params.put("claims_locales", Collections.singletonList(sb.toString()));
         }
 
         if (idTokenHint != null) {
@@ -1461,55 +1313,6 @@ public class AuthenticationRequest extends AuthorizationRequest {
             }
         }
 
-
-        v = MultivaluedMapUtils.getFirstValue(params, "ui_locales");
-
-        List<LangTag> uiLocales = null;
-
-        if (StringUtils.hasText(v)) {
-
-            uiLocales = new LinkedList<>();
-
-            StringTokenizer st = new StringTokenizer(v, " ");
-
-            while (st.hasMoreTokens()) {
-
-                try {
-                    uiLocales.add(LangTag.parse(st.nextToken()));
-
-                } catch (LangTagException e) {
-                    String msg = "Invalid \"ui_locales\" parameter: " + e.getMessage();
-                    throw new OAuth2JSONParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-                            ar.getClientID(), ar.getRedirectionURI(), ar.impliedResponseMode(), ar.getState(), e);
-                }
-            }
-        }
-
-
-        v = MultivaluedMapUtils.getFirstValue(params, "claims_locales");
-
-        List<LangTag> claimsLocales = null;
-
-        if (StringUtils.hasText(v)) {
-
-            claimsLocales = new LinkedList<>();
-
-            StringTokenizer st = new StringTokenizer(v, " ");
-
-            while (st.hasMoreTokens()) {
-
-                try {
-                    claimsLocales.add(LangTag.parse(st.nextToken()));
-
-                } catch (LangTagException e) {
-                    String msg = "Invalid \"claims_locales\" parameter: " + e.getMessage();
-                    throw new OAuth2JSONParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-                            ar.getClientID(), ar.getRedirectionURI(), ar.impliedResponseMode(), ar.getState(), e);
-                }
-            }
-        }
-
-
         v = MultivaluedMapUtils.getFirstValue(params, "id_token_hint");
 
         JWT idTokenHint = null;
@@ -1584,7 +1387,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
         return new AuthenticationRequest(
                 uri, ar.getResponseType(), ar.getResponseMode(), ar.getScope(), ar.getClientID(), ar.getRedirectionURI(), ar.getState(), nonce,
-                display, ar.getPrompt(), maxAge, uiLocales, claimsLocales,
+                display, ar.getPrompt(), maxAge,
                 idTokenHint, loginHint, acrValues, claims,
                 ar.getRequestObject(), ar.getRequestURI(),
                 ar.getCodeChallenge(), ar.getCodeChallengeMethod(),

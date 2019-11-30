@@ -16,7 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.rp;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.GrantType;
 import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
 import be.atbash.ee.oauth2.sdk.client.*;
@@ -114,7 +113,6 @@ public class OIDCClientRegistrationRequestTest {
                 + "   \"application_type\": \"web\","
                 + "   \"redirect_uris\":[\"https://client.example.org/callback\",\"https://client.example.org/callback2\"],"
                 + "   \"client_name\": \"My Example\","
-                + "   \"client_name#ja-Jpan-JP\":\"クライアント名\","
                 + "   \"logo_uri\": \"https://client.example.org/logo.png\","
                 + "   \"subject_type\": \"pairwise\","
                 + "   \"sector_identifier_uri\":\"https://other.example.net/file_of_redirect_uris.json\","
@@ -147,13 +145,8 @@ public class OIDCClientRegistrationRequestTest {
         assertThat(redirectURIs).hasSize(2);
 
         assertThat(metadata.getName()).isEqualTo("My Example");
-        assertThat(metadata.getName(null)).isEqualTo("My Example");
-        assertThat(metadata.getName(LangTag.parse("ja-Jpan-JP"))).isEqualTo("クライアント名");
-        assertThat(metadata.getNameEntries()).hasSize(2);
 
         assertThat(metadata.getLogoURI()).isEqualTo(new URI("https://client.example.org/logo.png"));
-        assertThat(metadata.getLogoURI(null)).isEqualTo(new URI("https://client.example.org/logo.png"));
-        assertThat(metadata.getLogoURIEntries()).hasSize(1);
 
         assertThat(metadata.getSubjectType()).isEqualTo(SubjectType.PAIRWISE);
         assertThat(metadata.getSectorIDURI()).isEqualTo(new URI("https://other.example.net/file_of_redirect_uris.json"));

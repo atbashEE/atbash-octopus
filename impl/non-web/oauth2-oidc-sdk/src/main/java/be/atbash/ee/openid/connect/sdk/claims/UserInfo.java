@@ -16,7 +16,6 @@
 package be.atbash.ee.openid.connect.sdk.claims;
 
 
-import be.atbash.ee.langtag.LangTag;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
@@ -28,7 +27,6 @@ import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 
-import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.mail.internet.InternetAddress;
@@ -459,32 +457,6 @@ public class UserInfo extends ClaimsSet {
         return getStringClaim(NAME_CLAIM_NAME);
     }
 
-
-    /**
-     * Gets the full name. Corresponds to the {@code name} claim, with an
-     * optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The full name, {@code null} if not specified.
-     */
-    public String getName(LangTag langTag) {
-
-        return getStringClaim(NAME_CLAIM_NAME, langTag);
-    }
-
-
-    /**
-     * Gets the full name entries. Correspond to the {@code name} claim.
-     *
-     * @return The full name entries, empty map if none.
-     */
-    public Map<LangTag, String> getNameEntries() {
-
-        return getLangTaggedClaim(NAME_CLAIM_NAME, String.class);
-    }
-
-
     /**
      * Sets the full name. Corresponds to the {@code name} claim, with no
      * language tag.
@@ -497,21 +469,6 @@ public class UserInfo extends ClaimsSet {
         setClaim(NAME_CLAIM_NAME, name);
     }
 
-
-    /**
-     * Sets the full name. Corresponds to the {@code name} claim, with an
-     * optional language tag.
-     *
-     * @param name    The full name. If {@code null} the claim will be
-     *                removed.
-     * @param langTag The language tag, {@code null} if not specified.
-     */
-    public void setName(String name, LangTag langTag) {
-
-        setClaim(NAME_CLAIM_NAME, Json.createValue(name), langTag);
-    }
-
-
     /**
      * Gets the given or first name. Corresponds to the {@code given_name}
      * claim, with no language tag.
@@ -522,33 +479,6 @@ public class UserInfo extends ClaimsSet {
 
         return getStringClaim(GIVEN_NAME_CLAIM_NAME);
     }
-
-
-    /**
-     * Gets the given or first name. Corresponds to the {@code given_name}
-     * claim, with an optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The given or first name, {@code null} if not specified.
-     */
-    public String getGivenName(LangTag langTag) {
-
-        return getStringClaim(GIVEN_NAME_CLAIM_NAME, langTag);
-    }
-
-
-    /**
-     * Gets the given or first name entries. Correspond to the
-     * {@code given_name} claim.
-     *
-     * @return The given or first name entries, empty map if none.
-     */
-    public Map<LangTag, String> getGivenNameEntries() {
-
-        return getLangTaggedClaim(GIVEN_NAME_CLAIM_NAME, String.class);
-    }
-
 
     /**
      * Sets the given or first name. Corresponds to the {@code given_name}
@@ -562,21 +492,6 @@ public class UserInfo extends ClaimsSet {
         setClaim(GIVEN_NAME_CLAIM_NAME, givenName);
     }
 
-
-    /**
-     * Sets the given or first name. Corresponds to the {@code given_name}
-     * claim, with an optional language tag.
-     *
-     * @param givenName The given or first full name. If {@code null} the
-     *                  claim will be removed.
-     * @param langTag   The language tag, {@code null} if not specified.
-     */
-    public void setGivenName(String givenName, LangTag langTag) {
-
-        setClaim(GIVEN_NAME_CLAIM_NAME, Json.createValue(givenName), langTag);
-    }
-
-
     /**
      * Gets the surname or last name. Corresponds to the
      * {@code family_name} claim, with no language tag.
@@ -587,33 +502,6 @@ public class UserInfo extends ClaimsSet {
 
         return getStringClaim(FAMILY_NAME_CLAIM_NAME);
     }
-
-
-    /**
-     * Gets the surname or last name. Corresponds to the
-     * {@code family_name} claim, with an optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The surname or last name, {@code null} if not specified.
-     */
-    public String getFamilyName(LangTag langTag) {
-
-        return getStringClaim(FAMILY_NAME_CLAIM_NAME, langTag);
-    }
-
-
-    /**
-     * Gets the surname or last name entries. Correspond to the
-     * {@code family_name} claim.
-     *
-     * @return The surname or last name entries, empty map if none.
-     */
-    public Map<LangTag, String> getFamilyNameEntries() {
-
-        return getLangTaggedClaim(FAMILY_NAME_CLAIM_NAME, String.class);
-    }
-
 
     /**
      * Sets the surname or last name. Corresponds to the
@@ -627,21 +515,6 @@ public class UserInfo extends ClaimsSet {
         setClaim(FAMILY_NAME_CLAIM_NAME, familyName);
     }
 
-
-    /**
-     * Sets the surname or last name. Corresponds to the
-     * {@code family_name} claim, with an optional language tag.
-     *
-     * @param familyName The surname or last name. If {@code null} the
-     *                   claim will be removed.
-     * @param langTag    The language tag, {@code null} if not specified.
-     */
-    public void setFamilyName(String familyName, LangTag langTag) {
-
-        setClaim(FAMILY_NAME_CLAIM_NAME, Json.createValue(familyName), langTag);
-    }
-
-
     /**
      * Gets the middle name. Corresponds to the {@code middle_name} claim,
      * with no language tag.
@@ -652,33 +525,6 @@ public class UserInfo extends ClaimsSet {
 
         return getStringClaim(MIDDLE_NAME_CLAIM_NAME);
     }
-
-
-    /**
-     * Gets the middle name. Corresponds to the {@code middle_name} claim,
-     * with an optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The middle name, {@code null} if not specified.
-     */
-    public String getMiddleName(LangTag langTag) {
-
-        return getStringClaim(MIDDLE_NAME_CLAIM_NAME, langTag);
-    }
-
-
-    /**
-     * Gets the middle name entries. Correspond to the {@code middle_name}
-     * claim.
-     *
-     * @return The middle name entries, empty map if none.
-     */
-    public Map<LangTag, String> getMiddleNameEntries() {
-
-        return getLangTaggedClaim(MIDDLE_NAME_CLAIM_NAME, String.class);
-    }
-
 
     /**
      * Sets the middle name. Corresponds to the {@code middle_name} claim,
@@ -692,21 +538,6 @@ public class UserInfo extends ClaimsSet {
         setClaim(MIDDLE_NAME_CLAIM_NAME, middleName);
     }
 
-
-    /**
-     * Sets the middle name. Corresponds to the {@code middle_name} claim,
-     * with an optional language tag.
-     *
-     * @param middleName The middle name. If {@code null} the claim will be
-     *                   removed.
-     * @param langTag    The language tag, {@code null} if not specified.
-     */
-    public void setMiddleName(String middleName, LangTag langTag) {
-
-        setClaim(MIDDLE_NAME_CLAIM_NAME, Json.createValue(middleName), langTag);
-    }
-
-
     /**
      * Gets the casual name. Corresponds to the {@code nickname} claim,
      * with no language tag.
@@ -718,33 +549,6 @@ public class UserInfo extends ClaimsSet {
         return getStringClaim(NICKNAME_CLAIM_NAME);
     }
 
-
-    /**
-     * Gets the casual name. Corresponds to the {@code nickname} claim,
-     * with an optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The casual name, {@code null} if not specified.
-     */
-    public String getNickname(LangTag langTag) {
-
-        return getStringClaim(NICKNAME_CLAIM_NAME, langTag);
-    }
-
-
-    /**
-     * Gets the casual name entries. Correspond to the {@code nickname}
-     * claim.
-     *
-     * @return The casual name entries, empty map if none.
-     */
-    public Map<LangTag, String> getNicknameEntries() {
-
-        return getLangTaggedClaim(NICKNAME_CLAIM_NAME, String.class);
-    }
-
-
     /**
      * Sets the casual name. Corresponds to the {@code nickname} claim,
      * with no language tag.
@@ -755,20 +559,6 @@ public class UserInfo extends ClaimsSet {
     public void setNickname(String nickname) {
 
         setClaim(NICKNAME_CLAIM_NAME, nickname);
-    }
-
-
-    /**
-     * Sets the casual name. Corresponds to the {@code nickname} claim,
-     * with an optional language tag.
-     *
-     * @param nickname The casual name. If {@code null} the claim will be
-     *                 removed.
-     * @param langTag  The language tag, {@code null} if not specified.
-     */
-    public void setNickname(String nickname, LangTag langTag) {
-
-        setClaim(NICKNAME_CLAIM_NAME, Json.createValue(nickname), langTag);
     }
 
 
@@ -1109,29 +899,7 @@ public class UserInfo extends ClaimsSet {
      */
     public Address getAddress() {
 
-        return getAddress(null);
-    }
-
-
-    /**
-     * Gets the preferred address. Corresponds to the {@code address}
-     * claim, with an optional language tag.
-     *
-     * @param langTag The language tag of the entry, {@code null} to get
-     *                the non-tagged entry.
-     * @return The preferred address, {@code null} if not specified.
-     */
-    public Address getAddress(LangTag langTag) {
-
-        String name;
-
-        if (langTag != null) {
-            name = ADDRESS_CLAIM_NAME + "#" + langTag;
-        } else {
-            name = ADDRESS_CLAIM_NAME;
-        }
-
-        JsonObject jsonObject = (JsonObject) getClaim(name);
+        JsonObject jsonObject = (JsonObject) getClaim(ADDRESS_CLAIM_NAME);
 
         if (jsonObject == null) {
             return null;
@@ -1139,27 +907,6 @@ public class UserInfo extends ClaimsSet {
 
         return new Address(jsonObject);
     }
-
-
-    /**
-     * Gets the preferred address entries. Correspond to the
-     * {@code address} claim.
-     *
-     * @return The preferred address entries, empty map if none.
-     */
-    public Map<LangTag, Address> getAddressEntries() {
-
-        Map<LangTag, JsonObject> entriesIn = getLangTaggedClaim(ADDRESS_CLAIM_NAME, JsonObject.class);
-
-        Map<LangTag, Address> entriesOut = new HashMap<>();
-
-        for (Map.Entry<LangTag, JsonObject> en : entriesIn.entrySet()) {
-            entriesOut.put(en.getKey(), new Address(en.getValue()));
-        }
-
-        return entriesOut;
-    }
-
 
     /**
      * Sets the preferred address. Corresponds to the {@code address}
@@ -1176,27 +923,6 @@ public class UserInfo extends ClaimsSet {
             setClaim(ADDRESS_CLAIM_NAME, null);
         }
     }
-
-
-    /**
-     * Sets the preferred address. Corresponds to the {@code address}
-     * claim, with an optional language tag.
-     *
-     * @param address The preferred address. If {@code null} the claim
-     *                will be removed.
-     * @param langTag The language tag, {@code null} if not specified.
-     */
-    public void setAddress(Address address, LangTag langTag) {
-
-        String key = langTag == null ? ADDRESS_CLAIM_NAME : ADDRESS_CLAIM_NAME + "#" + langTag;
-
-        if (address != null) {
-            setClaim(key, address.toJSONObject());
-        } else {
-            setClaim(key, null);
-        }
-    }
-
 
     /**
      * Gets the time the end-user information was last updated. Corresponds
