@@ -13,37 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.ee.oauth2.sdk;
+package be.atbash.ee.openid.connect.sdk;
 
+import be.atbash.ee.security.octopus.keys.selector.KeySelector;
+import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
 
-/**
- * Bad JSON Web Token (JWT) exception.
- *
- * @author Vladimir Dzhuvinov
- * @version 2015-06-29
- */
-public class BadJWTException extends OAuth2JSONParseException {
+import java.security.Key;
 
+public class TestKeySelector extends KeySelector {
+    private Key key;
 
-    /**
-     * Creates a new bad JWT exception.
-     *
-     * @param message The exception message.
-     */
-    public BadJWTException(String message) {
-
-        super(message);
+    public TestKeySelector(Key key) {
+        this.key = key;
     }
 
-
-    /**
-     * Creates a new bad JWT exception.
-     *
-     * @param message The exception message.
-     * @param cause   The exception cause.
-     */
-    public BadJWTException(String message, Throwable cause) {
-
-        super(message, cause);
+    @Override
+    public <T extends Key> T selectSecretKey(SelectorCriteria selectorCriteria) {
+        return (T) key;
     }
 }

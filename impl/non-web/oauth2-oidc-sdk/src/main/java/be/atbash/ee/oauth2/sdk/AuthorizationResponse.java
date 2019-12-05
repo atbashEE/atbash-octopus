@@ -20,10 +20,13 @@ import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.oauth2.sdk.jarm.JARMUtils;
+import be.atbash.ee.oauth2.sdk.jarm.JARMValidator;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.ee.oauth2.sdk.util.URIUtils;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.util.StringUtils;
 
 import java.net.MalformedURLException;
@@ -215,7 +218,7 @@ public abstract class AuthorizationResponse implements Response {
      */
     public URI toURI() {
 
-        final ResponseMode rm = impliedResponseMode();
+        ResponseMode rm = impliedResponseMode();
 
         StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 
@@ -348,26 +351,37 @@ public abstract class AuthorizationResponse implements Response {
      *                                  failed.
      */
     public static AuthorizationResponse parse(URI redirectURI,
-                                              Map<String, List<String>> params)
+                                              Map<String, List<String>> params,
+                                              JARMValidator jarmValidator)
             throws OAuth2JSONParseException {
+
+        Map<String, List<String>> workParams = params;
 
         String jwtResponseString = MultivaluedMapUtils.getFirstValue(params, "response");
 
+        if (jarmValidator != null) {
+            if (StringUtils.isEmpty(jwtResponseString)) {
+                throw new OAuth2JSONParseException("Missing JWT-secured (JARM) authorization response parameter");
+            }
+            try {
+                JWTClaimsSet jwtClaimsSet = jarmValidator.validate(jwtResponseString);
+                workParams = JARMUtils.toMultiValuedStringParameters(jwtClaimsSet);
+            } catch (Exception e) {
+                throw new OAuth2JSONParseException("Invalid JWT-secured (JARM) authorization response: " + e.getMessage());
+            }
+        }
 
         if (StringUtils.hasText(MultivaluedMapUtils.getFirstValue(params, "error"))) {
             return AuthorizationErrorResponse.parse(redirectURI, params);
         } else if (StringUtils.hasText(jwtResponseString)) {
             // JARM that wasn't validated, peek into JWT if signed only
-            throw new IllegalArgumentException("Not implemented yet");  // TODO
-            /*
+
             boolean likelyError = JARMUtils.impliesAuthorizationErrorResponse(jwtResponseString);
             if (likelyError) {
                 return AuthorizationErrorResponse.parse(redirectURI, workParams);
             } else {
                 return AuthorizationSuccessResponse.parse(redirectURI, workParams);
             }
-
-             */
 
         } else {
             return AuthorizationSuccessResponse.parse(redirectURI, params);
@@ -391,10 +405,16 @@ public abstract class AuthorizationResponse implements Response {
      * @throws OAuth2JSONParseException If no authorisation response parameters were
      *                                  found in the URL.
      */
+    public static AuthorizationResponse parse(URI uri, JARMValidator jarmValidator)
+            throws OAuth2JSONParseException {
+
+        return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri), jarmValidator);
+    }
+
     public static AuthorizationResponse parse(URI uri)
             throws OAuth2JSONParseException {
 
-        return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
+        return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri), null);
     }
 
 
@@ -425,7 +445,7 @@ public abstract class AuthorizationResponse implements Response {
             throw new OAuth2JSONParseException("Missing redirection URI / HTTP Location header");
         }
 
-        return parse(location);
+        return parse(location, null);
     }
 
 
@@ -451,7 +471,7 @@ public abstract class AuthorizationResponse implements Response {
     public static AuthorizationResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {
 
-        return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));
+        return parse(httpRequest.getURI(), parseResponseParameters(httpRequest), null);
     }
 
     /**

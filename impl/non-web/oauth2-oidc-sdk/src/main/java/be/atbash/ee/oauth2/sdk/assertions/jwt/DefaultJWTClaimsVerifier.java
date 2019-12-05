@@ -16,16 +16,15 @@
 package be.atbash.ee.oauth2.sdk.assertions.jwt;
 
 
-import be.atbash.ee.oauth2.sdk.BadJWTException;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
 
 import java.util.*;
 
 
 /**
- * {@link JWTClaimsSetVerifier JWT claims verifier} implementation. This class
- * is thread-safe.
+ * JWT claims verifier implementation. This class is thread-safe.
  *
  * <p>Performs the following checks:
  *

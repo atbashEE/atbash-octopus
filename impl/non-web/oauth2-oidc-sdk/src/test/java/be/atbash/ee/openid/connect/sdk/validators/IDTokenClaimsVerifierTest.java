@@ -16,11 +16,11 @@
 package be.atbash.ee.openid.connect.sdk.validators;
 
 
-import be.atbash.ee.oauth2.sdk.BadJWTException;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.openid.connect.sdk.Nonce;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 import org.junit.Test;
 
 import java.util.Arrays;

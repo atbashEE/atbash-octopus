@@ -19,9 +19,15 @@ package be.atbash.ee.openid.connect.sdk;
 import be.atbash.ee.oauth2.sdk.AuthorizationCode;
 import be.atbash.ee.oauth2.sdk.ResponseMode;
 import be.atbash.ee.oauth2.sdk.ResponseType;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.oauth2.sdk.jarm.JARMUtils;
+import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
+import be.atbash.ee.security.octopus.nimbus.jose.crypto.RSASSASigner;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
@@ -33,7 +39,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -48,9 +53,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AuthenticationSuccessResponseTest {
 
     private static final RSAPrivateKey RSA_PRIVATE_KEY;
-
-
-    private static final RSAPublicKey RSA_PUBLIC_KEY;
 
 
     private static URI REDIRECT_URI;
@@ -70,7 +72,6 @@ public class AuthenticationSuccessResponseTest {
             gen.initialize(2048);
             KeyPair keyPair = gen.generateKeyPair();
             RSA_PRIVATE_KEY = (RSAPrivateKey) keyPair.getPrivate();
-            RSA_PUBLIC_KEY = (RSAPublicKey) keyPair.getPublic();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -303,7 +304,6 @@ public class AuthenticationSuccessResponseTest {
         assertThat(params).hasSize(3);
     }
 
-	/* FIXME JarmUtils needed?
 	@Test
 	public void testJARM_successLifeCycle_query()
 		throws Exception {
@@ -402,5 +402,4 @@ public class AuthenticationSuccessResponseTest {
 		assertThat(jwtSuccessResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
 	}
 
-	 */
 }

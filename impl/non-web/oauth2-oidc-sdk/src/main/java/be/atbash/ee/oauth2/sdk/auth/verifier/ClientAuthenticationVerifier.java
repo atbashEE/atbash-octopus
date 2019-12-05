@@ -16,7 +16,6 @@
 package be.atbash.ee.oauth2.sdk.auth.verifier;
 
 
-import be.atbash.ee.oauth2.sdk.BadJWTException;
 import be.atbash.ee.oauth2.sdk.auth.*;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.util.CollectionUtils;
@@ -27,6 +26,7 @@ import be.atbash.ee.security.octopus.nimbus.jose.crypto.factories.DefaultJWSVeri
 import be.atbash.ee.security.octopus.nimbus.jose.proc.JWSVerifierFactory;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;

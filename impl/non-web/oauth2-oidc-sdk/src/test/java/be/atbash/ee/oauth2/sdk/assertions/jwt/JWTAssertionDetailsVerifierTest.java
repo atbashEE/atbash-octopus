@@ -16,10 +16,10 @@
 package be.atbash.ee.oauth2.sdk.assertions.jwt;
 
 
-import be.atbash.ee.oauth2.sdk.BadJWTException;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 import org.junit.Test;
 
 import java.net.URI;
