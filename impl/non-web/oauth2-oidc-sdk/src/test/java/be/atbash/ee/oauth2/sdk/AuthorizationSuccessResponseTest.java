@@ -145,7 +145,6 @@ public class AuthorizationSuccessResponseTest {
 
 		URI uri = resp.toURI();
 
-		System.out.println("Location: " + uri);
 
 		HTTPResponse httpResponse = resp.toHTTPResponse();
 		assertThat(httpResponse.getStatusCode()).isEqualTo(302);

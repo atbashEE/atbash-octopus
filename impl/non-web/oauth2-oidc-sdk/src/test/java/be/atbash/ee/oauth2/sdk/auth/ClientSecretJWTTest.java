@@ -65,8 +65,6 @@ public class ClientSecretJWTTest {
 
         JWTAuthenticationClaimsSet assertion = new JWTAuthenticationClaimsSet(clientID, audience.toSingleAudienceList(), exp, nbf, iat, jti);
 
-        System.out.println("Client secret JWT claims set: " + assertion.toJSONObject());
-
 
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
 
@@ -82,8 +80,6 @@ public class ClientSecretJWTTest {
 
         Map<String, List<String>> params = clientSecretJWT.toParameters();
         params.put("client_id", Collections.singletonList(clientID.getValue())); // add optional client_id to test parser
-
-        System.out.println("Client secret JWT: " + params);
 
         clientSecretJWT = ClientSecretJWT.parse(params);
 

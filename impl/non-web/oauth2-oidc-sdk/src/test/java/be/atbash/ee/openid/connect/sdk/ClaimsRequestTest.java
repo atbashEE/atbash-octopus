@@ -100,8 +100,6 @@ public class ClaimsRequestTest {
 
         ClaimsRequest cr = ClaimsRequest.resolve(ResponseType.parse("code"), scope);
 
-        System.out.println("Claims request for scope openid: " + cr.toJSONObject());
-
         assertThat(cr.getIDTokenClaims().isEmpty()).isTrue();
         assertThat(cr.getUserInfoClaims().isEmpty()).isTrue();
     }
@@ -113,8 +111,6 @@ public class ClaimsRequestTest {
         Scope scope = Scope.parse("openid email profile phone address");
 
         ClaimsRequest cr = ClaimsRequest.resolve(ResponseType.parse("code"), scope);
-
-        System.out.println("Claims request for scope openid email profile phone address: " + cr.toJSONObject());
 
         assertThat(cr.getIDTokenClaims().isEmpty()).isTrue();
 
@@ -181,7 +177,6 @@ public class ClaimsRequestTest {
 
         ClaimsRequest cr = ClaimsRequest.resolve(ResponseType.parse("id_token"), scope);
 
-        System.out.println("Claims request for scope openid email profile phone address: " + cr.toJSONObject());
         assertThat(cr.getUserInfoClaims().isEmpty()).isTrue();
 
         Collection<ClaimsRequest.Entry> idTokenClaims = cr.getIDTokenClaims();
@@ -270,8 +265,6 @@ public class ClaimsRequestTest {
 
         ClaimsRequest cr = ClaimsRequest.resolve(ResponseType.parse("code"), scope);
 
-        System.out.println("Claims request for scope openid profile: " + cr.toJSONObject());
-
         assertThat(cr.getIDTokenClaims().isEmpty()).isTrue();
 
         Collection<ClaimsRequest.Entry> userInfoClaims = cr.getUserInfoClaims();
@@ -297,8 +290,6 @@ public class ClaimsRequestTest {
         ClaimsRequest addon = new ClaimsRequest();
         addon.addUserInfoClaim("email", ClaimRequirement.ESSENTIAL);
         addon.addUserInfoClaim("email_verified", ClaimRequirement.ESSENTIAL);
-
-        System.out.println("Essential claims request: " + addon.toJSONObject());
 
         cr.add(addon);
 

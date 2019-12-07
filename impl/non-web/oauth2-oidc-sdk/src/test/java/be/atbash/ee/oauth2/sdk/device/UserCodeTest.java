@@ -118,8 +118,6 @@ public class UserCodeTest {
 
         UserCode code = new UserCode();
 
-        System.out.println("Random user code (default length): " + code);
-
         assertThat(code.toString().length()).isEqualTo(8 + 1);
         assertThat(code.getStrippedValue().length()).isEqualTo(8);
     }
@@ -128,8 +126,6 @@ public class UserCodeTest {
     public void testGenerationVarLengthAndCharset() {
 
         UserCode code = new UserCode(UserCode.DIGIT_CHAR_SET, 16);
-
-        System.out.println("Random user code (16 char length): " + code);
 
         assertThat(code.toString().length()).isEqualTo(16 + 3);
         assertThat(code.getStrippedValue().length()).isEqualTo(16);
@@ -141,8 +137,6 @@ public class UserCodeTest {
         UserCode code = new UserCode("abc");
 
         String json = code.toJSONString();
-
-        System.out.println("\"user_code\":" + json);
 
         assertThat(json).isEqualTo("\"abc\"");
     }

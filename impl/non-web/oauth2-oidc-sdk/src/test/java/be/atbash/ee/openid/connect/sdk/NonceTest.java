@@ -34,8 +34,6 @@ public class NonceTest {
 
         Nonce nonce = new Nonce();
 
-        System.out.println("Generated nonce: " + nonce);
-
         assertThat(new Base64URLValue(nonce.getValue()).decode().length).isEqualTo(Identifier.DEFAULT_BYTE_LENGTH);
     }
 
@@ -44,7 +42,6 @@ public class NonceTest {
 
         Nonce nonce = new Nonce(1);
 
-        System.out.println("Generated nonce: " + nonce);
         assertThat(new Base64Value(nonce.getValue()).decode().length).isEqualTo(1);
 
     }

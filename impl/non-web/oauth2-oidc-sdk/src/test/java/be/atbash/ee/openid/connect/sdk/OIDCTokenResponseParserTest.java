@@ -105,8 +105,6 @@ public class OIDCTokenResponseParserTest {
 
         HTTPResponse httpResponse = response.toHTTPResponse();
 
-        System.out.println(httpResponse.getContent());
-
         TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
 
         assertThat(tokenResponse.indicatesSuccess()).isTrue();

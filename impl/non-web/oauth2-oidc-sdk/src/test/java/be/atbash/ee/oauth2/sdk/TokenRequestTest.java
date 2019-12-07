@@ -1327,7 +1327,6 @@ public class TokenRequestTest  {
 
 		HTTPRequest httpRequest = request.toHTTPRequest();
 
-		System.out.println(httpRequest.getQuery());
 		assertThat(httpRequest.getQueryParameters().get("grant_type")).isEqualTo(Collections.singletonList("client_credentials"));
 		assertThat(httpRequest.getQueryParameters().get("scope")).isEqualTo(Collections.singletonList("read write"));
 		assertThat(httpRequest.getQueryParameters().get("data")).isEqualTo(Collections.singletonList("http://xxxxxx/PartyOData"));
@@ -1353,7 +1352,6 @@ public class TokenRequestTest  {
 
 		HTTPRequest httpRequest = request.toHTTPRequest();
 
-		System.out.println(httpRequest.getQuery());
 		assertThat(httpRequest.getQueryParameters().get("data")).isEqualTo(Collections.singletonList("http://xxxxxx/PartyOData"));
 
 		request = TokenRequest.parse(httpRequest);
@@ -1376,12 +1374,10 @@ public class TokenRequestTest  {
 
 		HTTPRequest httpRequest = request.toHTTPRequest();
 
-		System.out.println(httpRequest.getQuery());
 		assertThat(httpRequest.getQueryParameters().get("data")).isEqualTo(Collections.singletonList("http://xxxxxx/PartyOData"));
 
 		request = TokenRequest.parse(httpRequest);
 		assertThat(request.getCustomParameter("data")).isEqualTo(Collections.singletonList("http://xxxxxx/PartyOData"));
-		System.out.println(request.getCustomParameters());
 		assertThat(request.getCustomParameters()).hasSize(1);
 	}
 

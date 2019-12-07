@@ -85,7 +85,6 @@ public class OIDCClientRegistrationRequestTest {
         assertThat(httpRequest.getMethod()).isEqualTo(HTTPRequest.Method.POST);
         assertThat(httpRequest.getContentType().toString()).isEqualTo(CommonContentTypes.APPLICATION_JSON.toString());
 
-        System.out.println(httpRequest.getQuery());
 
         request = OIDCClientRegistrationRequest.parse(httpRequest);
 
@@ -124,7 +123,6 @@ public class OIDCClientRegistrationRequestTest {
                 + "   \"request_uris\":[\"https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA\"]"
                 + "  }";
 
-        System.out.println(json);
 
         HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, uri.toURL());
         httpRequest.setAuthorization("Bearer eyJhbGciOiJSUzI1NiJ9.eyJ");
@@ -290,20 +288,21 @@ public class OIDCClientRegistrationRequestTest {
 
         // The client credentials - store them:
 
+        //FIXME Make a proper test
         // The client_id
-        System.out.println("Client ID: " + clientInfo.getID());
+        //System.out.println("Client ID: " + clientInfo.getID());
 
         // The client_secret
-        System.out.println("Client secret: " + clientInfo.getSecret().getValue());
+        //System.out.println("Client secret: " + clientInfo.getSecret().getValue());
 
         // The client's registration resource
-        System.out.println("Client registration URI: " + clientInfo.getRegistrationURI());
+        //System.out.println("Client registration URI: " + clientInfo.getRegistrationURI());
 
         // The token for accessing the client's registration (for update, etc)
-        System.out.println("Client reg access token: " + clientInfo.getRegistrationAccessToken());
+        //System.out.println("Client reg access token: " + clientInfo.getRegistrationAccessToken());
 
         // Print the remaining client metadata
-        System.out.println("Client metadata: " + clientInfo.getMetadata().toJSONObject());
+        //System.out.println("Client metadata: " + clientInfo.getMetadata().toJSONObject());
 
 
         // Query
@@ -326,7 +325,6 @@ public class OIDCClientRegistrationRequestTest {
         // Success
         successResponse = (OIDCClientInformationResponse) regResponse;
 
-        System.out.println("Client registration data: " + successResponse.getClientInformation().toJSONObject());
 
 
         // Update client name
@@ -358,7 +356,6 @@ public class OIDCClientRegistrationRequestTest {
 
         // Ensure the client name has been updated
         clientInfo = successResponse.getOIDCClientInformation();
-        System.out.println("Client name: " + clientInfo.getMetadata().getName());
 
 
         // Request deletion

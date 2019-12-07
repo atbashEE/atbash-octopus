@@ -84,8 +84,6 @@ public class ScopeTest {
 
 		String out = scope.toString();
 
-		System.out.println("Scope: " + out);
-		
 		assertThat(out).isEqualTo("read write");
 
 		Scope scopeParsed = Scope.parse(out);

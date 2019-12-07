@@ -369,8 +369,6 @@ public class AuthenticationRequestTest {
 
         ClaimsRequest claimsOut = request.getClaims();
 
-//		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
-
         assertThat(claimsOut.getUserInfoClaims()).hasSize(2);
 
         assertThat(request.getCodeChallenge()).isEqualTo(codeChallenge);
@@ -385,8 +383,6 @@ public class AuthenticationRequestTest {
 
         // Check the resulting query string
         String queryString = request.toQueryString();
-
-        System.out.println("OIDC login query string: " + queryString);
 
         request = AuthenticationRequest.parse(uri, queryString);
 
@@ -434,8 +430,6 @@ public class AuthenticationRequestTest {
         assertThat(acrValuesOut).hasSize(2);
 
         claimsOut = request.getClaims();
-
-//		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
         assertThat(claimsOut.getUserInfoClaims()).hasSize(2);
 
@@ -545,8 +539,6 @@ public class AuthenticationRequestTest {
 
         ClaimsRequest claimsOut = request.getClaims();
 
-//		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
-
         assertThat(claimsOut.getUserInfoClaims()).hasSize(2);
 
         assertThat(request.getRequestObject().getParsedString()).isEqualTo(EXAMPLE_JWT_STRING);
@@ -554,8 +546,6 @@ public class AuthenticationRequestTest {
 
         // Check the resulting query string
         String queryString = request.toQueryString();
-
-//		System.out.println("OIDC login query string: " + queryString);
 
 
         request = AuthenticationRequest.parse(uri, queryString);
@@ -603,8 +593,6 @@ public class AuthenticationRequestTest {
         assertThat(acrValuesOut).hasSize(2);
 
         claimsOut = request.getClaims();
-
-        System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
         assertThat(claimsOut.getUserInfoClaims()).hasSize(2);
 
@@ -704,8 +692,6 @@ public class AuthenticationRequestTest {
 
         ClaimsRequest claimsOut = request.getClaims();
 
-        System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
-
         assertThat(claimsOut.getUserInfoClaims()).hasSize(2);
 
         assertThat(request.getRequestURI()).isEqualTo(requestURI);
@@ -713,8 +699,6 @@ public class AuthenticationRequestTest {
 
         // Check the resulting query string
         String queryString = request.toQueryString();
-
-        System.out.println("OIDC login query string: " + queryString);
 
 
         request = AuthenticationRequest.parse(uri, queryString);
@@ -762,8 +746,6 @@ public class AuthenticationRequestTest {
         assertThat(acrValuesOut).hasSize(2);
 
         claimsOut = request.getClaims();
-
-        System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
         assertThat(claimsOut.getUserInfoClaims()).hasSize(2);
 
@@ -1320,7 +1302,6 @@ public class AuthenticationRequestTest {
         jwt.sign(new RSASSASigner(rsaKeyPair.getPrivate()));
 
         String jwtString = jwt.serialize();
-        System.out.println(jwtString);
 
         CodeVerifier pkceVerifier = new CodeVerifier();
 
@@ -1336,7 +1317,6 @@ public class AuthenticationRequestTest {
                 .build()
                 .toURI();
 
-        System.out.println(authRequest);
 
         Base64URLValue fragment = Base64URLValue.encode(MessageDigest.getInstance("SHA-256").digest(jwtString.getBytes(StandardCharsets.UTF_8)));
 
@@ -1354,7 +1334,6 @@ public class AuthenticationRequestTest {
                 .build()
                 .toURI();
 
-        System.out.println(authRequest);
     }
 
     @Test

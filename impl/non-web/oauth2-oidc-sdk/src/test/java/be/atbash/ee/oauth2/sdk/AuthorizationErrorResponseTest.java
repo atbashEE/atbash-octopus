@@ -98,7 +98,6 @@ public class AuthorizationErrorResponseTest  {
 
 		URI location = r.toURI();
 			
-		System.out.println(location.toString());
 		assertThat(location.getFragment()).isNull();
 		assertThat(location.getQuery()).isNotNull();
 			

@@ -473,8 +473,6 @@ public class IDTokenClaimsSetTest {
 
         String json = claimsSet.toJSONObject().build().toString();
 
-//		System.out.println("ID token with subject JWK: " + json);
-
         claimsSet = IDTokenClaimsSet.parse(json);
 
         rsaJWKOut = (RSAKey) claimsSet.getSubjectJWK();

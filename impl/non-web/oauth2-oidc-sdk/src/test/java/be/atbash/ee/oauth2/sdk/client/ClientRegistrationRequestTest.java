@@ -126,23 +126,21 @@ public class ClientRegistrationRequestTest  {
 		ClientInformation clientInfo = successResponse.getClientInformation();
 		
 		// The client credentials - store them:
-		
+		// FIXME Create a proper test
 		// The client_id
-		System.out.println("Client ID: " + clientInfo.getID());
+		//System.out.println("Client ID: " + clientInfo.getID());
 		
 		// The client_secret
-		System.out.println("Client secret: " + clientInfo.getSecret().getValue());
+		//System.out.println("Client secret: " + clientInfo.getSecret().getValue());
 		
 		// The client's registration resource
-		System.out.println("Client registration URI: " + clientInfo.getRegistrationURI());
+		//System.out.println("Client registration URI: " + clientInfo.getRegistrationURI());
 		
 		// The token for accessing the client's registration (for update, etc)
-		System.out.println("Client reg access token: " + clientInfo.getRegistrationAccessToken());
+		//System.out.println("Client reg access token: " + clientInfo.getRegistrationAccessToken());
 		
 		// Print the remaining client metadata
-		System.out.println("Client metadata: " + clientInfo.getMetadata().toJSONObject());
-		
-		
+
 		// Query
 		ClientReadRequest readRequest = new ClientReadRequest(
 			clientInfo.getRegistrationURI(),
@@ -163,9 +161,7 @@ public class ClientRegistrationRequestTest  {
 		// Success
 		successResponse = (ClientInformationResponse)regResponse;
 		
-		System.out.println("Client registration data: " + successResponse.getClientInformation().toJSONObject());
-		
-		
+
 		// Update client name
 		clientMetadata = clientInfo.getMetadata();
 		clientMetadata.setName("My app has a new name");
@@ -195,8 +191,7 @@ public class ClientRegistrationRequestTest  {
 		
 		// Ensure the client name has been updated
 		clientInfo = successResponse.getClientInformation();
-		System.out.println("Client name: " + clientInfo.getMetadata().getName());
-		
+
 		
 		// Request deletion
 		ClientDeleteRequest deleteRequest = new ClientDeleteRequest(

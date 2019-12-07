@@ -91,8 +91,6 @@ public class AuthorizationRequestTest {
 
         String query = req.toQueryString();
 
-        System.out.println("Authorization query: " + query);
-
         Map<String, List<String>> params = URLUtils.parseParameters(query);
         assertThat(params.get("response_type")).isEqualTo(Collections.singletonList("code"));
         assertThat(params.get("client_id")).isEqualTo(Collections.singletonList("123456"));
@@ -235,7 +233,6 @@ public class AuthorizationRequestTest {
 
         String query = req.toQueryString();
 
-        System.out.println("Authorization query: " + query);
 
         Map<String, List<String>> params = URLUtils.parseParameters(query);
 
