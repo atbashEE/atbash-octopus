@@ -20,6 +20,9 @@ import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.sso.core.config.JARMLevel;
+import be.atbash.ee.security.octopus.util.duration.PeriodUtil;
+import be.atbash.util.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -103,5 +106,36 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
     @ConfigEntry
     public String getScopeForPermissions() {
         return getOptionalValue("SSO.scope.user.permissions", "", String.class);
+    }
+
+    @ConfigEntry
+    public JARMLevel getJARMLevel() {
+        String level = getOptionalValue("SSO.jarm.level", "NONE", String.class);
+        JARMLevel result;
+        try {
+            result = JARMLevel.valueOf(level);
+        } catch (IllegalArgumentException e) {
+            throw new ConfigurationException("Valid values for parameter 'SSO.jarm.level' are NONE, JWT and JWE");
+        }
+        return result;
+    }
+
+    @ConfigEntry
+    public String getJarmSigningKeyId() {
+        String kid = getOptionalValue("SSO.jarm.sign.kid", String.class);
+        if (StringUtils.isEmpty(kid) && getJARMLevel() != JARMLevel.NONE) {
+            throw new ConfigurationException("A valid for parameter 'SSO.jarm.sign.kid' is required when 'SSO.jarm.level' is JWT or JWE");
+        }
+        return kid;
+    }
+
+    @ConfigEntry
+    public String getJarmJWTExpirationTime() {
+        String expirationExpression = getOptionalValue("SSO.jarm.exp", "2s", String.class);
+        if (StringUtils.hasText(expirationExpression)) {
+            // Validate the expression
+            PeriodUtil.defineSecondsInPeriod(expirationExpression);
+        }
+        return expirationExpression;
     }
 }

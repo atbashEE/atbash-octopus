@@ -19,6 +19,7 @@ import be.atbash.ee.oauth2.sdk.AuthorizationCode;
 import be.atbash.ee.oauth2.sdk.ErrorObject;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.oauth2.sdk.jarm.JARMValidator;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
@@ -52,12 +53,14 @@ class SSOCallbackServletHandler {
     private CallbackErrorHandler callbackErrorHandler;
 
     private OpenIdVariableClientData variableClientData;
+    private JARMValidator jarmValidator;
 
-    SSOCallbackServletHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, OpenIdVariableClientData variableClientData, CallbackErrorHandler callbackErrorHandler) {
+    SSOCallbackServletHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, OpenIdVariableClientData variableClientData, CallbackErrorHandler callbackErrorHandler, JARMValidator jarmValidator) {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
         this.variableClientData = variableClientData;
         this.callbackErrorHandler = callbackErrorHandler;
+        this.jarmValidator = jarmValidator;
     }
 
     AuthenticationSuccessResponse getAuthenticationResponse() {
@@ -73,7 +76,7 @@ class SSOCallbackServletHandler {
         try {
             URI responseURL = new URI("?" + query);
 
-            authenticationResponse = AuthenticationResponseParser.parse(responseURL);
+            authenticationResponse = AuthenticationResponseParser.parse(responseURL, jarmValidator);
         } catch (URISyntaxException e) {
             errorObject = new ErrorObject("OCT-SSO-CLIENT-001", e.getMessage());
         } catch (OAuth2JSONParseException e) {

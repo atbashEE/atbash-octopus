@@ -164,7 +164,7 @@ public class AuthenticationResponseParserTest {
         AuthenticationSuccessResponse successResponse = response.toSuccessResponse();
         assertThat(successResponse.getAuthorizationCode()).isNull();
         assertThat(successResponse.getAccessToken()).isNull();
-        assertThat(successResponse.getState()).isNull();
+        assertThat(successResponse.getState().getValue()).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
         assertThat(successResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
 
         JWT jwtResponse = successResponse.getJWTResponse();
@@ -197,7 +197,7 @@ public class AuthenticationResponseParserTest {
         AuthenticationSuccessResponse successResponse = response.toSuccessResponse();
         assertThat(successResponse.getAuthorizationCode()).isNull();
         assertThat(successResponse.getAccessToken()).isNull();
-        assertThat(successResponse.getState()).isNull();
+        assertThat(successResponse.getState().getValue()).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
         assertThat(successResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
 
         JWT jwtResponse = successResponse.getJWTResponse();
@@ -235,7 +235,7 @@ public class AuthenticationResponseParserTest {
         AuthenticationSuccessResponse successResponse = response.toSuccessResponse();
         assertThat(successResponse.getAuthorizationCode()).isNull();
         assertThat(successResponse.getAccessToken()).isNull();
-        assertThat(successResponse.getState()).isNull();
+        assertThat(successResponse.getState().getValue()).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
         assertThat(successResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
 
         JWT jwtResponse = successResponse.getJWTResponse();

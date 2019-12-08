@@ -72,7 +72,7 @@ public class SSOCallbackServletHandlerTest {
     public void setup() {
         variableClientData = new OpenIdVariableClientData("app1");
 
-        handler = new SSOCallbackServletHandler(httpServletRequestMock, httpServletResponseMock, variableClientData, callbackErrorHandlerMock);
+        handler = new SSOCallbackServletHandler(httpServletRequestMock, httpServletResponseMock, variableClientData, callbackErrorHandlerMock, null);
     }
 
     @Test

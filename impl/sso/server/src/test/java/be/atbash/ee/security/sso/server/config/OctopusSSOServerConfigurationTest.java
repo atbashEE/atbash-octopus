@@ -17,13 +17,9 @@ package be.atbash.ee.security.sso.server.config;
 
 import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import com.google.common.collect.ImmutableList;
+import be.atbash.ee.security.octopus.sso.core.config.JARMLevel;
 import org.junit.After;
 import org.junit.Test;
-import uk.org.lidalia.slf4jext.Level;
-import uk.org.lidalia.slf4jtest.LoggingEvent;
-import uk.org.lidalia.slf4jtest.TestLogger;
-import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -91,5 +87,59 @@ public class OctopusSSOServerConfigurationTest {
 
         int ssoCookieTimeToLive = configuration.getSSOAccessTokenTimeToLive();
         assertThat(ssoCookieTimeToLive).isEqualTo(3600);
+    }
+
+    @Test
+    public void getUserEndpointEncoding_default() {
+        UserEndpointEncoding encoding = configuration.getUserEndpointEncoding();
+        assertThat(encoding).isEqualTo(UserEndpointEncoding.NONE);
+    }
+
+    @Test
+    public void getUserEndpointEncoding() {
+        TestConfig.addConfigValue("SSO.user.endpoint.encoding", "JWT");
+        UserEndpointEncoding encoding = configuration.getUserEndpointEncoding();
+        assertThat(encoding).isEqualTo(UserEndpointEncoding.JWT);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getUserEndpointEncoding_invalid() {
+        TestConfig.addConfigValue("SSO.user.endpoint.encoding", "something");
+        configuration.getUserEndpointEncoding();
+
+    }
+
+    @Test
+    public void getJARMLevel_default() {
+        JARMLevel level = configuration.getJARMLevel();
+        assertThat(level).isEqualTo(JARMLevel.NONE);
+    }
+
+    @Test
+    public void getJARMLevel() {
+        TestConfig.addConfigValue("SSO.jarm.level", "JWT");
+        JARMLevel level = configuration.getJARMLevel();
+        assertThat(level).isEqualTo(JARMLevel.JWT);
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getJARMLevel_invalid() {
+        TestConfig.addConfigValue("SSO.jarm.level", "something");
+        configuration.getJARMLevel();
+    }
+
+    @Test
+    public void getJarmSigningKeyId() {
+        TestConfig.addConfigValue("SSO.jarm.level", "JWT");
+        TestConfig.addConfigValue("SSO.jarm.sign.kid", "kidId");
+        String keyId = configuration.getJarmSigningKeyId();
+        assertThat(keyId).isEqualTo("kidId");
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void getJarmSigningKeyId_missing() {
+        TestConfig.addConfigValue("SSO.jarm.level", "JWT");
+        configuration.getJarmSigningKeyId();
+
     }
 }

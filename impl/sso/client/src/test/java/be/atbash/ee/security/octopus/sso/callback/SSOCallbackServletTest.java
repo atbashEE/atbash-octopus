@@ -20,16 +20,30 @@ import be.atbash.ee.oauth2.sdk.ErrorObject;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.oauth2.sdk.id.Subject;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.jwt.JWTEncoding;
+import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
+import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
+import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
+import be.atbash.ee.security.octopus.keys.AtbashKey;
+import be.atbash.ee.security.octopus.keys.ListKeyManager;
+import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
+import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
+import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
+import be.atbash.ee.security.octopus.keys.selector.KeySelector;
+import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
+import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
 import be.atbash.ee.security.octopus.sso.client.requestor.OctopusUserRequestor;
 import be.atbash.ee.security.octopus.sso.config.OctopusSSOClientConfiguration;
 import be.atbash.ee.security.octopus.sso.core.OctopusRetrievalException;
@@ -90,6 +104,9 @@ public class SSOCallbackServletTest {
     private OctopusSSOClientConfiguration clientConfigurationMock;
 
     @Mock
+    private OctopusSSOServerClientConfiguration octopusSSOServerClientConfigurationMock;
+
+    @Mock
     private CallbackErrorHandler callbackErrorHandlerMock;
 
     @Mock
@@ -97,6 +114,9 @@ public class SSOCallbackServletTest {
 
     @Mock
     private SessionUtil sessionUtilMock;
+
+    @Mock
+    private KeySelector keySelectorMock;
 
     @Mock
     private WebSubject webSubjectMock;
@@ -300,6 +320,86 @@ public class SSOCallbackServletTest {
         verify(callbackErrorHandlerMock, never()).showErrorMessage(any(HttpServletResponse.class), errorObjectArgumentCaptor.capture());
 
     }
+
+    @Test
+    public void doGet_ValidAuthenticationToken_JARM() throws ServletException, IOException, ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+
+        when(octopusSSOServerClientConfigurationMock.getOctopusSSOServer()).thenReturn("http://some.server/sso");
+        when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
+
+        when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
+        OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
+        when(httpSessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(clientData);
+
+        // For AUTHORIZATION_CODE inside JWT as parameter response
+        List<AtbashKey> atbashKeys = generateKey();
+        String responseJWT = createResponseJWT(clientData.getState(), filterKey(atbashKeys, AsymmetricPart.PRIVATE));
+        when(httpServletRequestMock.getQueryString()).thenReturn("response=" + responseJWT);
+        when(httpServletRequestMock.getParameter("response")).thenReturn(responseJWT);
+
+        // Supply the public part for signing Verification
+        when(keySelectorMock.selectSecretKey(any(SelectorCriteria.class))).thenReturn(filterKey(atbashKeys, AsymmetricPart.PUBLIC).getKey());
+
+        when(clientConfigurationMock.getSSOType()).thenReturn(SSOFlow.AUTHORIZATION_CODE);
+
+        AuthorizationCode authorizationCode = new AuthorizationCode("TheAuthorizationCode");
+        when(exchangeForAccessCodeMock.doExchange(httpServletResponseMock, clientData, authorizationCode)).thenReturn(new BearerAccessToken("TheAccessToken"));
+
+        BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
+        OctopusSSOToken ssoUser = new OctopusSSOToken();
+        when(octopusUserRequestorMock.getOctopusSSOToken(clientData, accessToken)).thenReturn(ssoUser);
+
+        ThreadContext.bind(webSubjectMock);
+        when(webSubjectMock.getSession(false)).thenReturn(sessionMock);
+        when(webSubjectMock.getSession()).thenReturn(sessionMock);
+        when(httpServletRequestMock.getRequestURI()).thenReturn("http://host.to.saved.request/root");
+        SavedRequest savedRequest = new SavedRequest(httpServletRequestMock);
+        when(sessionMock.getAttribute(WebUtils.SAVED_REQUEST_KEY)).thenReturn(savedRequest);
+
+        callbackServlet.doGet(httpServletRequestMock, httpServletResponseMock);
+
+        verify(sessionUtilMock).invalidateCurrentSession(httpServletRequestMock);
+
+        verify(httpServletResponseMock).sendRedirect(stringArgumentCaptor.capture());
+        assertThat(stringArgumentCaptor.getValue()).startsWith("http://host.to.saved.request/root?response=ey");
+
+        verify(callbackErrorHandlerMock, never()).showErrorMessage(any(HttpServletResponse.class), errorObjectArgumentCaptor.capture());
+
+    }
+
+    private String createResponseJWT(State state, AtbashKey key) {
+        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
+        builder.issuer("http://some.server/sso")
+                .audience("junit_client")
+                .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 10)) // 10 Min  // FIXME Can't find the Util method for calculating expiration time.
+                .claim("code", "TheAuthorizationCode")
+                .claim("state", state.getValue());
+
+        JWTParameters parameters = JWTParametersBuilder
+                .newBuilderFor(JWTEncoding.JWS)
+                .withSecretKeyForSigning(key)
+                .build();
+        return new JWTEncoder().encode(builder.build(), parameters);
+    }
+
+    private List<AtbashKey> generateKey() {
+        KeyGenerator keyGenerator = new KeyGenerator();
+        keyGenerator.init();
+        RSAGenerationParameters generationParameters = new RSAGenerationParameters.RSAGenerationParametersBuilder()
+                .withKeySize(2048)
+                .withKeyId("theKid")
+                .build();
+        return keyGenerator.generateKeys(generationParameters);
+    }
+
+    private AtbashKey filterKey(List<AtbashKey> atbashKeys, AsymmetricPart asymmetricPart) {
+        ListKeyManager keyManager = new ListKeyManager(atbashKeys);
+
+        SelectorCriteria criteria = SelectorCriteria.newBuilder().withAsymmetricPart(asymmetricPart).build();
+        List<AtbashKey> privateList = keyManager.retrieveKeys(criteria);
+        return privateList.get(0);
+    }
+
 
     // TODO other scenarios.
 }

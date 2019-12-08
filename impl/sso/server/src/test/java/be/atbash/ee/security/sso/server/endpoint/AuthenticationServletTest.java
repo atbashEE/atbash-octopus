@@ -24,16 +24,29 @@ import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.WebConstants;
+import be.atbash.ee.security.octopus.config.JwtSupportConfiguration;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.context.ThreadContext;
+import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
+import be.atbash.ee.security.octopus.keys.AtbashKey;
+import be.atbash.ee.security.octopus.keys.KeyManager;
+import be.atbash.ee.security.octopus.keys.ListKeyManager;
+import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
+import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
+import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
+import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
+import be.atbash.ee.security.octopus.sso.core.config.JARMLevel;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.TimeUtil;
@@ -43,6 +56,7 @@ import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
+import be.atbash.util.TestReflectionUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,16 +76,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationServletTest {
@@ -102,6 +113,9 @@ public class AuthenticationServletTest {
 
     @Mock
     private WebSubject subjectMock;
+
+    @Mock
+    private JwtSupportConfiguration jwtSupportConfigurationMock;
 
     @Captor
     private ArgumentCaptor<String> stringArgumentCaptor;
@@ -136,6 +150,7 @@ public class AuthenticationServletTest {
 
     @Test
     public void doGet_happyCase_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException {
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.NONE);
 
         ThreadContext.bind(subjectMock);
         UserPrincipal userPrincipal = new UserPrincipal();
@@ -197,6 +212,8 @@ public class AuthenticationServletTest {
 
     @Test
     public void doGet_happyCase_ImplicitFlow_IdTokenOnly() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException, JOSEException {
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.NONE);
+
         ThreadContext.bind(subjectMock);
         UserPrincipal userPrincipal = new UserPrincipal();
         when(subjectMock.getPrincipal()).thenReturn(userPrincipal);
@@ -297,6 +314,8 @@ public class AuthenticationServletTest {
 
     @Test
     public void doGet_happyCase_ImplicitFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException, JOSEException {
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.NONE);
+
         ThreadContext.bind(subjectMock);
         UserPrincipal userPrincipal = new UserPrincipal();
         when(subjectMock.getPrincipal()).thenReturn(userPrincipal);
@@ -368,5 +387,153 @@ public class AuthenticationServletTest {
         assertThat(claimsSet).isNotSameAs(expectedClaimSet);  // Since it is serialized/Deserialized
 
         verify(httpSessionMock).invalidate();
+    }
+
+    @Test
+    public void doGet_happyCase_JARM_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, NoSuchFieldException, ParseException {
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWT);
+        when(ssoServerConfigurationMock.getJarmJWTExpirationTime()).thenReturn("2s");
+
+        when(ssoServerConfigurationMock.getJarmSigningKeyId()).thenReturn("theKid");
+
+        List<AtbashKey> keys = new ArrayList<>();
+        keys.add(generatePrivateKey());
+        KeyManager listKeyManager = new ListKeyManager(keys);
+        when(jwtSupportConfigurationMock.getKeyManager()).thenReturn(listKeyManager);
+
+        TestReflectionUtils.setFieldValue(authenticationServlet, "jwtEncoder", new JWTEncoder());
+
+        ThreadContext.bind(subjectMock);
+        UserPrincipal userPrincipal = new UserPrincipal();
+        when(subjectMock.getPrincipal()).thenReturn(userPrincipal);
+
+        when(ssoServerConfigurationMock.getOIDCTokenLength()).thenReturn(48);
+        when(ssoServerConfigurationMock.getSSOAccessTokenTimeToLive()).thenReturn(3600);
+
+        when(httpServletRequestMock.getAttribute(AbstractRequest.class.getName())).thenReturn(authenticationRequestMock);
+        when(authenticationRequestMock.getClientID()).thenReturn(new ClientID("JUnit_client"));
+        when(authenticationRequestMock.getResponseType()).thenReturn(ResponseType.parse("code"));
+        when(authenticationRequestMock.getRedirectionURI()).thenReturn(new URI("http://client.app/testing"));
+        when(authenticationRequestMock.getState()).thenReturn(new State("stateValue"));
+        when(authenticationRequestMock.getScope()).thenReturn(Scope.parse("scope1 scope2"));
+
+        when(httpServletRequestMock.getSession()).thenReturn(httpSessionMock);
+
+        userPrincipal.addUserInfo(WebConstants.SSO_COOKIE_TOKEN, "CookieTokenRememberMe");
+        when(httpServletRequestMock.getHeader("User-Agent")).thenReturn("UserAgentValue");
+        when(httpServletRequestMock.getRemoteAddr()).thenReturn("remoteAddressValue");
+
+        List<Audience> aud = Audience.create("aud");
+        IDTokenClaimsSet expectedClaimSet = new IDTokenClaimsSet(new Issuer("issuer"), new Subject("sub"), aud, new Date(), new Date());
+
+        ClientID clientId = new ClientID("JUnit_client");
+        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, clientId, authenticationRequestMock))
+                .thenReturn(expectedClaimSet);
+
+        authenticationServlet.init();  // To configure the KeyManager
+
+        authenticationServlet.doGet(httpServletRequestMock, httpServletResponseMock);
+
+        verify(httpServletResponseMock).sendRedirect(stringArgumentCaptor.capture());
+
+        String callbackURL = stringArgumentCaptor.getValue();
+        assertThat(callbackURL).startsWith("http://client.app/testing?response=");
+
+        JWT jwt = JWTParser.parse(callbackURL.substring(35));
+
+        Map<String, Object> claims = jwt.getJWTClaimsSet().getClaims();
+        assertThat(claims.keySet()).containsOnly("iss", "exp", "aud", "code", "state");
+
+        String authorizationCode = claims.get("code").toString();
+        byte[] bytes = new Base64URLValue(authorizationCode).decode();
+        assertThat(bytes.length).isEqualTo(48);
+
+        assertThat(claims.get("state")).isEqualTo("stateValue");
+        List<String> audience = (List<String>) claims.get("aud");
+        assertThat(audience).containsOnly("JUnit_client");
+
+        verify(tokenStoreMock).addLoginFromClient(any(UserPrincipal.class), cookieTokenArgumentCaptor.capture(),
+                userAgentArgumentCaptor.capture(), remoteHostArgumentCaptor.capture(), oidcStoreDataArgumentCaptor.capture());
+
+        assertThat(cookieTokenArgumentCaptor.getValue()).isEqualTo("CookieTokenRememberMe");
+        assertThat(userAgentArgumentCaptor.getValue()).isEqualTo("UserAgentValue");
+        assertThat(remoteHostArgumentCaptor.getValue()).isEqualTo("remoteAddressValue");
+
+        assertThat(oidcStoreDataArgumentCaptor.getValue().getAuthorizationCode().getValue()).isEqualTo(authorizationCode);
+        assertThat(oidcStoreDataArgumentCaptor.getValue().getAccessToken()).isNotNull();
+        assertThat(oidcStoreDataArgumentCaptor.getValue().getScope().toStringList()).containsExactly("scope1", "scope2");
+        assertThat(oidcStoreDataArgumentCaptor.getValue().getClientId().getValue()).isEqualTo("JUnit_client");
+
+        IDTokenClaimsSet claimsSet = oidcStoreDataArgumentCaptor.getValue().getIdTokenClaimsSet();
+        assertThat(claimsSet).isNotSameAs(expectedClaimSet);  // Since it is serialized/Deserialized
+
+        verify(httpSessionMock).invalidate();
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void doGet_missingKey_JARM_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, NoSuchFieldException, ParseException {
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWT);
+        when(ssoServerConfigurationMock.getJarmJWTExpirationTime()).thenReturn("2s");
+
+        when(ssoServerConfigurationMock.getJarmSigningKeyId()).thenReturn("theKid");
+
+        List<AtbashKey> keys = new ArrayList<>();
+        KeyManager listKeyManager = new ListKeyManager(keys);
+        when(jwtSupportConfigurationMock.getKeyManager()).thenReturn(listKeyManager);
+
+        TestReflectionUtils.setFieldValue(authenticationServlet, "jwtEncoder", new JWTEncoder());
+
+        ThreadContext.bind(subjectMock);
+        UserPrincipal userPrincipal = new UserPrincipal();
+        when(subjectMock.getPrincipal()).thenReturn(userPrincipal);
+
+        when(ssoServerConfigurationMock.getOIDCTokenLength()).thenReturn(48);
+        when(ssoServerConfigurationMock.getSSOAccessTokenTimeToLive()).thenReturn(3600);
+
+        when(httpServletRequestMock.getAttribute(AbstractRequest.class.getName())).thenReturn(authenticationRequestMock);
+        when(authenticationRequestMock.getClientID()).thenReturn(new ClientID("JUnit_client"));
+        when(authenticationRequestMock.getResponseType()).thenReturn(ResponseType.parse("code"));
+        when(authenticationRequestMock.getRedirectionURI()).thenReturn(new URI("http://client.app/testing"));
+        when(authenticationRequestMock.getState()).thenReturn(new State("stateValue"));
+        when(authenticationRequestMock.getScope()).thenReturn(Scope.parse("scope1 scope2"));
+
+        userPrincipal.addUserInfo(WebConstants.SSO_COOKIE_TOKEN, "CookieTokenRememberMe");
+
+        List<Audience> aud = Audience.create("aud");
+        IDTokenClaimsSet expectedClaimSet = new IDTokenClaimsSet(new Issuer("issuer"), new Subject("sub"), aud, new Date(), new Date());
+
+        ClientID clientId = new ClientID("JUnit_client");
+        when(oidcTokenHelperMock.defineIDToken(httpServletRequestMock, userPrincipal, clientId, authenticationRequestMock))
+                .thenReturn(expectedClaimSet);
+
+        authenticationServlet.init();  // To configure the KeyManager
+
+        try {
+            authenticationServlet.doGet(httpServletRequestMock, httpServletResponseMock);
+        } finally {
+
+            verify(httpServletResponseMock, never()).sendRedirect(anyString());
+
+            verify(tokenStoreMock, never()).addLoginFromClient(any(UserPrincipal.class), anyString(),
+                    anyString(), anyString(), any(OIDCStoreData.class));
+
+            verify(httpSessionMock, never()).invalidate();
+        }
+    }
+
+    private static AtbashKey generatePrivateKey() {
+        KeyGenerator keyGenerator = new KeyGenerator();
+        keyGenerator.init();
+        RSAGenerationParameters generationParameters = new RSAGenerationParameters.RSAGenerationParametersBuilder()
+                .withKeySize(2048)
+                .withKeyId("theKid")
+                .build();
+        List<AtbashKey> atbashKeys = keyGenerator.generateKeys(generationParameters);
+
+        ListKeyManager keyManager = new ListKeyManager(atbashKeys);
+
+        SelectorCriteria criteria = SelectorCriteria.newBuilder().withAsymmetricPart(AsymmetricPart.PRIVATE).build();
+        List<AtbashKey> privateList = keyManager.retrieveKeys(criteria);
+        return privateList.get(0);
     }
 }

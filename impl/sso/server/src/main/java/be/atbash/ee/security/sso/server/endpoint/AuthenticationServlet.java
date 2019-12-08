@@ -19,7 +19,9 @@ import be.atbash.ee.oauth2.sdk.AbstractRequest;
 import be.atbash.ee.oauth2.sdk.AuthorizationCode;
 import be.atbash.ee.oauth2.sdk.ResponseMode;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.oauth2.sdk.id.State;
+import be.atbash.ee.oauth2.sdk.jarm.JARMUtils;
 import be.atbash.ee.oauth2.sdk.token.AccessToken;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
@@ -28,9 +30,23 @@ import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.Debug;
+import be.atbash.ee.security.octopus.config.JwtSupportConfiguration;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.jwt.JWTEncoding;
+import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
+import be.atbash.ee.security.octopus.jwt.parameter.JWTParameters;
+import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersBuilder;
+import be.atbash.ee.security.octopus.keys.AtbashKey;
+import be.atbash.ee.security.octopus.keys.KeyManager;
+import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
+import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
+import be.atbash.ee.security.octopus.sso.core.config.JARMLevel;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
+import be.atbash.ee.security.octopus.util.WebUtils;
+import be.atbash.ee.security.octopus.util.duration.PeriodUtil;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
 import be.atbash.ee.security.sso.server.endpoint.helper.OIDCTokenHelper;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
@@ -46,6 +62,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -59,6 +78,9 @@ public class AuthenticationServlet extends HttpServlet {
     private OctopusSSOServerConfiguration ssoServerConfiguration;
 
     @Inject
+    private JwtSupportConfiguration jwtSupportConfiguration;
+
+    @Inject
     private SSOTokenStore tokenStore;
 
     @Inject
@@ -67,6 +89,16 @@ public class AuthenticationServlet extends HttpServlet {
     @Inject
     private OIDCTokenHelper oidcTokenHelper;
 
+    @Inject
+    private JWTEncoder jwtEncoder;
+
+    private KeyManager keyManager;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        keyManager = jwtSupportConfiguration.getKeyManager();
+    }
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse response) throws ServletException, IOException {
@@ -100,6 +132,28 @@ public class AuthenticationServlet extends HttpServlet {
             idToken = oidcTokenHelper.signIdToken(clientId, claimsSet);
         }
 
+        State state = request.getState();
+
+        AuthenticationSuccessResponse successResponse = new AuthenticationSuccessResponse(request.getRedirectionURI()
+                , authorizationCode, idToken, accessToken, state, null, ResponseMode.QUERY);
+
+        if (ssoServerConfiguration.getJARMLevel() != JARMLevel.NONE) {
+
+            Issuer issuer = new Issuer(WebUtils.determineRoot(httpServletRequest));
+
+            Date exp = new Date(new Date().getTime() + PeriodUtil.defineSecondsInPeriod(ssoServerConfiguration.getJarmJWTExpirationTime()));
+            JWTClaimsSet jarmClaimSet = JARMUtils.toJWTClaimsSet(issuer, request.getClientID(), exp, successResponse);
+            String jwt = jwtEncoder.encode(jarmClaimSet, getEncoderParameters());
+
+            // redefine the AuthenticationSuccessResponse but now with the JWT/JWE
+            try {
+                successResponse = new AuthenticationSuccessResponse(request.getRedirectionURI()
+                        , JWTParser.parse(jwt), ResponseMode.QUERY);
+            } catch (ParseException e) {
+                throw new AtbashUnexpectedException(e);
+            }
+        }
+
         oidcStoreData.setIdTokenClaimsSet(claimsSet);
 
         oidcStoreData.setClientId(request.getClientID());
@@ -111,10 +165,6 @@ public class AuthenticationServlet extends HttpServlet {
         String cookieToken = userPrincipal.getUserInfo(WebConstants.SSO_COOKIE_TOKEN);
         tokenStore.addLoginFromClient(SecurityUtils.getSubject().getPrincipal(), cookieToken, userAgent, remoteHost, oidcStoreData);
 
-        State state = request.getState();
-
-        AuthenticationSuccessResponse successResponse = new AuthenticationSuccessResponse(request.getRedirectionURI()
-                , authorizationCode, idToken, accessToken, state, null, ResponseMode.QUERY);
 
         try {
             String callback = successResponse.toURI().toString();
@@ -132,6 +182,30 @@ public class AuthenticationServlet extends HttpServlet {
         }
 
 
+    }
+
+    private JWTParameters getEncoderParameters() {
+        JWTParameters result = null;
+        switch (ssoServerConfiguration.getJARMLevel()) {
+
+            case JWT:
+                SelectorCriteria.Builder criteriaBuilder = SelectorCriteria.newBuilder();
+                criteriaBuilder.withId(ssoServerConfiguration.getJarmSigningKeyId());
+                List<AtbashKey> atbashKeys = keyManager.retrieveKeys(criteriaBuilder.build());
+
+                if (atbashKeys.isEmpty()) {
+                    throw new ConfigurationException(String.format("KeyManager does not know the key with id '%s'", ssoServerConfiguration.getJarmSigningKeyId()));
+                }
+
+                result = JWTParametersBuilder.newBuilderFor(JWTEncoding.JWS).withSecretKeyForSigning(atbashKeys.get(0))
+                        .build();
+                break;
+            case JWE:
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Value '%s' not supported for JARMLevel", ssoServerConfiguration.getJARMLevel()));
+        }
+        return result;
     }
 
     private void showDebugInfo(UserPrincipal userPrincipal) {

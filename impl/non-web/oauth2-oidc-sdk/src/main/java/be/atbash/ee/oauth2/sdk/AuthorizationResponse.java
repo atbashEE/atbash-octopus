@@ -28,10 +28,12 @@ import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.util.StringUtils;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +63,7 @@ public abstract class AuthorizationResponse implements Response {
     /**
      * The optional state parameter to be echoed back to the client.
      */
-    private final State state;
+    private State state;
 
 
     /**
@@ -122,7 +124,15 @@ public abstract class AuthorizationResponse implements Response {
 
         this.jwtResponse = jwtResponse;
 
-        this.state = null;
+        try {
+            JWTClaimsSet jwtClaimsSet = jwtResponse.getJWTClaimsSet();
+            if (jwtClaimsSet.getClaim("state") != null) {
+                this.state = new State(jwtClaimsSet.getStringClaim("state"));
+            }
+        } catch (ParseException e) {
+            // Should not happen as payload is already validated
+            throw new AtbashUnexpectedException(e);
+        }
 
         this.rm = rm;
     }
@@ -437,7 +447,7 @@ public abstract class AuthorizationResponse implements Response {
      * @see #parse(HTTPRequest)
      */
     public static AuthorizationResponse parse(HTTPResponse httpResponse)
-            throws OAuth2JSONParseException {
+            throws OAuth2JSONParseException {  // FIXME Remove as it is not used?
 
         URI location = httpResponse.getLocation();
 

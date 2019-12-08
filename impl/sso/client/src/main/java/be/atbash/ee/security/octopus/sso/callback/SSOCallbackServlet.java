@@ -16,11 +16,15 @@
 package be.atbash.ee.security.octopus.sso.callback;
 
 import be.atbash.ee.oauth2.sdk.ErrorObject;
+import be.atbash.ee.oauth2.sdk.id.ClientID;
+import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.oauth2.sdk.jarm.JARMValidator;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.openid.connect.sdk.AuthenticationSuccessResponse;
 import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
+import be.atbash.ee.security.octopus.keys.selector.KeySelector;
 import be.atbash.ee.security.octopus.session.SessionUtil;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
 import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientConfiguration;
@@ -37,6 +41,7 @@ import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.ee.security.octopus.util.WebUtils;
 import be.atbash.util.CDIUtils;
+import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import javax.inject.Inject;
@@ -73,6 +78,9 @@ public class SSOCallbackServlet extends HttpServlet {
     private OctopusSSOServerClientConfiguration octopusSSOServerClientConfiguration;
 
     @Inject
+    private KeySelector keySelector;
+
+    @Inject
     private SessionUtil sessionUtil;
 
     // TODO Are servlets serialized?
@@ -99,7 +107,13 @@ public class SSOCallbackServlet extends HttpServlet {
             return;
         }
 
-        SSOCallbackServletHandler handler = new SSOCallbackServletHandler(httpServletRequest, httpServletResponse, variableClientData, callbackErrorHandler);
+        JARMValidator jarmValidator = null;
+        if (requiresJARM(httpServletRequest)) {
+            Issuer issuer = new Issuer(octopusSSOServerClientConfiguration.getOctopusSSOServer());
+            ClientID clientId = new ClientID(octopusSSOServerClientConfiguration.getSSOClientId());
+            jarmValidator = new JARMValidator(issuer, clientId, keySelector);
+        }
+        SSOCallbackServletHandler handler = new SSOCallbackServletHandler(httpServletRequest, httpServletResponse, variableClientData, callbackErrorHandler, jarmValidator);
 
         // Get the authentication response and do some basic checks about it.
         AuthenticationSuccessResponse successResponse = handler.getAuthenticationResponse();
@@ -161,6 +175,10 @@ public class SSOCallbackServlet extends HttpServlet {
             handleException(httpServletRequest, httpServletResponse, e, user);
         }
 
+    }
+
+    private boolean requiresJARM(HttpServletRequest httpServletRequest) {
+        return !StringUtils.isEmpty(httpServletRequest.getParameter("response"));
     }
 
     private OpenIdVariableClientData getOpenIdVariableClientData(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {

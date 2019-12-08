@@ -63,7 +63,7 @@ public final class JARMUtils {
                 continue; // own JARM parameter, skip
             }
 
-            builder = builder.claim(en.getKey(), en.getValue() + ""); // force string
+            builder = builder.claim(en.getKey(), en.getValue().toString());
         }
 
         return builder.build();
