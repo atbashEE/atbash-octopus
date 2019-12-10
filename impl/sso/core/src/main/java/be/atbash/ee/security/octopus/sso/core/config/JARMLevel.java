@@ -20,5 +20,5 @@ package be.atbash.ee.security.octopus.sso.core.config;
  * NONE is plain http Query parameters, JWT is a JWT encoded response, JWE is a JWE Encoded response.
  */
 public enum JARMLevel {
-    NONE, JWT, JWE
+    NONE, JWS, JWE
 }

@@ -391,7 +391,7 @@ public class AuthenticationServletTest {
 
     @Test
     public void doGet_happyCase_JARM_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, NoSuchFieldException, ParseException {
-        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWT);
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWS);
         when(ssoServerConfigurationMock.getJarmJWTExpirationTime()).thenReturn("2s");
 
         when(ssoServerConfigurationMock.getJarmSigningKeyId()).thenReturn("theKid");
@@ -472,7 +472,7 @@ public class AuthenticationServletTest {
 
     @Test(expected = ConfigurationException.class)
     public void doGet_missingKey_JARM_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, NoSuchFieldException, ParseException {
-        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWT);
+        when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWS);
         when(ssoServerConfigurationMock.getJarmJWTExpirationTime()).thenReturn("2s");
 
         when(ssoServerConfigurationMock.getJarmSigningKeyId()).thenReturn("theKid");

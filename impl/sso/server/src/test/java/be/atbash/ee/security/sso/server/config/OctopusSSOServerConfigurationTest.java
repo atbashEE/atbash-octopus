@@ -97,9 +97,9 @@ public class OctopusSSOServerConfigurationTest {
 
     @Test
     public void getUserEndpointEncoding() {
-        TestConfig.addConfigValue("SSO.user.endpoint.encoding", "JWT");
+        TestConfig.addConfigValue("SSO.user.endpoint.encoding", "JWS");
         UserEndpointEncoding encoding = configuration.getUserEndpointEncoding();
-        assertThat(encoding).isEqualTo(UserEndpointEncoding.JWT);
+        assertThat(encoding).isEqualTo(UserEndpointEncoding.JWS);
     }
 
     @Test(expected = ConfigurationException.class)
@@ -117,9 +117,9 @@ public class OctopusSSOServerConfigurationTest {
 
     @Test
     public void getJARMLevel() {
-        TestConfig.addConfigValue("SSO.jarm.level", "JWT");
+        TestConfig.addConfigValue("SSO.jarm.level", "JWS");
         JARMLevel level = configuration.getJARMLevel();
-        assertThat(level).isEqualTo(JARMLevel.JWT);
+        assertThat(level).isEqualTo(JARMLevel.JWS);
     }
 
     @Test(expected = ConfigurationException.class)

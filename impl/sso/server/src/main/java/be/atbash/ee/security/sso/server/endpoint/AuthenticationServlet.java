@@ -188,7 +188,7 @@ public class AuthenticationServlet extends HttpServlet {
         JWTParameters result = null;
         switch (ssoServerConfiguration.getJARMLevel()) {
 
-            case JWT:
+            case JWS:
                 SelectorCriteria.Builder criteriaBuilder = SelectorCriteria.newBuilder();
                 criteriaBuilder.withId(ssoServerConfiguration.getJarmSigningKeyId());
                 List<AtbashKey> atbashKeys = keyManager.retrieveKeys(criteriaBuilder.build());

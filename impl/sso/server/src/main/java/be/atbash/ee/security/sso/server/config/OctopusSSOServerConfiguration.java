@@ -98,7 +98,7 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
         try {
             result = UserEndpointEncoding.valueOf(encoding);
         } catch (IllegalArgumentException e) {
-            throw new ConfigurationException("Valid values for parameter SSO.user.endpoint.encoding are NONE, JWT and JWE");
+            throw new ConfigurationException("Valid values for parameter SSO.user.endpoint.encoding are NONE, JWS and JWE");
         }
         return result;
     }
@@ -115,7 +115,7 @@ public class OctopusSSOServerConfiguration extends AbstractConfiguration impleme
         try {
             result = JARMLevel.valueOf(level);
         } catch (IllegalArgumentException e) {
-            throw new ConfigurationException("Valid values for parameter 'SSO.jarm.level' are NONE, JWT and JWE");
+            throw new ConfigurationException("Valid values for parameter 'SSO.jarm.level' are NONE, JWS and JWE");
         }
         return result;
     }
