@@ -148,13 +148,13 @@ public class OIDCProviderMetadataTest {
                 "   \"userinfo_signing_alg_values_supported\":\n" +
                 "     [\"RS256\", \"ES256\", \"HS256\"],\n" +
                 "   \"userinfo_encryption_alg_values_supported\":\n" +
-                "     [\"RSA1_5\", \"A128KW\"],\n" +
+                "     [\"A128KW\"],\n" +
                 "   \"userinfo_encryption_enc_values_supported\":\n" +
                 "     [\"A128CBC-HS256\", \"A128GCM\"],\n" +
                 "   \"id_token_signing_alg_values_supported\":\n" +
                 "     [\"RS256\", \"ES256\", \"HS256\"],\n" +
                 "   \"id_token_encryption_alg_values_supported\":\n" +
-                "     [\"RSA1_5\", \"A128KW\"],\n" +
+                "     [\"A128KW\"],\n" +
                 "   \"id_token_encryption_enc_values_supported\":\n" +
                 "     [\"A128CBC-HS256\", \"A128GCM\"],\n" +
                 "   \"request_object_signing_alg_values_supported\":\n" +
@@ -250,9 +250,8 @@ public class OIDCProviderMetadataTest {
         assertThat(userInfoJWSAlgs).hasSize(3);
 
         List<JWEAlgorithm> userInfoJWEalgs = op.getUserInfoJWEAlgs();
-        assertThat(userInfoJWEalgs.contains(JWEAlgorithm.RSA1_5)).isTrue();
         assertThat(userInfoJWEalgs.contains(JWEAlgorithm.A128KW)).isTrue();
-        assertThat(userInfoJWEalgs).hasSize(2);
+        assertThat(userInfoJWEalgs).hasSize(1);
 
         List<EncryptionMethod> userInfoEncs = op.getUserInfoJWEEncs();
         assertThat(userInfoEncs.contains(EncryptionMethod.A128CBC_HS256)).isTrue();
@@ -267,9 +266,8 @@ public class OIDCProviderMetadataTest {
         assertThat(idTokenJWSAlgs).hasSize(3);
 
         List<JWEAlgorithm> idTokenJWEAlgs = op.getIDTokenJWEAlgs();
-        assertThat(idTokenJWEAlgs.contains(JWEAlgorithm.RSA1_5)).isTrue();
         assertThat(idTokenJWEAlgs.contains(JWEAlgorithm.A128KW)).isTrue();
-        assertThat(idTokenJWEAlgs).hasSize(2);
+        assertThat(idTokenJWEAlgs).hasSize(1);
 
         List<EncryptionMethod> idTokenEncs = op.getIDTokenJWEEncs();
         assertThat(idTokenEncs.contains(EncryptionMethod.A128CBC_HS256)).isTrue();
@@ -468,9 +466,9 @@ public class OIDCProviderMetadataTest {
         assertThat(meta.getUserInfoJWSAlgs().get(0)).isEqualTo(JWSAlgorithm.RS256);
 
         List<JWEAlgorithm> userInfoJWEAlgs = new LinkedList<>();
-        userInfoJWEAlgs.add(JWEAlgorithm.RSA1_5);
+        userInfoJWEAlgs.add(JWEAlgorithm.RSA_OAEP_256);
         meta.setUserInfoJWEAlgs(userInfoJWEAlgs);
-        assertThat(meta.getUserInfoJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(meta.getUserInfoJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
 
         List<EncryptionMethod> userInfoEncs = new LinkedList<>();
         userInfoEncs.add(EncryptionMethod.A128CBC_HS256);
@@ -643,7 +641,7 @@ public class OIDCProviderMetadataTest {
 
         assertThat(meta.getUserInfoJWSAlgs().get(0)).isEqualTo(JWSAlgorithm.RS256);
 
-        assertThat(meta.getUserInfoJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(meta.getUserInfoJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
 
         assertThat(meta.getUserInfoJWEEncs().get(0)).isEqualTo(EncryptionMethod.A128CBC_HS256);
 
@@ -857,15 +855,15 @@ public class OIDCProviderMetadataTest {
         jsonObjectbuilder.add("token_endpoint_auth_signing_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RS256")));
 
         jsonObjectbuilder.add("request_object_signing_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RS256")));
-        jsonObjectbuilder.add("request_object_encryption_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RSA-OAEP")));
+        jsonObjectbuilder.add("request_object_encryption_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RSA-OAEP-256")));
         jsonObjectbuilder.add("request_object_encryption_enc_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("A128GCM")));
 
         jsonObjectbuilder.add("id_token_signing_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RS256")));
-        jsonObjectbuilder.add("id_token_encryption_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RSA-OAEP")));
+        jsonObjectbuilder.add("id_token_encryption_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RSA-OAEP-256")));
         jsonObjectbuilder.add("id_token_encryption_enc_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("A128GCM")));
 
         jsonObjectbuilder.add("userinfo_signing_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RS256")));
-        jsonObjectbuilder.add("userinfo_encryption_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RSA-OAEP")));
+        jsonObjectbuilder.add("userinfo_encryption_alg_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("RSA-OAEP-256")));
         jsonObjectbuilder.add("userinfo_encryption_enc_values_supported", JSONObjectUtils.asJsonArray(Collections.singletonList("A128GCM")));
 
         OIDCProviderMetadata opMetadata = OIDCProviderMetadata.parse(jsonObjectbuilder.build().toString());
@@ -873,16 +871,16 @@ public class OIDCProviderMetadataTest {
         assertThat(opMetadata.getTokenEndpointJWSAlgs().get(0)).isEqualTo(JWSAlgorithm.RS256);
 
         assertThat(opMetadata.getRequestObjectJWSAlgs().get(0)).isEqualTo(JWSAlgorithm.RS256);
-        assertThat(opMetadata.getRequestObjectJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP);
+        assertThat(opMetadata.getRequestObjectJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(opMetadata.getRequestObjectJWEEncs().get(0)).isEqualTo(EncryptionMethod.A128GCM);
 
 
         assertThat(opMetadata.getIDTokenJWSAlgs().get(0)).isEqualTo(JWSAlgorithm.RS256);
-        assertThat(opMetadata.getIDTokenJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP);
+        assertThat(opMetadata.getIDTokenJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(opMetadata.getIDTokenJWEEncs().get(0)).isEqualTo(EncryptionMethod.A128GCM);
 
         assertThat(opMetadata.getUserInfoJWSAlgs().get(0)).isEqualTo(JWSAlgorithm.RS256);
-        assertThat(opMetadata.getUserInfoJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP);
+        assertThat(opMetadata.getUserInfoJWEAlgs().get(0)).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(opMetadata.getUserInfoJWEEncs().get(0)).isEqualTo(EncryptionMethod.A128GCM);
     }
 

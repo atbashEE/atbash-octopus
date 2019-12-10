@@ -195,16 +195,6 @@ public class SecretKeyDerivationTest {
     }
 
     @Test
-    public void testUnsupportedJWEAlg() {
-
-        try {
-            SecretKeyDerivation.deriveSecretKey(CLIENT_SECRET, JWEAlgorithm.RSA1_5, EncryptionMethod.A128GCM);
-        } catch (JOSEException e) {
-            assertThat(e.getMessage()).isEqualTo("Unsupported JWE algorithm / method: alg=RSA1_5 enc=A128GCM");
-        }
-    }
-
-    @Test
     public void testUnsupportedJWEMethod() {
 
         try {

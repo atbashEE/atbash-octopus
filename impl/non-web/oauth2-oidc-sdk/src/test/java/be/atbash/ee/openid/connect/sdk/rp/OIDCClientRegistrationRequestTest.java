@@ -117,7 +117,7 @@ public class OIDCClientRegistrationRequestTest {
                 + "   \"sector_identifier_uri\":\"https://other.example.net/file_of_redirect_uris.json\","
                 + "   \"token_endpoint_auth_method\": \"client_secret_basic\","
                 + "   \"jwks_uri\": \"https://client.example.org/my_public_keys.jwks\","
-                + "   \"userinfo_encrypted_response_alg\": \"RSA1_5\","
+                + "   \"userinfo_encrypted_response_alg\": \"RSA-OAEP-256\","
                 + "   \"userinfo_encrypted_response_enc\": \"A128CBC-HS256\","
                 + "   \"contacts\": [\"ve7jtb@example.org\", \"mary@example.org\"],"
                 + "   \"request_uris\":[\"https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA\"]"
@@ -153,7 +153,7 @@ public class OIDCClientRegistrationRequestTest {
 
         assertThat(metadata.getJWKSetURI()).isEqualTo(new URI("https://client.example.org/my_public_keys.jwks"));
 
-        assertThat(metadata.getUserInfoJWEAlg()).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(metadata.getUserInfoJWEAlg()).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(metadata.getUserInfoJWEEnc()).isEqualTo(EncryptionMethod.A128CBC_HS256);
 
         List<InternetAddress> contacts = metadata.getContacts();

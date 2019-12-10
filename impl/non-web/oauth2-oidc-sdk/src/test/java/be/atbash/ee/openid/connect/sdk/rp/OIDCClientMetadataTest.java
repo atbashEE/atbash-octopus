@@ -119,7 +119,7 @@ public class OIDCClientMetadataTest {
                 + "   \"sector_identifier_uri\":\"https://other.example.net/file_of_redirect_uris.json\","
                 + "   \"token_endpoint_auth_method\": \"client_secret_basic\","
                 + "   \"jwks_uri\": \"https://client.example.org/my_public_keys.jwks\","
-                + "   \"userinfo_encrypted_response_alg\": \"RSA1_5\","
+                + "   \"userinfo_encrypted_response_alg\": \"RSA-OAEP-256\","
                 + "   \"userinfo_encrypted_response_enc\": \"A128CBC-HS256\","
                 + "   \"contacts\": [\"ve7jtb@example.org\", \"mary@example.org\"],"
                 + "   \"request_uris\":[\"https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA\"]"
@@ -150,7 +150,7 @@ public class OIDCClientMetadataTest {
 
         assertThat(clientMetadata.getJWKSetURI().toString()).isEqualTo(new URL("https://client.example.org/my_public_keys.jwks").toString());
 
-        assertThat(clientMetadata.getUserInfoJWEAlg()).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(clientMetadata.getUserInfoJWEAlg()).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(clientMetadata.getUserInfoJWEEnc()).isEqualTo(EncryptionMethod.A128CBC_HS256);
 
         List<InternetAddress> contacts = clientMetadata.getContacts();
@@ -423,29 +423,29 @@ public class OIDCClientMetadataTest {
         metadata.applyDefaults();
 
         metadata.setIDTokenJWSAlg(JWSAlgorithm.RS256);
-        metadata.setIDTokenJWEAlg(JWEAlgorithm.RSA1_5);
+        metadata.setIDTokenJWEAlg(JWEAlgorithm.RSA_OAEP_256);
         metadata.setIDTokenJWEEnc(EncryptionMethod.A128GCM);
 
         metadata.setUserInfoJWSAlg(JWSAlgorithm.RS256);
-        metadata.setUserInfoJWEAlg(JWEAlgorithm.RSA1_5);
+        metadata.setUserInfoJWEAlg(JWEAlgorithm.RSA_OAEP_256);
         metadata.setUserInfoJWEEnc(EncryptionMethod.A128GCM);
 
         metadata.setRequestObjectJWSAlg(JWSAlgorithm.HS256);
-        metadata.setRequestObjectJWEAlg(JWEAlgorithm.RSA1_5);
+        metadata.setRequestObjectJWEAlg(JWEAlgorithm.RSA_OAEP_256);
         metadata.setRequestObjectJWEEnc(EncryptionMethod.A128CBC_HS256);
 
         metadata = OIDCClientMetadata.parse(JSONObjectUtils.parse(metadata.toJSONObject().build().toString()));
 
         assertThat(metadata.getIDTokenJWSAlg()).isEqualTo(JWSAlgorithm.RS256);
-        assertThat(metadata.getIDTokenJWEAlg()).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(metadata.getIDTokenJWEAlg()).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(metadata.getIDTokenJWEEnc()).isEqualTo(EncryptionMethod.A128GCM);
 
         assertThat(metadata.getUserInfoJWSAlg()).isEqualTo(JWSAlgorithm.RS256);
-        assertThat(metadata.getUserInfoJWEAlg()).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(metadata.getUserInfoJWEAlg()).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(metadata.getIDTokenJWEEnc()).isEqualTo(EncryptionMethod.A128GCM);
 
         assertThat(metadata.getRequestObjectJWSAlg()).isEqualTo(JWSAlgorithm.HS256);
-        assertThat(metadata.getRequestObjectJWEAlg()).isEqualTo(JWEAlgorithm.RSA1_5);
+        assertThat(metadata.getRequestObjectJWEAlg()).isEqualTo(JWEAlgorithm.RSA_OAEP_256);
         assertThat(metadata.getRequestObjectJWEEnc()).isEqualTo(EncryptionMethod.A128CBC_HS256);
     }
 

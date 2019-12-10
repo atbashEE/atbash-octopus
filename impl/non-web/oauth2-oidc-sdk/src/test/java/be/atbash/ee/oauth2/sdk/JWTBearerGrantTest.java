@@ -77,7 +77,7 @@ public class JWTBearerGrantTest  {
 			.build();
 
 		try {
-			new JWTBearerGrant(new EncryptedJWT(new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128CBC_HS256), claimsSet));
+			new JWTBearerGrant(new EncryptedJWT(new JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128CBC_HS256), claimsSet));
 		} catch (IllegalArgumentException e) {
 			assertThat(e.getMessage()).isEqualTo("The JWT assertion must not be in a unencrypted state");
 		}
