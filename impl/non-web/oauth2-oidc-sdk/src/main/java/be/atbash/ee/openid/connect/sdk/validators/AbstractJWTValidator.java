@@ -18,20 +18,13 @@ package be.atbash.ee.openid.connect.sdk.validators;
 
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
+import be.atbash.ee.security.octopus.config.JwtSupportConfiguration;
 import be.atbash.ee.security.octopus.keys.selector.KeySelector;
 
 /**
  * Abstract JSON Web Token (JWT) validator for ID tokens and logout tokens.
  */
-public abstract class AbstractJWTValidator /*implements ClockSkewAware*/ {
-
-
-    /**
-     * The default maximum acceptable clock skew for verifying token
-     * timestamps, in seconds.
-     */
-    private static final int DEFAULT_MAX_CLOCK_SKEW = 60;  // FIXME Parameter, see also octopus-jwt-support
-
+public abstract class AbstractJWTValidator {
 
     /**
      * The expected token issuer.
@@ -60,7 +53,7 @@ public abstract class AbstractJWTValidator /*implements ClockSkewAware*/ {
     /**
      * The maximum acceptable clock skew, in seconds.
      */
-    private int maxClockSkew = DEFAULT_MAX_CLOCK_SKEW;
+    private int maxClockSkew;
 
 
     /**
@@ -90,6 +83,8 @@ public abstract class AbstractJWTValidator /*implements ClockSkewAware*/ {
             throw new IllegalArgumentException("The client ID must not be null");
         }
         this.clientID = clientID;
+
+        maxClockSkew = JwtSupportConfiguration.getInstance().getClockSkewSeconds();
 
         // Optional
         this.jwsKeySelector = jwsKeySelector;
@@ -146,7 +141,7 @@ public abstract class AbstractJWTValidator /*implements ClockSkewAware*/ {
      * @return The maximum acceptable clock skew, in seconds. Zero
      * indicates none.
      */
-    public int getMaxClockSkew() {
+    protected int getMaxClockSkew() {
 
         return maxClockSkew;
     }

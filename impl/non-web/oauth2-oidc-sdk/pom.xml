@@ -87,6 +87,13 @@
         </dependency>
 
         <dependency>
+            <groupId>be.atbash.config</groupId>
+            <artifactId>atbash-config-test</artifactId>
+            <version>${atbash-config.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>uk.org.lidalia</groupId>
             <artifactId>slf4j-test</artifactId>
             <version>1.2.0</version>

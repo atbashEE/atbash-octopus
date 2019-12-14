@@ -46,9 +46,6 @@ public class JARMClaimsVerifierTest {
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
 
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
-
         Date now = new Date();
         Date exp = new Date(now.getTime() + 5 * 60 * 1000);
 
@@ -70,9 +67,6 @@ public class JARMClaimsVerifierTest {
         ClientID clientID = new ClientID("123");
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
-
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
 
         Date now = new Date();
         Date exp = new Date(now.getTime() + 5 * 60 * 1000);
@@ -97,9 +91,6 @@ public class JARMClaimsVerifierTest {
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
 
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
-
         Date now = new Date();
         Date exp = new Date(now.getTime() + 5 * 60 * 1000);
 
@@ -123,9 +114,6 @@ public class JARMClaimsVerifierTest {
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
 
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
-
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .issuer(iss.getValue())
                 .audience(clientID.getValue())
@@ -145,9 +133,6 @@ public class JARMClaimsVerifierTest {
         ClientID clientID = new ClientID("123");
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
-
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
 
         Date now = new Date();
         Date exp = new Date(now.getTime() + 5 * 60 * 1000);
@@ -172,9 +157,6 @@ public class JARMClaimsVerifierTest {
         ClientID clientID = new ClientID("123");
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
-
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
 
         Date now = new Date();
         Date exp = new Date(now.getTime() + 5 * 60 * 1000);
@@ -201,9 +183,6 @@ public class JARMClaimsVerifierTest {
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
 
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
-
         Date now = new Date();
         Date exp = new Date(now.getTime() + 5 * 60 * 1000);
 
@@ -227,9 +206,6 @@ public class JARMClaimsVerifierTest {
         ClientID clientID = new ClientID("123");
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 0);
-
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
 
         Date now = new Date();
         Date oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000L);
@@ -257,9 +233,6 @@ public class JARMClaimsVerifierTest {
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 60);
 
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
-
         Date now = new Date();
         Date in30Seconds = new Date(now.getTime() + 30 * 1000L);
         Date inOneHour = new Date(now.getTime() + 60 * 60 * 1000L);
@@ -283,9 +256,6 @@ public class JARMClaimsVerifierTest {
         ClientID clientID = new ClientID("123");
 
         JARMClaimsVerifier verifier = new JARMClaimsVerifier(iss, clientID, 60);
-
-        assertThat(verifier.getExpectedIssuer()).isEqualTo(iss);
-        assertThat(verifier.getClientID()).isEqualTo(clientID);
 
         Date now = new Date();
         Date oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000L);

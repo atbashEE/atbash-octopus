@@ -16,6 +16,7 @@
 package be.atbash.ee.oauth2.sdk.assertions.jwt;
 
 
+import be.atbash.ee.security.octopus.config.JwtSupportConfiguration;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
@@ -44,15 +45,9 @@ public class DefaultJWTClaimsVerifier {
 
 
     /**
-     * The default maximum acceptable clock skew, in seconds (60).
-     */
-    public static final int DEFAULT_MAX_CLOCK_SKEW_SECONDS = 60;
-
-
-    /**
      * The maximum acceptable clock skew, in seconds.
      */
-    private int maxClockSkew = DEFAULT_MAX_CLOCK_SKEW_SECONDS;
+    private int maxClockSkew;
 
 
     /**
@@ -163,63 +158,12 @@ public class DefaultJWTClaimsVerifier {
         this.requiredClaims = Collections.unmodifiableSet(requiredClaimsCopy);
 
         this.prohibitedClaims = prohibitedClaims != null ? Collections.unmodifiableSet(prohibitedClaims) : Collections.emptySet();
+        maxClockSkew = JwtSupportConfiguration.getInstance().getClockSkewSeconds();
     }
-
-
-    /**
-     * Returns the accepted audience values.
-     *
-     * @return The accepted JWT audience values, {@code null} if not
-     * specified. A {@code null} value in the set allows JWTs with
-     * no audience.
-     */
-    public Set<String> getAcceptedAudienceValues() {
-        return acceptedAudienceValues;
-    }
-
-
-    /**
-     * Returns the JWT claims that must match exactly.
-     *
-     * @return The JWT claims that must match exactly, empty set if none.
-     */
-    public JWTClaimsSet getExactMatchClaims() {
-        return exactMatchClaims;
-    }
-
-
-    /**
-     * Returns the names of the JWT claims that must be present, including
-     * the name of those that must match exactly.
-     *
-     * @return The names of the JWT claims that must be present, empty set
-     * if none.
-     */
-    public Set<String> getRequiredClaims() {
-        return requiredClaims;
-    }
-
-
-    /**
-     * Returns the names of the JWT claims that must not be present.
-     *
-     * @return The names of the JWT claims that must not be present, empty
-     * set if none.
-     */
-    public Set<String> getProhibitedClaims() {
-        return prohibitedClaims;
-    }
-
-
-    public int getMaxClockSkew() {
-        return maxClockSkew;
-    }
-
 
     public void setMaxClockSkew(int maxClockSkewSeconds) {
         maxClockSkew = maxClockSkewSeconds;
     }
-
 
     public void verify(JWTClaimsSet claimsSet)
             throws BadJWTException {

@@ -88,36 +88,7 @@ public class JARMClaimsVerifier implements JWTVerifier {
         setMaxClockSkew(maxClockSkew);
     }
 
-
-    /**
-     * Returns the expected Authorisation Server.
-     *
-     * @return The Authorisation Server issuer.
-     */
-    public Issuer getExpectedIssuer() {
-
-        return expectedIssuer;
-    }
-
-
-    /**
-     * Returns the client ID for verifying the JWT audience.
-     *
-     * @return The client ID.
-     */
-    public ClientID getClientID() {
-
-        return expectedClientID;
-    }
-
-
-    public int getMaxClockSkew() {
-
-        return maxClockSkew;
-    }
-
-
-    public void setMaxClockSkew(int maxClockSkew) {
+    private void setMaxClockSkew(int maxClockSkew) {
         if (maxClockSkew < 0) {
             throw new IllegalArgumentException("The max clock skew must be zero or positive");
         }
