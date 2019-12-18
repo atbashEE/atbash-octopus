@@ -118,14 +118,6 @@ public class AuthorizationErrorResponseTest  {
 		assertThat(httpResponse.getStatusCode()).isEqualTo(HTTPResponse.SC_FOUND);
 		assertThat(httpResponse.getLocation()).isEqualTo(location);
 
-		r = AuthorizationErrorResponse.parse(httpResponse);
-
-		assertThat(r.indicatesSuccess()).isFalse();
-		assertThat(r.getRedirectionURI()).isEqualTo(REDIRECT_URI);
-		assertThat(r.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-		assertThat(r.getResponseMode()).isNull();
-		assertThat(r.impliedResponseMode()).isEqualTo(ResponseMode.QUERY); // default
-		assertThat(r.getState()).isEqualTo(state);
 	}
 
 	@Test

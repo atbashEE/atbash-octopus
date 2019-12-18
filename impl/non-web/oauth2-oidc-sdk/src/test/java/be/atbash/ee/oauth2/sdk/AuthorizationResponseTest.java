@@ -16,16 +16,12 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
-import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.oauth2.sdk.jarm.JARMUtils;
-import be.atbash.ee.oauth2.sdk.jarm.JARMValidator;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
-import be.atbash.ee.openid.connect.sdk.TestKeySelector;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.RSASSASigner;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
@@ -35,7 +31,6 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import org.junit.Test;
 
 import java.net.URI;
-import java.net.URL;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -68,168 +63,6 @@ public class AuthorizationResponseTest {
         }
     }
 
-
-    // See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/147/authorizationrequestparse-final-uri-uri
-    @Test
-    public void testParseWithEncodedEqualsChar()
-            throws Exception {
-
-        URI redirectURI = URI.create("https://example.com/in");
-
-        AuthorizationCode code = new AuthorizationCode("===code===");
-        State state = new State("===state===");
-
-        AuthorizationResponse response = new AuthorizationSuccessResponse(redirectURI, code, null, state, ResponseMode.QUERY);
-
-        URI uri = response.toURI();
-
-        response = AuthorizationResponse.parse(uri);
-
-        assertThat(response.getState()).isEqualTo(state);
-
-        AuthorizationSuccessResponse successResponse = (AuthorizationSuccessResponse) response;
-
-        assertThat(successResponse.getAuthorizationCode()).isEqualTo(code);
-        assertThat(successResponse.getAccessToken()).isNull();
-    }
-
-    @Test
-    public void testToSuccessResponse()
-            throws Exception {
-
-        AuthorizationCode code = new AuthorizationCode();
-        State state = new State();
-        AuthorizationSuccessResponse successResponse = new AuthorizationSuccessResponse(URI.create("https://example.com/in"), code, null, state, ResponseMode.QUERY);
-
-        URI uri = successResponse.toURI();
-
-        successResponse = AuthorizationResponse.parse(uri).toSuccessResponse();
-
-        assertThat(successResponse.getAuthorizationCode()).isEqualTo(code);
-        assertThat(successResponse.getState()).isEqualTo(state);
-    }
-
-    @Test
-    public void testToErrorResponse()
-            throws Exception {
-
-        State state = new State();
-
-        AuthorizationErrorResponse errorResponse = new AuthorizationErrorResponse(URI.create("https://example.com/in"), OAuth2Error.ACCESS_DENIED, state, ResponseMode.QUERY);
-
-        URI uri = errorResponse.toURI();
-
-        errorResponse = AuthorizationResponse.parse(uri).toErrorResponse();
-
-        assertThat(errorResponse.getErrorObject()).isEqualTo(OAuth2Error.ACCESS_DENIED);
-        assertThat(errorResponse.getState()).isEqualTo(state);
-    }
-
-    @Test
-    public void testJARM_parse_queryExample()
-            throws Exception {
-
-        URI uri = URI.create("https://client.example.com/cb?" +
-                "response=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLm" +
-                "V4YW1wbGUuY29tIiwiYXVkIjoiczZCaGRSa3F0MyIsImV4cCI6MTMxMTI4MTk3MCwiY29kZSI6IlB5eU" +
-                "ZhdXgybzdRMFlmWEJVMzJqaHcuNUZYU1FwdnI4YWt2OUNlUkRTZDBRQSIsInN0YXRlIjoiUzhOSjd1cW" +
-                "s1Zlk0RWpOdlBfR19GdHlKdTZwVXN2SDlqc1luaTlkTUFKdyJ9.HkdJ_TYgwBBj10C-aWuNUiA062Amq" +
-                "2b0_oyuc5P0aMTQphAqC2o9WbGSkpfuHVBowlb-zJ15tBvXDIABL_t83q6ajvjtq_pqsByiRK2dLVdUw" +
-                "KhW3P_9wjvI0K20gdoTNbNlP9Z41mhart4BqraIoI8e-L_EfAHfhCG_DDDv7Yg");
-
-        AuthorizationResponse response = AuthorizationResponse.parse(uri);
-
-        AuthorizationSuccessResponse successResponse = response.toSuccessResponse();
-        assertThat(successResponse.getAuthorizationCode()).isNull();
-        assertThat(successResponse.getAccessToken()).isNull();
-        assertThat(successResponse.getState().getValue()).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
-        assertThat(successResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-
-        JWT jwtResponse = successResponse.getJWTResponse();
-
-        JWTClaimsSet jwtClaimsSet = jwtResponse.getJWTClaimsSet();
-
-        assertThat(jwtClaimsSet.getIssuer()).isEqualTo("https://accounts.example.com");
-        assertThat(jwtClaimsSet.getAudience().get(0)).isEqualTo("s6BhdRkqt3");
-        assertThat(jwtClaimsSet.getExpirationTime().getTime() / 1000L).isEqualTo(1311281970L);
-        assertThat(jwtClaimsSet.getStringClaim("code")).isEqualTo("PyyFaux2o7Q0YfXBU32jhw.5FXSQpvr8akv9CeRDSd0QA");
-        assertThat(jwtClaimsSet.getStringClaim("state")).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
-        assertThat(jwtClaimsSet.getClaims()).hasSize(5);
-    }
-
-    @Test
-    public void testJARM_parse_fragmentExample()
-            throws Exception {
-
-        URI uri = URI.create("https://client.example.com/cb#" +
-                "response=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLm" +
-                "V4YW1wbGUuY29tIiwiYXVkIjoiczZCaGRSa3F0MyIsImV4cCI6MTMxMTI4MTk3MCwiYWNjZXNzX3Rva2" +
-                "VuIjoiMllvdG5GWkZFanIxekNzaWNNV3BBQSIsInN0YXRlIjoiUzhOSjd1cWs1Zlk0RWpOdlBfR19GdH" +
-                "lKdTZwVXN2SDlqc1luaTlkTUFKdyIsInRva2VuX3R5cGUiOiJiZWFyZXIiLCJleHBpcmVzX2luIjoiMz" +
-                "YwMCIsInNjb3BlIjoiZXhhbXBsZSJ9.bgHLOu2dlDjtCnvTLK7hTN_JNwoZXEBnbXQx5vd9z17v1Hyzf" +
-                "Mqz00Vi002T-SWf2JEs3IVSvAe1xWLIY0TeuaiegklJx_gvB59SQIhXX2ifzRmqPoDdmJGaWZ3tnRyFW" +
-                "NnEogJDqGFCo2RHtk8fXkE5IEiBD0g-tN0GS_XnxlE");
-
-        AuthorizationResponse response = AuthorizationResponse.parse(uri);
-
-        AuthorizationSuccessResponse successResponse = response.toSuccessResponse();
-        assertThat(successResponse.getAuthorizationCode()).isNull();
-        assertThat(successResponse.getAccessToken()).isNull();
-        assertThat(successResponse.getState().getValue()).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
-        assertThat(successResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-
-        JWT jwtResponse = successResponse.getJWTResponse();
-
-        JWTClaimsSet jwtClaimsSet = jwtResponse.getJWTClaimsSet();
-
-        assertThat(jwtClaimsSet.getIssuer()).isEqualTo("https://accounts.example.com");
-        assertThat(jwtClaimsSet.getAudience().get(0)).isEqualTo("s6BhdRkqt3");
-        assertThat(jwtClaimsSet.getExpirationTime().getTime() / 1000L).isEqualTo(1311281970L);
-        assertThat(jwtClaimsSet.getStringClaim("access_token")).isEqualTo("2YotnFZFEjr1zCsicMWpAA");
-        assertThat(jwtClaimsSet.getStringClaim("scope")).isEqualTo("example");
-        assertThat(jwtClaimsSet.getStringClaim("token_type")).isEqualTo("bearer");
-        assertThat(jwtClaimsSet.getStringClaim("expires_in")).isEqualTo("3600");
-        assertThat(jwtClaimsSet.getStringClaim("state")).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
-        assertThat(jwtClaimsSet.getClaims()).hasSize(8);
-    }
-
-    @Test
-    public void testJARM_parse_formPOSTExample()
-            throws Exception {
-
-        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://client.example.org/cb"));
-        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-        httpRequest.setQuery("response=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2" +
-                "FjY291bnRzLmV4YW1wbGUuY29tIiwiYXVkIjoiczZCaGRSa3F0MyIsImV4cCI6MTM" +
-                "xMTI4MTk3MCwiYWNjZXNzX3Rva2VuIjoiMllvdG5GWkZFanIxekNzaWNNV3BBQSIs" +
-                "InN0YXRlIjoiUzhOSjd1cWs1Zlk0RWpOdlBfR19GdHlKdTZwVXN2SDlqc1luaTlkT" +
-                "UFKdyIsInRva2VuX3R5cGUiOiJiZWFyZXIiLCJleHBpcmVzX2luIjoiMzYwMCIsIn" +
-                "Njb3BlIjoiZXhhbXBsZSJ9.bgHLOu2dlDjtCnvTLK7hTN_JNwoZXEBnbXQx5vd9z1" +
-                "7v1HyzfMqz00Vi002T-SWf2JEs3IVSvAe1xWLIY0TeuaiegklJx_gvB59SQIhXX2i" +
-                "fzRmqPoDdmJGaWZ3tnRyFWNnEogJDqGFCo2RHtk8fXkE5IEiBD0g-tN0GS_XnxlE");
-
-        AuthorizationResponse response = AuthorizationResponse.parse(httpRequest);
-
-        AuthorizationSuccessResponse successResponse = response.toSuccessResponse();
-        assertThat(successResponse.getAuthorizationCode()).isNull();
-        assertThat(successResponse.getAccessToken()).isNull();
-        assertThat(successResponse.getState().getValue()).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
-        assertThat(successResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-
-        JWT jwtResponse = successResponse.getJWTResponse();
-
-        JWTClaimsSet jwtClaimsSet = jwtResponse.getJWTClaimsSet();
-
-        assertThat(jwtClaimsSet.getIssuer()).isEqualTo("https://accounts.example.com");
-        assertThat(jwtClaimsSet.getAudience().get(0)).isEqualTo("s6BhdRkqt3");
-        assertThat(jwtClaimsSet.getExpirationTime().getTime() / 1000L).isEqualTo(1311281970L);
-        assertThat(jwtClaimsSet.getStringClaim("access_token")).isEqualTo("2YotnFZFEjr1zCsicMWpAA");
-        assertThat(jwtClaimsSet.getStringClaim("scope")).isEqualTo("example");
-        assertThat(jwtClaimsSet.getStringClaim("token_type")).isEqualTo("bearer");
-        assertThat(jwtClaimsSet.getStringClaim("expires_in")).isEqualTo("3600");
-        assertThat(jwtClaimsSet.getStringClaim("state")).isEqualTo("S8NJ7uqk5fY4EjNvP_G_FtyJu6pUsvH9jsYni9dMAJw");
-        assertThat(jwtClaimsSet.getClaims()).hasSize(8);
-    }
 
 
 	@Test
@@ -273,21 +106,6 @@ public class AuthorizationResponseTest {
 		assertThat(uri.getQuery()).isEqualTo("response=" + jwt.serialize());
 		assertThat(uri.getFragment()).isNull();
 		
-		jwtSuccessResponse = AuthorizationResponse.parse(uri).toSuccessResponse();
-		assertThat(jwtSuccessResponse.getRedirectionURI()).isEqualTo(successResponse.getRedirectionURI());
-		assertThat(jwtSuccessResponse.getJWTResponse().serialize()).isEqualTo(jwt.serialize());
-		assertThat(jwtSuccessResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-		
-		// Parse with validator now
-		JARMValidator jarmValidator = new JARMValidator(
-			new Issuer("https://c2id.com"),
-			new ClientID("123"),
-                new TestKeySelector(RSA_PUBLIC_KEY));
-		
-		AuthorizationSuccessResponse validatedResponse = AuthorizationResponse.parse(uri, jarmValidator).toSuccessResponse();
-		
-		assertThat(validatedResponse.getAuthorizationCode()).isEqualTo(successResponse.getAuthorizationCode());
-		assertThat(validatedResponse.getState()).isEqualTo(successResponse.getState());
 	}
 
 	@Test
@@ -331,21 +149,6 @@ public class AuthorizationResponseTest {
 		assertThat(uri.getQuery()).isNull();
 		assertThat(uri.getFragment()).isEqualTo("response=" + jwt.serialize());
 		
-		jwtSuccessResponse = AuthorizationResponse.parse(uri).toSuccessResponse();
-		assertThat(jwtSuccessResponse.getRedirectionURI()).isEqualTo(successResponse.getRedirectionURI());
-		assertThat(jwtSuccessResponse.getJWTResponse().serialize()).isEqualTo(jwt.serialize());
-		assertThat(jwtSuccessResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-		
-		// Parse with validator now
-		JARMValidator jarmValidator = new JARMValidator(
-			new Issuer("https://c2id.com"),
-			new ClientID("123"),
-                new TestKeySelector(RSA_PUBLIC_KEY));
-		
-		AuthorizationSuccessResponse validatedResponse = AuthorizationResponse.parse(uri, jarmValidator).toSuccessResponse();
-		
-		assertThat(validatedResponse.getAccessToken()).isEqualTo(successResponse.getAccessToken());
-		assertThat(validatedResponse.getState()).isEqualTo(successResponse.getState());
 	}
 
 	@Test
@@ -388,21 +191,6 @@ public class AuthorizationResponseTest {
 		assertThat(uri.getQuery()).isEqualTo("response=" + jwt.serialize());
 		assertThat(uri.getFragment()).isNull();
 		
-		jwtErrorResponse = AuthorizationResponse.parse(uri).toErrorResponse();
-		assertThat(jwtErrorResponse.getRedirectionURI()).isEqualTo(errorResponse.getRedirectionURI());
-		assertThat(jwtErrorResponse.getJWTResponse().serialize()).isEqualTo(jwt.serialize());
-		assertThat(jwtErrorResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-		
-		// Parse with validator now
-		JARMValidator jarmValidator = new JARMValidator(
-			new Issuer("https://c2id.com"),
-			new ClientID("123"),
-                new TestKeySelector(RSA_PUBLIC_KEY));
-		
-		AuthorizationErrorResponse validatedResponse = AuthorizationResponse.parse(uri, jarmValidator).toErrorResponse();
-		
-		assertThat(validatedResponse.getErrorObject()).isEqualTo(errorResponse.getErrorObject());
-		assertThat(validatedResponse.getState()).isEqualTo(errorResponse.getState());
 	}
 
 
@@ -446,21 +234,6 @@ public class AuthorizationResponseTest {
 		assertThat(uri.getQuery()).isNull();
 		assertThat(uri.getFragment()).isEqualTo("response=" + jwt.serialize());
 		
-		jwtErrorResponse = AuthorizationResponse.parse(uri).toErrorResponse();
-		assertThat(jwtErrorResponse.getRedirectionURI()).isEqualTo(errorResponse.getRedirectionURI());
-		assertThat(jwtErrorResponse.getJWTResponse().serialize()).isEqualTo(jwt.serialize());
-		assertThat(jwtErrorResponse.getResponseMode()).isEqualTo(ResponseMode.JWT);
-		
-		// Parse with validator now
-		JARMValidator jarmValidator = new JARMValidator(
-			new Issuer("https://c2id.com"),
-			new ClientID("123"),
-                new TestKeySelector(RSA_PUBLIC_KEY));
-		
-		AuthorizationErrorResponse validatedResponse = AuthorizationResponse.parse(uri, jarmValidator).toErrorResponse();
-		
-		assertThat(validatedResponse.getErrorObject()).isEqualTo(errorResponse.getErrorObject());
-		assertThat(validatedResponse.getState()).isEqualTo(errorResponse.getState());
 	}
 
 }

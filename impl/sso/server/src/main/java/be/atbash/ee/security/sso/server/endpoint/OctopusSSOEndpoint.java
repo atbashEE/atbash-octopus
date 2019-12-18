@@ -185,7 +185,7 @@ public class OctopusSSOEndpoint {
             } else {
                 jwtClaimsSet = idTokenClaimsSet.toJWTClaimsSet();
             }
-        } catch (OAuth2JSONParseException | java.text.ParseException e) {
+        } catch (OAuth2JSONParseException e) {
             throw new AtbashUnexpectedException(e);
         }
 

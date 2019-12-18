@@ -139,9 +139,8 @@ public class AuthenticationSuccessResponse
         sessionState = null;
     }
 
-
-    @Override
     public ResponseType impliedResponseType() {
+        // FIXME Not used for the moment, Check Octopus should use this
 
         ResponseType rt = new ResponseType();
 
@@ -163,7 +162,7 @@ public class AuthenticationSuccessResponse
 
     @Override
     public ResponseMode impliedResponseMode() {
-
+        // FIXME Verify usage within Octopus and if it is needed.
         if (getResponseMode() != null) {
             return getResponseMode();
         } else {

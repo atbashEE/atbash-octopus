@@ -178,7 +178,7 @@ public class AuthorizationErrorResponse
 
     @Override
     public ResponseMode impliedResponseMode() {
-
+        // FIXME Can be removed I think.
         // Return "query" if not known, assumed the most frequent case
         return getResponseMode() != null ? getResponseMode() : ResponseMode.QUERY;
     }
@@ -246,7 +246,6 @@ public class AuthorizationErrorResponse
         return new AuthorizationErrorResponse(redirectURI, error, state, null);
     }
 
-
     /**
      * Parses an authorisation error response.
      *
@@ -279,61 +278,4 @@ public class AuthorizationErrorResponse
         return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
     }
 
-
-    /**
-     * Parses an authorisation error response from the specified initial
-     * HTTP 302 redirect response generated at the authorisation endpoint.
-     *
-     * <p>Example HTTP response:
-     *
-     * <pre>
-     * HTTP/1.1 302 Found
-     * Location: https://client.example.com/cb?error=invalid_request&amp;state=af0ifjsldkj
-     * </pre>
-     *
-     * @param httpResponse The HTTP response to parse. Must not be
-     *                     {@code null}.
-     * @return The authorisation error response.
-     * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
-     *                                  authorisation error response.
-     * @see #parse(HTTPRequest)
-     */
-    public static AuthorizationErrorResponse parse(HTTPResponse httpResponse)
-            throws OAuth2JSONParseException {
-
-        URI location = httpResponse.getLocation();
-
-        if (location == null) {
-            throw new OAuth2JSONParseException("Missing redirection URL / HTTP Location header");
-        }
-
-        return parse(location);
-    }
-
-
-    /**
-     * Parses an authorisation error response from the specified HTTP
-     * request at the client redirection (callback) URI. Applies to
-     * {@code query}, {@code fragment} and {@code form_post} response
-     * modes.
-     *
-     * <p>Example HTTP request (authorisation success):
-     *
-     * <pre>
-     * GET /cb?error=invalid_request&amp;state=af0ifjsldkj HTTP/1.1
-     * Host: client.example.com
-     * </pre>
-     *
-     * @param httpRequest The HTTP request to parse. Must not be
-     *                    {@code null}.
-     * @return The authorisation error response.
-     * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
-     *                                  authorisation error response.
-     * @see #parse(HTTPResponse)
-     */
-    public static AuthorizationErrorResponse parse(HTTPRequest httpRequest)
-            throws OAuth2JSONParseException {
-
-        return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));
-    }
 }

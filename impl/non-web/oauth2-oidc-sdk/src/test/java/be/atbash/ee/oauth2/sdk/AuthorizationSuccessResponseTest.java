@@ -89,9 +89,6 @@ public class AuthorizationSuccessResponseTest {
 		assertThat(resp.getAccessToken()).isNull();
 		assertThat(resp.getResponseMode()).isNull();
 
-		ResponseType responseType = resp.impliedResponseType();
-		assertThat(new ResponseType("code").equals(responseType)).isTrue();
-
 		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.QUERY);
 
 		Map<String, List<String>> params = resp.toParameters();
@@ -105,16 +102,6 @@ public class AuthorizationSuccessResponseTest {
 		assertThat(httpResponse.getStatusCode()).isEqualTo(302);
 		assertThat(httpResponse.getLocation().toString()).isEqualTo(uri.toString());
 
-		resp = AuthorizationSuccessResponse.parse(httpResponse);
-
-		assertThat(resp.indicatesSuccess()).isTrue();
-		assertThat(resp.getRedirectionURI()).isEqualTo(ABS_REDIRECT_URI);
-		assertThat(resp.getAuthorizationCode()).isEqualTo(CODE);
-		assertThat(resp.getState()).isEqualTo(STATE);
-		assertThat(resp.getAccessToken()).isNull();
-		assertThat(resp.getResponseMode()).isNull();
-
-		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.QUERY);
 	}
 
 	@Test
@@ -130,9 +117,6 @@ public class AuthorizationSuccessResponseTest {
 		assertThat(resp.getState()).isEqualTo(STATE);
 		assertThat(resp.getAuthorizationCode()).isNull();
 		assertThat(resp.getResponseMode()).isNull();
-
-		ResponseType responseType = resp.impliedResponseType();
-		assertThat(new ResponseType("token").equals(responseType)).isTrue();
 
 		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
 
@@ -150,17 +134,6 @@ public class AuthorizationSuccessResponseTest {
 		assertThat(httpResponse.getStatusCode()).isEqualTo(302);
 		assertThat(httpResponse.getLocation()).isEqualTo(uri);
 
-		resp = AuthorizationSuccessResponse.parse(httpResponse);
-
-		assertThat(resp.indicatesSuccess()).isTrue();
-		assertThat(resp.getRedirectionURI()).isEqualTo(ABS_REDIRECT_URI);
-		assertThat(resp.getAccessToken()).isEqualTo(TOKEN);
-		assertThat(resp.getAccessToken().getLifetime()).isEqualTo(3600);
-		assertThat(resp.getState()).isEqualTo(STATE);
-		assertThat(resp.getAuthorizationCode()).isNull();
-		assertThat(resp.getResponseMode()).isNull();
-
-		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
 	}
 
 	@Test
@@ -173,9 +146,6 @@ public class AuthorizationSuccessResponseTest {
 			TOKEN,
 			STATE,
 			ResponseMode.FORM_POST);
-
-		ResponseType responseType = resp.impliedResponseType();
-		assertThat(responseType).isEqualTo(new ResponseType("token"));
 
 		assertThat(resp.getResponseMode()).isEqualTo(ResponseMode.FORM_POST);
 		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.FORM_POST);
@@ -210,9 +180,6 @@ public class AuthorizationSuccessResponseTest {
 			STATE,
 			ResponseMode.FRAGMENT);
 
-		ResponseType responseType = resp.impliedResponseType();
-		assertThat(responseType).isEqualTo(new ResponseType("code"));
-
 		assertThat(resp.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
 		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
 
@@ -242,9 +209,6 @@ public class AuthorizationSuccessResponseTest {
 			STATE,
 			ResponseMode.QUERY);
 
-		ResponseType responseType = resp.impliedResponseType();
-		assertThat(responseType).isEqualTo(new ResponseType("token"));
-
 		assertThat(resp.getResponseMode()).isEqualTo(ResponseMode.QUERY);
 		assertThat(resp.impliedResponseMode()).isEqualTo(ResponseMode.QUERY);
 
@@ -263,36 +227,6 @@ public class AuthorizationSuccessResponseTest {
 		assertThat(MultivaluedMapUtils.getFirstValue(params, "expires_in")).isEqualTo(TOKEN.getLifetime() + "");
 		assertThat(MultivaluedMapUtils.getFirstValue(params, "state")).isEqualTo(STATE.getValue());
 		assertThat(params).hasSize(4);
-	}
-
-	@Test
-	public void testParseCodeResponse()
-		throws Exception {
-
-		URI redirectionURI = new URI(RESPONSE_CODE);
-
-		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
-		assertThat(response.indicatesSuccess()).isTrue();
-		assertThat(response.getRedirectionURI().toString()).isEqualTo("https://client.example.org/cb");
-		assertThat(response.getAuthorizationCode().getValue()).isEqualTo("SplxlOBeZQQYbYS6WxSbIA");
-		assertThat(response.getState().getValue()).isEqualTo("xyz");
-		assertThat(response.getAccessToken()).isNull();
-	}
-
-	@Test
-	public void testParseTokenResponse()
-		throws Exception {
-
-		URI redirectionURI = new URI(RESPONSE_TOKEN);
-
-		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
-		assertThat(response.indicatesSuccess()).isTrue();
-		assertThat(response.getRedirectionURI().toString()).isEqualTo("https://client.example.org/cb");
-		assertThat(response.getAuthorizationCode()).isNull();
-		assertThat(response.getState().getValue()).isEqualTo("xyz");
-		BearerAccessToken accessToken = (BearerAccessToken)response.getAccessToken();
-		assertThat(accessToken.getValue()).isEqualTo("2YotnFZFEjr1zCsicMWpAA");
-		assertThat(accessToken.getLifetime()).isEqualTo(3600L);
 	}
 
 	@Test
@@ -323,40 +257,4 @@ public class AuthorizationSuccessResponseTest {
 	}
 
 
-	// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/147/authorizationrequestparse-final-uri-uri
-	@Test
-	public void testParseWithEncodedEqualsChar()
-		throws Exception {
-
-		URI redirectURI = URI.create("https://example.com/in");
-
-		AuthorizationCode code = new AuthorizationCode("===code===");
-		State state = new State("===state===");
-
-		AuthorizationSuccessResponse response = new AuthorizationSuccessResponse(redirectURI, code, null, state, ResponseMode.QUERY);
-
-		URI uri = response.toURI();
-
-		response = AuthorizationSuccessResponse.parse(uri);
-
-		assertThat(response.getAuthorizationCode()).isEqualTo(code);
-		assertThat(response.getState()).isEqualTo(state);
-		assertThat(response.getAccessToken()).isNull();
-	}
-
-	@Test
-	public void testParseWithEncodedEqualsCharAlt()
-		throws Exception {
-
-		// See https://bitbucket.org/connect2id/openid-connect-dev-client/issues/5/stripping-equal-sign-from-access_code-in
-
-		String uri = "https://demo.c2id.com/oidc-client/cb?" +
-			"&state=cVIe4g4D1J3tYtZgnTL-Po9QpozQJdikDCBp7KJorIQ" +
-			"&code=1nf1ljB0JkPIbhMcYMeoT9Q5oGt28ggDsUiWLvCL81YTqCZMzAbVCGLUPrDHouda4cELZRujcS7d8rUNcZVl7HxUXdDsOUtc65s2knGbxSo%3D";
-
-		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(URI.create(uri));
-
-		assertThat(response.getState().getValue()).isEqualTo("cVIe4g4D1J3tYtZgnTL-Po9QpozQJdikDCBp7KJorIQ");
-		assertThat(response.getAuthorizationCode().getValue()).isEqualTo("1nf1ljB0JkPIbhMcYMeoT9Q5oGt28ggDsUiWLvCL81YTqCZMzAbVCGLUPrDHouda4cELZRujcS7d8rUNcZVl7HxUXdDsOUtc65s2knGbxSo=");
-	}
 }

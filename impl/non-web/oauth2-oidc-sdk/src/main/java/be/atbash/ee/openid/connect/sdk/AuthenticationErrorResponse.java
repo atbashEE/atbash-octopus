@@ -21,7 +21,6 @@ import be.atbash.ee.oauth2.sdk.ErrorObject;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.ResponseMode;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
-import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 
@@ -257,32 +256,6 @@ public class AuthenticationErrorResponse
         return toAuthenticationErrorResponse(AuthorizationErrorResponse.parse(uri));
     }
 
-
-    /**
-     * Parses an OpenID Connect authentication error response from the
-     * specified initial HTTP 302 redirect response generated at the
-     * authorisation endpoint.
-     *
-     * <p>Example HTTP response:
-     *
-     * <pre>
-     * HTTP/1.1 302 Found
-     * Location: https://client.example.com/cb?error=invalid_request&amp;state=af0ifjsldkj
-     * </pre>
-     *
-     * @param httpResponse The HTTP response to parse. Must not be
-     *                     {@code null}.
-     * @return The OpenID Connect authentication error response.
-     * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
-     *                                  OpenID Connect authentication error response.
-     */
-    public static AuthenticationErrorResponse parse(HTTPResponse httpResponse)
-            throws OAuth2JSONParseException {
-
-        return toAuthenticationErrorResponse(AuthorizationErrorResponse.parse(httpResponse));
-    }
-
-
     /**
      * Parses an OpenID Connect authentication error response from the
      * specified HTTP request at the client redirection (callback) URI.
@@ -301,7 +274,6 @@ public class AuthenticationErrorResponse
      * @return The authentication error response.
      * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
      *                                  OpenID Connect authentication error response.
-     * @see #parse(HTTPResponse)
      */
     public static AuthenticationErrorResponse parse(HTTPRequest httpRequest)
             throws OAuth2JSONParseException {

@@ -399,18 +399,11 @@ public abstract class ClaimsSet {
      * Gets the JSON Web Token (JWT) claims set for this claim set.
      *
      * @return The JWT claims set.
-     * @throws OAuth2JSONParseException If the conversion to a JWT claims set fails.
      */
-    public JWTClaimsSet toJWTClaimsSet()
-            throws OAuth2JSONParseException {
+    public JWTClaimsSet toJWTClaimsSet() throws OAuth2JSONParseException {
 
         ensureReadMode();
-        try {
-            return JWTClaimsSet.parse(claims);
+        return JWTClaimsSet.parse(claims);
 
-        } catch (java.text.ParseException e) {
-
-            throw new OAuth2JSONParseException(e.getMessage(), e);
-        }
     }
 }

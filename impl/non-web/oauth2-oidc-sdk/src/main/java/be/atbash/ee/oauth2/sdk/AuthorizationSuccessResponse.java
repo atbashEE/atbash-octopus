@@ -16,12 +16,9 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
-import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.oauth2.sdk.token.AccessToken;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
-import be.atbash.ee.oauth2.sdk.util.URIUtils;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
@@ -132,30 +129,9 @@ public class AuthorizationSuccessResponse
     }
 
 
-    /**
-     * Returns the implied response type.
-     *
-     * @return The implied response type.
-     */
-    public ResponseType impliedResponseType() {
-
-        ResponseType rt = new ResponseType();
-
-        if (code != null) {
-            rt.add(ResponseType.Value.CODE);
-        }
-
-        if (accessToken != null) {
-            rt.add(ResponseType.Value.TOKEN);
-        }
-
-        return rt;
-    }
-
-
     @Override
     public ResponseMode impliedResponseMode() {
-
+        // FIXME Unlikely it is used ion Octopus and needed there. Remove?
         if (getResponseMode() != null) {
             return getResponseMode();
         } else {
@@ -277,91 +253,4 @@ public class AuthorizationSuccessResponse
         return new AuthorizationSuccessResponse(redirectURI, code, accessToken, state, null);
     }
 
-
-    /**
-     * Parses an authorisation success response.
-     *
-     * <p>Use a relative URI if the host, port and path details are not
-     * known:
-     *
-     * <pre>
-     * URI relUrl = new URI("https:///?code=Qcb0Orv1...&amp;state=af0ifjsldkj");
-     * </pre>
-     *
-     * <p>Example URI:
-     *
-     * <pre>
-     * https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
-     * </pre>
-     *
-     * @param uri The URI to parse. Can be absolute or relative, with a
-     *            fragment or query string containing the authorisation
-     *            response parameters. Must not be {@code null}.
-     * @return The authorisation success response.
-     * @throws OAuth2JSONParseException If the redirection URI couldn't be parsed to
-     *                                  an authorisation success response.
-     */
-    public static AuthorizationSuccessResponse parse(URI uri)
-            throws OAuth2JSONParseException {
-
-        return parse(URIUtils.getBaseURI(uri), parseResponseParameters(uri));
-    }
-
-
-    /**
-     * Parses an authorisation success response from the specified initial
-     * HTTP 302 redirect response generated at the authorisation endpoint.
-     *
-     * <p>Example HTTP response:
-     *
-     * <pre>
-     * HTTP/1.1 302 Found
-     * Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
-     * </pre>
-     *
-     * @param httpResponse The HTTP response to parse. Must not be
-     *                     {@code null}.
-     * @return The authorisation success response.
-     * @throws OAuth2JSONParseException If the HTTP response couldn't be parsed to an
-     *                                  authorisation success response.
-     * @see #parse(HTTPRequest)
-     */
-    public static AuthorizationSuccessResponse parse(HTTPResponse httpResponse)
-            throws OAuth2JSONParseException {
-
-        URI location = httpResponse.getLocation();
-
-        if (location == null) {
-            throw new OAuth2JSONParseException("Missing redirection URL / HTTP Location header");
-        }
-
-        return parse(location);
-    }
-
-
-    /**
-     * Parses an authorisation success response from the specified HTTP
-     * request at the client redirection (callback) URI. Applies to
-     * {@code query}, {@code fragment} and {@code form_post} response
-     * modes.
-     *
-     * <p>Example HTTP request (authorisation success):
-     *
-     * <pre>
-     * GET /cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz HTTP/1.1
-     * Host: client.example.com
-     * </pre>
-     *
-     * @param httpRequest The HTTP request to parse. Must not be
-     *                    {@code null}.
-     * @return The authorisation success response.
-     * @throws OAuth2JSONParseException If the HTTP request couldn't be parsed to an
-     *                                  authorisation success response.
-     * @see #parse(HTTPResponse)
-     */
-    public static AuthorizationSuccessResponse parse(HTTPRequest httpRequest)
-            throws OAuth2JSONParseException {
-
-        return parse(httpRequest.getURI(), parseResponseParameters(httpRequest));
-    }
 }

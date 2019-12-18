@@ -42,7 +42,7 @@ public class NonceTest {
 
         Nonce nonce = new Nonce(1);
 
-        assertThat(new Base64Value(nonce.getValue()).decode().length).isEqualTo(1);
+        assertThat(new Base64URLValue(nonce.getValue()).decode().length).isEqualTo(1);
 
     }
 
