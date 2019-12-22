@@ -51,7 +51,7 @@
 
         <dependency>
             <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-jsf7</artifactId>
+            <artifactId>octopus-jsf8</artifactId>
             <version>${octopus.version}</version>
         </dependency>
 

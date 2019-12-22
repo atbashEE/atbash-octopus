@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+                version="2.0">
+    <namespace>http://www.atbash.be/secure/octopus</namespace>
+
+    <tag>
+        <tag-name>securedComponent</tag-name>
+        <component>
+            <component-type>securedComponent</component-type>
+            <handler-class>be.atbash.ee.security.octopus.view.component.secured.SecuredComponentHandler</handler-class>
+        </component>
+        <attribute>
+            <description>Defines the voter(s) that will be used for this. multiple names separated by a ,</description>
+            <name>voter</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the permission(s) that will be used for this. multiple names separated by a ,
+            </description>
+            <name>permission</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the role(s) that will be used for this. multiple names separated by a ,</description>
+            <name>role</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Is access allowed when voter veto the access? useful for a usecase where you want to show
+                something when the user is not logged in.
+            </description>
+            <name>not</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description>When multiple voters are specified, must the all allow the access. When not specified,
+                or false, access is granted when one voter allows the access.
+            </description>
+            <name>combined</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+
+        <attribute>
+            <description>Defines the component id's for which this permission check is performed. Multiple id can be
+                separated by ,. If not specified, the parent is the target.
+            </description>
+            <name>for</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+
+    </tag>
+    <tag>
+        <tag-name>securedComponentParameter</tag-name>
+        <component>
+            <component-type>securedComponentParameter</component-type>
+
+        </component>
+        <attribute>
+            <description></description>
+            <name>value</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <tag-name>requiresUser</tag-name>
+        <component>
+            <component-type>requiresUser</component-type>
+            <handler-class>be.atbash.ee.security.octopus.view.component.user.RequiresUserHandler</handler-class>
+        </component>
+        <attribute>
+            <description>Is access allowed for anonymous users.
+            </description>
+            <name>not</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description>Defines the component id's for which this permission check is performed. Multiple id can be
+                separated by ,. If not specified, the parent is the target.
+            </description>
+            <name>for</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Is remembered user also OK.
+            </description>
+            <name>remembered</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+    </tag>
+
+    <tag>
+        <tag-name>securedListener</tag-name>
+        <handler-class>be.atbash.ee.security.octopus.view.component.secured.PermissionListenerHandler</handler-class>
+        <attribute>
+            <description>EL Method Expression executed when the authorization checks (based on permission, role and voter) are 'positive'.
+            Method must have a UIComponent parameter and return void.</description>
+            <name>listener</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the voter(s) that will be used for this. multiple names separated by a ,</description>
+            <name>voter</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the permission(s) that will be used for this. multiple names separated by a ,
+            </description>
+            <name>permission</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the role(s) that will be used for this. multiple names separated by a ,</description>
+            <name>role</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Is access allowed when voter veto the access? useful for a usecase where you want to show
+                something when the user is not logged in.
+            </description>
+            <name>not</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description>When multiple voters are specified, must the all allow the access. When not specified,
+                or false, access is granted when one voter allows the access.
+            </description>
+            <name>combined</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+
+        <attribute>
+            <description>Defines the component id's for which this permission check is performed. Multiple id can be
+                separated by ,. If not specified, the parent is the target.
+            </description>
+            <name>for</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+
+    </tag>
+
+    <tag>
+        <tag-name>securedPage</tag-name>
+        <handler-class>be.atbash.ee.security.octopus.view.component.secured.SecuredPageHandler</handler-class>
+
+        <attribute>
+            <description>Defines the voter(s) that will be used for this. multiple names separated by a ,</description>
+            <name>voter</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the permission(s) that will be used for this. multiple names separated by a ,
+            </description>
+            <name>permission</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Defines the role(s) that will be used for this. multiple names separated by a ,</description>
+            <name>role</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>Is access allowed when voter veto the access? useful for a usecase where you want to show
+                something when the user is not logged in.
+            </description>
+            <name>not</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description>When multiple voters are specified, must the all allow the access. When not specified,
+                or false, access is granted when one voter allows the access.
+            </description>
+            <name>combined</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+
+    </tag>
+
+</facelet-taglib>

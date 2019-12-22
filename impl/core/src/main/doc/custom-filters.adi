@@ -14,7 +14,7 @@ A user filter is typical a filter for authentication where the end user has the 
 
 Various filters are already available within octopus (KeyCloak, OAuth2, etc ...) but as a developer, you can create your custom version by extending +be.atbash.ee.security.octopus.authc.AbstractUserFilter+.
 
-This Abstract user filter can be found within the _octopus_jsf7_ module.
+This Abstract user filter can be found within the _octopus_jsf8_ module.
 
 ==== Custom authentication filter
 

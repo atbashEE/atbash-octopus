@@ -7,7 +7,7 @@ List of Maven modules
 |be.atbash.ee.security:octopus-token-generator |SE, CDI | Contains class to generate the Offline Token (for SE usage).
 |be.atbash.ee.security:octopus-javafx |SE (JavaFX) | Integration within FXML views.
 |be.atbash.ee.security:octopus-keycloak-se |SE | Integration of Keycloak with CLI programs (pure Java SE or JavaFX).
-|be.atbash.ee.security:octopus-jsf7 |EE (JSF) | Specific for JSF
+|be.atbash.ee.security:octopus-jsf8 |EE (JSF) | Specific for JSF
 |be.atbash.ee.security:octopus-keycloak |EE (JSF) | Integration of Keycloak specific for JSF
 |be.atbash.ee.security:keycloak |EE (JSF) | Integration with Keycloak (including SSO)
 |be.atbash.ee.security:octopus-rest |EE (JAX-RS) | Specific for JAX-RS
@@ -41,7 +41,7 @@ The most flexible way is to define the different artifacts in your Maven project
 ----
     <dependency>
         <groupId>be.atbash.ee.security</groupId>
-        <artifactId>octopus-jsf7</artifactId>
+        <artifactId>octopus-jsf8</artifactId>
         <version>${octopus.version}</version>
     </dependency>
 
@@ -123,7 +123,7 @@ define the versions of the dependencies since they are already defined in the BO
 
        <dependency>
            <groupId>be.atbash.ee.security</groupId>
-           <artifactId>octopus-jsf7</artifactId>
+           <artifactId>octopus-jsf8</artifactId>
        </dependency>
 
        <dependency>

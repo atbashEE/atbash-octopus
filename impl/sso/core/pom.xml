@@ -33,23 +33,13 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- CDI API 1.1 has dependency on interceptor 1.1 which is wrong -->
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <!-- FIXME, This means we require Java EE 8, is it needed ? -->
             <groupId>javax.json.bind</groupId>
             <artifactId>javax.json.bind-api</artifactId>
             <version>${javax.json.bind.version}</version>

@@ -77,7 +77,7 @@ public class WebSecurityManager extends SessionsSecurityManager implements Autho
 
     @Inject
     private RememberMeManagerProvider rememberMeManagerProvider;
-    // FIXME this gives issue when adding JSF7 and Rest module because they each have their provider?
+    // FIXME this gives issue when adding JSF8 and Rest module because they each have their provider?
 
     @Inject
     private ServletContainerSessionManager servletContainerSessionManager;
