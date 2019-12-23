@@ -20,7 +20,7 @@ import be.atbash.config.logging.ConfigEntry;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.config.logging.StartupLogging;
-import be.atbash.ee.security.octopus.util.duration.PeriodUtil;
+import be.atbash.ee.security.octopus.util.PeriodUtil;
 import be.atbash.util.StringUtils;
 import be.atbash.util.reflection.CDICheck;
 

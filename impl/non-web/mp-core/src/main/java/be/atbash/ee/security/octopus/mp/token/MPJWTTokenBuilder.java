@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.mp.token;
 
 import be.atbash.ee.security.octopus.mp.config.MPCoreConfiguration;
-import be.atbash.ee.security.octopus.util.duration.PeriodUtil;
+import be.atbash.ee.security.octopus.util.PeriodUtil;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
