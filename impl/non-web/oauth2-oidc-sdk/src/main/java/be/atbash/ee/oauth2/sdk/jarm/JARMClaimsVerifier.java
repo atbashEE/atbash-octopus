@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package be.atbash.ee.oauth2.sdk.jarm;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTVerifier;
+import be.atbash.ee.security.octopus.nimbus.jwt.CommonJWTHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
@@ -97,7 +98,7 @@ public class JARMClaimsVerifier implements JWTVerifier {
 
 
     @Override
-    public boolean verify(JWSHeader jwsHeader, JWTClaimsSet claimsSet) {
+    public boolean verify(CommonJWTHeader jwsHeader, JWTClaimsSet claimsSet) {
 
         // See http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation
 

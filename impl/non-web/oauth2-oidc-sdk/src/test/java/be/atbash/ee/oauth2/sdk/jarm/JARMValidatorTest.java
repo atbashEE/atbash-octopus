@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.openid.connect.sdk.TestKeySelector;
+import be.atbash.ee.security.octopus.jwt.InvalidJWTException;
 import be.atbash.ee.security.octopus.keys.AtbashKey;
 import be.atbash.ee.security.octopus.nimbus.jose.Payload;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
@@ -167,7 +168,7 @@ public class JARMValidatorTest {
         try {
             jarmValidator.validate(jarm);
             fail();
-        } catch (BadJWTException e) {
+        } catch (InvalidJWTException e) {
             assertThat(e.getMessage()).isEqualTo("Signed JWT rejected: Invalid signature");
         }
     }
@@ -228,7 +229,7 @@ public class JARMValidatorTest {
         try {
             jarmValidator.validate(jarm);
             fail();
-        } catch (BadJWTException e) {
+        } catch (InvalidJWTException e) {
             assertThat(e.getMessage()).isEqualTo("Signed JWT rejected: Invalid signature");
         }
     }

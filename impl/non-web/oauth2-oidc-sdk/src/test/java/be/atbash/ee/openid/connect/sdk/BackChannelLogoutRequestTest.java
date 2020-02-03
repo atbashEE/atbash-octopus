@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,13 +101,14 @@ public class BackChannelLogoutRequestTest {
     private static JWT createSignedLogoutToken() {
 
 
-        SignedJWT jwt = new SignedJWT(
-                new JWSHeader.Builder(JWSAlgorithm.RS256)
-                        .keyID(RSA_JWK.getKeyID())
-                        .build(),
-                createLogoutTokenClaimsSet());
-
+        SignedJWT jwt;
         try {
+            jwt = new SignedJWT(
+                    new JWSHeader.Builder(JWSAlgorithm.RS256)
+                            .keyID(RSA_JWK.getKeyID())
+                            .build(),
+                    createLogoutTokenClaimsSet());
+
             jwt.sign(new RSASSASigner(RSA_JWK));
         } catch (JOSEException e) {
             throw new RuntimeException(e);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import be.atbash.ee.security.octopus.jwt.decoder.JWTVerifier;
 import be.atbash.ee.security.octopus.keys.AtbashKey;
 import be.atbash.ee.security.octopus.keys.selector.KeySelector;
 import be.atbash.ee.security.octopus.keys.selector.SingleKeySelector;
+import be.atbash.ee.security.octopus.nimbus.jwt.CommonJWTHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 
@@ -55,7 +56,7 @@ public final class OfflineTokenParser {
     private static class OfflineTokenVerifier implements JWTVerifier {
 
         @Override
-        public boolean verify(JWSHeader header, JWTClaimsSet jwtClaimsSet) {
+        public boolean verify(CommonJWTHeader header, JWTClaimsSet jwtClaimsSet) {
             return header.getCustomParams().containsKey("Octopus Offline");  // Fixme Constant
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package be.atbash.ee.security.octopus.mp.filter.authc;
 import be.atbash.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.jwt.decoder.JWTVerifier;
 import be.atbash.ee.security.octopus.mp.config.MPCoreConfiguration;
+import be.atbash.ee.security.octopus.nimbus.jwt.CommonJWTHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.util.StringUtils;
@@ -44,13 +45,15 @@ public class MPBearerTokenVerifier implements JWTVerifier {
     }
 
     @Override
-    public boolean verify(JWSHeader header, JWTClaimsSet jwtClaimsSet) {
+    public boolean verify(CommonJWTHeader header, JWTClaimsSet jwtClaimsSet) {
         boolean result = true;
         if (!jwtClaimsSet.getAudience().contains(mpConfiguration.getAudience())) {
             // TODO Log
             result = false;
         }
 
+        // FIXME This is already checked by the default
+        // FIXME, we only need to check if exp is present.
         if (jwtClaimsSet.getExpirationTime().before(new Date())) {
             // TODO Log
             result = false;

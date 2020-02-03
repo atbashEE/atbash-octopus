@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class PrivateKeyJWTTest {
         RSAPrivateKey priv = (RSAPrivateKey) pair.getPrivate();
         RSAPublicKey pub = (RSAPublicKey) pair.getPublic();
 
-        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.RS256, priv, null, null);
+        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.RS256, priv, null);
 
         privateKeyJWT = PrivateKeyJWT.parse(privateKeyJWT.toParameters());
 
@@ -105,7 +105,7 @@ public class PrivateKeyJWTTest {
         RSAPrivateKey priv = (RSAPrivateKey) pair.getPrivate();
         RSAPublicKey pub = (RSAPublicKey) pair.getPublic();
 
-        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.RS256, priv, "1", null);
+        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.RS256, priv, "1");
         assertThat(privateKeyJWT.getClientAssertion().getHeader().getKeyID()).isEqualTo("1");
 
         privateKeyJWT = PrivateKeyJWT.parse(privateKeyJWT.toParameters());
@@ -142,7 +142,7 @@ public class PrivateKeyJWTTest {
         ECPrivateKey priv = (ECPrivateKey) pair.getPrivate();
         ECPublicKey pub = (ECPublicKey) pair.getPublic();
 
-        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.ES256, priv, null, null);
+        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.ES256, priv, null);
 
         privateKeyJWT = PrivateKeyJWT.parse(privateKeyJWT.toParameters());
 
@@ -176,7 +176,7 @@ public class PrivateKeyJWTTest {
         ECPrivateKey priv = (ECPrivateKey) pair.getPrivate();
         ECPublicKey pub = (ECPublicKey) pair.getPublic();
 
-        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.ES256, priv, "1", null);
+        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.ES256, priv, "1");
         assertThat(privateKeyJWT.getClientAssertion().getHeader().getKeyID()).isEqualTo("1");
 
         privateKeyJWT = PrivateKeyJWT.parse(privateKeyJWT.toParameters());
@@ -213,7 +213,7 @@ public class PrivateKeyJWTTest {
         RSAPrivateKey priv = (RSAPrivateKey) pair.getPrivate();
         RSAPublicKey pub = (RSAPublicKey) pair.getPublic();
 
-        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.RS256, priv, null, null);
+        PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(clientID, tokenEndpoint, JWSAlgorithm.RS256, priv, null);
 
         Map<String, List<String>> params = privateKeyJWT.toParameters();
 

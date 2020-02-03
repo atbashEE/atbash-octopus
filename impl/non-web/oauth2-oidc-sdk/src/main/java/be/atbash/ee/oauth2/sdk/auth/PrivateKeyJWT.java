@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 
 import java.net.URI;
-import java.security.Provider;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.*;
@@ -111,23 +110,19 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID         Optional identifier for the RSA key, to aid
      *                      key selection at the authorisation server.
      *                      Recommended. {@code null} if not specified.
-     * @param jcaProvider   Optional specific JCA provider, {@code null} to
-     *                      use the default one.
      * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(ClientID clientID,
                          URI tokenEndpoint,
                          JWSAlgorithm jwsAlgorithm,
                          RSAPrivateKey rsaPrivateKey,
-                         String keyID,
-                         Provider jcaProvider)
+                         String keyID)
             throws JOSEException {
 
         this(new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
                 jwsAlgorithm,
                 rsaPrivateKey,
-                keyID,
-                jcaProvider);
+                keyID);
     }
 
 
@@ -145,18 +140,15 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID            Optional identifier for the RSA key, to aid
      *                         key selection at the authorisation server.
      *                         Recommended. {@code null} if not specified.
-     * @param jcaProvider      Optional specific JCA provider, {@code null}
-     *                         to use the default one.
      * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(JWTAuthenticationClaimsSet jwtAuthClaimsSet,
                          JWSAlgorithm jwsAlgorithm,
                          RSAPrivateKey rsaPrivateKey,
-                         String keyID,
-                         Provider jcaProvider)
+                         String keyID)
             throws JOSEException {
 
-        this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, rsaPrivateKey, keyID, jcaProvider));
+        this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, rsaPrivateKey, keyID));
     }
 
 
@@ -178,23 +170,19 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID         Optional identifier for the EC key, to aid key
      *                      selection at the authorisation server.
      *                      Recommended. {@code null} if not specified.
-     * @param jcaProvider   Optional specific JCA provider, {@code null} to
-     *                      use the default one.
      * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(ClientID clientID,
                          URI tokenEndpoint,
                          JWSAlgorithm jwsAlgorithm,
                          ECPrivateKey ecPrivateKey,
-                         String keyID,
-                         Provider jcaProvider)
+                         String keyID)
             throws JOSEException {
 
         this(new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
                 jwsAlgorithm,
                 ecPrivateKey,
-                keyID,
-                jcaProvider);
+                keyID);
     }
 
 
@@ -212,18 +200,15 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID            Optional identifier for the EC key, to aid
      *                         key selection at the authorisation server.
      *                         Recommended. {@code null} if not specified.
-     * @param jcaProvider      Optional specific JCA provider, {@code null}
-     *                         to use the default one.
      * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(JWTAuthenticationClaimsSet jwtAuthClaimsSet,
                          JWSAlgorithm jwsAlgorithm,
                          ECPrivateKey ecPrivateKey,
-                         String keyID,
-                         Provider jcaProvider)
+                         String keyID)
             throws JOSEException {
 
-        this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, ecPrivateKey, keyID, jcaProvider));
+        this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, ecPrivateKey, keyID));
     }
 
 

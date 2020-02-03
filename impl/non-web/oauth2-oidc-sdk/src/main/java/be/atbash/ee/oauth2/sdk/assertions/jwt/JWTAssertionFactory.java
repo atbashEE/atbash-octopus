@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,25 +100,19 @@ public class JWTAssertionFactory {
      * @param keyID         Optional identifier for the RSA key, to aid key
      *                      selection on the recipient side. Recommended.
      *                      {@code null} if not specified.
-     * @param jcaProvider   Optional specific JCA provider, {@code null} to
-     *                      use the default one.
      * @return The JWT bearer assertion.
      * @throws JOSEException If RSA signing failed.
      */
     public static SignedJWT create(JWTAssertionDetails details,
                                    JWSAlgorithm jwsAlgorithm,
                                    RSAPrivateKey rsaPrivateKey,
-                                   String keyID,
-                                   Provider jcaProvider)
+                                   String keyID)
             throws JOSEException {
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader.Builder(jwsAlgorithm).keyID(keyID).build(),
                 details.toJWTClaimsSet());
         RSASSASigner signer = new RSASSASigner(rsaPrivateKey);
-        if (jcaProvider != null) {
-            signer.getJCAContext().setProvider(jcaProvider);
-        }
         signedJWT.sign(signer);
         return signedJWT;
     }
@@ -136,25 +130,19 @@ public class JWTAssertionFactory {
      * @param keyID        Optional identifier for the EC key, to aid key
      *                     selection on the recipient side. Recommended.
      *                     {@code null} if not specified.
-     * @param jcaProvider  Optional specific JCA provider, {@code null} to
-     *                     use the default one.
      * @return The JWT bearer assertion.
      * @throws JOSEException If RSA signing failed.
      */
     public static SignedJWT create(JWTAssertionDetails details,
                                    JWSAlgorithm jwsAlgorithm,
                                    ECPrivateKey ecPrivateKey,
-                                   String keyID,
-                                   Provider jcaProvider)
+                                   String keyID)
             throws JOSEException {
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader.Builder(jwsAlgorithm).keyID(keyID).build(),
                 details.toJWTClaimsSet());
         ECDSASigner signer = new ECDSASigner(ecPrivateKey);
-        if (jcaProvider != null) {
-            signer.getJCAContext().setProvider(jcaProvider);
-        }
         signedJWT.sign(signer);
         return signedJWT;
     }

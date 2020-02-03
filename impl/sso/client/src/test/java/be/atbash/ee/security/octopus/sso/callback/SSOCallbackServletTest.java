@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -384,7 +384,6 @@ public class SSOCallbackServletTest {
 
     private List<AtbashKey> generateKey() {
         KeyGenerator keyGenerator = new KeyGenerator();
-        keyGenerator.init();
         RSAGenerationParameters generationParameters = new RSAGenerationParameters.RSAGenerationParametersBuilder()
                 .withKeySize(2048)
                 .withKeyId("theKid")

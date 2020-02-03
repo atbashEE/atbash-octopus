@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -245,7 +245,6 @@ public class ClientAuthenticationVerifierTest {
                 VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
                 JWSAlgorithm.RS256,
                 VALID_RSA_KEY_PAIR_1.toRSAPrivateKey(),
-                null,
                 null);
 
         createBasicVerifier().verify(clientAuthentication, null, null);
@@ -302,7 +301,6 @@ public class ClientAuthenticationVerifierTest {
                 VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
                 JWSAlgorithm.RS256,
                 INVALID_RSA_KEY_PAIR.toRSAPrivateKey(),
-                null,
                 null);
 
         try {
@@ -337,7 +335,6 @@ public class ClientAuthenticationVerifierTest {
                 VALID_CLIENT_ID, URI.create("https://other.com/token"),
                 JWSAlgorithm.RS256,
                 INVALID_RSA_KEY_PAIR.toRSAPrivateKey(),
-                null,
                 null);
 
         try {
@@ -409,7 +406,6 @@ public class ClientAuthenticationVerifierTest {
                 VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
                 JWSAlgorithm.RS256,
                 VALID_RSA_KEY_PAIR_2.toRSAPrivateKey(),
-                null,
                 null);
 
         createBasicVerifier().verify(clientAuthentication, Collections.singleton(Hint.CLIENT_HAS_REMOTE_JWK_SET), null);
@@ -423,7 +419,6 @@ public class ClientAuthenticationVerifierTest {
                 VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
                 JWSAlgorithm.RS256,
                 INVALID_RSA_KEY_PAIR.toRSAPrivateKey(),
-                null,
                 null);
 
         try {

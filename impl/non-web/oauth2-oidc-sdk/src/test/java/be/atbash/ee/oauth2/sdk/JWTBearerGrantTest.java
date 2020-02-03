@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package be.atbash.ee.oauth2.sdk;
 
 import be.atbash.ee.oauth2.sdk.auth.Secret;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
+import be.atbash.ee.security.octopus.nimbus.jose.CustomParameterNameException;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.Payload;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.DirectDecrypter;
@@ -56,7 +57,7 @@ import static org.junit.Assert.fail;
 public class JWTBearerGrantTest  {
 
 	@Test
-	public void testRejectUnsignedAssertion() {
+	public void testRejectUnsignedAssertion() throws CustomParameterNameException {
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.subject("alice")
@@ -70,7 +71,7 @@ public class JWTBearerGrantTest  {
 	}
 
 	@Test
-	public void testRejectUnencryptedAssertion() {
+	public void testRejectUnencryptedAssertion() throws CustomParameterNameException {
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.subject("alice")
@@ -232,7 +233,6 @@ public class JWTBearerGrantTest  {
 		SecretKey key = keyGen.generateKey();
 
 		DirectEncrypter encrypter = new DirectEncrypter(key);
-		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jwt.encrypt(encrypter);
 
 		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jwt);
@@ -245,7 +245,6 @@ public class JWTBearerGrantTest  {
 		assertThat(jwt).isNotNull();
 
 		DirectDecrypter decrypter = new DirectDecrypter(key);
-		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jwt.decrypt(decrypter);
 		assertThat(jwt.getJWTClaimsSet().getSubject()).isEqualTo("alice");
 	}
@@ -267,7 +266,6 @@ public class JWTBearerGrantTest  {
 		SecretKey key = keyGen.generateKey();
 
 		DirectEncrypter encrypter = new DirectEncrypter(key);
-		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jwt.encrypt(encrypter);
 
 		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jwt);
@@ -280,7 +278,6 @@ public class JWTBearerGrantTest  {
 		assertThat(jwt).isNotNull();
 
 		DirectDecrypter decrypter = new DirectDecrypter(key);
-		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jwt.decrypt(decrypter);
 		assertThat(jwt.getJWTClaimsSet().getSubject()).isEqualTo("alice");
 	}
@@ -312,7 +309,6 @@ public class JWTBearerGrantTest  {
 		SecretKey key = keyGen.generateKey();
 
 		DirectEncrypter encrypter = new DirectEncrypter(key);
-		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jweObject.encrypt(encrypter);
 
 		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jweObject);
@@ -326,7 +322,6 @@ public class JWTBearerGrantTest  {
 		jweObject = (JWEObject)jwtBearerGrant.getJOSEAssertion();
 
 		DirectDecrypter decrypter = new DirectDecrypter(key);
-		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jweObject.decrypt(decrypter);
 
 		jwt = jweObject.getPayload().toSignedJWT();
@@ -363,7 +358,6 @@ public class JWTBearerGrantTest  {
 		SecretKey key = keyGen.generateKey();
 
 		DirectEncrypter encrypter = new DirectEncrypter(key);
-		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jweObject.encrypt(encrypter);
 
 		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jweObject);
@@ -377,7 +371,6 @@ public class JWTBearerGrantTest  {
 		jweObject = (JWEObject)jwtBearerGrant.getJOSEAssertion();
 
 		DirectDecrypter decrypter = new DirectDecrypter(key);
-		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
 		jweObject.decrypt(decrypter);
 
 		jwt = jweObject.getPayload().toSignedJWT();

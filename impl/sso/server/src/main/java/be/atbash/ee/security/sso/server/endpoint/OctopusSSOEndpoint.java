@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
+import be.atbash.ee.security.octopus.nimbus.jose.CustomParameterNameException;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
@@ -250,7 +251,12 @@ public class OctopusSSOEndpoint {
     private void buildResponsePayload(Response.ResponseBuilder builder, UriInfo uriDetails, OIDCStoreData oidcStoreData, UserInfo userInfo) {
         builder.type(CommonContentTypes.APPLICATION_JWT.toString());
 
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
+        JWSHeader header;
+        try {
+            header = new JWSHeader(JWSAlgorithm.HS256);
+        } catch (CustomParameterNameException e) {
+            throw new AtbashUnexpectedException(e);
+        }
 
         JWTClaimsSet.Builder claimSetBuilder = new JWTClaimsSet.Builder();
 
