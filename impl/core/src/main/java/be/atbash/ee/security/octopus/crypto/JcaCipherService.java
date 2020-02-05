@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -590,13 +590,17 @@ public abstract class JcaCipherService implements CipherService {
 
         Cipher cipher = newCipherInstance(streaming);
         Key jdkKey = new SecretKeySpec(key, getAlgorithmName());
-        IvParameterSpec ivSpec = null;
+        AlgorithmParameterSpec ivSpec = null;
         if (iv != null && iv.length > 0) {
-            ivSpec = new IvParameterSpec(iv);
+            ivSpec = createParameterSpec(iv, streaming);
         }
 
         init(cipher, jcaCipherMode, jdkKey, ivSpec, getSecureRandom());
 
         return cipher;
+    }
+
+    protected AlgorithmParameterSpec createParameterSpec(byte[] iv, boolean streaming) {
+        return new IvParameterSpec(iv);
     }
 }
