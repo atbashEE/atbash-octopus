@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 package be.atbash.ee.security.octopus.crypto;
 
 import be.atbash.ee.security.octopus.ShiroEquivalent;
+
+import javax.crypto.spec.GCMParameterSpec;
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * {@code CipherService} using the {@code AES} cipher algorithm for all encryption, decryption, and key operations.
@@ -73,7 +76,7 @@ public class AESCipherService extends DefaultBlockCipherService {
      * </tr>
      * </table>
      * <p/>
-     * <b>*</b> The {@link OperationMode#CBC CBC} operation mode is used instead of the JDK default {@code ECB} to
+     * <b>*</b> The {@link OperationMode#GCM GCM} operation mode is used instead of the JDK default {@code ECB} to
      * ensure strong encryption.  {@code ECB} should not be used in security-sensitive environments - see the
      * {@link DefaultBlockCipherService DefaultBlockCipherService} class JavaDoc's &quot;Operation Mode&quot; section
      * for more.
@@ -83,6 +86,18 @@ public class AESCipherService extends DefaultBlockCipherService {
      */
     public AESCipherService() {
         super(ALGORITHM_NAME);
+        setMode(OperationMode.GCM);
+        setStreamingMode(OperationMode.GCM);
     }
 
+    @Override
+    protected AlgorithmParameterSpec createParameterSpec(byte[] iv, boolean streaming) {
+
+        if ((streaming && OperationMode.GCM.name().equals(getStreamingModeName()))
+                || (!streaming && OperationMode.GCM.name().equals(getModeName()))) {
+            return new GCMParameterSpec(getKeySize(), iv);
+        }
+
+        return super.createParameterSpec(iv, streaming);
+    }
 }
