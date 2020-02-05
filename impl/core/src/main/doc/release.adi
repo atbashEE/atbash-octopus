@@ -1,3 +1,7 @@
+=== 0.6.1
+
+. Reduce the possibility of a padding attack on the cookie used for remember-me.
+
 === 0.6
 
 . Support for External Password validation.
