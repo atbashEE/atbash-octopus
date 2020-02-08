@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -206,7 +206,7 @@ public class LogoutServletTest {
 
         try {
             JWSHeader.Builder headerBuilder = new JWSHeader.Builder(JWSAlgorithm.HS256);
-            headerBuilder.customParam("clientId", clientId);
+            headerBuilder.parameter("clientId", clientId);
             result = new SignedJWT(headerBuilder.build(), claimsSet.toJWTClaimsSet());
 
             result.sign(new MACSigner(secret));

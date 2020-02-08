@@ -57,7 +57,7 @@ public final class OfflineTokenParser {
 
         @Override
         public boolean verify(CommonJWTHeader header, JWTClaimsSet jwtClaimsSet) {
-            return header.getCustomParams().containsKey("Octopus Offline");  // Fixme Constant
+            return header.getCustomParameters().containsKey("Octopus Offline");  // Fixme Constant
         }
     }
 }

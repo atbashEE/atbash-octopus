@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class LogoutURLCreator {
         SignedJWT idToken;
         try {
             JWSHeader.Builder headerBuilder = new JWSHeader.Builder(algorithm);
-            headerBuilder.customParam("clientId", ssoServerClientConfiguration.getSSOClientId());
+            headerBuilder.parameter("clientId", ssoServerClientConfiguration.getSSOClientId());
 
             idToken = new SignedJWT(headerBuilder.build(), claimsSet.toJWTClaimsSet());
 

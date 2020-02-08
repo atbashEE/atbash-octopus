@@ -16,17 +16,14 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-
 import be.atbash.ee.oauth2.sdk.auth.Secret;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
-import be.atbash.ee.security.octopus.nimbus.jose.CustomParameterNameException;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.Payload;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.DirectDecrypter;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.DirectEncrypter;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
-import be.atbash.ee.security.octopus.nimbus.jose.crypto.bc.BouncyCastleProviderSingleton;
 import be.atbash.ee.security.octopus.nimbus.jwt.EncryptedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
@@ -57,11 +54,11 @@ import static org.junit.Assert.fail;
 public class JWTBearerGrantTest  {
 
 	@Test
-	public void testRejectUnsignedAssertion() throws CustomParameterNameException {
+	public void testRejectUnsignedAssertion() {
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-			.subject("alice")
-			.build();
+				.subject("alice")
+				.build();
 
 		try {
 			new JWTBearerGrant(new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet));
@@ -71,11 +68,11 @@ public class JWTBearerGrantTest  {
 	}
 
 	@Test
-	public void testRejectUnencryptedAssertion() throws CustomParameterNameException {
+	public void testRejectUnencryptedAssertion() {
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-			.subject("alice")
-			.build();
+				.subject("alice")
+				.build();
 
 		try {
 			new JWTBearerGrant(new EncryptedJWT(new JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128CBC_HS256), claimsSet));

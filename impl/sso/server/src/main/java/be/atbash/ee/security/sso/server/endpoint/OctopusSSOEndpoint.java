@@ -29,7 +29,6 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionJSONProvider;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import be.atbash.ee.security.octopus.nimbus.jose.CustomParameterNameException;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
@@ -251,12 +250,7 @@ public class OctopusSSOEndpoint {
     private void buildResponsePayload(Response.ResponseBuilder builder, UriInfo uriDetails, OIDCStoreData oidcStoreData, UserInfo userInfo) {
         builder.type(CommonContentTypes.APPLICATION_JWT.toString());
 
-        JWSHeader header;
-        try {
-            header = new JWSHeader(JWSAlgorithm.HS256);
-        } catch (CustomParameterNameException e) {
-            throw new AtbashUnexpectedException(e);
-        }
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
 
         JWTClaimsSet.Builder claimSetBuilder = new JWTClaimsSet.Builder();
 

@@ -28,7 +28,6 @@ import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.nimbus.jose.CustomParameterNameException;
 import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
@@ -211,12 +210,7 @@ public class TokenServlet extends HttpServlet {
 
             // RFC-6749 2. Must be signed ith JWS
             // TODO Support JWE?
-            JWSHeader header;
-            try {
-                header = new JWSHeader(JWSAlgorithm.HS256);
-            } catch (CustomParameterNameException e) {
-                throw new AtbashUnexpectedException(e);
-            }
+            JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
             // TODO We should also add the clientId to the token info, so that it can be used as id_token_hint for the logout request.
             SignedJWT signedJWT = null;
             try {
