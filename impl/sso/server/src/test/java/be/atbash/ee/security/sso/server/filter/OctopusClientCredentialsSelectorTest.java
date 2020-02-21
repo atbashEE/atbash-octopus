@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class OctopusClientCredentialsSelectorTest {
     private String clientSecretBase64Encoded = "szxK-5_eJjs-aUj-64MpUZ-GPPzGLhYPLGl0wrYjYNVAGva2P0lLe6UGKGM7k8dWxsOVGutZWgvmY3l5oVPO3w";
 
     @Test
-    public void selectClientSecrets() throws JOSEException, InvalidClientException, URISyntaxException {
+    public void selectClientSecrets() throws  InvalidClientException, URISyntaxException {
 
         Secret secret = new Secret(new Base64URLValue(clientSecretBase64Encoded));
 

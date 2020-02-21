@@ -1299,7 +1299,7 @@ public class AuthenticationRequestTest {
         keyPairGenerator.initialize(2048);
         KeyPair rsaKeyPair = keyPairGenerator.generateKeyPair();
 
-        jwt.sign(new RSASSASigner(rsaKeyPair.getPrivate()));
+        jwt.sign(new RSASSASigner((RSAPrivateKey) rsaKeyPair.getPrivate()));
 
         String jwtString = jwt.serialize();
 
@@ -1850,7 +1850,7 @@ public class AuthenticationRequestTest {
         RSAKey rsaJWK = generateKey();
 
         SignedJWT jar = new SignedJWT(new JWSHeader.Builder((JWSAlgorithm) rsaJWK.getAlgorithm()).keyID(rsaJWK.getKeyID()).build(), jarClaims);
-        jar.sign(new RSASSASigner(rsaJWK));
+        jar.sign(new RSASSASigner(rsaJWK.toRSAPrivateKey()));
 
         AuthenticationRequest jarRequest = new AuthenticationRequest.Builder(jar).build();
 

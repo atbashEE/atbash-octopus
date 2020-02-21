@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import be.atbash.ee.oauth2.sdk.auth.*;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.util.CollectionUtils;
 import be.atbash.ee.oauth2.sdk.util.X509CertificateUtils;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.factories.DefaultJWSVerifierFactory;
 import be.atbash.ee.security.octopus.nimbus.jose.proc.JWSVerifierFactory;
@@ -157,12 +156,9 @@ public class ClientAuthenticationVerifier<T> {
      * @throws InvalidClientException If the client authentication is
      *                                invalid, typically due to bad
      *                                credentials.
-     * @throws JOSEException          If authentication failed due to an
-     *                                internal JOSE / JWT processing
-     *                                exception.
      */
     public void verify(ClientAuthentication clientAuth, Set<Hint> hints, Context<T> context)
-            throws InvalidClientException, JOSEException {
+            throws InvalidClientException {
 
         if (clientAuth instanceof PlainClientSecret) {
 

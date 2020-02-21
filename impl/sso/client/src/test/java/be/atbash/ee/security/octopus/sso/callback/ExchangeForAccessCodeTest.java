@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -188,7 +188,7 @@ public class ExchangeForAccessCodeTest {
     }
 
     @Test
-    public void doExchange_clientAuthenticationJWTInvalidSigning() throws OAuth2JSONParseException, JOSEException {
+    public void doExchange_clientAuthenticationJWTInvalidSigning() throws OAuth2JSONParseException {
         defineSecret(256 / 8 + 1);
         when(jwsAlgorithmFactoryMock.determineOptimalAlgorithm(any(byte[].class))).thenReturn(JWSAlgorithm.HS256);
         exchangeForAccessCode.init();
@@ -284,7 +284,7 @@ public class ExchangeForAccessCodeTest {
         return new OIDCTokens(plainJWT, accessCode, null);
     }
 
-    private OIDCTokens defineTokens(OpenIdVariableClientData variableClientData, byte[] secret) throws OAuth2JSONParseException, JOSEException {
+    private OIDCTokens defineTokens(OpenIdVariableClientData variableClientData, byte[] secret) throws OAuth2JSONParseException {
 
         List<Audience> audiences = new ArrayList<>();
         audiences.add(new Audience("junit_client"));

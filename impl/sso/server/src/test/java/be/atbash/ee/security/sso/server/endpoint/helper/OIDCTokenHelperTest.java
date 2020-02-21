@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class OIDCTokenHelperTest {
     }
 
     @Test
-    public void signToken() throws JOSEException, ParseException, OAuth2JSONParseException {
+    public void signToken() throws ParseException, OAuth2JSONParseException {
         Issuer iss = new Issuer("http://some.host/root");
         Subject sub = new Subject("subject");
         List<Audience> audList = Audience.create("JUnit_client");

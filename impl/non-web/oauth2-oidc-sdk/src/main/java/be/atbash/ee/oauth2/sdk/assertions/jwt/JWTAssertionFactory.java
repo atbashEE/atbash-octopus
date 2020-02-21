@@ -17,7 +17,6 @@ package be.atbash.ee.oauth2.sdk.assertions.jwt;
 
 
 import be.atbash.ee.oauth2.sdk.auth.Secret;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.ECDSASigner;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.RSASSASigner;
@@ -25,7 +24,6 @@ import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 
-import java.security.Provider;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Collections;
@@ -73,13 +71,10 @@ public class JWTAssertionFactory {
      *                     and not {@code null}.
      * @param secret       The secret. Must be at least 256-bits long.
      * @return The JWT bearer assertion.
-     * @throws JOSEException If the client secret is too short, or HMAC
-     *                       computation failed.
      */
     public static SignedJWT create(JWTAssertionDetails details,
                                    JWSAlgorithm jwsAlgorithm,
-                                   Secret secret)
-            throws JOSEException {
+                                   Secret secret) {
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), details.toJWTClaimsSet());
         signedJWT.sign(new MACSigner(secret.getValueBytes()));
@@ -101,13 +96,11 @@ public class JWTAssertionFactory {
      *                      selection on the recipient side. Recommended.
      *                      {@code null} if not specified.
      * @return The JWT bearer assertion.
-     * @throws JOSEException If RSA signing failed.
      */
     public static SignedJWT create(JWTAssertionDetails details,
                                    JWSAlgorithm jwsAlgorithm,
                                    RSAPrivateKey rsaPrivateKey,
-                                   String keyID)
-            throws JOSEException {
+                                   String keyID) {
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader.Builder(jwsAlgorithm).keyID(keyID).build(),
@@ -131,13 +124,11 @@ public class JWTAssertionFactory {
      *                     selection on the recipient side. Recommended.
      *                     {@code null} if not specified.
      * @return The JWT bearer assertion.
-     * @throws JOSEException If RSA signing failed.
      */
     public static SignedJWT create(JWTAssertionDetails details,
                                    JWSAlgorithm jwsAlgorithm,
                                    ECPrivateKey ecPrivateKey,
-                                   String keyID)
-            throws JOSEException {
+                                   String keyID) {
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader.Builder(jwsAlgorithm).keyID(keyID).build(),

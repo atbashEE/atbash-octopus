@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 
@@ -82,14 +81,11 @@ public final class ClientSecretJWT extends JWTAuthentication {
      *                      Must be supported and not {@code null}.
      * @param clientSecret  The client secret. Must be at least 256-bits
      *                      long.
-     * @throws JOSEException If the client secret is too short, or HMAC
-     *                       computation failed.
      */
     public ClientSecretJWT(ClientID clientID,
                            URI tokenEndpoint,
                            JWSAlgorithm jwsAlgorithm,
-                           Secret clientSecret)
-            throws JOSEException {
+                           Secret clientSecret) {
 
         this(JWTAssertionFactory.create(
                 new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),

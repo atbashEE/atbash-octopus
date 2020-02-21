@@ -23,7 +23,6 @@ import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 
@@ -110,14 +109,12 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID         Optional identifier for the RSA key, to aid
      *                      key selection at the authorisation server.
      *                      Recommended. {@code null} if not specified.
-     * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(ClientID clientID,
                          URI tokenEndpoint,
                          JWSAlgorithm jwsAlgorithm,
                          RSAPrivateKey rsaPrivateKey,
-                         String keyID)
-            throws JOSEException {
+                         String keyID) {
 
         this(new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
                 jwsAlgorithm,
@@ -140,13 +137,11 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID            Optional identifier for the RSA key, to aid
      *                         key selection at the authorisation server.
      *                         Recommended. {@code null} if not specified.
-     * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(JWTAuthenticationClaimsSet jwtAuthClaimsSet,
                          JWSAlgorithm jwsAlgorithm,
                          RSAPrivateKey rsaPrivateKey,
-                         String keyID)
-            throws JOSEException {
+                         String keyID) {
 
         this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, rsaPrivateKey, keyID));
     }
@@ -170,14 +165,12 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID         Optional identifier for the EC key, to aid key
      *                      selection at the authorisation server.
      *                      Recommended. {@code null} if not specified.
-     * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(ClientID clientID,
                          URI tokenEndpoint,
                          JWSAlgorithm jwsAlgorithm,
                          ECPrivateKey ecPrivateKey,
-                         String keyID)
-            throws JOSEException {
+                         String keyID) {
 
         this(new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
                 jwsAlgorithm,
@@ -200,13 +193,11 @@ public final class PrivateKeyJWT extends JWTAuthentication {
      * @param keyID            Optional identifier for the EC key, to aid
      *                         key selection at the authorisation server.
      *                         Recommended. {@code null} if not specified.
-     * @throws JOSEException If RSA signing failed.
      */
     public PrivateKeyJWT(JWTAuthenticationClaimsSet jwtAuthClaimsSet,
                          JWSAlgorithm jwsAlgorithm,
                          ECPrivateKey ecPrivateKey,
-                         String keyID)
-            throws JOSEException {
+                         String keyID) {
 
         this(JWTAssertionFactory.create(jwtAuthClaimsSet, jwsAlgorithm, ecPrivateKey, keyID));
     }

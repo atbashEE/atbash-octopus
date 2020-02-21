@@ -143,8 +143,7 @@ public class JWTBearerGrantTest  {
 	}
 
 	@Test
-	public void testParseInvalidGrantType()
-		throws JOSEException {
+	public void testParseInvalidGrantType() {
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.subject("alice")

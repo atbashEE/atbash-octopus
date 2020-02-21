@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import be.atbash.ee.openid.connect.sdk.*;
 import be.atbash.ee.openid.connect.sdk.claims.UserInfo;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.sso.client.OpenIdVariableClientData;
@@ -61,7 +60,7 @@ public class OctopusUserRequestor extends AbstractRequestor {
         this.customUserInfoValidator = customUserInfoValidator;
     }
 
-    public OctopusSSOToken getOctopusSSOToken(OpenIdVariableClientData variableClientData, BearerAccessToken accessToken) throws URISyntaxException, OAuth2JSONParseException, JOSEException, java.text.ParseException, OctopusRetrievalException {
+    public OctopusSSOToken getOctopusSSOToken(OpenIdVariableClientData variableClientData, BearerAccessToken accessToken) throws URISyntaxException, OAuth2JSONParseException, java.text.ParseException, OctopusRetrievalException {
         // Create UserInfoRequest instance to send request to Server
         UserInfoRequest infoRequest = new UserInfoRequest(new URI(configuration.getUserInfoEndpoint()), accessToken);
 

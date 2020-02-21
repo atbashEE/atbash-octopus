@@ -58,7 +58,7 @@ import static org.junit.Assert.fail;
 public class RequestObjectPOSTRequestTest  {
 	
 	
-	private static JWT createRequestJWT() throws JOSEException {
+	private static JWT createRequestJWT() {
 		
 		RSAKey rsaJWK = generateKey();
 		
@@ -70,7 +70,7 @@ public class RequestObjectPOSTRequestTest  {
 			.build();
 		
 		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), ar.toJWTClaimsSet());
-		jwt.sign(new RSASSASigner(rsaJWK));
+		jwt.sign(new RSASSASigner(rsaJWK.toRSAPrivateKey()));
 		return jwt;
 	}
 
@@ -213,7 +213,7 @@ public class RequestObjectPOSTRequestTest  {
 	}
 
 	@Test
-	public void testRejectUnsecuredJWT() throws ParseException, JOSEException {
+	public void testRejectUnsecuredJWT() throws ParseException {
 		
 		JWT jwt = createRequestJWT();
 		

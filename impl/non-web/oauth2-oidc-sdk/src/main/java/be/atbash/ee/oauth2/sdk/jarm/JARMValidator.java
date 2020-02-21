@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.openid.connect.sdk.validators.AbstractJWTValidator;
 import be.atbash.ee.security.octopus.keys.selector.KeySelector;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jwt.*;
 import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 import be.atbash.ee.security.octopus.nimbus.jwt.proc.DefaultJWTProcessor;
@@ -94,12 +93,8 @@ public class JARMValidator extends AbstractJWTValidator {
      * @param jwtResponseString The JWT-secured authorisation response
      *                          string. Must not be {@code null}.
      * @return The claims set of the verified JWT.
-     * @throws BadJWTException If the JWT is invalid or expired.
-     * @throws JOSEException   If an internal JOSE exception was
-     *                         encountered.
      */
-    public JWTClaimsSet validate(String jwtResponseString)
-            throws BadJWTException, JOSEException {
+    public JWTClaimsSet validate(String jwtResponseString) {
 
         try {
             return validate(JWTParser.parse(jwtResponseString));
@@ -115,12 +110,8 @@ public class JARMValidator extends AbstractJWTValidator {
      * @param jwtResponse The JWT-secured authorisation response. Must not
      *                    be {@code null}.
      * @return The claims set of the verified JWT.
-     * @throws BadJWTException If the JWT is invalid or expired.
-     * @throws JOSEException   If an internal JOSE exception was
-     *                         encountered.
      */
-    public JWTClaimsSet validate(JWT jwtResponse)
-            throws BadJWTException, JOSEException {
+    public JWTClaimsSet validate(JWT jwtResponse) {
 
         if (jwtResponse instanceof SignedJWT) {
             return validate((SignedJWT) jwtResponse);
@@ -140,12 +131,8 @@ public class JARMValidator extends AbstractJWTValidator {
      * @param jwtResponse The JWT-secured authorisation response. Must not
      *                    be {@code null}.
      * @return The claims set of the verified JWT.
-     * @throws BadJWTException If the JWT is invalid or expired.
-     * @throws JOSEException   If an internal JOSE exception was
-     *                         encountered.
      */
-    private JWTClaimsSet validate(SignedJWT jwtResponse)
-            throws BadJWTException, JOSEException {
+    private JWTClaimsSet validate(SignedJWT jwtResponse) {
 
         if (getJWSKeySelector() == null) {
             throw new BadJWTException("Verification of signed JWTs not configured");
@@ -164,12 +151,8 @@ public class JARMValidator extends AbstractJWTValidator {
      * @param jwtResponse The JWT-secured authorisation response. Must not
      *                    be {@code null}.
      * @return The claims set of the verified JWT.
-     * @throws BadJWTException If the JWT is invalid or expired.
-     * @throws JOSEException   If an internal JOSE exception was
-     *                         encountered.
      */
-    private JWTClaimsSet validate(EncryptedJWT jwtResponse)
-            throws BadJWTException, JOSEException {
+    private JWTClaimsSet validate(EncryptedJWT jwtResponse) {
 
         if (getJWEKeySelector() == null) {
             throw new BadJWTException("Decryption of JWTs not configured");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,7 +167,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_happyCase() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void retrieveUser_happyCase() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
@@ -182,7 +182,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_OctopusRetrievalException() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void retrieveUser_OctopusRetrievalException() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
@@ -202,7 +202,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_ParseException() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void retrieveUser_ParseException() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null
@@ -221,7 +221,7 @@ public class SSOCallbackServletHandlerTest {
     }
 
     @Test
-    public void retrieveUser_ParseException2() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void retrieveUser_ParseException2() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         BearerAccessToken accessToken = new BearerAccessToken("accessToken");
 
         // variableClientData null because not set by call  getAuthenticationResponse but in real life, never null

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -139,7 +139,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_expired() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken_expired() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -185,7 +185,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_invalidSignature() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken_invalidSignature() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -232,7 +232,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_missingNonce() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken_missingNonce() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -275,7 +275,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken_missingAud() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken_missingAud() throws ParseException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -324,7 +324,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken_customValidator() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException, IllegalAccessException {
+    public void getOctopusSSOToken_customValidator() throws ParseException, OAuth2JSONParseException, URISyntaxException, IllegalAccessException {
         // Inject custom validator
         CustomUserInfoValidator customUserInfoValidatorMock = Mockito.mock(CustomUserInfoValidator.class);
         TestReflectionUtils.injectDependencies(octopusUserRequestor, customUserInfoValidatorMock);
@@ -382,7 +382,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test(expected = OctopusRetrievalException.class)
-    public void getOctopusSSOToken_ErrorReturn() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken_ErrorReturn() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
 
@@ -406,7 +406,7 @@ public class OctopusUserRequestorTest {
     }
 
     @Test
-    public void getOctopusSSOToken_plainJSONResult() throws ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void getOctopusSSOToken_plainJSONResult() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData();
 

@@ -109,7 +109,7 @@ public class BackChannelLogoutRequestTest {
                             .build(),
                     createLogoutTokenClaimsSet());
 
-            jwt.sign(new RSASSASigner(RSA_JWK));
+            jwt.sign(new RSASSASigner(RSA_JWK.toRSAPrivateKey()));
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }

@@ -251,8 +251,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testInvalidClientSecretPost_badID()
-            throws JOSEException {
+    public void testInvalidClientSecretPost_badID() {
 
         ClientAuthentication clientAuthentication = new ClientSecretBasic(new ClientID("invalid-id"), VALID_CLIENT_SECRET);
 
@@ -264,8 +263,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testInvalidClientSecretPost_badSecret()
-            throws JOSEException {
+    public void testInvalidClientSecretPost_badSecret() {
 
         ClientAuthentication clientAuthentication = new ClientSecretBasic(VALID_CLIENT_ID, new Secret("invalid-secret"));
 
@@ -277,8 +275,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testInvalidClientSecretJWT_badHMAC()
-            throws JOSEException {
+    public void testInvalidClientSecretJWT_badHMAC() {
 
         ClientAuthentication clientAuthentication = new ClientSecretJWT(
                 VALID_CLIENT_ID,
@@ -294,8 +291,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testInvalidPrivateKeyJWT_badSignature()
-            throws JOSEException {
+    public void testInvalidPrivateKeyJWT_badSignature() {
 
         ClientAuthentication clientAuthentication = new PrivateKeyJWT(
                 VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
@@ -311,8 +307,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testClientSecretJWTBadAudience()
-            throws JOSEException {
+    public void testClientSecretJWTBadAudience() {
 
         ClientAuthentication clientAuthentication = new ClientSecretJWT(
                 VALID_CLIENT_ID,
@@ -328,8 +323,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testPrivateKeyJWTBadAudience()
-            throws JOSEException {
+    public void testPrivateKeyJWTBadAudience() {
 
         ClientAuthentication clientAuthentication = new PrivateKeyJWT(
                 VALID_CLIENT_ID, URI.create("https://other.com/token"),
@@ -345,8 +339,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testExpiredClientSecretJWT()
-            throws JOSEException {
+    public void testExpiredClientSecretJWT() {
 
         Date now = new Date();
         Date before5min = new Date(now.getTime() - 5 * 60 * 1000L);
@@ -372,8 +365,7 @@ public class ClientAuthenticationVerifierTest {
     }
 
     @Test
-    public void testExpiredPrivateKeyJWT()
-            throws JOSEException {
+    public void testExpiredPrivateKeyJWT() {
 
         Date now = new Date();
         Date before5min = new Date(now.getTime() - 5 * 60 * 1000L);
@@ -387,7 +379,7 @@ public class ClientAuthenticationVerifierTest {
                 new JWTID());
 
         SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet.toJWTClaimsSet());
-        jwt.sign(new RSASSASigner(VALID_RSA_KEY_PAIR_1));
+        jwt.sign(new RSASSASigner(VALID_RSA_KEY_PAIR_1.toRSAPrivateKey()));
 
         ClientAuthentication clientAuthentication = new PrivateKeyJWT(jwt);
 

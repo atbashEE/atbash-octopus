@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,13 +45,10 @@ public class SecretKeyDerivation {
      * @param alg          The JWE algorithm. Must not be {@code null}.
      * @param enc          The JWE method. Must not be {@code null}.
      * @return The matching secret key (with algorithm set to "AES").
-     * @throws JOSEException If the JWE algorithm or method is not
-     *                       supported.
      */
     public static SecretKey deriveSecretKey(Secret clientSecret,
                                             JWEAlgorithm alg,
-                                            EncryptionMethod enc)
-            throws JOSEException {
+                                            EncryptionMethod enc) {
 
         if (JWEAlgorithm.DIR.equals(alg)) {
 
@@ -94,10 +91,8 @@ public class SecretKeyDerivation {
      * @param clientSecret The client secret. Must not be {@code null}.
      * @param bits         The secret key bits (128, 192, 256, 384 or 512).
      * @return The matching secret key (with algorithm set to "AES").
-     * @throws JOSEException If the secret key bit size it not supported.
      */
-    public static SecretKey deriveSecretKey(Secret clientSecret, int bits)
-            throws JOSEException {
+    public static SecretKey deriveSecretKey(Secret clientSecret, int bits) {
 
         final int hashBitLength;
 

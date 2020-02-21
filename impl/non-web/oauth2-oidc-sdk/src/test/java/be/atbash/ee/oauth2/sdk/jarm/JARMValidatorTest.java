@@ -127,7 +127,7 @@ public class JARMValidatorTest {
                 SAMPLE_AUTHZ_RESPONSE);
 
         SignedJWT jarm = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
-        jarm.sign(new RSASSASigner(SERVER_RSA_JWK));
+        jarm.sign(new RSASSASigner(SERVER_RSA_JWK.toRSAPrivateKey()));
 
         claimsSet = jarmValidator.validate(jarm);
         assertThat(claimsSet.getIssuer()).isEqualTo(iss.getValue());
@@ -163,7 +163,7 @@ public class JARMValidatorTest {
                 .build();
 
         SignedJWT jarm = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
-        jarm.sign(new RSASSASigner(invalidRSAJWK));
+        jarm.sign(new RSASSASigner(invalidRSAJWK.toRSAPrivateKey()));
 
         try {
             jarmValidator.validate(jarm);
@@ -260,7 +260,7 @@ public class JARMValidatorTest {
                 SAMPLE_AUTHZ_RESPONSE);
 
         SignedJWT jarm = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(SERVER_RSA_JWK.getKeyID()).build(), claimsSet);
-        jarm.sign(new RSASSASigner(SERVER_RSA_JWK));
+        jarm.sign(new RSASSASigner(SERVER_RSA_JWK.toRSAPrivateKey()));
 
         JWEObject jweObject = new JWEObject(new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128CBC_HS256).keyID("e1").contentType("JWT").build(), new Payload(jarm));
         jweObject.encrypt(new RSAEncrypter(rpJWK));

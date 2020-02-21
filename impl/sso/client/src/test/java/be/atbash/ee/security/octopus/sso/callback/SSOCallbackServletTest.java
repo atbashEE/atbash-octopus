@@ -237,7 +237,7 @@ public class SSOCallbackServletTest {
     }
 
     @Test
-    public void doGet_ValidAuthenticationToken() throws ServletException, IOException, ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void doGet_ValidAuthenticationToken() throws ServletException, IOException, ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
         when(httpSessionMock.getAttribute(OpenIdVariableClientData.class.getName())).thenReturn(clientData);
@@ -287,7 +287,7 @@ public class SSOCallbackServletTest {
     // catch (UnauthorizedException e) {
 
     @Test
-    public void doGet_ValidAccessToken() throws ServletException, IOException, ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void doGet_ValidAccessToken() throws ServletException, IOException, ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
         // Implicit flow
         when(httpServletRequestMock.getSession(true)).thenReturn(httpSessionMock);
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
@@ -322,7 +322,7 @@ public class SSOCallbackServletTest {
     }
 
     @Test
-    public void doGet_ValidAuthenticationToken_JARM() throws ServletException, IOException, ParseException, JOSEException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
+    public void doGet_ValidAuthenticationToken_JARM() throws ServletException, IOException, ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         when(octopusSSOServerClientConfigurationMock.getOctopusSSOServer()).thenReturn("http://some.server/sso");
         when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");

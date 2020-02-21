@@ -211,7 +211,7 @@ public class AuthenticationServletTest {
 
 
     @Test
-    public void doGet_happyCase_ImplicitFlow_IdTokenOnly() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException, JOSEException {
+    public void doGet_happyCase_ImplicitFlow_IdTokenOnly() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException {
         when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.NONE);
 
         ThreadContext.bind(subjectMock);
@@ -313,7 +313,7 @@ public class AuthenticationServletTest {
     }
 
     @Test
-    public void doGet_happyCase_ImplicitFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException, JOSEException {
+    public void doGet_happyCase_ImplicitFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, java.text.ParseException {
         when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.NONE);
 
         ThreadContext.bind(subjectMock);
