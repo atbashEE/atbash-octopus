@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package be.atbash.ee.oauth2.sdk.http;
 
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -41,7 +42,6 @@ import java.util.*;
 
 import static net.jadler.Jadler.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -68,31 +68,26 @@ public class HTTPRequestTest {
 	public void testConstructorAndAccessors()
 		throws Exception {
 
-		URL url = new URL("https://c2id.com/login");
+        URL url = new URL("https://c2id.com/login");
 
-		HTTPRequest request = new HTTPRequest(HTTPRequest.Method.POST, url);
+        HTTPRequest request = new HTTPRequest(HTTPRequest.Method.POST, url);
 
-		assertThat(request.getMethod()).isEqualTo(HTTPRequest.Method.POST);
-		assertThat(request.getURL()).isEqualTo(url);
+        assertThat(request.getMethod()).isEqualTo(HTTPRequest.Method.POST);
+        assertThat(request.getURL()).isEqualTo(url);
 
-		request.ensureMethod(HTTPRequest.Method.POST);
+        request.ensureMethod(HTTPRequest.Method.POST);
 
-		try {
-			request.ensureMethod(HTTPRequest.Method.GET);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> request.ensureMethod(HTTPRequest.Method.GET));
 
-		assertThat(request.getContentType()).isNull();
-		request.setContentType(CommonContentTypes.APPLICATION_JSON);
-		assertThat(request.getContentType().toString()).isEqualTo(CommonContentTypes.APPLICATION_JSON.toString());
+        assertThat(request.getContentType()).isNull();
+        request.setContentType(CommonContentTypes.APPLICATION_JSON);
+        assertThat(request.getContentType().toString()).isEqualTo(CommonContentTypes.APPLICATION_JSON.toString());
 
-		assertThat(request.getAuthorization()).isNull();
-		request.setAuthorization("Bearer 123");
-		assertThat(request.getAuthorization()).isEqualTo("Bearer 123");
+        assertThat(request.getAuthorization()).isNull();
+        request.setAuthorization("Bearer 123");
+        assertThat(request.getAuthorization()).isEqualTo("Bearer 123");
 
-		assertThat(request.getAccept()).isNull();
+        assertThat(request.getAccept()).isNull();
 		request.setAccept("text/plain");
 		assertThat(request.getAccept()).isEqualTo("text/plain");
 
@@ -147,47 +142,45 @@ public class HTTPRequestTest {
 	public void testParseJSONObjectException()
 		throws Exception {
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost"));
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost"));
 
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
 
-		httpRequest.setQuery(" ");
+        httpRequest.setQuery(" ");
 
-		try {
-			httpRequest.getQueryAsJSONObject();
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			// ok
-			assertThat(e.getMessage()).isEqualTo("Missing or empty HTTP query string / entity body");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                httpRequest.getQueryAsJSONObject());
+
+        assertThat(exception.getMessage()).isEqualTo("Missing or empty HTTP query string / entity body");
+
+    }
 
 
-	@Before
-	public void setUp() {
-		initJadler();
-	}
+    @BeforeEach
+    public void setUp() {
+        initJadler();
+    }
 
 
-	@After
-	public void tearDown() {
-		closeJadler();
-	}
+    @AfterEach
+    public void tearDown() {
+        closeJadler();
+    }
 
 
-	@Test
-	public void test401Response()
-		throws Exception {
+    @Test
+    public void test401Response()
+            throws Exception {
 
-		onRequest()
-			.havingMethodEqualTo("POST")
-			.havingHeaderEqualTo("Authorization", "Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW")
-			.havingHeaderEqualTo("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString())
-			.havingPathEqualTo("/c2id/token")
-			.havingBodyEqualTo("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
-				"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb")
-			.respond()
-			.withStatus(401)
+        onRequest()
+                .havingMethodEqualTo("POST")
+                .havingHeaderEqualTo("Authorization", "Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW")
+                .havingHeaderEqualTo("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString())
+                .havingPathEqualTo("/c2id/token")
+                .havingBodyEqualTo("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
+                        "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb")
+                .respond()
+                .withStatus(401)
 			.withHeader("WWW-Authenticate", "Bearer");
 
 		// Simulate token request with invalid token
@@ -432,26 +425,20 @@ public class HTTPRequestTest {
 	
 	@Test
 	public void testRejectNullDefaultHostnameVerifier() {
-		
-		try {
-			HTTPRequest.setDefaultHostnameVerifier(null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The hostname verifier must not be null");
-		}
-	}
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                HTTPRequest.setDefaultHostnameVerifier(null));
+        assertThat(exception.getMessage()).isEqualTo("The hostname verifier must not be null");
+
+    }
 	
 	
 	@Test
 	public void testRejectNullDefaultSSLSocketFactory() {
-		
-		try {
-			HTTPRequest.setDefaultSSLSocketFactory(null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The SSL socket factory must not be null");
-		}
-	}
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> HTTPRequest.setDefaultSSLSocketFactory(null));
+        assertThat(exception.getMessage()).isEqualTo("The SSL socket factory must not be null");
+    }
 	
 	
 	@Test

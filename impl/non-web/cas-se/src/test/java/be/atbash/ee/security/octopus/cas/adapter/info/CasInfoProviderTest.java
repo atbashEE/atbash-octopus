@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.cas.adapter.CasUserToken;
 import be.atbash.ee.security.octopus.cas.exception.CasAuthenticationException;
 import net.jadler.Jadler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ public class CasInfoProviderTest {
 
     private CasInfoProvider infoProvider;
 
-    @Before
+    @BeforeEach
     public void setup() {
         Jadler.initJadler();
         configureParameters();
@@ -42,7 +43,7 @@ public class CasInfoProviderTest {
         infoProvider.init();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
         TestConfig.resetConfig();
@@ -84,7 +85,7 @@ public class CasInfoProviderTest {
 
     }
 
-    @Test(expected = CasAuthenticationException.class)
+    @Test
     public void retrieveUserInfo_WrongTicket() {
 
         Jadler.onRequest()
@@ -99,7 +100,7 @@ public class CasInfoProviderTest {
                         "  </cas:authenticationFailure>\n" +
                         "</cas:serviceResponse>");
 
-        infoProvider.retrieveUserInfo("ST1");
+        Assertions.assertThrows(CasAuthenticationException.class, () -> infoProvider.retrieveUserInfo("ST1"));
 
     }
 

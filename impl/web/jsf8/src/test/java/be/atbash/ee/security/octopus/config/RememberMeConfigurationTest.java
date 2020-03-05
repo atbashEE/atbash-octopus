@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 package be.atbash.ee.security.octopus.config;
 
 import be.atbash.config.test.TestConfig;
-import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.crypto.AESCipherService;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
 
@@ -30,7 +29,7 @@ public class RememberMeConfigurationTest {
 
     private RememberMeConfiguration configuration = new RememberMeConfiguration();
 
-    @After
+    @AfterEach
     public void cleanup() {
         TestConfig.resetConfig();
     }

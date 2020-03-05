@@ -23,7 +23,6 @@ import be.atbash.ee.oauth2.sdk.id.Subject;
 import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.openid.connect.sdk.Nonce;
 import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
@@ -33,11 +32,11 @@ import be.atbash.ee.security.octopus.util.URLUtil;
 import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -49,7 +48,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OIDCTokenHelperTest {
 
     @Mock

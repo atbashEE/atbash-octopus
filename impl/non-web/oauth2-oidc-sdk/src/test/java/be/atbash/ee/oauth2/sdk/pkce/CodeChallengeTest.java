@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
 package be.atbash.ee.oauth2.sdk.pkce;
 
 
-
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
-import java.text.ParseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -59,35 +57,28 @@ public class CodeChallengeTest  {
 	@Test
 	public void testUnsupportedMethod() {
 
-		try {
-			CodeChallenge.compute(new CodeChallengeMethod("S512"), new CodeVerifier());
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("Unsupported code challenge method: S512");
-		}
-	}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                CodeChallenge.compute(new CodeChallengeMethod("S512"), new CodeVerifier()));
+
+        assertThat(exception.getMessage()).isEqualTo("Unsupported code challenge method: S512");
+
+    }
 
 	@Test
 	public void testParseNull() {
-		
-		try {
-			CodeChallenge.parse(null);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Invalid code challenge: The value must not be null or empty string");
-		}
-	}
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> CodeChallenge.parse(null));
+        assertThat(exception.getMessage()).isEqualTo("Invalid code challenge: The value must not be null or empty string");
+    }
 
 	@Test
 	public void testParseEmpty() {
-		
-		try {
-			CodeChallenge.parse("");
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Invalid code challenge: The value must not be null or empty string");
-		}
-	}
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> CodeChallenge.parse(""));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid code challenge: The value must not be null or empty string");
+
+    }
 
 	@Test
 	public void testEnsurePrivateConstructor() {

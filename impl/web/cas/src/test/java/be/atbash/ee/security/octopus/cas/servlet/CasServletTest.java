@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package be.atbash.ee.security.octopus.cas.servlet;
 
-import be.atbash.ee.security.octopus.authc.AuthenticationException;
 import be.atbash.ee.security.octopus.cas.adapter.CasUserToken;
 import be.atbash.ee.security.octopus.cas.adapter.info.CasInfoProvider;
 import be.atbash.ee.security.octopus.cas.exception.CasAuthenticationException;
@@ -27,11 +26,11 @@ import be.atbash.ee.security.octopus.session.usage.ActiveSessionRegistry;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +41,7 @@ import java.io.IOException;
 import static be.atbash.ee.security.octopus.util.WebUtils.SAVED_REQUEST_KEY;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CasServletTest {
 
     private CasServlet casServlet;
@@ -77,7 +76,7 @@ public class CasServletTest {
     @Mock
     private SavedRequest savedRequestMock;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         casServlet = new CasServlet();
         TestReflectionUtils.injectDependencies(casServlet, casInfoProviderMock, sessionUtilMock, activeSessionRegistryMock, jsfConfigurationMock);

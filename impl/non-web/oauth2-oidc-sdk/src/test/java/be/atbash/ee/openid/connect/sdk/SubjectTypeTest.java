@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ package be.atbash.ee.openid.connect.sdk;
 
 
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Tests the SubjectType class.
@@ -45,26 +45,16 @@ public class SubjectTypeTest {
     @Test
     public void testParseExceptionNull() {
 
-        try {
-            SubjectType.parse(null);
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                SubjectType.parse(null));
 
-            fail("Failed to raise parse exception");
-
-        } catch (OAuth2JSONParseException e) {
-            // ok
-        }
     }
 
     @Test
     public void testParseInvalidConstant() {
 
-        try {
-            SubjectType.parse("abc");
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                SubjectType.parse("abc"));
 
-            fail("Failed to raise exception");
-
-        } catch (OAuth2JSONParseException e) {
-            // ok
-        }
     }
 }

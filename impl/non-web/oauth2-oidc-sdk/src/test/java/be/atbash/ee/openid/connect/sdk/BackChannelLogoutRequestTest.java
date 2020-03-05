@@ -34,7 +34,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -47,7 +48,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class BackChannelLogoutRequestTest {
@@ -157,50 +157,44 @@ public class BackChannelLogoutRequestTest {
     }
 
     @Test
-    public void testParseMissingParams()
-            throws Exception {
+    public void testParseMissingParams() {
 
         HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, LOGOUT_ENDPOINT_URL);
         httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-        try {
-            BackChannelLogoutRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing URI query string");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                BackChannelLogoutRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing URI query string");
+
     }
 
     @Test
-    public void testParseInvalidJWT()
-            throws Exception {
+    public void testParseInvalidJWT() {
 
         HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, LOGOUT_ENDPOINT_URL);
         httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
         httpRequest.setQuery("logout_token=ey...");
 
-        try {
-            BackChannelLogoutRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid logout token: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                BackChannelLogoutRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid logout token: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
+
     }
 
     @Test
-    public void testRejectPlainJWT_constructor()
-            throws Exception {
+    public void testRejectPlainJWT_constructor() {
 
         URI LOGOUT_ENDPOINT_URI = URI.create("https://rp.example.com/logout");
 
         PlainJWT jwt = new PlainJWT(createLogoutTokenClaimsSet());
 
-        try {
-            new BackChannelLogoutRequest(LOGOUT_ENDPOINT_URI, jwt);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The logout token must not be unsecured (plain)");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new BackChannelLogoutRequest(LOGOUT_ENDPOINT_URI, jwt));
+
+        assertThat(exception.getMessage()).isEqualTo("The logout token must not be unsecured (plain)");
+
     }
 
     @Test
@@ -213,28 +207,25 @@ public class BackChannelLogoutRequestTest {
         httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
         httpRequest.setQuery("logout_token=" + jwt.serialize());
 
-        try {
-            BackChannelLogoutRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The logout token must not be unsecured (plain)");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                BackChannelLogoutRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("The logout token must not be unsecured (plain)");
+
     }
 
     @Test
-    public void testRejectGET()
-            throws Exception {
+    public void testRejectGET() {
 
         HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, LOGOUT_ENDPOINT_URL);
         JWT logoutToken = createSignedLogoutToken();
         httpRequest.setQuery("logout_token=" + logoutToken.serialize());
 
-        try {
-            BackChannelLogoutRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("HTTP POST required");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                BackChannelLogoutRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("HTTP POST required");
+
     }
 
     @Test

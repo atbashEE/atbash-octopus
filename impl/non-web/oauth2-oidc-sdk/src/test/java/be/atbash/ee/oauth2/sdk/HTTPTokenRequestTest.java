@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import be.atbash.ee.oauth2.sdk.token.Tokens;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.List;
@@ -42,13 +42,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HTTPTokenRequestTest {
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         initJadler();
     }
 
 
-    @After
+    @AfterEach
     public void tearDown() {
         closeJadler();
     }

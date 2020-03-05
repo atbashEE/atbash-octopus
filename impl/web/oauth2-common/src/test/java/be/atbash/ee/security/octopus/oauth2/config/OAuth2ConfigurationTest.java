@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,14 @@ import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2Provider;
 import be.atbash.ee.security.octopus.oauth2.metadata.OAuth2ProviderControl;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OAuth2ConfigurationTest {
 
     @Mock
@@ -50,13 +51,13 @@ public class OAuth2ConfigurationTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
-    public void setup() throws IllegalAccessException {
+    @BeforeEach
+    public void setup() {
 
         beanManagerFake = new BeanManagerFake();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         TestConfig.resetConfig();
         beanManagerFake.deregistration();
@@ -75,7 +76,7 @@ public class OAuth2ConfigurationTest {
         assertThat(clientId).isEqualTo("testClientId");
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getClientId_singleProvider_noValue() {
         TestOAuth2Provider providerMetaData = new TestOAuth2Provider("test");
 
@@ -85,7 +86,7 @@ public class OAuth2ConfigurationTest {
         when(oAuth2ProviderControlMock.getProviderInfos()).thenReturn(metaDataList);
         when(oAuth2ProviderControlMock.getSingleProviderMetaData()).thenReturn(providerMetaData);
 
-        configuration.getClientId();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getClientId());
 
     }
 
@@ -157,7 +158,7 @@ public class OAuth2ConfigurationTest {
         assertThat(clientSecret).isEqualTo("testClientSecret");
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getClientSecret_singleProvider_noValue() {
         TestOAuth2Provider providerMetaData = new TestOAuth2Provider("test");
 
@@ -167,7 +168,7 @@ public class OAuth2ConfigurationTest {
         when(oAuth2ProviderControlMock.getProviderInfos()).thenReturn(metaDataList);
         when(oAuth2ProviderControlMock.getSingleProviderMetaData()).thenReturn(providerMetaData);
 
-        configuration.getClientSecret();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getClientSecret());
 
     }
 

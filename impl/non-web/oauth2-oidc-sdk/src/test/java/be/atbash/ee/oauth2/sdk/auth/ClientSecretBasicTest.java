@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ package be.atbash.ee.oauth2.sdk.auth;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -134,23 +134,20 @@ public class ClientSecretBasicTest {
         String concat = id + "" + pw; // ':' delimiter
         String b64 = Base64Value.encode(concat).toString();
 
-        try {
-            ClientSecretBasic.parse("Basic " + b64);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Missing credentials delimiter \":\"");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientSecretBasic.parse("Basic " + b64));
+
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Missing credentials delimiter \":\"");
+
     }
 
     @Test
     public void testParse_tooManyAuthzHeaderTokens() {
 
-        try {
-            ClientSecretBasic.parse("Basic abc def");
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Unexpected number of HTTP Authorization header value parts: 3");
-        }
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientSecretBasic.parse("Basic abc def"));
+
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Unexpected number of HTTP Authorization header value parts: 3");
+
     }
 
 
@@ -158,11 +155,10 @@ public class ClientSecretBasicTest {
     @Test
     public void testIllegalHexCharsInAuthzHeader() {
 
-        try {
-            ClientSecretBasic.parse("Basic KVQdqB25zeFg4duoJf7ZYo4wDMXtQjqlpxWdgFm06vc");
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Invalid URL encoding");
-        }
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientSecretBasic.parse("Basic KVQdqB25zeFg4duoJf7ZYo4wDMXtQjqlpxWdgFm06vc"));
+
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Invalid URL encoding");
+
     }
 }

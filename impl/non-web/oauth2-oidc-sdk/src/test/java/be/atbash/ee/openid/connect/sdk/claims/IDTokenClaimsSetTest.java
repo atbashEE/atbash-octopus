@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 import java.net.URL;
@@ -41,7 +42,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -432,12 +432,11 @@ public class IDTokenClaimsSetTest {
                 new Date(),
                 new Date());
 
-        try {
-            claimsSet.hasRequiredClaims(responseType, true);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("Unsupported response_type: token");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                claimsSet.hasRequiredClaims(responseType, true));
+
+        assertThat(exception.getMessage()).isEqualTo("Unsupported response_type: token");
+
     }
 
     @Test
@@ -505,14 +504,8 @@ public class IDTokenClaimsSetTest {
 
         RSAKey rsaJWK = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
 
-        try {
-            claimsSet.setSubjectJWK(rsaJWK);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> claimsSet.setSubjectJWK(rsaJWK));
 
-            fail();
-
-        } catch (IllegalArgumentException e) {
-            // ok
-        }
     }
 
     @Test

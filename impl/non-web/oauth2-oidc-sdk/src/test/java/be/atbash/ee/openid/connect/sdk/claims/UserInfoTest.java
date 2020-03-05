@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,9 @@ import be.atbash.ee.oauth2.sdk.token.TypelessAccessToken;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -36,7 +37,7 @@ import java.net.URI;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -465,15 +466,9 @@ public class UserInfoTest {
         UserInfo userInfoBob = new UserInfo(bob);
         userInfoBob.setGivenName("Bob");
 
-        try {
-            userInfoAlice.putAll(userInfoBob);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                userInfoAlice.putAll(userInfoBob));
 
-            fail("Failed to raise exception");
-
-        } catch (IllegalArgumentException e) {
-
-            // ok
-        }
     }
 
     @Test
@@ -570,7 +565,7 @@ public class UserInfoTest {
     }
 
     @Test
-    @Ignore // FIXME test fails, so check if required by Octopus and Fix
+    @Disabled // FIXME test fails, so check if required by Octopus and Fix
     public void testDistributedClaims_addAndGet()
             throws Exception {
 
@@ -756,7 +751,7 @@ public class UserInfoTest {
     }
 
     @Test
-    @Ignore // FIXME test fails, so check if required by Octopus and Fix
+    @Disabled // FIXME test fails, so check if required by Octopus and Fix
     public void testPutAll_mergeDistributedClaims()
             throws Exception {
 

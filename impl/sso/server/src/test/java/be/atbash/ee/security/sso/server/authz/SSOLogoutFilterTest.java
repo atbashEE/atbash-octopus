@@ -34,13 +34,12 @@ import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
@@ -55,7 +54,7 @@ import java.util.Date;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SSOLogoutFilterTest {
 
     @Mock
@@ -79,7 +78,7 @@ public class SSOLogoutFilterTest {
     @InjectMocks
     private SSOLogoutFilter filter;
 
-    @After
+    @AfterEach
     public void teardown() {
         TestLoggerFactory.clear();
     }
@@ -230,11 +229,9 @@ public class SSOLogoutFilterTest {
         clientInfo.setOctopusClient(true);
         when(clientInfoRetrieverMock.retrieveInfo("clientId")).thenReturn(clientInfo);
 
-        try {
-            Thread.sleep(2100); // By default there is a sec timeToLive
-        } catch (InterruptedException e) {
-            Assert.fail(e.getMessage());
-        }
+
+        Thread.sleep(2100); // By default there is a sec timeToLive
+
 
         boolean accessAllowed = filter.isAccessAllowed(httpServletRequestMock, httpServletResponseMock);
         assertThat(accessAllowed).isFalse();

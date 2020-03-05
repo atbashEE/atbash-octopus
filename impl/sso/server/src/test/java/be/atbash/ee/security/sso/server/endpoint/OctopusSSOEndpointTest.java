@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,14 +42,14 @@ import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.json.Json;
@@ -70,7 +70,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OctopusSSOEndpointTest {
 
     private static final String CLIENT_ID = "JUnit client";
@@ -112,7 +112,7 @@ public class OctopusSSOEndpointTest {
 
     private SecretUtil secretUtil;
 
-    @Before
+    @BeforeEach
     public void setup() throws IllegalAccessException {
         beanManagerFake = new BeanManagerFake();
 
@@ -130,7 +130,7 @@ public class OctopusSSOEndpointTest {
         secretUtil.init();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }

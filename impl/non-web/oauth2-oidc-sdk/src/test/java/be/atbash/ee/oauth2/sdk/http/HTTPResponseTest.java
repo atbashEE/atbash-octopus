@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package be.atbash.ee.oauth2.sdk.http;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -28,7 +29,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -40,31 +40,26 @@ public class HTTPResponseTest  {
 	public void testConstructorAndAccessors()
 		throws Exception {
 
-		HTTPResponse response = new HTTPResponse(200);
+        HTTPResponse response = new HTTPResponse(200);
 
-		assertThat(response.indicatesSuccess()).isTrue();
-		assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.indicatesSuccess()).isTrue();
+        assertThat(response.getStatusCode()).isEqualTo(200);
 
-		response.ensureStatusCode(200);
-		response.ensureStatusCode(200, 201);
+        response.ensureStatusCode(200);
+        response.ensureStatusCode(200, 201);
 
-		try {
-			response.ensureStatusCode(302);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			// ok
-			assertThat(e.getMessage()).isEqualTo("Unexpected HTTP status code 200, must be [302]");
-		}
-		
-		assertThat(response.getStatusMessage()).isNull();
-		response.setStatusMessage("OK");
-		assertThat(response.getStatusMessage()).isEqualTo("OK");
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> response.ensureStatusCode(302));
+        assertThat(exception.getMessage()).isEqualTo("Unexpected HTTP status code 200, must be [302]");
 
-		assertThat(response.getContentType()).isNull();
-		response.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		assertThat(response.getContentType().toString()).isEqualTo(CommonContentTypes.APPLICATION_URLENCODED.toString());
+        assertThat(response.getStatusMessage()).isNull();
+        response.setStatusMessage("OK");
+        assertThat(response.getStatusMessage()).isEqualTo("OK");
 
-		assertThat(response.getLocation()).isNull();
+        assertThat(response.getContentType()).isNull();
+        response.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        assertThat(response.getContentType().toString()).isEqualTo(CommonContentTypes.APPLICATION_URLENCODED.toString());
+
+        assertThat(response.getLocation()).isNull();
 		URI location = new URI("https://client.com/cb");
 		response.setLocation(location);
 		assertThat(response.getLocation()).isEqualTo(location);
@@ -73,38 +68,29 @@ public class HTTPResponseTest  {
 		response.setCacheControl("no-cache");
 		assertThat(response.getCacheControl()).isEqualTo("no-cache");
 
-		assertThat(response.getPragma()).isNull();
-		response.setPragma("no-cache");
-		assertThat(response.getPragma()).isEqualTo("no-cache");
+        assertThat(response.getPragma()).isNull();
+        response.setPragma("no-cache");
+        assertThat(response.getPragma()).isEqualTo("no-cache");
 
-		assertThat(response.getWWWAuthenticate()).isNull();
-		response.setWWWAuthenticate("Basic");
-		assertThat(response.getWWWAuthenticate()).isEqualTo("Basic");
+        assertThat(response.getWWWAuthenticate()).isNull();
+        response.setWWWAuthenticate("Basic");
+        assertThat(response.getWWWAuthenticate()).isEqualTo("Basic");
 
-		assertThat(response.getContent()).isNull();
+        assertThat(response.getContent()).isNull();
 
-		try {
-			response.getContentAsJSONObject();
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
+        Assertions.assertThrows(OAuth2JSONParseException.class, response::getContentAsJSONObject);
 
-		try {
-			response.getContentAsJWT();
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
+        Assertions.assertThrows(OAuth2JSONParseException.class, response::getContentAsJWT);
 
-		response.setContentType(CommonContentTypes.APPLICATION_JSON);
-		response.setContent("{\"apples\":\"123\"}");
-		assertThat(response.getContent()).isEqualTo("{\"apples\":\"123\"}");
 
-		JsonObject jsonObject = response.getContentAsJSONObject();
-		assertThat(jsonObject.getString("apples")).isEqualTo("123");
+        response.setContentType(CommonContentTypes.APPLICATION_JSON);
+        response.setContent("{\"apples\":\"123\"}");
+        assertThat(response.getContent()).isEqualTo("{\"apples\":\"123\"}");
 
-		// From http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-13#section-3.1
+        JsonObject jsonObject = response.getContentAsJSONObject();
+        assertThat(jsonObject.getString("apples")).isEqualTo("123");
+
+        // From http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-13#section-3.1
 		String exampleJWTString = "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9" +
 			"." +
 			"eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFt" +

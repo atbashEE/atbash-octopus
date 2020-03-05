@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 package be.atbash.ee.oauth2.sdk.auth;
 
 
-
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -70,27 +69,23 @@ public class ClientSecretPostTest {
 
 	@Test
 	public void testParse_missingClientID() {
-		
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("client_secret", Collections.singletonList("secret"));
-		try {
-			ClientSecretPost.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Malformed client secret post authentication: Missing \"client_id\" parameter");
-		}
-	}
+
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("client_secret", Collections.singletonList("secret"));
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientSecretPost.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret post authentication: Missing \"client_id\" parameter");
+
+    }
 
 	@Test
 	public void testParse_missingClientSecret() {
-		
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("client_id", Collections.singletonList("alice"));
-		try {
-			ClientSecretPost.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Malformed client secret post authentication: Missing \"client_secret\" parameter");
-		}
-	}
+
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("client_id", Collections.singletonList("alice"));
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientSecretPost.parse(params));
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret post authentication: Missing \"client_secret\" parameter");
+
+    }
 }

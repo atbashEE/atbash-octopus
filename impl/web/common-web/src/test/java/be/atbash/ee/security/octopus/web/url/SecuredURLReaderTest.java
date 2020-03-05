@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import be.atbash.ee.security.octopus.config.OctopusWebConfiguration;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.resource.ResourceUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
 import javax.servlet.ServletContext;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SecuredURLReaderTest {
 
     @Mock
@@ -81,12 +81,12 @@ public class SecuredURLReaderTest {
     @Captor
     private ArgumentCaptor<String> stringCaptor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }

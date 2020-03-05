@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotEquals;
 
 
 /**
@@ -54,9 +53,9 @@ public class ResponseModeTest  {
 
 	@Test
 	public void testInequality() {
-		
-		assertNotEquals(new ResponseMode("fragment"), new ResponseMode("query"));
-	}
+
+        assertThat(new ResponseMode("fragment")).isNotEqualTo(new ResponseMode("query"));
+    }
 
 	@Test
 	public void testResolve_explicit() {

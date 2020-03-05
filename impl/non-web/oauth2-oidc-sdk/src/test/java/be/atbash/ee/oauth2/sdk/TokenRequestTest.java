@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
@@ -40,7 +41,6 @@ import java.net.URL;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class TokenRequestTest  {
@@ -207,15 +207,13 @@ public class TokenRequestTest  {
 	public void testRejectNullClientAuthentication()
 		throws Exception {
 
-		URI uri = new URI("https://c2id.com/token");
+        URI uri = new URI("https://c2id.com/token");
 
-		try {
-			new TokenRequest(uri, (ClientAuthentication)null, new ClientCredentialsGrant(), null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The client authentication must not be null");
-		}
-	}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRequest(uri, (ClientAuthentication) null, new ClientCredentialsGrant(), null));
+
+        assertThat(exception.getMessage()).isEqualTo("The client authentication must not be null");
+
+    }
 
 	@Test
 	public void testPublicClientConstructor_minimal()
@@ -335,31 +333,29 @@ public class TokenRequestTest  {
 
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		assertThat(httpRequest.getURL()).isEqualTo(uri.toURL());
-		assertThat(httpRequest.getMethod()).isEqualTo(HTTPRequest.Method.POST);
-		assertThat(httpRequest.getAuthorization()).isNull();
-		Map<String, List<String>> params = httpRequest.getQueryParameters();
-		assertThat(params.get("grant_type")).isEqualTo(Collections.singletonList(GrantType.AUTHORIZATION_CODE.getValue()));
-		assertThat(params.get("code")).isEqualTo(Collections.singletonList("abc"));
-		assertThat(params.get("client_id")).isEqualTo(Collections.singletonList("123"));
-		assertThat(params.get("redirect_uri")).isEqualTo(Collections.singletonList("http://example.com/in"));
-		assertThat(params).hasSize(4);
-	}
+        assertThat(httpRequest.getMethod()).isEqualTo(HTTPRequest.Method.POST);
+        assertThat(httpRequest.getAuthorization()).isNull();
+        Map<String, List<String>> params = httpRequest.getQueryParameters();
+        assertThat(params.get("grant_type")).isEqualTo(Collections.singletonList(GrantType.AUTHORIZATION_CODE.getValue()));
+        assertThat(params.get("code")).isEqualTo(Collections.singletonList("abc"));
+        assertThat(params.get("client_id")).isEqualTo(Collections.singletonList("123"));
+        assertThat(params.get("redirect_uri")).isEqualTo(Collections.singletonList("http://example.com/in"));
+        assertThat(params).hasSize(4);
+    }
 
+    @Test
+    public void testConstructorMissingClientID()
+            throws Exception {
 
-	public void testConstructorMissingClientID()
-		throws Exception {
+        URI uri = new URI("https://c2id.com/token");
+        ClientID clientID = null;
+        AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), new URI("http://example.com/in"));
 
-		URI uri = new URI("https://c2id.com/token");
-		ClientID clientID = null;
-		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), new URI("http://example.com/in"));
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRequest(uri, clientID, grant, null));
 
-		try {
-			new TokenRequest(uri, clientID, grant, null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The \"authorization_code\" grant type requires a \"client_id\" parameter");
-		}
-	}
+        assertThat(exception.getMessage()).isEqualTo("The \"authorization_code\" grant type requires a \"client_id\" parameter");
+
+    }
 
 	@Test
 	public void testMinimalConstructor()
@@ -417,17 +413,14 @@ public class TokenRequestTest  {
 		assertThat(params).hasSize(3);
 	}
 
-	@Test
-	public void testMissingClientCredentialsAuthentication()
-		throws Exception {
+    @Test
+    public void testMissingClientCredentialsAuthentication() {
 
-		try {
-			new TokenRequest(new URI("https://c2id.com/token"), new ClientCredentialsGrant(), null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The \"client_credentials\" grant type requires client authentication");
-		}
-	}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRequest(new URI("https://c2id.com/token"), new ClientCredentialsGrant(), null));
+
+        assertThat(exception.getMessage()).isEqualTo("The \"client_credentials\" grant type requires client authentication");
+
+    }
 
 	@Test
 	public void testCodeGrantWithBasicSecret()
@@ -699,19 +692,17 @@ public class TokenRequestTest  {
 	public void testParseClientCredentialsGrantMissingAuthentication()
 		throws Exception {
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		String postBody = "grant_type=client_credentials";
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        String postBody = "grant_type=client_credentials";
 
-		httpRequest.setQuery(postBody);
+        httpRequest.setQuery(postBody);
 
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_CLIENT);
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_CLIENT);
+
+    }
 
 	@Test
 	public void testSupportTokenRequestClientSecretPostSerialization()
@@ -848,28 +839,23 @@ public class TokenRequestTest  {
 	public void testCodeGrant_rejectUnregisteredClient()
 		throws Exception {
 
-		URI tokenEndpoint = new URI("https://c2id.com/token");
-		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(new AuthorizationCode("xyz"), new URI("https://example.com/cb"));
+        URI tokenEndpoint = new URI("https://c2id.com/token");
+        AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(new AuthorizationCode("xyz"), new URI("https://example.com/cb"));
 
-		try {
-			new TokenRequest(tokenEndpoint, codeGrant);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The \"authorization_code\" grant type requires a \"client_id\" parameter");
-		}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRequest(tokenEndpoint, codeGrant));
+
+        assertThat(exception.getMessage()).isEqualTo("The \"authorization_code\" grant type requires a \"client_id\" parameter");
 
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setQuery(URLUtils.serializeParameters(codeGrant.toParameters()));
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setQuery(URLUtils.serializeParameters(codeGrant.toParameters()));
 
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing required \"client_id\" parameter");
-		}
-	}
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception1.getMessage()).isEqualTo("Missing required \"client_id\" parameter");
+
+    }
 
 	@Test
 	public void testPasswordGrant_confidentialClient()
@@ -1068,54 +1054,46 @@ public class TokenRequestTest  {
 	public void testClientCredentialsGrant_rejectPublicClient()
 		throws Exception {
 
-		URI tokenEndpoint = new URI("https://c2id.com/token");
-		ClientID clientID = new ClientID("123");
-		ClientCredentialsGrant grant = new ClientCredentialsGrant();
+        URI tokenEndpoint = new URI("https://c2id.com/token");
+        ClientID clientID = new ClientID("123");
+        ClientCredentialsGrant grant = new ClientCredentialsGrant();
 
-		try {
-			new TokenRequest(tokenEndpoint, clientID, grant);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The \"client_credentials\" grant type requires client authentication");
-		}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRequest(tokenEndpoint, clientID, grant));
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setQuery(URLUtils.serializeParameters(grant.toParameters()));
+        assertThat(exception.getMessage()).isEqualTo("The \"client_credentials\" grant type requires client authentication");
 
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing client authentication");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setQuery(URLUtils.serializeParameters(grant.toParameters()));
+
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception1.getMessage()).isEqualTo("Missing client authentication");
+
+    }
 
 	@Test
 	public void testClientCredentialsGrant_rejectUnregisteredClient()
 		throws Exception {
 
-		URI tokenEndpoint = new URI("https://c2id.com/token");
-		ClientCredentialsGrant grant = new ClientCredentialsGrant();
+        URI tokenEndpoint = new URI("https://c2id.com/token");
+        ClientCredentialsGrant grant = new ClientCredentialsGrant();
 
-		try {
-			new TokenRequest(tokenEndpoint, grant);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The \"client_credentials\" grant type requires client authentication");
-		}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRequest(tokenEndpoint, grant));
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setQuery(URLUtils.serializeParameters(grant.toParameters()));
+        assertThat(exception.getMessage()).isEqualTo("The \"client_credentials\" grant type requires client authentication");
 
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing client authentication");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setQuery(URLUtils.serializeParameters(grant.toParameters()));
+
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception1.getMessage()).isEqualTo("Missing client authentication");
+
+    }
 
 	@Test
 	public void testJWTBearerGrant_confidentialClient()
@@ -1384,29 +1362,27 @@ public class TokenRequestTest  {
 	@Test
 	public void testCodeGrantWithBasicSecret_parseMalformedBasicAuth_missingDelimiter()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		
-		httpRequest.setAuthorization("Basic " + Base64Value.encode("alice"));
-		
-		String postBody =
-			"grant_type=authorization_code" +
-				"&code=SplxlOBeZQQYbYS6WxSbIA" +
-				"&redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb";
-		
-		httpRequest.setQuery(postBody);
-		
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Missing credentials delimiter \":\"");
-			
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.toString());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Missing credentials delimiter \":\"");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+        httpRequest.setAuthorization("Basic " + Base64Value.encode("alice"));
+
+        String postBody =
+                "grant_type=authorization_code" +
+                        "&code=SplxlOBeZQQYbYS6WxSbIA" +
+                        "&redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb";
+
+        httpRequest.setQuery(postBody);
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Missing credentials delimiter \":\"");
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.toString());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Missing credentials delimiter \":\"");
+
+    }
 
 	@Test
 	// Reject basic + client_secret_jwt auth present in the same token request
@@ -1421,50 +1397,46 @@ public class TokenRequestTest  {
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, tokenEndpoint);
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		httpRequest.setAuthorization(new ClientSecretBasic(clientID, clientSecret).toHTTPAuthorizationHeader());
-		
-		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode(), URI.create("https://example.com/cb"));
-		
-		ClientSecretJWT clientSecretJWT = new ClientSecretJWT(clientID, tokenEndpoint.toURI(), JWSAlgorithm.HS256, clientSecret);
-		
-		Map<String, List<String>> bodyParams = new HashMap<>();
-		bodyParams.putAll(grant.toParameters());
-		bodyParams.putAll(clientSecretJWT.toParameters());
-		
-		httpRequest.setQuery(URLUtils.serializeParameters(bodyParams));
-		
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Multiple conflicting client authentication methods found: Basic and JWT assertion");
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Multiple conflicting client authentication methods found: Basic and JWT assertion");
-		}
-	}
+
+        AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode(), URI.create("https://example.com/cb"));
+
+        ClientSecretJWT clientSecretJWT = new ClientSecretJWT(clientID, tokenEndpoint.toURI(), JWSAlgorithm.HS256, clientSecret);
+
+        Map<String, List<String>> bodyParams = new HashMap<>();
+        bodyParams.putAll(grant.toParameters());
+        bodyParams.putAll(clientSecretJWT.toParameters());
+
+        httpRequest.setQuery(URLUtils.serializeParameters(bodyParams));
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Multiple conflicting client authentication methods found: Basic and JWT assertion");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Multiple conflicting client authentication methods found: Basic and JWT assertion");
+
+    }
 	
 	
 	// iss208
 	@Test
 	public void testClientSecretBasicDecodingException()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setAuthorization("Basic KVQdqB25zeFg4duoJf7ZYo4wDMXtQjqlpxWdgFm06vc");
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setHeader("Cache-Control", "no-cache");
-		httpRequest.setQuery("grant_type=authorization_code" +
-			"&code=a0x3DwU3vE9Ad1CbWdy1LQ.KaPahOgJJjODKWE47-DXzg" +
-			"&redirect_uri=dufryred%3A%2F%2Foauth.callback" +
-			"&code_verifier=VjdnvRw3_nTdhoWLcwYBjVt2wQnklP-gcXRmFXvQcM6OhMqDQOXWhXQvqHeCbgOlJHsu8xDVyRU0vRaMzuEKbQ" +
-			"&client_id=47ub27skbkcf2");
-		
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Invalid URL encoding");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setAuthorization("Basic KVQdqB25zeFg4duoJf7ZYo4wDMXtQjqlpxWdgFm06vc");
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setHeader("Cache-Control", "no-cache");
+        httpRequest.setQuery("grant_type=authorization_code" +
+                "&code=a0x3DwU3vE9Ad1CbWdy1LQ.KaPahOgJJjODKWE47-DXzg" +
+                "&redirect_uri=dufryred%3A%2F%2Foauth.callback" +
+                "&code_verifier=VjdnvRw3_nTdhoWLcwYBjVt2wQnklP-gcXRmFXvQcM6OhMqDQOXWhXQvqHeCbgOlJHsu8xDVyRU0vRaMzuEKbQ" +
+                "&client_id=47ub27skbkcf2");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Malformed client secret basic authentication (see RFC 6749, section 2.3.1): Invalid URL encoding");
+
+    }
 
 	@Test
 	public void testParseResourceIndicatorsExample()
@@ -1499,54 +1471,48 @@ public class TokenRequestTest  {
 	@Test
 	public void testParseResource_rejectNonAbsoluteURI()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://authorization-server.example.com/as/token.oauth2"));
-		httpRequest.setAuthorization("Basic czZCaGRSa3F0Mzpoc3FFelFsVW9IQUU5cHg0RlNyNHlJ");
-		httpRequest.setContentType("application/x-www-form-urlencoded");
-		httpRequest.setQuery("grant_type=refresh_token&refresh_token=4LTC8lb0acc6Oy4esc1Nk9BWC0imAwH&resource=https%3A%2F%2F%2F");
-		
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https:///");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://authorization-server.example.com/as/token.oauth2"));
+        httpRequest.setAuthorization("Basic czZCaGRSa3F0Mzpoc3FFelFsVW9IQUU5cHg0RlNyNHlJ");
+        httpRequest.setContentType("application/x-www-form-urlencoded");
+        httpRequest.setQuery("grant_type=refresh_token&refresh_token=4LTC8lb0acc6Oy4esc1Nk9BWC0imAwH&resource=https%3A%2F%2F%2F");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https:///");
+
+    }
 
 	@Test
 	public void testParseResource_rejectURIWithQuery()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://authorization-server.example.com/as/token.oauth2"));
-		httpRequest.setAuthorization("Basic czZCaGRSa3F0Mzpoc3FFelFsVW9IQUU5cHg0RlNyNHlJ");
-		httpRequest.setContentType("application/x-www-form-urlencoded");
-		httpRequest.setQuery("grant_type=refresh_token&refresh_token=4LTC8lb0acc6Oy4esc1Nk9BWC0imAwH&resource=https%3A%2F%2Frs.example.com%2F?query");
-		
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/?query");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://authorization-server.example.com/as/token.oauth2"));
+        httpRequest.setAuthorization("Basic czZCaGRSa3F0Mzpoc3FFelFsVW9IQUU5cHg0RlNyNHlJ");
+        httpRequest.setContentType("application/x-www-form-urlencoded");
+        httpRequest.setQuery("grant_type=refresh_token&refresh_token=4LTC8lb0acc6Oy4esc1Nk9BWC0imAwH&resource=https%3A%2F%2Frs.example.com%2F?query");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/?query");
+
+    }
 
 	@Test
 	public void testParseResource_rejectURIWithFragment()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://authorization-server.example.com/as/token.oauth2"));
-		httpRequest.setAuthorization("Basic czZCaGRSa3F0Mzpoc3FFelFsVW9IQUU5cHg0RlNyNHlJ");
-		httpRequest.setContentType("application/x-www-form-urlencoded");
-		httpRequest.setQuery("grant_type=refresh_token&refresh_token=4LTC8lb0acc6Oy4esc1Nk9BWC0imAwH&resource=https%3A%2F%2Frs.example.com%2F#fragment");
-		
-		try {
-			TokenRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/#fragment");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://authorization-server.example.com/as/token.oauth2"));
+        httpRequest.setAuthorization("Basic czZCaGRSa3F0Mzpoc3FFelFsVW9IQUU5cHg0RlNyNHlJ");
+        httpRequest.setContentType("application/x-www-form-urlencoded");
+        httpRequest.setQuery("grant_type=refresh_token&refresh_token=4LTC8lb0acc6Oy4esc1Nk9BWC0imAwH&resource=https%3A%2F%2Frs.example.com%2F#fragment");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRequest.parse(httpRequest));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/#fragment");
+
+    }
 }

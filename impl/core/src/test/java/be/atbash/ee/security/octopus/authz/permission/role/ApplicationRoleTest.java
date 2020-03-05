@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package be.atbash.ee.security.octopus.authz.permission.role;
 
 import be.atbash.util.exception.AtbashIllegalActionException;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,35 +43,23 @@ public class ApplicationRoleTest {
     @Test
     public void instantiate_null() {
 
-        try {
-            new ApplicationRole(null);
-            Assert.fail("Should thrown an AtbashIllegalActionException");
-        } catch (AtbashIllegalActionException e) {
-            assertThat(e.getMessage()).isEqualTo("(OCT-DEV-010) The name can't be empty for a ApplicationRole");
-        }
+        AtbashIllegalActionException exception = Assertions.assertThrows(AtbashIllegalActionException.class, () -> new ApplicationRole(null));
+        assertThat(exception.getMessage()).isEqualTo("(OCT-DEV-010) The name can't be empty for a ApplicationRole");
 
     }
 
     @Test
     public void instantiate_empty() {
 
-        try {
-            new ApplicationRole("");
-            Assert.fail("Should thrown an AtbashIllegalActionException");
-        } catch (AtbashIllegalActionException e) {
-            assertThat(e.getMessage()).isEqualTo("(OCT-DEV-010) The name can't be empty for a ApplicationRole");
-        }
+        AtbashIllegalActionException exception = Assertions.assertThrows(AtbashIllegalActionException.class, () -> new ApplicationRole(""));
+        assertThat(exception.getMessage()).isEqualTo("(OCT-DEV-010) The name can't be empty for a ApplicationRole");
+
     }
 
     @Test
     public void instantiate_whitespace() {
-
-        try {
-            new ApplicationRole(" ");
-            Assert.fail("Should thrown an AtbashIllegalActionException");
-        } catch (AtbashIllegalActionException e) {
-            assertThat(e.getMessage()).isEqualTo("(OCT-DEV-010) The name can't be empty for a ApplicationRole");
-        }
+        AtbashIllegalActionException exception = Assertions.assertThrows(AtbashIllegalActionException.class, () -> new ApplicationRole(" "));
+        assertThat(exception.getMessage()).isEqualTo("(OCT-DEV-010) The name can't be empty for a ApplicationRole");
 
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Force latest since jerry is still using an older version -->
+        <!-- Force latest since jerry is still using an older version FIXME-->
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-jsf</artifactId>
@@ -110,6 +110,13 @@
         </dependency>
 
         <!-- test dependencies-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-cdi</artifactId>

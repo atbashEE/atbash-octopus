@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package be.atbash.ee.oauth2.sdk.jarm;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
@@ -33,7 +33,7 @@ public class JARMClaimsVerifierTest {
     private TestLogger logger = TestLoggerFactory.getTestLogger(JARMClaimsVerifier.class);
 
 
-    @After
+    @AfterEach
     public void teardown() {
         TestLoggerFactory.clear();
     }

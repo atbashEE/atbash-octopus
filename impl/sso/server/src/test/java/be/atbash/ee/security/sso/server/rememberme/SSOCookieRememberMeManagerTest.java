@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@ import be.atbash.ee.security.octopus.token.RememberMeAuthenticationToken;
 import be.atbash.ee.security.sso.server.config.OctopusSSOServerConfiguration;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.util.codec.ByteSource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -47,7 +47,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SSOCookieRememberMeManagerTest {
 
 
@@ -84,7 +84,7 @@ public class SSOCookieRememberMeManagerTest {
 
     private byte[] encryptionKey;
 
-    @Before
+    @BeforeEach
     public void setup() throws NoSuchAlgorithmException {
         SecretKey key = KeyGenerator.getInstance("AES").generateKey();
         encryptionKey = key.getEncoded();

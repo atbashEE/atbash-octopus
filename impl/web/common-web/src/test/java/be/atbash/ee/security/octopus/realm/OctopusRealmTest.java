@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,10 @@ import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
 import be.atbash.util.codec.Hex;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +47,7 @@ public class OctopusRealmTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup() throws IllegalAccessException {
 
         beanManagerFake = new BeanManagerFake();
@@ -59,7 +60,7 @@ public class OctopusRealmTest {
         realm.init();
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         TestConfig.resetConfig();
         beanManagerFake.deregistration();
@@ -83,7 +84,7 @@ public class OctopusRealmTest {
         assertThat(realm.getAuthorizationCache().size()).isEqualTo(0);
     }
 
-    @Test(expected = UnknownAccountException.class)
+    @Test
     public void doGetAuthenticationInfo_scenario2() {
         // Not authenticated
         beanManagerFake.endRegistration();
@@ -92,9 +93,7 @@ public class OctopusRealmTest {
 
         TestAuthenticationInfoProvider.authenticationInfo = null;
 
-        AuthenticationInfo data = realm.doGetAuthenticationInfo(token);
-        assertThat(data).isNull();
-
+        Assertions.assertThrows(UnknownAccountException.class, () -> realm.doGetAuthenticationInfo(token));
     }
 
     @Test
@@ -119,7 +118,7 @@ public class OctopusRealmTest {
 
     }
 
-    @Test(expected = CredentialsException.class)
+    @Test
     public void doGetAuthenticationInfo_scenario4() {
         // Verify encoding, Failed encoding
         beanManagerFake.endRegistration();
@@ -134,7 +133,7 @@ public class OctopusRealmTest {
         AuthenticationInfo info = builder.build();
         TestAuthenticationInfoProvider.authenticationInfo = info;
 
-        realm.doGetAuthenticationInfo(token);
+        Assertions.assertThrows(CredentialsException.class, () -> realm.doGetAuthenticationInfo(token));
 
     }
 

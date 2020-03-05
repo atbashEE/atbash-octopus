@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package be.atbash.ee.security.sso.server.config;
 import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.sso.core.config.JARMLevel;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +28,7 @@ public class OctopusSSOServerConfigurationTest {
 
     private OctopusSSOServerConfiguration configuration = new OctopusSSOServerConfiguration();
 
-    @After
+    @AfterEach
     public void teardown() {
         TestConfig.resetConfig();
     }
@@ -53,24 +54,24 @@ public class OctopusSSOServerConfigurationTest {
         assertThat(tokenLength).isEqualTo(32);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getOIDCTokenLength_minimalValue() {
         TestConfig.addConfigValue("SSO.token.length", "31");
-        configuration.getOIDCTokenLength();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getOIDCTokenLength());
 
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getOIDCTokenLength_nonNumeric() {
         TestConfig.addConfigValue("SSO.token.length", "abc");
-        configuration.getOIDCTokenLength();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getOIDCTokenLength());
 
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getOIDCTokenLength_empty() {
         TestConfig.addConfigValue("SSO.token.length", "");
-        configuration.getOIDCTokenLength();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getOIDCTokenLength());
 
     }
 
@@ -102,10 +103,10 @@ public class OctopusSSOServerConfigurationTest {
         assertThat(encoding).isEqualTo(UserEndpointEncoding.JWS);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getUserEndpointEncoding_invalid() {
         TestConfig.addConfigValue("SSO.user.endpoint.encoding", "something");
-        configuration.getUserEndpointEncoding();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getUserEndpointEncoding());
 
     }
 
@@ -122,10 +123,10 @@ public class OctopusSSOServerConfigurationTest {
         assertThat(level).isEqualTo(JARMLevel.JWS);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getJARMLevel_invalid() {
         TestConfig.addConfigValue("SSO.jarm.level", "something");
-        configuration.getJARMLevel();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getJARMLevel());
     }
 
     @Test
@@ -136,10 +137,10 @@ public class OctopusSSOServerConfigurationTest {
         assertThat(keyId).isEqualTo("kidId");
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getJarmSigningKeyId_missing() {
         TestConfig.addConfigValue("SSO.jarm.level", "JWT");
-        configuration.getJarmSigningKeyId();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getJarmSigningKeyId());
 
     }
 }

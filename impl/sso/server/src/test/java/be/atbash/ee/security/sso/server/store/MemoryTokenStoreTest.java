@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class MemoryTokenStoreTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup()  {
 
         beanManagerFake = new BeanManagerFake();
@@ -54,7 +54,7 @@ public class MemoryTokenStoreTest {
         beanManagerFake.endRegistration();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }

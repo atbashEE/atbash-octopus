@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package be.atbash.ee.security.sso.server.client;
 
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,17 +61,17 @@ public class ClientInfoTest {
 
     }
 
-    @Test(expected = AtbashUnexpectedException.class)
+    @Test
     public void processCallbackURL_WrongURI() {
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setCallbackURL("://localhost:8080/sso-app2");
+        Assertions.assertThrows(AtbashUnexpectedException.class, () -> clientInfo.setCallbackURL("://localhost:8080/sso-app2"));
     }
 
-    @Test(expected = ClientInfoCallbackException.class)
+    @Test
     public void additionalCallbackURL_noMainURL() {
         ClientInfo clientInfo = new ClientInfo();
 
-        clientInfo.additionalCallbackURL("http://localhost:8080/sso-app2/");
+        Assertions.assertThrows(ClientInfoCallbackException.class, () -> clientInfo.additionalCallbackURL("http://localhost:8080/sso-app2/"));
 
     }
 
@@ -99,14 +100,13 @@ public class ClientInfoTest {
         assertThat(clientInfo.getAdditionalCallbackURLs()).containsOnly("http://alias/sso-app2/sso/SSOCallback");
     }
 
-    @Test(expected = ClientInfoOctopusClientException.class)
+    @Test
     public void additionalCallbackURL_changedOctopusClient() {
         ClientInfo clientInfo = new ClientInfo();
 
         clientInfo.setCallbackURL("http://localhost:8080/sso-app2/");
         clientInfo.additionalCallbackURL("http://alias/sso-app2/");
-        clientInfo.setOctopusClient(true);
-        clientInfo.additionalCallbackURL("http://alias2/sso-app2/");
+        Assertions.assertThrows(ClientInfoOctopusClientException.class, () -> clientInfo.setOctopusClient(true));
 
     }
 

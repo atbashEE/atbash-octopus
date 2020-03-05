@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package be.atbash.ee.security.octopus.interceptor.annotation;
 import org.apache.deltaspike.core.api.literal.DefaultLiteral;
 import org.apache.deltaspike.core.api.literal.DependentScopeLiteral;
 import org.apache.deltaspike.core.api.literal.SpecializesLiteral;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -34,7 +34,7 @@ public class AnnotationInfoTest {
 
     private AnnotationInfo info;
 
-    @Before
+    @BeforeEach
     public void setup() {
         info = new AnnotationInfo();
 

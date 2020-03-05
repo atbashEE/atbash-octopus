@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,14 @@ import be.atbash.ee.security.octopus.interceptor.testclasses.MultipleAtMethodLev
 import be.atbash.ee.security.octopus.realm.OctopusRealm;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,29 +39,25 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@RunWith(Parameterized.class)
 public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterceptorTest {
 
-    public OctopusInterceptor_MultipleAtMethodLevelTest(boolean authenticated, String permission, boolean customAccess, String systemAccount, String role) {
-        super(authenticated, permission, customAccess, systemAccount, role);
+    private static Stream<Arguments> provideArguments() {
+        return Stream.of(
+                Arguments.of(new TestInterceptorParameters(NOT_AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(NOT_AUTHENTICATED, null, CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, PERMISSION1, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, OCTOPUS1, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, ROLE1))
+        );
     }
 
-    @Parameterized.Parameters
-    public static List<Object[]> defineScenarios() {
-        return Arrays.asList(new Object[][]{
-                {NOT_AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null},            //0
-                {NOT_AUTHENTICATED, null, CUSTOM_ACCESS, null, null},               //1
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null},                //2
-                {AUTHENTICATED, PERMISSION1, NO_CUSTOM_ACCESS, null, null},        //3
-                {AUTHENTICATED, null, CUSTOM_ACCESS, null, null},                   //4
-                {AUTHENTICATED, OCTOPUS1, NO_CUSTOM_ACCESS, null, null},            //5
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null},           //6
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, ROLE1},            //7
-        });
-    }
-
-    @Test
-    public void testInterceptShiroSecurity_InAuthentication() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_InAuthentication(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         // The in Authentication is so encapsulated that we can never set it outside the class (as we could manipulate then the security)
         // That is also the reason we have to simulate a larger part to test this.
@@ -92,22 +88,24 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
         try {
             octopusRealm.getAuthenticationInfo(new SpecialValidatedToken());
 
-            if (PERMISSION1.equals(permission)) {
-                assertThat(authenticated).isTrue();
+            if (PERMISSION1.equals(parameters.getPermission())) {
+                assertThat(parameters.isAuthenticated()).isTrue();
             }
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MultipleAtMethodLevel.MULTIPLE_CHECKS);
 
         } catch (SecurityAuthorizationViolationException e) {
-            assertThat(authenticated).isTrue();
+            assertThat(parameters.isAuthenticated()).isTrue();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_CustomPermissionAnnotation() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_CustomPermissionAnnotation(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MultipleAtMethodLevel();
         Method method = target.getClass().getMethod("multiple");
@@ -122,7 +120,7 @@ public class OctopusInterceptor_MultipleAtMethodLevelTest extends OctopusInterce
         try {
             octopusInterceptor.interceptForSecurity(context);
 
-            assertThat(permission).isEqualTo(PERMISSION1);
+            assertThat(parameters.getPermission()).isEqualTo(PERMISSION1);
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MultipleAtMethodLevel.MULTIPLE_CHECKS);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import net.jadler.Jadler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
 import java.util.Date;
@@ -47,7 +47,7 @@ public class ClientAuthenticationInfoProviderTest {
 
     private String issuer;
 
-    @Before
+    @BeforeEach
     public void setup() {
         Jadler.initJadler();
         provider = new ClientAuthenticationInfoProvider();
@@ -62,7 +62,7 @@ public class ClientAuthenticationInfoProviderTest {
         TestConfig.addConfigValue("SSO.clientId", "testClientId");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         TestConfig.resetConfig();
         Jadler.closeJadler();

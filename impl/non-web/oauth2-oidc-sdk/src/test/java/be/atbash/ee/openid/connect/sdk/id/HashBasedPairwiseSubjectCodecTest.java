@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ package be.atbash.ee.openid.connect.sdk.id;
 import be.atbash.ee.oauth2.sdk.id.Subject;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.bc.BouncyCastleProviderSingleton;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class HashBasedPairwiseSubjectCodecTest {
@@ -106,11 +106,10 @@ public class HashBasedPairwiseSubjectCodecTest {
 
         HashBasedPairwiseSubjectCodec codec = new HashBasedPairwiseSubjectCodec(salt);
 
-        try {
-            codec.decode(new Subject("xyz"));
-            fail();
-        } catch (UnsupportedOperationException e) {
-            assertThat(e.getMessage()).isEqualTo("Pairwise subject decoding is not supported");
-        }
+        UnsupportedOperationException exception = Assertions.assertThrows(UnsupportedOperationException.class, () ->
+                codec.decode(new Subject("xyz")));
+
+        assertThat(exception.getMessage()).isEqualTo("Pairwise subject decoding is not supported");
+
     }
 }

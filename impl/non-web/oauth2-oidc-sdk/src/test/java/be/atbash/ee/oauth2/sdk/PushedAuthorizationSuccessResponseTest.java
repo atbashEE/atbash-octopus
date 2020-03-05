@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ package be.atbash.ee.oauth2.sdk;
 
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -26,7 +27,6 @@ import javax.json.JsonObjectBuilder;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class PushedAuthorizationSuccessResponseTest  {
@@ -63,56 +63,44 @@ public class PushedAuthorizationSuccessResponseTest  {
 
 	@Test
 	public void testRejectNullRequestURI() {
-		
-		try {
-			new PushedAuthorizationSuccessResponse(null, 3600);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The request URI must not be null");
-		}
-	}
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationSuccessResponse(null, 3600));
+
+        assertThat(exception.getMessage()).isEqualTo("The request URI must not be null");
+
+    }
 
 	@Test
 	public void testRejectNonPositiveLifetime() {
-		
-		try {
-			new PushedAuthorizationSuccessResponse(URI.create("urn:ietf:params:oauth:request_uri:tioteej8"), 0L);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The request lifetime must be a positive integer");
-		}
-		
-		try {
-			new PushedAuthorizationSuccessResponse(URI.create("urn:ietf:params:oauth:request_uri:tioteej8"), -1L);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The request lifetime must be a positive integer");
-		}
-	}
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationSuccessResponse(URI.create("urn:ietf:params:oauth:request_uri:tioteej8"), 0L));
+        assertThat(exception.getMessage()).isEqualTo("The request lifetime must be a positive integer");
+
+
+        exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationSuccessResponse(URI.create("urn:ietf:params:oauth:request_uri:tioteej8"), -1L));
+        assertThat(exception.getMessage()).isEqualTo("The request lifetime must be a positive integer");
+
+    }
 
 	@Test
 	public void testParse_missingRequestURI() {
-		
-		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
-		jsonObject.add("expires_in", 3600L);
-		try {
-			PushedAuthorizationSuccessResponse.parse(jsonObject.build());
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing JSON object member with key \"request_uri\"");
-		}
-	}
+
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("expires_in", 3600L);
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationSuccessResponse.parse(jsonObject.build()));
+        assertThat(exception.getMessage()).isEqualTo("Missing JSON object member with key \"request_uri\"");
+
+    }
 
 	@Test
 	public void testParse_missingLifetime() {
-		
-		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
-		jsonObject.add("request_uri", "urn:ietf:params:oauth:request_uri:tioteej8");
-		try {
-			PushedAuthorizationSuccessResponse.parse(jsonObject.build());
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing JSON object member with key \"expires_in\"");
-		}
-	}
+
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("request_uri", "urn:ietf:params:oauth:request_uri:tioteej8");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationSuccessResponse.parse(jsonObject.build()));
+        assertThat(exception.getMessage()).isEqualTo("Missing JSON object member with key \"expires_in\"");
+
+    }
 }

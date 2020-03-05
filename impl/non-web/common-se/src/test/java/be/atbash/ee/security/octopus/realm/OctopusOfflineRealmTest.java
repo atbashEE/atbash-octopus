@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,10 @@ import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import be.atbash.ee.security.octopus.token.ValidatedAuthenticationToken;
 import be.atbash.util.TestReflectionUtils;
 import be.atbash.util.codec.Hex;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,7 +48,7 @@ public class OctopusOfflineRealmTest {
 
     private SaltHashingUtil hashingUtil;
 
-    @Before
+    @BeforeEach
     public void setup() throws IllegalAccessException {
         realm = OctopusOfflineRealm.getInstance();
         TestConfig.addConfigValue("authenticationInfoProvider.class", "be.atbash.ee.security.octopus.realm.TestAuthenticationInfoProvider");
@@ -59,7 +60,7 @@ public class OctopusOfflineRealmTest {
         factory.defineRealHashAlgorithmName("SHA-256");
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         TestConfig.resetConfig();
     }
@@ -80,15 +81,14 @@ public class OctopusOfflineRealmTest {
         assertThat(realm.getAuthorizationCache().size()).isEqualTo(0);
     }
 
-    @Test(expected = UnknownAccountException.class)
+    @Test
     public void doGetAuthenticationInfo_scenario2() {
         // Not authenticated
         AuthenticationToken token = new UsernamePasswordToken("JUnit", "Atbash".toCharArray());
 
         TestAuthenticationInfoProvider.authenticationInfo = null;
 
-        AuthenticationInfo data = realm.doGetAuthenticationInfo(token);
-        assertThat(data).isNull();
+        Assertions.assertThrows(UnknownAccountException.class, () -> realm.doGetAuthenticationInfo(token));
 
     }
 
@@ -112,7 +112,7 @@ public class OctopusOfflineRealmTest {
 
     }
 
-    @Test(expected = CredentialsException.class)
+    @Test
     public void doGetAuthenticationInfo_scenario4() {
         // Verify encoding, Failed encoding
         AuthenticationToken token = new UsernamePasswordToken("JUnit", "Atbash".toCharArray());
@@ -125,7 +125,7 @@ public class OctopusOfflineRealmTest {
         AuthenticationInfo info = builder.build();
         TestAuthenticationInfoProvider.authenticationInfo = info;
 
-        realm.doGetAuthenticationInfo(token);
+        Assertions.assertThrows(CredentialsException.class, () -> realm.doGetAuthenticationInfo(token));
 
     }
 
@@ -146,14 +146,14 @@ public class OctopusOfflineRealmTest {
         assertThat(realm.getAuthorizationCache().size()).isEqualTo(0);
     }
 
-    @Test(expected = UnknownAccountException.class)
+    @Test
     public void doAuthenticate_scenario2() {
         // Not authenticated
         AuthenticationToken token = new UsernamePasswordToken("JUnit", "Atbash".toCharArray());
 
         TestAuthenticationInfoProvider.authenticationInfo = null;
 
-        realm.doAuthenticate(token);
+        Assertions.assertThrows(UnknownAccountException.class, () -> realm.doAuthenticate(token));
 
     }
 
@@ -182,7 +182,7 @@ public class OctopusOfflineRealmTest {
 
     }
 
-    @Test(expected = CredentialsException.class)
+    @Test
     public void doAuthenticate_scenario4() {
         // Verify encoding, Failed encoding
         AuthenticationToken token = new UsernamePasswordToken("JUnit", "Atbash".toCharArray());
@@ -195,7 +195,7 @@ public class OctopusOfflineRealmTest {
         AuthenticationInfo info = builder.build();
         TestAuthenticationInfoProvider.authenticationInfo = info;
 
-        realm.doAuthenticate(token);
+        Assertions.assertThrows(CredentialsException.class, () -> realm.doAuthenticate(token));
 
     }
 

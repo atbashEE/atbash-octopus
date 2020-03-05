@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package be.atbash.ee.oauth2.sdk;
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotEquals;
 
 
 public class ErrorObjectTest {
@@ -245,10 +245,9 @@ public class ErrorObjectTest {
 
 	@Test
 	public void testInequality() {
-		
-		assertNotEquals(new ErrorObject("bad_request", null, 400), OAuth2Error.INVALID_GRANT);
-		assertNotEquals(new ErrorObject("bad_request", null, 0), OAuth2Error.INVALID_GRANT);
-	}
+        Assertions.assertNotEquals(new ErrorObject("bad_request", null, 400), OAuth2Error.INVALID_GRANT);
+        Assertions.assertNotEquals(new ErrorObject("bad_request", null, 0), OAuth2Error.INVALID_GRANT);
+    }
 
 	@Test
 	public void testSetDescription() {

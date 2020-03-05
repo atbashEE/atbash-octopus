@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package be.atbash.ee.oauth2.sdk.auth.verifier;
 import be.atbash.ee.oauth2.sdk.id.Audience;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.Date;
@@ -27,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -65,19 +65,13 @@ public class JWTAuthenticationClaimsSetVerifierTest {
     private static void ensureRejected(JWTClaimsSet claimsSet,
                                        String expectedMessage) {
 
-        try {
-            createForAS().verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo(expectedMessage);
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> createForAS().verify(claimsSet));
 
-        try {
-            createForOP().verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo(expectedMessage);
-        }
+        assertThat(exception.getMessage()).isEqualTo(expectedMessage);
+
+        BadJWTException exception1 = Assertions.assertThrows(BadJWTException.class, () -> createForOP().verify(claimsSet));
+        assertThat(exception1.getMessage()).isEqualTo(expectedMessage);
+
     }
 
     @Test
@@ -172,19 +166,12 @@ public class JWTAuthenticationClaimsSetVerifierTest {
                 .subject("123")
                 .build();
 
-        try {
-            createForAS().verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid JWT audience claim, expected [https://c2id.com/token]");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> createForAS().verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Invalid JWT audience claim, expected [https://c2id.com/token]");
 
-        try {
-            createForOP().verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid JWT audience claim, expected [https://c2id.com/token, https://c2id.com]");
-        }
+        BadJWTException exception1 = Assertions.assertThrows(BadJWTException.class, () -> createForOP().verify(claimsSet));
+        assertThat(exception1.getMessage()).isEqualTo("Invalid JWT audience claim, expected [https://c2id.com/token, https://c2id.com]");
+
     }
 
     @Test

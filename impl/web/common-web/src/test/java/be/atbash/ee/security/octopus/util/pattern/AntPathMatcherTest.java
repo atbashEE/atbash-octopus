@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package be.atbash.ee.security.octopus.util.pattern;
 
 import be.atbash.util.exception.AtbashIllegalActionException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,28 +54,28 @@ public class AntPathMatcherTest {
         assertThat(patternMatcher.matches(null, "com/test.jsp")).isFalse();
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void matchStart_emptyPath1() {
-        patternMatcher.matches("be/**/test.jsp", "");
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> patternMatcher.matches("be/**/test.jsp", ""));
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void matchStart_emptyPath2() {
-        patternMatcher.matches("be/**/test.jsp", null);
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> patternMatcher.matches("be/**/test.jsp", null));
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void matchStart_emptyPath3() {
-        patternMatcher.matches("be/**/test.jsp", "  ");
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> patternMatcher.matches("be/**/test.jsp", "  "));
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void matchStart_pathHasPatternCharacters1() {
-        patternMatcher.matches("be/**/test.jsp", "test*.jsp");
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> patternMatcher.matches("be/**/test.jsp", "test*.jsp"));
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void matchStart_pathHasPatternCharacters2() {
-        patternMatcher.matches("be/**/test.jsp", "test?.jsp");
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> patternMatcher.matches("be/**/test.jsp", "test?.jsp"));
     }
 }

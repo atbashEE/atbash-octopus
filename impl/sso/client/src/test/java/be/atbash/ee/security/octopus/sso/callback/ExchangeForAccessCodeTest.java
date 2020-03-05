@@ -30,7 +30,6 @@ import be.atbash.ee.openid.connect.sdk.claims.IDTokenClaimsSet;
 import be.atbash.ee.openid.connect.sdk.token.OIDCTokens;
 import be.atbash.ee.security.octopus.config.Debug;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
@@ -42,15 +41,15 @@ import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientCon
 import net.jadler.Jadler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
@@ -63,7 +62,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ExchangeForAccessCodeTest {
 
     @Mock
@@ -87,13 +86,13 @@ public class ExchangeForAccessCodeTest {
     @Captor
     private ArgumentCaptor<ErrorObject> errorObjectArgumentCaptor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Jadler.initJadler();
         when(coreConfigurationMock.showDebugFor()).thenReturn(Collections.<Debug>emptyList());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
     }
@@ -114,7 +113,7 @@ public class ExchangeForAccessCodeTest {
         exchangeForAccessCode.init();
 
         when(octopusSSOServerClientConfigurationMock.getTokenEndpoint()).thenReturn("http://localhost:" + Jadler.port() + "/oidc/octopus/sso/token");
-        when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
+        lenient().when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
 
         OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("http://some.server/oidc");
         AuthorizationCode authorizationCode = new AuthorizationCode("TheAuthorizationCode");
@@ -154,7 +153,7 @@ public class ExchangeForAccessCodeTest {
         exchangeForAccessCode.init();
 
         when(octopusSSOServerClientConfigurationMock.getTokenEndpoint()).thenReturn("http://localhost:" + Jadler.port() + "/oidc/octopus/sso/token");
-        when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
+        //when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
 
         OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("http://some.server/oidc");
         AuthorizationCode authorizationCode = new AuthorizationCode("TheAuthorizationCode");
@@ -194,7 +193,7 @@ public class ExchangeForAccessCodeTest {
         exchangeForAccessCode.init();
 
         when(octopusSSOServerClientConfigurationMock.getTokenEndpoint()).thenReturn("http://localhost:" + Jadler.port() + "/oidc/octopus/sso/token");
-        when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
+        //when(octopusSSOServerClientConfigurationMock.getSSOClientId()).thenReturn("junit_client");
 
         OpenIdVariableClientData variableClientData = new OpenIdVariableClientData("http://some.server/oidc");
         AuthorizationCode authorizationCode = new AuthorizationCode("TheAuthorizationCode");

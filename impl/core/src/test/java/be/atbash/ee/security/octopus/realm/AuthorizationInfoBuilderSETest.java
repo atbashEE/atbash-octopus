@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import be.atbash.ee.security.octopus.authz.permission.WildcardPermission;
 import be.atbash.ee.security.octopus.authz.permission.role.ApplicationRole;
 import be.atbash.ee.security.octopus.authz.permission.role.RolePermission;
 import be.atbash.ee.security.octopus.realm.mocks.FakeRoleMapperProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +38,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AuthorizationInfoBuilderSETest {
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         System.setProperty("atbash.utils.cdi.check", "false");
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         TestConfig.resetConfig();
         System.clearProperty("atbash.utils.cdi.check");

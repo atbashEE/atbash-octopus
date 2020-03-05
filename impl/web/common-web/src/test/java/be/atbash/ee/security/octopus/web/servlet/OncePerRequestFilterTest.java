@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package be.atbash.ee.security.octopus.web.servlet;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,7 +31,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OncePerRequestFilterTest {
 
     private static final String EXCEPTION_MESSAGE = "doFilterInternal Exception message";
@@ -60,7 +60,7 @@ public class OncePerRequestFilterTest {
     private String attributeName;
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         filter = new OncePerRequestFilter() {
             @Override
@@ -128,16 +128,12 @@ public class OncePerRequestFilterTest {
     }
 
     @Test
-    public void doFilter_Exception() throws IOException {
+    public void doFilter_Exception() {
 
         throwException = true;
 
-        try {
-            filter.doFilter(servletRequestMock, servletResponseMock, null);
-            Assert.fail("Should throw ServletException");
-        } catch (ServletException e) {
-            assertThat(e.getMessage()).isEqualTo(EXCEPTION_MESSAGE);
-        }
+        ServletException exception = Assertions.assertThrows(ServletException.class, () -> filter.doFilter(servletRequestMock, servletResponseMock, null));
+        assertThat(exception.getMessage()).isEqualTo(EXCEPTION_MESSAGE);
     }
 
     @Test
@@ -167,6 +163,7 @@ public class OncePerRequestFilterTest {
 
         filter.setName(filterName);
         when(servletRequestMock.getAttribute(filterName + ".DISABLED_FOR_REQUEST")).thenReturn(new Object()); // any return will do
+        when(servletRequestMock.getAttribute(filterName + ".FILTERED")).thenReturn(null);
 
         filter.doFilter(servletRequestMock, null, filterChainMock);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@ package be.atbash.ee.security.octopus.twostep;
 
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TwoStepManagerTest {
 
     private BeanManagerFake beanManagerFake;
@@ -40,13 +40,13 @@ public class TwoStepManagerTest {
     @Mock
     private WebSubject webSubjectMock;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
         manager = new TwoStepManager();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }

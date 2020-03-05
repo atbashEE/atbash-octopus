@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,10 @@ package be.atbash.ee.openid.connect.sdk;
 
 import be.atbash.ee.oauth2.sdk.id.Identifier;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
-import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Tests the Nonce class.
@@ -49,29 +48,17 @@ public class NonceTest {
     @Test
     public void testIntConstructorZero() {
 
-        try {
-            new Nonce(0);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new Nonce(0));
 
-            fail();
-
-        } catch (IllegalArgumentException e) {
-
-            // ok
-        }
     }
 
     @Test
     public void testIntConstructorNegative() {
 
-        try {
-            new Nonce(-1);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new Nonce(-1));
 
-            fail();
-
-        } catch (IllegalArgumentException e) {
-
-            // ok
-        }
     }
 
     @Test

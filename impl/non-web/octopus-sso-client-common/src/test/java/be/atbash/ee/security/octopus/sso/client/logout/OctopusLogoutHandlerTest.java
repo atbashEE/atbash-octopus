@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import net.jadler.Jadler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
@@ -38,12 +38,12 @@ public class OctopusLogoutHandlerTest {
 
     private Random random = new Random();
 
-    @Before
+    @BeforeEach
     public void setup() {
         Jadler.initJadler();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         Jadler.closeJadler();
         TestConfig.resetConfig();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package be.atbash.ee.security.octopus.crypto.hash;
 
 import be.atbash.config.test.TestConfig;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,12 +28,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SaltHashingUtilTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         TestConfig.registerDefaultConverters();
     }
 
-    @After
+    @AfterEach
     public void teardown() throws NoSuchFieldException {
         TestConfig.resetConfig();
         // Reset SaltHashingUtil so that initialization happens again.

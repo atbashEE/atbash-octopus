@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,23 +27,22 @@ import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SSOAuthenticatingFilterTest {
 
     private static final String ACCESS_TOKEN = "realToken";
@@ -66,7 +65,7 @@ public class SSOAuthenticatingFilterTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
@@ -74,10 +73,10 @@ public class SSOAuthenticatingFilterTest {
         beanManagerFake.registerBean(new TimeUtil(), TimeUtil.class);
         beanManagerFake.endRegistration();
 
-        when(octopusCoreConfigurationMock.showDebugFor()).thenReturn(new ArrayList<Debug>());
+        lenient().when(octopusCoreConfigurationMock.showDebugFor()).thenReturn(new ArrayList<Debug>());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }

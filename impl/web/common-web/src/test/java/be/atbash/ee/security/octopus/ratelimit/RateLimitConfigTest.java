@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package be.atbash.ee.security.octopus.ratelimit;
 
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,17 +58,17 @@ public class RateLimitConfigTest {
         assertThat(rateLimiter.getAllowedRequests()).isEqualTo(100000);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void createRateLimiter_MissingTimeValue() {
         config = new RateLimitConfig();
-        config.createRateLimiter("1000/s");
+        Assertions.assertThrows(ConfigurationException.class, () -> config.createRateLimiter("1000/s"));
 
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void createRateLimiter_wrongUnit() {
         config = new RateLimitConfig();
-        config.createRateLimiter("10/1x");
+        Assertions.assertThrows(ConfigurationException.class, () -> config.createRateLimiter("10/1x"));
 
     }
 

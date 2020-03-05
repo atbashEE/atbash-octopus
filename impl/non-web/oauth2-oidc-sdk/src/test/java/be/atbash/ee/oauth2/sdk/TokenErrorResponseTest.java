@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 import java.net.URI;
@@ -33,23 +32,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests token error response serialisation and parsing.
  */
-public class TokenErrorResponseTest  {
-	
-	
-	private static URI ERROR_PAGE_URI = null;
-	
-	
-	@Before
-	public void setUp()
-		throws Exception {
-		
-		ERROR_PAGE_URI = new URI("http://server.example.com/error/123");
-	}
+public class TokenErrorResponseTest {
 
-	@Test
-	public void testStandardErrors() {
-	
-		Set<ErrorObject> errors = TokenErrorResponse.getStandardErrors();
+
+    private static URI ERROR_PAGE_URI = null;
+
+    @BeforeEach
+    public void setUp()
+            throws Exception {
+
+        ERROR_PAGE_URI = new URI("http://server.example.com/error/123");
+    }
+
+    @Test
+    public void testStandardErrors() {
+
+        Set<ErrorObject> errors = TokenErrorResponse.getStandardErrors();
 	
 		assertThat(errors).contains(OAuth2Error.INVALID_REQUEST);
 		assertThat(errors).contains(OAuth2Error.INVALID_CLIENT);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import be.atbash.ee.security.octopus.jwt.encoder.JWTEncoder;
 import be.atbash.ee.security.octopus.jwt.parameter.JWTParametersNone;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import net.jadler.Jadler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.adapters.config.AdapterConfig;
@@ -36,12 +36,12 @@ public class KeycloakAuthenticatorTest {
 
     private KeycloakAuthenticator authenticator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Jadler.initJadler();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
     }

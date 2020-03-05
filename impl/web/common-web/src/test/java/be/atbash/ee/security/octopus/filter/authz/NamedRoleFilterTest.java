@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,15 @@ import be.atbash.ee.security.octopus.authz.permission.typesafe.RoleLookup;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.servlet.ServletRequest;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NamedRoleFilterTest {
 
     private BeanManagerFake beanManagerFake;
@@ -68,7 +68,7 @@ public class NamedRoleFilterTest {
     @Captor
     private ArgumentCaptor<String> attributeNameCaptor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
@@ -77,7 +77,7 @@ public class NamedRoleFilterTest {
         ThreadContext.bind(subjectMock);
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         beanManagerFake.deregistration();
     }

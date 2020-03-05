@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@ package be.atbash.ee.security.octopus.oauth2.github.json;
 
 import be.atbash.ee.security.octopus.authz.UnauthenticatedException;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
@@ -33,7 +34,7 @@ public class GithubJSONProcessorTest {
 
     private TestLogger logger = TestLoggerFactory.getTestLogger(GithubJSONProcessor.class);
 
-    @After
+    @AfterEach
     public void clearLoggers() {
         TestLoggerFactory.clear();
     }
@@ -81,16 +82,16 @@ public class GithubJSONProcessorTest {
 
     }
 
-    @Test(expected = UnauthenticatedException.class)
+    @Test
     public void extractGoogleUser_error() {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("error", "invalid authentication");
 
-        try {
-            processor.extractGithubUser(builder.build().toString());
-        } finally {
-            assertThat(logger.getLoggingEvents()).hasSize(1);
-            assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Received following response from Github token resolving \n{\"error\":\"invalid authentication\"}");
-        }
+        Assertions.assertThrows(UnauthenticatedException.class, () ->
+                processor.extractGithubUser(builder.build().toString()));
+
+        assertThat(logger.getLoggingEvents()).hasSize(1);
+        assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Received following response from Github token resolving \n{\"error\":\"invalid authentication\"}");
+
     }
 }

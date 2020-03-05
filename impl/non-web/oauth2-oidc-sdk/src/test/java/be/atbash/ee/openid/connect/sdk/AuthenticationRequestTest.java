@@ -37,7 +37,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.*;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -50,7 +51,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class AuthenticationRequestTest {
@@ -905,16 +905,15 @@ public class AuthenticationRequestTest {
                 "&state=af0ifjsldkj" +
                 "&nonce=n-0S6_WzA2Mj";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"redirect_uri\" parameter");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"redirect_uri\" parameter");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"redirect_uri\" parameter");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"redirect_uri\" parameter");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -925,16 +924,15 @@ public class AuthenticationRequestTest {
                 "&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
                 "&state=af0ifjsldkj";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"scope\" parameter");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"scope\" parameter");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"scope\" parameter");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"scope\" parameter");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -946,16 +944,15 @@ public class AuthenticationRequestTest {
                 "&scope=profile" +
                 "&state=af0ifjsldkj";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The scope must include an \"openid\" value");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: The scope must include an \"openid\" value");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.QUERY);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("The scope must include an \"openid\" value");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: The scope must include an \"openid\" value");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.QUERY);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -967,16 +964,15 @@ public class AuthenticationRequestTest {
                 "&scope=openid%20profile" +
                 "&state=af0ifjsldkj";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -989,16 +985,15 @@ public class AuthenticationRequestTest {
                 "&state=af0ifjsldkj" +
                 "&display=mobile";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"display\" parameter: Unknown display type: mobile");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"display\" parameter: Unknown display type: mobile");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.QUERY);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"display\" parameter: Unknown display type: mobile");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"display\" parameter: Unknown display type: mobile");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.QUERY);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -1011,16 +1006,15 @@ public class AuthenticationRequestTest {
                 "&state=af0ifjsldkj" +
                 "&max_age=zero";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"max_age\" parameter: zero");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"max_age\" parameter: zero");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.QUERY);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"max_age\" parameter: zero");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"max_age\" parameter: zero");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.QUERY);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -1033,16 +1027,15 @@ public class AuthenticationRequestTest {
                 "&state=af0ifjsldkj" +
                 "&id_token_hint=ey...";
 
-        try {
-            AuthenticationRequest.parse(query);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.QUERY);
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AuthenticationRequest.parse(query));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.QUERY);
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -1140,65 +1133,62 @@ public class AuthenticationRequestTest {
                 .state(new State("af0ifjsldkj"))
                 .build();
 
-        try {
-            new AuthenticationRequest.Builder(
-                    ResponseType.parse("code id_token"),
-                    new Scope("openid"),
-                    new ClientID("s6BhdRkqt3"),
-                    URI.create("https://example.com/cb")) // redirect_uri
-                    .state(new State("af0ifjsldkj"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is required in implicit / hybrid protocol flow");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () ->
+                new AuthenticationRequest.Builder(
+                        ResponseType.parse("code id_token"),
+                        new Scope("openid"),
+                        new ClientID("s6BhdRkqt3"),
+                        URI.create("https://example.com/cb")) // redirect_uri
+                        .state(new State("af0ifjsldkj"))
+                        .build());
 
-        try {
-            new AuthenticationRequest.Builder(
-                    ResponseType.parse("code id_token token"),
-                    new Scope("openid"),
-                    new ClientID("s6BhdRkqt3"),
-                    URI.create("https://example.com/cb")) // redirect_uri
-                    .state(new State("af0ifjsldkj"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is required in implicit / hybrid protocol flow");
-        }
+        assertThat(exception.getMessage()).isEqualTo("Nonce is required in implicit / hybrid protocol flow");
 
-        try {
-            new AuthenticationRequest.Builder(
-                    ResponseType.parse("id_token token"),
-                    new Scope("openid"),
-                    new ClientID("s6BhdRkqt3"),
-                    URI.create("https://example.com/cb")) // redirect_uri
-                    .state(new State("af0ifjsldkj"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is required in implicit / hybrid protocol flow");
-        }
+
+        exception = Assertions.assertThrows(IllegalStateException.class, () ->
+                new AuthenticationRequest.Builder(
+                        ResponseType.parse("code id_token token"),
+                        new Scope("openid"),
+                        new ClientID("s6BhdRkqt3"),
+                        URI.create("https://example.com/cb")) // redirect_uri
+                        .state(new State("af0ifjsldkj"))
+                        .build());
+
+        assertThat(exception.getMessage()).isEqualTo("Nonce is required in implicit / hybrid protocol flow");
+
+
+        exception = Assertions.assertThrows(IllegalStateException.class, () ->
+                new AuthenticationRequest.Builder(
+                        ResponseType.parse("id_token token"),
+                        new Scope("openid"),
+                        new ClientID("s6BhdRkqt3"),
+                        URI.create("https://example.com/cb")) // redirect_uri
+                        .state(new State("af0ifjsldkj"))
+                        .build());
+
+        assertThat(exception.getMessage()).isEqualTo("Nonce is required in implicit / hybrid protocol flow");
+
 
         // Test static parse method
-        try {
-            AuthenticationRequest.parse(new URI(
-                    "https://server.example.com" +
-                            "/authorize?" +
-                            "response_type=code%20id_token" +
-                            "&client_id=s6BhdRkqt3" +
-                            "&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
-                            "&scope=openid%20profile" +
-                            "&state=af0ifjsldkj"));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
-            assertThat(e.getClientID()).isEqualTo(new ClientID("s6BhdRkqt3"));
-            assertThat(e.getRedirectionURI()).isEqualTo(new URI("https://client.example.org/cb"));
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
-            assertThat(e.getState()).isEqualTo(new State("af0ifjsldkj"));
-        }
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+
+                AuthenticationRequest.parse(new URI(
+                        "https://server.example.com" +
+                                "/authorize?" +
+                                "response_type=code%20id_token" +
+                                "&client_id=s6BhdRkqt3" +
+                                "&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+                                "&scope=openid%20profile" +
+                                "&state=af0ifjsldkj")));
+
+        assertThat(exception1.getMessage()).isEqualTo("Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
+        assertThat(exception1.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception1.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"nonce\" parameter: Required in the implicit and hybrid flows");
+        assertThat(exception1.getClientID()).isEqualTo(new ClientID("s6BhdRkqt3"));
+        assertThat(exception1.getRedirectionURI()).isEqualTo(new URI("https://client.example.org/cb"));
+        assertThat(exception1.getResponseMode()).isEqualTo(ResponseMode.FRAGMENT);
+        assertThat(exception1.getState()).isEqualTo(new State("af0ifjsldkj"));
+
     }
 
 
@@ -1728,40 +1718,34 @@ public class AuthenticationRequestTest {
         assertThat(ar.getClientID()).isEqualTo(clientID);
         assertThat(ar.getRedirectionURI()).isEqualTo(redirectURI);
 
-        try {
-            new AuthenticationRequest.Builder(requestURI).responseType(null);
-            fail("Core response_type when set not null");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The response type must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(requestURI).responseType(null));
 
-        try {
-            new AuthenticationRequest.Builder(requestURI).scope(null);
-            fail("Core scope when set not null");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The scope must not be null");
-        }
+        assertThat(exception.getMessage()).isEqualTo("The response type must not be null");
 
-        try {
-            new AuthenticationRequest.Builder(requestURI).scope(new Scope("email"));
-            fail("Core scope when set must contain openid");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The scope must include an \"openid\" value");
-        }
+        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 
-        try {
-            new AuthenticationRequest.Builder(requestURI).clientID(null);
-            fail("Core client ID when set not null");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The client ID must not be null");
-        }
+                new AuthenticationRequest.Builder(requestURI).scope(null));
 
-        try {
-            new AuthenticationRequest.Builder(requestURI).redirectionURI(null);
-            fail("Core redirection URI when set not null");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The redirection URI must not be null");
-        }
+        assertThat(exception.getMessage()).isEqualTo("The scope must not be null");
+
+
+        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(requestURI).scope(new Scope("email")));
+
+        assertThat(exception.getMessage()).isEqualTo("The scope must include an \"openid\" value");
+
+
+        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(requestURI).clientID(null));
+
+        assertThat(exception.getMessage()).isEqualTo("The client ID must not be null");
+
+        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(requestURI).redirectionURI(null));
+
+        assertThat(exception.getMessage()).isEqualTo("The redirection URI must not be null");
+
     }
 
     @Test
@@ -1901,44 +1885,40 @@ public class AuthenticationRequestTest {
     @Test
     public void testBuilder_nullResponseType() {
 
-        try {
-            new AuthenticationRequest.Builder(null, new Scope("openid"), new ClientID("123"), URI.create("https://example.com/cb"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The response type must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(null, new Scope("openid"), new ClientID("123"), URI.create("https://example.com/cb")));
+
+        assertThat(exception.getMessage()).isEqualTo("The response type must not be null");
+
     }
 
     @Test
     public void testBuilder_nullScope() {
 
-        try {
-            new AuthenticationRequest.Builder(new ResponseType("code"), null, new ClientID("123"), URI.create("https://example.com/cb"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The scope must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(new ResponseType("code"), null, new ClientID("123"), URI.create("https://example.com/cb")));
+
+        assertThat(exception.getMessage()).isEqualTo("The scope must not be null");
+
     }
 
     @Test
     public void testBuilder_missingOpenIDScopeValue() {
 
-        try {
-            new AuthenticationRequest.Builder(new ResponseType("code"), new Scope("email"), new ClientID("123"), URI.create("https://example.com/cb"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The scope must include an \"openid\" value");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(new ResponseType("code"), new Scope("email"), new ClientID("123"), URI.create("https://example.com/cb")));
+
+        assertThat(exception.getMessage()).isEqualTo("The scope must include an \"openid\" value");
+
     }
 
     @Test
     public void testBuilder_nullClientID() {
 
-        try {
-            new AuthenticationRequest.Builder(new ResponseType("code"), new Scope("openid"), null, URI.create("https://example.com/cb"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The client ID must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AuthenticationRequest.Builder(new ResponseType("code"), new Scope("openid"), null, URI.create("https://example.com/cb")));
+
+        assertThat(exception.getMessage()).isEqualTo("The client ID must not be null");
+
     }
 }

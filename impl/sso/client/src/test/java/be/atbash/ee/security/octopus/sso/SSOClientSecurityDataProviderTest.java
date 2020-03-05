@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
 import net.jadler.Jadler;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
@@ -40,7 +40,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SSOClientSecurityDataProviderTest {
 
     @Mock
@@ -54,13 +54,13 @@ public class SSOClientSecurityDataProviderTest {
     @InjectMocks
     private SSOClientSecurityDataProvider provider;
 
-    @Before
+    @BeforeEach
     public void setup() {
         Jadler.initJadler();
         beanManagerFake.registerBean(new JacksonClientCustomization(), ClientCustomization.class);
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         Jadler.closeJadler();
         beanManagerFake.deregistration();

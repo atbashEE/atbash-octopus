@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package be.atbash.ee.oauth2.sdk.device;
 
-import be.atbash.ee.oauth2.sdk.AuthorizationCodeGrant;
 import be.atbash.ee.oauth2.sdk.GrantType;
 import be.atbash.ee.oauth2.sdk.OAuth2Error;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+
 
 /**
  * Tests the device code grant class.
@@ -71,53 +71,44 @@ public class DeviceCodeGrantTest  {
 	@Test
 	public void testParseMissingGrantType() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", null);
-		params.put("device_code", Collections.singletonList("abc"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", null);
+        params.put("device_code", Collections.singletonList("abc"));
 
-		try {
-			DeviceCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"grant_type\" parameter");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> DeviceCodeGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"grant_type\" parameter");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+    }
 
 	@Test
 	public void testParseUnsupportedGrant() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("no-such-grant"));
-		params.put("device_code", Collections.singletonList("abc"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("no-such-grant"));
+        params.put("device_code", Collections.singletonList("abc"));
 
-		try {
-			AuthorizationCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be \"authorization_code\"");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> DeviceCodeGrant.parse(params));
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be urn:ietf:params:oauth:grant-type:device_code");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
+    }
 
 	@Test
 	public void testParseMissingCode() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList(GrantType.DEVICE_CODE.getValue()));
-		params.put("device_code", Collections.singletonList(""));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList(GrantType.DEVICE_CODE.getValue()));
+        params.put("device_code", Collections.singletonList(""));
 
-		try {
-			DeviceCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"device_code\" parameter");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> DeviceCodeGrant.parse(params));
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"device_code\" parameter");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
+    }
 
 	@Test
 	public void testEquality() {

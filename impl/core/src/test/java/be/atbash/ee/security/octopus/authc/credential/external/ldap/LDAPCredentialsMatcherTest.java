@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldif.LDIFReader;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +38,7 @@ import java.util.Set;
 import static be.atbash.ee.security.octopus.OctopusConstants.AUTHORIZATION_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class LDAPCredentialsMatcherTest {
 
     private static InMemoryDirectoryServer directoryServer;
@@ -47,7 +47,7 @@ public class LDAPCredentialsMatcherTest {
 
     private LDAPCredentialsMatcher credentialsMatcher;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupLDAP() {
 
         try {
@@ -67,12 +67,12 @@ public class LDAPCredentialsMatcherTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void destroy() {
         directoryServer.shutDown(true);
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
@@ -85,7 +85,7 @@ public class LDAPCredentialsMatcherTest {
         TestConfig.addConfigValue("ldap.url", "ldap://localhost:33389/");
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         beanManagerFake.deregistration();
         TestConfig.resetConfig();

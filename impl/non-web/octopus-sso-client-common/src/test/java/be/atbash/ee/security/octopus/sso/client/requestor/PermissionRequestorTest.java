@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,19 @@ import be.atbash.ee.security.octopus.sso.client.config.OctopusSSOServerClientCon
 import net.jadler.Jadler;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PermissionRequestorTest {
 
     @Mock
@@ -45,7 +45,7 @@ public class PermissionRequestorTest {
 
     private PermissionRequestor permissionRequestor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         ClientConfig clientConfiguration = new ClientConfig();
         clientConfiguration.register(JacksonFeature.class);
@@ -54,7 +54,7 @@ public class PermissionRequestorTest {
         Jadler.initJadler();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
     }

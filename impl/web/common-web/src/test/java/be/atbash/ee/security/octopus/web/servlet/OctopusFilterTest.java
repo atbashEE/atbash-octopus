@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,16 @@ import be.atbash.ee.security.octopus.subject.WebSubject;
 import be.atbash.ee.security.octopus.subject.support.WebSubjectContext;
 import be.atbash.ee.security.octopus.web.url.SecuredURLReader;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -50,7 +51,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OctopusFilterTest {
 
     @Mock
@@ -91,17 +92,17 @@ public class OctopusFilterTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
         beanManagerFake.registerBean(realmMock, OctopusRealm.class);
         beanManagerFake.endRegistration();
 
-        when(coreConfigurationMock.showDebugFor()).thenReturn(new ArrayList<Debug>());
+        lenient().when(coreConfigurationMock.showDebugFor()).thenReturn(new ArrayList<Debug>());
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }
@@ -129,15 +130,14 @@ public class OctopusFilterTest {
     public void doFilterInternal_WrappedException() throws IOException {
 
         when(securityManagerMock.createSubject(any(WebSubjectContext.class))).thenThrow(new NullPointerException());
-        try {
-            filter.doFilterInternal(servletRequestMock, servletResponseMock, filterChainMock);
-            fail("Expected exception not thrown");
-        } catch (ServletException ex) {
-            assertThat(ex.getRootCause()).isInstanceOf(NullPointerException.class);
-        } finally {
-            verify(filterChainResolverMock, never()).getChain(servletRequestMock, servletResponseMock, filterChainMock);
 
-        }
+        ServletException exception = Assertions.assertThrows(ServletException.class, () -> filter.doFilterInternal(servletRequestMock, servletResponseMock, filterChainMock));
+
+        assertThat(exception.getRootCause()).isInstanceOf(NullPointerException.class);
+
+        verify(filterChainResolverMock, never()).getChain(servletRequestMock, servletResponseMock, filterChainMock);
+
+
     }
 
     @Test

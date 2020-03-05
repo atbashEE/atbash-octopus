@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-
 import be.atbash.ee.oauth2.sdk.auth.Secret;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -69,67 +68,59 @@ public class ResourceOwnerPasswordCredentialsGrantTest  {
 	@Test
 	public void testParseMissingGrantType() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("username", Collections.singletonList("alice"));
-		params.put("password", Collections.singletonList("secret"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("username", Collections.singletonList("alice"));
+        params.put("password", Collections.singletonList("secret"));
 
-		try {
-			ResourceOwnerPasswordCredentialsGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"grant_type\" parameter");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ResourceOwnerPasswordCredentialsGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"grant_type\" parameter");
+
+    }
 
 	@Test
 	public void testParseUnsupportedGrantType() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("invalid_grant"));
-		params.put("username", Collections.singletonList("alice"));
-		params.put("password", Collections.singletonList("secret"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("invalid_grant"));
+        params.put("username", Collections.singletonList("alice"));
+        params.put("password", Collections.singletonList("secret"));
 
-		try {
-			ResourceOwnerPasswordCredentialsGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be password");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ResourceOwnerPasswordCredentialsGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be password");
+
+    }
 
 	@Test
 	public void testParseMissingUsername() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("password"));
-		params.put("password", Collections.singletonList("secret"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("password"));
+        params.put("password", Collections.singletonList("secret"));
 
-		try {
-			ResourceOwnerPasswordCredentialsGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"username\" parameter");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ResourceOwnerPasswordCredentialsGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"username\" parameter");
+
+    }
 
 	@Test
 	public void testParseMissingPassword() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("password"));
-		params.put("username", Collections.singletonList("alice"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("password"));
+        params.put("username", Collections.singletonList("alice"));
 
-		try {
-			ResourceOwnerPasswordCredentialsGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"password\" parameter");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ResourceOwnerPasswordCredentialsGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"password\" parameter");
+
+    }
 
 	@Test
 	public void testEquality() {

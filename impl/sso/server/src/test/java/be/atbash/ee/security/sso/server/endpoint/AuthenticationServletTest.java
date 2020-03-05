@@ -36,7 +36,6 @@ import be.atbash.ee.security.octopus.keys.generator.KeyGenerator;
 import be.atbash.ee.security.octopus.keys.generator.RSAGenerationParameters;
 import be.atbash.ee.security.octopus.keys.selector.AsymmetricPart;
 import be.atbash.ee.security.octopus.keys.selector.SelectorCriteria;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACVerifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
@@ -57,16 +56,17 @@ import be.atbash.ee.security.sso.server.store.OIDCStoreData;
 import be.atbash.ee.security.sso.server.store.SSOTokenStore;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.servlet.ServletException;
@@ -80,11 +80,11 @@ import java.text.ParseException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AuthenticationServletTest {
 
     @Mock
@@ -134,7 +134,7 @@ public class AuthenticationServletTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
@@ -143,7 +143,7 @@ public class AuthenticationServletTest {
         beanManagerFake.endRegistration();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }
@@ -470,7 +470,7 @@ public class AuthenticationServletTest {
         verify(httpSessionMock).invalidate();
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void doGet_missingKey_JARM_CodeFlow() throws ServletException, IOException, OAuth2JSONParseException, URISyntaxException, NoSuchFieldException, ParseException {
         when(ssoServerConfigurationMock.getJARMLevel()).thenReturn(JARMLevel.JWS);
         when(ssoServerConfigurationMock.getJarmJWTExpirationTime()).thenReturn("2s");
@@ -508,17 +508,16 @@ public class AuthenticationServletTest {
 
         authenticationServlet.init();  // To configure the KeyManager
 
-        try {
-            authenticationServlet.doGet(httpServletRequestMock, httpServletResponseMock);
-        } finally {
 
-            verify(httpServletResponseMock, never()).sendRedirect(anyString());
+        Assertions.assertThrows(ConfigurationException.class, () -> authenticationServlet.doGet(httpServletRequestMock, httpServletResponseMock));
 
-            verify(tokenStoreMock, never()).addLoginFromClient(any(UserPrincipal.class), anyString(),
-                    anyString(), anyString(), any(OIDCStoreData.class));
+        verify(httpServletResponseMock, never()).sendRedirect(anyString());
 
-            verify(httpSessionMock, never()).invalidate();
-        }
+        verify(tokenStoreMock, never()).addLoginFromClient(any(UserPrincipal.class), anyString(),
+                anyString(), anyString(), any(OIDCStoreData.class));
+
+        verify(httpSessionMock, never()).invalidate();
+
     }
 
     private static AtbashKey generatePrivateKey() {

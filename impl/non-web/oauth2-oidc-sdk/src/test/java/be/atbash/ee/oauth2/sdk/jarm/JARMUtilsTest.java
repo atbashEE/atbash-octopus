@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEObject;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.security.KeyPair;
@@ -43,7 +44,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class JARMUtilsTest {
     private static final RSAPrivateKey RSA_PRIVATE_KEY;
@@ -263,12 +263,9 @@ public class JARMUtilsTest {
         JWTClaimsSet jwtClaimsSet = JARMUtils.toJWTClaimsSet(new Issuer("https://c2id.com"), new ClientID("123"), new Date(), response);
         JWT jwt = new PlainJWT(jwtClaimsSet);
 
-        try {
-            JARMUtils.impliesAuthorizationErrorResponse(jwt);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid JWT-secured authorization response: The JWT must not be plain (unsecured)");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                JARMUtils.impliesAuthorizationErrorResponse(jwt));
+        assertThat(exception.getMessage()).isEqualTo("Invalid JWT-secured authorization response: The JWT must not be plain (unsecured)");
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package be.atbash.ee.oauth2.sdk;
 
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class PushedAuthorizationErrorResponseTest {
@@ -78,29 +78,22 @@ public class PushedAuthorizationErrorResponseTest {
     @Test
     public void testRejectNullErrorObject() {
 
-        try {
-            new PushedAuthorizationErrorResponse(null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The error must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationErrorResponse(null));
+
+        assertThat(exception.getMessage()).isEqualTo("The error must not be null");
+
     }
 
     @Test
     public void testParse_rejectStatusCodes201_200() {
 
-        try {
-            PushedAuthorizationErrorResponse.parse(new HTTPResponse(201));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The HTTP status code must be other than 201 and 200");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationErrorResponse.parse(new HTTPResponse(201)));
 
-        try {
-            PushedAuthorizationErrorResponse.parse(new HTTPResponse(200));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The HTTP status code must be other than 201 and 200");
-        }
+        assertThat(exception.getMessage()).isEqualTo("The HTTP status code must be other than 201 and 200");
+
+        exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationErrorResponse.parse(new HTTPResponse(200)));
+
+        assertThat(exception.getMessage()).isEqualTo("The HTTP status code must be other than 201 and 200");
     }
+
 }

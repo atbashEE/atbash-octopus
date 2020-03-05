@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ import be.atbash.ee.security.octopus.util.SavedRequest;
 import be.atbash.util.TestReflectionUtils;
 import be.atbash.util.exception.AtbashIllegalActionException;
 import be.atbash.util.jsf.FakeFacesContext;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.faces.context.ExternalContext;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OAuth2ServletInfoTest {
 
     @Mock
@@ -120,7 +121,7 @@ public class OAuth2ServletInfoTest {
         assertThat(servletPath).isEqualTo("/path2");
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void getServletPath_scenario4() throws NoSuchFieldException {
         // wrong selection is never possible without reflection
         List<OAuth2ProviderMetaData> metaDataList = new ArrayList<>();
@@ -132,7 +133,7 @@ public class OAuth2ServletInfoTest {
         // We could set this value with authenticateWith() but does a lot more and is tested separately.
         TestReflectionUtils.setFieldValue(servletInfo, "userProviderSelection", "wrong");
 
-        servletInfo.getServletPath();
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> servletInfo.getServletPath());
     }
 
     @Test
@@ -167,7 +168,7 @@ public class OAuth2ServletInfoTest {
         verify(providerSelectionMock).setProviderSelection("test1");
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void authenticateWith_scenario2() throws IOException {
         // Wrong metadata provider specified
         List<OAuth2ProviderMetaData> metaDataList = new ArrayList<>();
@@ -177,13 +178,10 @@ public class OAuth2ServletInfoTest {
 
         servletInfo.init();
 
-        try {
-            servletInfo.authenticateWith("wrong");
-        } finally {
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> servletInfo.authenticateWith("wrong"));
 
-            // Check if no redirect is made
-            verify(externalContextMock, never()).redirect(anyString());
-        }
+        // Check if no redirect is made
+        verify(externalContextMock, never()).redirect(anyString());
     }
 
     public static class TestProviderMetaData implements OAuth2ProviderMetaData {

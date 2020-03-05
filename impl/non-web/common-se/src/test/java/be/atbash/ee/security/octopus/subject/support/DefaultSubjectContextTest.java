@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import be.atbash.ee.security.octopus.realm.OctopusOfflineRealm;
 import be.atbash.ee.security.octopus.subject.SecurityManager;
 import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +46,7 @@ public class DefaultSubjectContextTest {
 
     private AuthorizingRealm realm;
 
-    @Before
+    @BeforeEach
     public void setup() {
         realm = new AuthorizingRealm() {
             @Override
@@ -68,7 +68,7 @@ public class DefaultSubjectContextTest {
         defaultSubjectContext = new DefaultSubjectContext(realm);
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         TestConfig.resetConfig();
     }

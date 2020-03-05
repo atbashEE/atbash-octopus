@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
 package be.atbash.ee.security.octopus.mp.token;
 
 import be.atbash.ee.security.octopus.mp.config.MPCoreConfiguration;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MPJWTTokenBuilderTest {
 
     @Mock
@@ -38,7 +38,7 @@ public class MPJWTTokenBuilderTest {
     @InjectMocks
     private MPJWTTokenBuilder tokenBuilder;
 
-    @Before
+    @BeforeEach
     public void setup() {
         tokenBuilder.init();
     }
@@ -127,12 +127,9 @@ public class MPJWTTokenBuilderTest {
         tokenBuilder.setExpirationTime(exp);
         tokenBuilder.setSubject("Subject");
 
-        try {
-            tokenBuilder.build();
-            Assert.fail("Should throw MissingClaimMPJWTTokenException");
-        } catch (MissingClaimMPJWTTokenException e) {
-            assertThat(e.getMessage()).contains("'iss'");
-        }
+
+        MissingClaimMPJWTTokenException exception = Assertions.assertThrows(MissingClaimMPJWTTokenException.class, () -> tokenBuilder.build());
+        assertThat(exception.getMessage()).contains("'iss'");
     }
 
     @Test
@@ -145,12 +142,9 @@ public class MPJWTTokenBuilderTest {
         tokenBuilder.setExpirationTime(exp);
         tokenBuilder.setSubject("Subject");
 
-        try {
-            tokenBuilder.build();
-            Assert.fail("Should throw MissingClaimMPJWTTokenException");
-        } catch (MissingClaimMPJWTTokenException e) {
-            assertThat(e.getMessage()).contains("'aud'");
-        }
+        MissingClaimMPJWTTokenException exception = Assertions.assertThrows(MissingClaimMPJWTTokenException.class, () -> tokenBuilder.build());
+        assertThat(exception.getMessage()).contains("'aud'");
+
 
     }
 
@@ -161,12 +155,8 @@ public class MPJWTTokenBuilderTest {
         tokenBuilder.setAudience("AUD");
         tokenBuilder.setSubject("Subject");
 
-        try {
-            tokenBuilder.build();
-            Assert.fail("Should throw MissingClaimMPJWTTokenException");
-        } catch (MissingClaimMPJWTTokenException e) {
-            assertThat(e.getMessage()).contains("'exp'");
-        }
+        MissingClaimMPJWTTokenException exception = Assertions.assertThrows(MissingClaimMPJWTTokenException.class, () -> tokenBuilder.build());
+        assertThat(exception.getMessage()).contains("'exp'");
 
     }
 
@@ -181,12 +171,8 @@ public class MPJWTTokenBuilderTest {
         tokenBuilder.setIssuedAtTime(now);
         tokenBuilder.setExpirationTime(exp);
 
-        try {
-            tokenBuilder.build();
-            Assert.fail("Should throw MissingClaimMPJWTTokenException");
-        } catch (MissingClaimMPJWTTokenException e) {
-            assertThat(e.getMessage()).contains("'sub' and 'upn'");
-        }
+        MissingClaimMPJWTTokenException exception = Assertions.assertThrows(MissingClaimMPJWTTokenException.class, () -> tokenBuilder.build());
+        assertThat(exception.getMessage()).contains("'sub' and 'upn'");
 
     }
 

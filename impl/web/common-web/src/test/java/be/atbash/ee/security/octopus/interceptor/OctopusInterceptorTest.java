@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,8 @@ import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationConte
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -65,7 +64,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  *
  */
-@Ignore
+@Disabled
 public class OctopusInterceptorTest {
     protected static final String PERMISSION1 = "PERMISSION1";
     protected static final String PERMISSION2 = "PERMISSION2";
@@ -115,29 +114,14 @@ public class OctopusInterceptorTest {
 
     protected BeanManagerFake beanManagerFake;
 
-    protected boolean authenticated;
-    protected String permission;
-    protected boolean customAccess;
-    protected String systemAccount;
-    protected String role;
-
-    public OctopusInterceptorTest(boolean authenticated, String permission, boolean customAccess, String systemAccount, String role) {
-        this.authenticated = authenticated; // FIXME How about remember me
-        this.permission = permission;
-        this.customAccess = customAccess;
-        this.systemAccount = systemAccount;
-        this.role = role;
-    }
-
-    @Before
-    public void setup() throws IllegalAccessException {
+    protected void setup(TestInterceptorParameters parameters) throws IllegalAccessException {
         CallFeedbackCollector.reset();
         initMocks(this);
 
         ThreadContext.bind(subjectMock);
-        if (authenticated) {
-            if (systemAccount != null) {
-                SystemAccountPrincipal systemAccountPrincipal = new SystemAccountPrincipal(systemAccount);
+        if (parameters.isAuthenticated()) {
+            if (parameters.getSystemAccount() != null) {
+                SystemAccountPrincipal systemAccountPrincipal = new SystemAccountPrincipal(parameters.getSystemAccount());
                 when(subjectMock.getPrincipal()).thenReturn(systemAccountPrincipal);
             } else {
 
@@ -151,47 +135,41 @@ public class OctopusInterceptorTest {
         }
 
         // Define logic at subject level to see if subject has the required permission
-        final NamedDomainPermission namedPermission = getNamedDomainPermission(permission);
-        final RolePermission namedRole = getNamedApplicationRole(role);
+        final NamedDomainPermission namedPermission = getNamedDomainPermission(parameters.getPermission());
+        final RolePermission namedRole = getNamedApplicationRole(parameters.getRole());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                Object parameter = invocationOnMock.getArguments()[0];
-                if (parameter instanceof Permission) {
-                    Permission permission = (Permission) parameter;
-                    if (namedPermission == null && namedRole == null) {
-                        throw new AuthorizationException();
-                    }
-                    if (namedPermission != null && !namedPermission.implies(permission)) {
-                        throw new AuthorizationException();
-                    }
-                    if (namedRole != null && !namedRole.implies(permission)) {
-                        throw new AuthorizationException();
-                    }
-                    return null;
+        doAnswer(invocationOnMock -> {
+            Object parameter = invocationOnMock.getArguments()[0];
+            if (parameter instanceof Permission) {
+                Permission permission = (Permission) parameter;
+                if (namedPermission == null && namedRole == null) {
+                    throw new AuthorizationException();
                 }
-                throw new IllegalArgumentException();
+                if (namedPermission != null && !namedPermission.implies(permission)) {
+                    throw new AuthorizationException();
+                }
+                if (namedRole != null && !namedRole.implies(permission)) {
+                    throw new AuthorizationException();
+                }
+                return null;
             }
+            throw new IllegalArgumentException();
         }).when(subjectMock).checkPermission((Permission) ArgumentMatchers.any());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                Object parameter = invocationOnMock.getArguments()[0];
-                if (parameter instanceof Permission) {
-                    Permission permission = (Permission) parameter;
-                    if (namedPermission == null && namedRole == null) {
-                        return false;
-                    }
-                    if (namedPermission != null && !namedPermission.implies(permission)) {
-                        return false;
-                    }
-                    return namedRole == null || namedRole.implies(permission);
-
+        doAnswer(invocationOnMock -> {
+            Object parameter = invocationOnMock.getArguments()[0];
+            if (parameter instanceof Permission) {
+                Permission permission = (Permission) parameter;
+                if (namedPermission == null && namedRole == null) {
+                    return false;
                 }
-                throw new IllegalArgumentException();
+                if (namedPermission != null && !namedPermission.implies(permission)) {
+                    return false;
+                }
+                return namedRole == null || namedRole.implies(permission);
+
             }
+            throw new IllegalArgumentException();
         }).when(subjectMock).isPermitted((Permission) ArgumentMatchers.any());
 
         doAnswer(new Answer() {
@@ -200,7 +178,7 @@ public class OctopusInterceptorTest {
                 Object parameter = invocationOnMock.getArguments()[0];
                 if (parameter instanceof String) {
                     String permissionParameter = (String) parameter;
-                    if (!permissionParameter.equals(permission)) {
+                    if (!permissionParameter.equals(parameters.getPermission())) {
                         throw new AuthorizationException();
                     } else {
                         return null;
@@ -214,36 +192,23 @@ public class OctopusInterceptorTest {
             }
         }).when(subjectMock).checkPermissions((String[]) ArgumentMatchers.any());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                Object parameter = invocationOnMock.getArguments()[0];
-                if (parameter instanceof String) {
-                    String permissionString = (String) parameter;
-                    if (permissionString.contains(":")) {
-                        return new WildcardPermission(permissionString);
-                    }
-                    throw new IllegalArgumentException();
+        doAnswer(invocationOnMock -> {
+            Object parameter = invocationOnMock.getArguments()[0];
+            if (parameter instanceof String) {
+                String permissionString = (String) parameter;
+                if (permissionString.contains(":")) {
+                    return new WildcardPermission(permissionString);
                 }
                 throw new IllegalArgumentException();
             }
+            throw new IllegalArgumentException();
         }).when(permissionResolverMock).resolvePermission(ArgumentMatchers.anyString());
 
         // Define the Named permission check class
-        when(octopusConfigMock.getNamedPermissionCheckClass()).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return TestPermissionCheck.class;
-            }
-        });
+        when(octopusConfigMock.getNamedPermissionCheckClass()).thenAnswer((Answer<Object>) invocationOnMock -> TestPermissionCheck.class);
 
         // Define the Named permission check class
-        when(octopusConfigMock.getNamedRoleCheckClass()).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return TestRoleCheck.class;
-            }
-        });
+        when(octopusConfigMock.getNamedRoleCheckClass()).thenAnswer((Answer<Object>) invocationOnMock -> TestRoleCheck.class);
 
         when(octopusConfigMock.getPermissionVoterSuffix()).thenReturn("PermissionVoter");
         when(octopusConfigMock.getRoleVoterSuffix()).thenReturn("RoleVoter");
@@ -261,7 +226,7 @@ public class OctopusInterceptorTest {
 
         // The custom voter bound to CDI
         TestCustomVoter customVoter = new TestCustomVoter();
-        customVoter.setCustomAccess(customAccess);
+        customVoter.setCustomAccess(parameters.isCustomAccess());
         beanManagerFake.registerBean(customVoter, TestCustomVoter.class);
 
         voterNameFactory = new VoterNameFactory();
@@ -317,7 +282,7 @@ public class OctopusInterceptorTest {
         beanManagerFake.registerBean(securityCheckRequiresRoles, SecurityCheck.class);
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-
 import be.atbash.ee.openid.connect.sdk.OIDCResponseTypeValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -65,13 +64,9 @@ public class ResponseTypeTest{
 	@Test
 	public void testStringVarargConstructorNull() {
 
-		try {
-			new ResponseType((String)null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			// ok
-		}
-	}
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ResponseType((String) null));
+
+    }
 
 	@Test
 	public void testCodeFlowDetection() {
@@ -109,53 +104,32 @@ public class ResponseTypeTest{
 		assertThat(new ResponseType("id_token").impliesHybridFlow()).isFalse();
 	}
 
-	@Test
-	public void testSerializeAndParse() {
+    @Test
+    public void testSerializeAndParse() throws OAuth2JSONParseException {
 
-		ResponseType rt = new ResponseType();
-		rt.add(ResponseType.Value.CODE);
-		rt.add(new ResponseType.Value("id_token"));
+        ResponseType rt = new ResponseType();
+        rt.add(ResponseType.Value.CODE);
+        rt.add(new ResponseType.Value("id_token"));
 
-		try {
-			rt = ResponseType.parse(rt.toString());
+        rt = ResponseType.parse(rt.toString());
 
-		} catch (OAuth2JSONParseException e) {
-
-			fail(e.getMessage());
-		}
-
-		assertThat(rt).contains(ResponseType.Value.CODE);
-		assertThat(rt).contains(new ResponseType.Value("id_token"));
-		assertThat(rt).hasSize(2);
-	}
+        assertThat(rt).contains(ResponseType.Value.CODE);
+        assertThat(rt).contains(new ResponseType.Value("id_token"));
+        assertThat(rt).hasSize(2);
+    }
 
 	@Test
 	public void testParseNull() {
 
-		try {
-			ResponseType.parse(null);
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> ResponseType.parse(null));
 
-			fail("Failed to raise exception");
-		
-		} catch (OAuth2JSONParseException e) {
-
-			// ok
-		}
-	}
+    }
 
 	@Test
 	public void testParseEmptyString() {
 
-		try {
-			ResponseType.parse(" ");
-
-			fail("Failed to raise exception");
-		
-		} catch (OAuth2JSONParseException e) {
-
-			// ok
-		}
-	}
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> ResponseType.parse(" "));
+    }
 
 	@Test
 	public void testContains() {

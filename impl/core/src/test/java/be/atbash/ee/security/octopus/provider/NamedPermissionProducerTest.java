@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ import be.atbash.ee.security.octopus.provider.testclasses.TestPermissionAnnotati
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.enterprise.inject.spi.Annotated;
 import java.lang.annotation.Annotation;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NamedPermissionProducerTest extends AbstractProducerTest {
 
     public static final String TEST_PERMISSION = "testPermission";
@@ -77,7 +77,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
     @InjectMocks
     private NamedPermissionProducer producer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         when(injectionPointMock.getAnnotated()).thenReturn(annotatedMock);
@@ -91,7 +91,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
         TestReflectionUtils.injectDependencies(producer, configMock);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }
@@ -116,9 +116,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
         registerOctopusConfig(TestPermissionAnnotationCheck.class);
         when(annotatedMock.getAnnotation(TestPermissionAnnotationCheck.class)).thenReturn(null);
 
-        // @Rule at AbstractProducerTest
-        checkUnsatisfiedResolutionException();
-        producer.getVoter(injectionPointMock);
+        testWithMissing(() -> producer.getVoter(injectionPointMock));
 
     }
 
@@ -129,10 +127,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
 
         when(testPermissionAnnotationCheckMock.value()).thenReturn(new TestPermissionAnnotation[]{TestPermissionAnnotation.TEST, TestPermissionAnnotation.SECOND});
 
-        // @Rule at AbstractProducerTest
-        checkAmbigousResolutionException();
-
-        producer.getVoter(injectionPointMock);
+        testWithMultiple(() -> producer.getVoter(injectionPointMock));
     }
 
     @Test
@@ -191,9 +186,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
         registerOctopusConfig(null);
         when(annotatedMock.getAnnotation(RequiresPermissions.class)).thenReturn(null);
 
-        // @Rule at AbstractProducerTest
-        checkUnsatisfiedResolutionException();
-        producer.getVoter(injectionPointMock);
+        testWithMissing(() -> producer.getVoter(injectionPointMock));
 
     }
 
@@ -204,10 +197,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
 
         when(requiresPermissionsMock.value()).thenReturn(new String[]{TEST_PERMISSION, "SecondPermission"});
 
-        // @Rule at AbstractProducerTest
-        checkAmbigousResolutionException();
-
-        producer.getVoter(injectionPointMock);
+        testWithMultiple(() -> producer.getVoter(injectionPointMock));
     }
 
     @Test
@@ -229,10 +219,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
         registerOctopusConfig(TestPermissionAnnotationCheck.class);
         when(annotatedMock.getAnnotation(TestPermissionAnnotationCheck.class)).thenReturn(null);
 
-        // @Rule at AbstractProducerTest
-        checkUnsatisfiedResolutionException();
-        producer.getPermission(injectionPointMock);
-
+        testWithMissing(() -> producer.getPermission(injectionPointMock));
     }
 
     @Test
@@ -242,9 +229,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
 
         when(testPermissionAnnotationCheckMock.value()).thenReturn(new TestPermissionAnnotation[]{TestPermissionAnnotation.TEST, TestPermissionAnnotation.SECOND});
 
-        // @Rule at AbstractProducerTest
-        checkAmbigousResolutionException();
-        producer.getPermission(injectionPointMock);
+        testWithMultiple(() -> producer.getPermission(injectionPointMock));
     }
 
     @Test
@@ -266,9 +251,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
         registerOctopusConfig(null);
         when(annotatedMock.getAnnotation(RequiresPermissions.class)).thenReturn(null);
 
-        // @Rule at AbstractProducerTest
-        checkUnsatisfiedResolutionException();
-        producer.getPermission(injectionPointMock);
+        testWithMissing(() -> producer.getPermission(injectionPointMock));
 
     }
 
@@ -279,9 +262,7 @@ public class NamedPermissionProducerTest extends AbstractProducerTest {
 
         when(requiresPermissionsMock.value()).thenReturn(new String[]{TEST_PERMISSION, "SecondPermission"});
 
-        // @Rule at AbstractProducerTest
-        checkAmbigousResolutionException();
-        producer.getPermission(injectionPointMock);
+        testWithMultiple(() -> producer.getPermission(injectionPointMock));
     }
 
     private static class OctopusConfigMock extends OctopusCoreConfiguration {

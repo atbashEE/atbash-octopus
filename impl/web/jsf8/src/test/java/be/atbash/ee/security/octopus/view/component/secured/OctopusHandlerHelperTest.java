@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,22 @@ package be.atbash.ee.security.octopus.view.component.secured;
 import be.atbash.ee.security.octopus.authz.Combined;
 import be.atbash.ee.security.octopus.config.names.VoterNameFactory;
 import be.atbash.ee.security.octopus.view.component.OctopusComponentUsageException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.faces.component.UIComponentBase;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 /**
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OctopusHandlerHelperTest {
 
     private UIComponentBase component = new UIComponentBase() {
@@ -48,10 +49,10 @@ public class OctopusHandlerHelperTest {
     @InjectMocks
     private OctopusHandlerHelper handlerHelper;
 
-    @Before
-    public void setup() throws IllegalAccessException {
-        when(voterNameFactoryMock.generatePermissionBeanName("myPermission")).thenReturn("myPermissionVoter");
-        when(voterNameFactoryMock.generateRoleBeanName("theRole")).thenReturn("theRoleVoter");
+    @BeforeEach
+    public void setup() {
+        lenient().when(voterNameFactoryMock.generatePermissionBeanName("myPermission")).thenReturn("myPermissionVoter");
+        lenient().when(voterNameFactoryMock.generateRoleBeanName("theRole")).thenReturn("theRoleVoter");
 
     }
 
@@ -113,10 +114,10 @@ public class OctopusHandlerHelperTest {
         assertThat(componentData.getVoters()).contains("complexVoter", "myPermissionVoter", "theRoleVoter");
     }
 
-    @Test(expected = OctopusComponentUsageException.class)
+    @Test
     public void gatherSecurityInfo_no_Voter_permission_role() {
 
-        handlerHelper.gatherSecurityInfo(component, null);
+        Assertions.assertThrows(OctopusComponentUsageException.class, () -> handlerHelper.gatherSecurityInfo(component, null));
 
     }
 

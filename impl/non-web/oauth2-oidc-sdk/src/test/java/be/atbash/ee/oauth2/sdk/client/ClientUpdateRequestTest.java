@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,14 @@ import be.atbash.ee.oauth2.sdk.auth.ClientAuthenticationMethod;
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.token.BearerTokenError;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URL;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -104,35 +104,30 @@ public class ClientUpdateRequestTest  {
 
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
 
-		String json = "{\"client_id\":\"123\","
-			+ "    \"client_secret\": \"cf136dc3c1fc93f31185e5885805d\","
-			+ "    \"redirect_uris\":[\"https://client.example.org/callback\",\"https://client.example.org/alt\"],"
-			+ "    \"scope\": \"read write dolphin\","
-			+ "    \"grant_types\": [\"authorization_code\", \"refresh_token\"],"
-			+ "    \"token_endpoint_auth_method\": \"client_secret_basic\","
-			+ "    \"jwks_uri\": \"https://client.example.org/my_public_keys.jwks\","
-			+ "    \"client_name\":\"My New Example\","
-			+ "    \"client_name#fr\":\"Mon Nouvel Exemple\","
-			+ "    \"logo_uri\":\"https://client.example.org/newlogo.png\","
-			+ "    \"logo_uri#fr\":\"https://client.example.org/fr/newlogo.png\""
-			+ "   }";
+        String json = "{\"client_id\":\"123\","
+                + "    \"client_secret\": \"cf136dc3c1fc93f31185e5885805d\","
+                + "    \"redirect_uris\":[\"https://client.example.org/callback\",\"https://client.example.org/alt\"],"
+                + "    \"scope\": \"read write dolphin\","
+                + "    \"grant_types\": [\"authorization_code\", \"refresh_token\"],"
+                + "    \"token_endpoint_auth_method\": \"client_secret_basic\","
+                + "    \"jwks_uri\": \"https://client.example.org/my_public_keys.jwks\","
+                + "    \"client_name\":\"My New Example\","
+                + "    \"client_name#fr\":\"Mon Nouvel Exemple\","
+                + "    \"logo_uri\":\"https://client.example.org/newlogo.png\","
+                + "    \"logo_uri#fr\":\"https://client.example.org/fr/newlogo.png\""
+                + "   }";
 
-		httpRequest.setQuery(json);
+        httpRequest.setQuery(json);
 
-		try {
-			ClientUpdateRequest.parse(httpRequest);
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientUpdateRequest.parse(httpRequest));
 
-			fail();
+        assertThat(exception.getErrorObject()).isInstanceOf(BearerTokenError.class);
 
-		} catch (OAuth2JSONParseException e) {
+        BearerTokenError bte = (BearerTokenError) exception.getErrorObject();
 
-			assertThat(e.getErrorObject()).isInstanceOf(BearerTokenError.class);
+        assertThat(bte.getHTTPStatusCode()).isEqualTo(401);
+        assertThat(bte.getCode()).isNull();
+        assertThat(bte.toWWWAuthenticateHeader()).isEqualTo("Bearer");
 
-			BearerTokenError bte = (BearerTokenError)e.getErrorObject();
-
-			assertThat(bte.getHTTPStatusCode()).isEqualTo(401);
-			assertThat(bte.getCode()).isNull();
-			assertThat(bte.toWWWAuthenticateHeader()).isEqualTo("Bearer");
-		}
-	}
+    }
 }

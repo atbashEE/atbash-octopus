@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ package be.atbash.ee.oauth2.sdk;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,31 +31,30 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
  * Tests authorisation error response serialisation and parsing.
  */
-public class AuthorizationErrorResponseTest  {
-	
-	
-	private static URI REDIRECT_URI = null;
-	
-	
-	private static URI ERROR_PAGE_URL = null;
-	
-	@Before
-	public void setUp()
-		throws URISyntaxException {
-		
-		REDIRECT_URI = new URI("https://client.example.com/cb");
-		
-		ERROR_PAGE_URL = new URI("http://server.example.com/error/123");
-	}
+public class AuthorizationErrorResponseTest {
 
-	@Test
-	public void testStandardErrors() {
+
+    private static URI REDIRECT_URI = null;
+
+
+    private static URI ERROR_PAGE_URL = null;
+
+    @BeforeEach
+    public void setUp()
+            throws URISyntaxException {
+
+        REDIRECT_URI = new URI("https://client.example.com/cb");
+
+        ERROR_PAGE_URL = new URI("http://server.example.com/error/123");
+    }
+
+    @Test
+    public void testStandardErrors() {
 	
 		Set<ErrorObject> errors = AuthorizationErrorResponse.getStandardErrors();
 	
@@ -186,60 +186,44 @@ public class AuthorizationErrorResponseTest  {
 		assertThat(response.getState()).isEqualTo(state);
 	}
 
-	@Test
-	public void testParse()
-		throws URISyntaxException {
-	
-		String s = "https://client.example.com/cb?error=invalid_request&error_description=Invalid+request&error_uri=http%3A%2F%2Fserver.example.com%2Ferror%2F123&state=123";
+    @Test
+    public void testParse()
+            throws URISyntaxException, OAuth2JSONParseException {
 
-		AuthorizationErrorResponse r = null;
-		
-		try {
-			r = AuthorizationErrorResponse.parse(new URI(s));
-			
-		} catch (OAuth2JSONParseException e) {
-		
-			fail(e.getMessage());
-		}
+        String s = "https://client.example.com/cb?error=invalid_request&error_description=Invalid+request&error_uri=http%3A%2F%2Fserver.example.com%2Ferror%2F123&state=123";
 
-		assertThat(r.indicatesSuccess()).isFalse();
-		assertThat(r.getRedirectionURI().toString()).isEqualTo("https://client.example.com/cb");
-		assertThat(r.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-		assertThat(r.getErrorObject().getURI()).isEqualTo(ERROR_PAGE_URL);
-		assertThat(r.getState()).isEqualTo(new State("123"));
-		
-		assertThat(r.getResponseMode()).isNull();
-		assertThat(r.impliedResponseMode()).isEqualTo(ResponseMode.QUERY);
-	}
+        AuthorizationErrorResponse r = AuthorizationErrorResponse.parse(new URI(s));
 
-	@Test
-	public void testParseExceptions()
-		throws URISyntaxException {
-		
-		String s1 = "https://client.example.com/cb";
-		
-		try {
-			AuthorizationErrorResponse.parse(new URI(s1));
-			fail();
-			
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
-	}
+        assertThat(r.indicatesSuccess()).isFalse();
+        assertThat(r.getRedirectionURI().toString()).isEqualTo("https://client.example.com/cb");
+        assertThat(r.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+        assertThat(r.getErrorObject().getURI()).isEqualTo(ERROR_PAGE_URL);
+        assertThat(r.getState()).isEqualTo(new State("123"));
 
-	@Test
-	public void testRedirectionURIWithQueryString()
-		throws Exception {
-		// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/140
+        assertThat(r.getResponseMode()).isNull();
+        assertThat(r.impliedResponseMode()).isEqualTo(ResponseMode.QUERY);
+    }
 
-		URI redirectURI = URI.create("https://example.com/myservice/?action=oidccallback");
-		assertThat(redirectURI.getQuery()).isEqualTo("action=oidccallback");
+    @Test
+    public void testParseExceptions() {
 
-		State state = new State();
+        String s1 = "https://client.example.com/cb";
 
-		ErrorObject error = OAuth2Error.ACCESS_DENIED;
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationErrorResponse.parse(new URI(s1)));
+    }
 
-		AuthorizationErrorResponse response = new AuthorizationErrorResponse(redirectURI, error, state, ResponseMode.QUERY);
+    @Test
+    public void testRedirectionURIWithQueryString() {
+        // See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/140
+
+        URI redirectURI = URI.create("https://example.com/myservice/?action=oidccallback");
+        assertThat(redirectURI.getQuery()).isEqualTo("action=oidccallback");
+
+        State state = new State();
+
+        ErrorObject error = OAuth2Error.ACCESS_DENIED;
+
+        AuthorizationErrorResponse response = new AuthorizationErrorResponse(redirectURI, error, state, ResponseMode.QUERY);
 
 		Map<String, List<String>> params = response.toParameters();
 		assertThat(params.get("error")).isEqualTo(Collections.singletonList(OAuth2Error.ACCESS_DENIED.getCode()));

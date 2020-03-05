@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,16 +36,16 @@ import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.interceptor.InvocationContext;
@@ -53,13 +53,12 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Fail.fail;
 import static org.mockito.Mockito.*;
 
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OctopusInterceptor_CustomCheck {
 
     private BeanManagerFake beanManagerFake;
@@ -90,7 +89,7 @@ public class OctopusInterceptor_CustomCheck {
     @Captor
     private ArgumentCaptor<AccessDecisionVoterContext> accessDecisionVoterCaptor;
 
-    @Before
+    @BeforeEach
     public void setup() throws IllegalAccessException {
         beanManagerFake = new BeanManagerFake();
 
@@ -101,10 +100,10 @@ public class OctopusInterceptor_CustomCheck {
 
         voterNameFactory = new VoterNameFactory();
         TestReflectionUtils.injectDependencies(voterNameFactory, octopusConfigMock);
-        when(octopusConfigMock.getCustomCheckSuffix()).thenReturn("AccessDecissionVoter");
+        lenient().when(octopusConfigMock.getCustomCheckSuffix()).thenReturn("AccessDecissionVoter");
 
         Permission permission = new WildcardPermission("Permission1:*:*");
-        when(permissionResolverMock.resolvePermission("Permission1")).thenReturn(permission);
+        lenient().when(permissionResolverMock.resolvePermission("Permission1")).thenReturn(permission);
         SecurityCheckCustomCheck securityCheckCustomCheck = new SecurityCheckCustomCheck();
         TestReflectionUtils.injectDependencies(securityCheckCustomCheck, infoProducerMock, octopusConfigMock, voterNameFactory, permissionResolverMock, realmMock);
 
@@ -113,18 +112,13 @@ public class OctopusInterceptor_CustomCheck {
         beanManagerFake.registerBean("myCheckAccessDecissionVoter", abstractGenericVoterMock);
 
         // Define the Custom check class
-        when(octopusConfigMock.getCustomCheckClass()).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return MyCheck.class;
-            }
-        });
+        when(octopusConfigMock.getCustomCheckClass()).thenAnswer((Answer<Object>) invocationOnMock -> MyCheck.class);
 
         ThreadContext.bind(subjectMock);
 
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }
@@ -155,7 +149,7 @@ public class OctopusInterceptor_CustomCheck {
 
     }
 
-    @Test(expected = SecurityAuthorizationViolationException.class)
+    @Test
     public void testAuthenticated_NotValidCheck() throws Exception {
 
         Object target = new MethodLevel();
@@ -171,17 +165,13 @@ public class OctopusInterceptor_CustomCheck {
         violations.add(new BasicAuthorizationViolation("JUnit", null));
         when(abstractGenericVoterMock.checkPermission(any(AccessDecisionVoterContext.class))).thenReturn(violations);
 
-        try {
-            octopusInterceptor.interceptForSecurity(context);
-            fail("Should fail");
-        } finally {
+        Assertions.assertThrows(SecurityAuthorizationViolationException.class, () -> octopusInterceptor.interceptForSecurity(context));
 
-            verify(abstractGenericVoterMock).checkPermission(accessDecisionVoterCaptor.capture());
-        }
+        verify(abstractGenericVoterMock).checkPermission(accessDecisionVoterCaptor.capture());
 
     }
 
-    @Test(expected = SecurityAuthorizationViolationException.class)
+    @Test//(expected = SecurityAuthorizationViolationException.class)
     public void testNotAuthenticated() throws Exception {
 
         Object target = new MethodLevel();
@@ -203,12 +193,9 @@ public class OctopusInterceptor_CustomCheck {
         when(abstractGenericVoterMock.checkPermission(any(AccessDecisionVoterContext.class))).thenReturn(violations);
         */
 
-        try {
-            octopusInterceptor.interceptForSecurity(context);
-        } finally {
+        Assertions.assertThrows(SecurityAuthorizationViolationException.class, () -> octopusInterceptor.interceptForSecurity(context));
 
-            verify(abstractGenericVoterMock, never()).checkPermission(accessDecisionVoterCaptor.capture());
-        }
+        verify(abstractGenericVoterMock, never()).checkPermission(accessDecisionVoterCaptor.capture());
 
     }
 

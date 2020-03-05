@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ import be.atbash.ee.oauth2.sdk.auth.Secret;
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URL;
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class DeviceAuthorizationRequestTest  {
 
@@ -227,29 +227,23 @@ public class DeviceAuthorizationRequestTest  {
 	@Test
 	public void testConstructParseExceptionMissingClientID() throws Exception {
 
-		URI tokenEndpoint = new URI("https://c2id.com/devauthz");
+        URI tokenEndpoint = new URI("https://c2id.com/devauthz");
 
-		try {
-			new DeviceAuthorizationRequest(tokenEndpoint, null);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The client ID must not be null");
-		}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new DeviceAuthorizationRequest(tokenEndpoint, null));
+        assertThat(exception.getMessage()).isEqualTo("The client ID must not be null");
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST,
-		                new URL("https://c2id.com/devauthz"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		try {
-			DeviceAuthorizationRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing \"client_id\" parameter");
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST,
+                new URL("https://c2id.com/devauthz"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () -> DeviceAuthorizationRequest.parse(httpRequest));
+        assertThat(exception1.getMessage()).isEqualTo("Missing \"client_id\" parameter");
+        assertThat(exception1.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception1.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
+        assertThat(exception1.getErrorObject().getURI()).isNull();
+
+    }
 
 	@Test
 	public void testCopyConstructorBuilder() throws Exception {

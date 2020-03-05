@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
 package be.atbash.ee.oauth2.sdk.token;
 
 
-
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.Scope;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
-import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -34,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -158,186 +156,144 @@ public class BearerAccessTokenTest  {
 	@Test
 	public void testParseFromHeader_missing() {
 
-		try {
-			AccessToken.parse((String)null);
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                AccessToken.parse((String) null));
 
-			fail();
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getHTTPStatusCode());
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getCode());
 
-		} catch (OAuth2JSONParseException e) {
-
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getHTTPStatusCode());
-			assertThat(e.getErrorObject().getCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getCode());
-		}
-	}
+    }
 
 	@Test
 	public void testParseFromHeader_missingName() {
-	
-		try {
-			AccessToken.parse("abc");
-			
-			fail();
-			
-		} catch (OAuth2JSONParseException e) {
-		
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
-			assertThat(e.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
-		}
-	}
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AccessToken.parse("abc"));
+
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
+
+    }
 
 	@Test
 	public void testParseFromHeader_missingValue() {
-	
-		try {
-			AccessToken.parse("Bearer ");
-			
-			fail();
-			
-		} catch (OAuth2JSONParseException e) {
 
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
-			assertThat(e.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AccessToken.parse("Bearer "));
 
-	@Test
-	public void testParseFromQueryParameters()
-		throws Exception {
-		
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("access_token", Collections.singletonList("abc"));
-		
-		assertThat(BearerAccessToken.parse(params).getValue()).isEqualTo("abc");
-	}
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
+    }
+
+    @Test
+    public void testParseFromQueryParameters()
+            throws Exception {
+
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("access_token", Collections.singletonList("abc"));
+
+        assertThat(BearerAccessToken.parse(params).getValue()).isEqualTo("abc");
+    }
 
 	@Test
 	public void testParseFromQueryParameters_missing() {
-		
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("some_param", Collections.singletonList("abc"));
-		
-		try {
-			BearerAccessToken.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing access token parameter");
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getHTTPStatusCode());
-			assertThat(e.getErrorObject().getCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getCode());
-		}
-	}
+
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("some_param", Collections.singletonList("abc"));
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing access token parameter");
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getHTTPStatusCode());
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(BearerTokenError.MISSING_TOKEN.getCode());
+
+    }
 
 	@Test
 	public void testParseFromQueryParameters_empty() {
-		
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("access_token", Collections.singletonList(""));
-		
-		try {
-			BearerAccessToken.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Blank / empty access token");
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
-			assertThat(e.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
-		}
-	}
 
-	@Test
-	public void testParseFromHTTPRequest()
-		throws Exception {
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("access_token", Collections.singletonList(""));
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
-		httpRequest.setAuthorization("Bearer abc");
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse(params));
 
-		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest);
+        assertThat(exception.getMessage()).isEqualTo("Blank / empty access token");
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
+    }
 
-		assertThat(accessToken.getValue()).isEqualTo("abc");
-	}
+    @Test
+    public void testParseFromHTTPRequest()
+            throws Exception {
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
+        httpRequest.setAuthorization("Bearer abc");
+
+        BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest);
+
+        assertThat(accessToken.getValue()).isEqualTo("abc");
+    }
 
 	@Test
 	public void testParseFromHTTPRequest_missing()
 		throws Exception {
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
 
-		try {
-			BearerAccessToken.parse(httpRequest);
-			fail();
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse(httpRequest));
 
-		} catch (OAuth2JSONParseException e) {
-
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(401);
-			assertThat(e.getErrorObject().getCode()).isNull();
-		}
-	}
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(401);
+        assertThat(exception.getErrorObject().getCode()).isNull();
+    }
 
 	@Test
 	public void testParseFromHTTPRequest_invalid()
 		throws Exception {
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
-		httpRequest.setAuthorization("Bearer");
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
+        httpRequest.setAuthorization("Bearer");
 
-		try {
-			BearerAccessToken.parse(httpRequest);
-			fail();
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse(httpRequest));
 
-		} catch (OAuth2JSONParseException e) {
-
-			assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
-			assertThat(e.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
-		}
-	}
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode());
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(BearerTokenError.INVALID_REQUEST.getCode());
+    }
 
 	@Test
 	public void testParseException_validChars_TokenTypeMustBeBearer() {
-		
-		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
-		jsonObject.add("token_type", "some-token-type");
 
-		OAuth2JSONParseException pe = null;
-		try {
-			BearerAccessToken.parse(jsonObject.build());
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			pe = e;
-		}
-		assertThat(pe.getMessage()).isEqualTo("Token type must be Bearer");
-		assertThat(BearerTokenError.isDescriptionWithValidChars(pe.getMessage())).isTrue();
-	}
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("token_type", "some-token-type");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse(jsonObject.build()));
+
+        assertThat(exception.getMessage()).isEqualTo("Token type must be Bearer");
+
+        assertThat(BearerTokenError.isDescriptionWithValidChars(exception.getMessage())).isTrue();
+    }
 
 	@Test
 	public void testParseExpiresInError() {
-		
-		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
-		jsonObject.add("token_type", "Bearer");
-		jsonObject.add("access_token", "xyz");
-		jsonObject.add("expires_in", "invalid-time");
 
-		OAuth2JSONParseException pe = null;
-		try {
-			BearerAccessToken.parse(jsonObject.build());
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			pe = e;
-		}
-		assertThat(pe.getMessage()).isEqualTo("Invalid expires_in parameter, must be integer");
-		assertThat(BearerTokenError.isDescriptionWithValidChars(pe.getMessage())).isTrue();
-	}
-	
-	
-	// https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/276/bearer-access-token-invalid-error-message
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+        jsonObject.add("token_type", "Bearer");
+        jsonObject.add("access_token", "xyz");
+        jsonObject.add("expires_in", "invalid-time");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse(jsonObject.build()));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid expires_in parameter, must be integer");
+
+        assertThat(BearerTokenError.isDescriptionWithValidChars(exception.getMessage())).isTrue();
+
+    }
+
+
+    // https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/276/bearer-access-token-invalid-error-message
 	@Test
 	public void testParseHeader_tokenTypeMustBeBearer() {
 
-		OAuth2JSONParseException pe = null;
-		try {
-			BearerAccessToken.parse("XYZ aiXe4moo8aiguaL4ohnu3bod");
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			pe = e;
-		}
-		assertThat(pe.getMessage()).isEqualTo("Token type must be Bearer");
-		assertThat(BearerTokenError.isDescriptionWithValidChars(pe.getMessage())).isTrue();
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> BearerAccessToken.parse("XYZ aiXe4moo8aiguaL4ohnu3bod"));
+
+        assertThat(exception.getMessage()).isEqualTo("Token type must be Bearer");
+        assertThat(BearerTokenError.isDescriptionWithValidChars(exception.getMessage())).isTrue();
+    }
 }

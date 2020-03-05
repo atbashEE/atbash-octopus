@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,14 @@ import be.atbash.ee.security.octopus.subject.*;
 import be.atbash.ee.security.octopus.subject.support.DelegatingSubject;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class StandardSecurityManagerTest {
 
     @Mock
@@ -50,7 +51,7 @@ public class StandardSecurityManagerTest {
     @Captor
     private ArgumentCaptor<SubjectContext> subjectContextArgumentCaptor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         securityManager = new StandardSecurityManager(subjectFactoryMock, octopusRealmMock);
     }
@@ -81,18 +82,15 @@ public class StandardSecurityManagerTest {
         assertThat(data).isEqualTo(subject);
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void login_authenticationException() {
 
         AuthenticationToken token = new UsernamePasswordToken("Atbash", "secret");
 
         when(octopusRealmMock.authenticate(token)).thenThrow(new AuthenticationException());
 
-        try {
-            securityManager.login(null, token);
-        } finally {
-            verifyNoMoreInteractions(subjectFactoryMock);
-        }
+        Assertions.assertThrows(AuthenticationException.class, () -> securityManager.login(null, token));
+        verifyNoMoreInteractions(subjectFactoryMock);
 
         // FIXME test onFailedLogin event when implemented
     }

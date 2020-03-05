@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,27 +29,27 @@ import be.atbash.util.BeanManagerFake;
 import org.apache.deltaspike.security.api.authorization.AbstractAccessDecisionVoter;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ComponentAuthorizationServiceTest {
 
     private static final String MY_PERMISSION = "myPermission";
@@ -82,7 +82,7 @@ public class ComponentAuthorizationServiceTest {
     @Mock
     private SecurityViolationInfoProducer securityViolationInfoProducerMock;
 
-    @Before
+    @BeforeEach
     public void setup() {
         service = new ComponentAuthorizationService();
 
@@ -96,17 +96,17 @@ public class ComponentAuthorizationServiceTest {
         beanManagerFake.registerBean(subjectMock, Subject.class);
         beanManagerFake.registerBean(securityViolationInfoProducerMock, SecurityViolationInfoProducer.class);
 
-        when(myPermissionVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(new HashSet<SecurityViolation>());
+        lenient().when(myPermissionVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(new HashSet<SecurityViolation>());
 
         Set<SecurityViolation> violations = new HashSet<>();
         violations.add(securityViolationMock);
-        when(notMyPermissionVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(violations);
+        lenient().when(notMyPermissionVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(violations);
 
-        when(myRoleVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(new HashSet<SecurityViolation>());
+        lenient().when(myRoleVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(new HashSet<SecurityViolation>());
 
         violations = new HashSet<>();
         violations.add(securityViolationMock);
-        when(notMyRoleVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(violations);
+        lenient().when(notMyRoleVoterMock.checkPermission(ArgumentMatchers.any(AccessDecisionVoterContext.class))).thenReturn(violations);
 
     }
 
@@ -115,7 +115,7 @@ public class ComponentAuthorizationServiceTest {
         service.init();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }

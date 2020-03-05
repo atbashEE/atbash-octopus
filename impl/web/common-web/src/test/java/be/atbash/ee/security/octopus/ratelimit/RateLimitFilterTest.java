@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ package be.atbash.ee.security.octopus.ratelimit;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RateLimitFilterTest {
 
     private static final String SOMEPATH = "/somepath";
@@ -53,7 +54,7 @@ public class RateLimitFilterTest {
 
     private RateLimitFilter filter;
 
-    @Before
+    @BeforeEach
     public void setup() {
         filter = new RateLimitFilter();
         filter.initInstance();
@@ -69,9 +70,9 @@ public class RateLimitFilterTest {
         assertThat(rateLimiters.get(SOMEPATH)).isNotNull();
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void processPathConfig_invalidConfig() {
-        filter.processPathConfig(SOMEPATH, "1/1s, 10/1m");
+        Assertions.assertThrows(ConfigurationException.class, () -> filter.processPathConfig(SOMEPATH, "1/1s, 10/1m"));
     }
 
     @Test

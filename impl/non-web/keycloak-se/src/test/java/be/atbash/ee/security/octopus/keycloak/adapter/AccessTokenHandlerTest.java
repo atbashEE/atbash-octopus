@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,9 @@ import be.atbash.ee.security.octopus.keys.selector.SecretKeyType;
 import be.atbash.ee.security.octopus.keys.selector.filter.SecretKeyTypeKeyFilter;
 import be.atbash.ee.security.octopus.nimbus.jwk.KeyType;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessTokenResponse;
@@ -54,7 +55,7 @@ public class AccessTokenHandlerTest {
 
     private TestLogger logger = TestLoggerFactory.getTestLogger(AccessTokenHandler.class);
 
-    @After
+    @AfterEach
     public void clearLoggers() {
         TestLoggerFactory.clear();
     }
@@ -96,7 +97,7 @@ public class AccessTokenHandlerTest {
         assertThat(user.getClientSession()).isEqualTo(CLIENT_SESSION);
     }
 
-    @Test(expected = OIDCAuthenticationException.class)
+    @Test
     public void extractUser_AccessTokenValidationProblem() {
 
         AccessToken accessToken = defineAccessToken();
@@ -125,16 +126,13 @@ public class AccessTokenHandlerTest {
         // Create a KeycloakDeployment dummy.
         KeycloakDeployment deployment = defineKeycloakDeployment(atbashKeys);
 
-        try {
-            AccessTokenHandler.extractUser(deployment, tokenResponse);
-        } finally {
-            assertThat(logger.getLoggingEvents()).hasSize(1);
-            assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Failed verification of token: Token user was null.");
-        }
+        Assertions.assertThrows(OIDCAuthenticationException.class, () -> AccessTokenHandler.extractUser(deployment, tokenResponse));
+        assertThat(logger.getLoggingEvents()).hasSize(1);
+        assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Failed verification of token: Token user was null.");
 
     }
 
-    @Test(expected = OIDCAuthenticationException.class)
+    @Test
     public void extractUser_IdTokenInvalid() {
 
         AccessToken accessToken = defineAccessToken();
@@ -159,16 +157,14 @@ public class AccessTokenHandlerTest {
         // Create a KeycloakDeployment dummy.
         KeycloakDeployment deployment = defineKeycloakDeployment(atbashKeys);
 
-        try {
-            AccessTokenHandler.extractUser(deployment, tokenResponse);
-        } finally {
-            assertThat(logger.getLoggingEvents()).hasSize(1);
-            assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Failed verification of token: java.lang.IllegalArgumentException: Parsing error");
-        }
+        Assertions.assertThrows(OIDCAuthenticationException.class, () -> AccessTokenHandler.extractUser(deployment, tokenResponse));
+
+        assertThat(logger.getLoggingEvents()).hasSize(1);
+        assertThat(logger.getLoggingEvents().get(0).getMessage()).isEqualTo("Failed verification of token: java.lang.IllegalArgumentException: Parsing error");
 
     }
 
-    @Test(expected = OIDCAuthenticationException.class)
+    @Test
     public void extractUser_StaleToken() {
 
         AccessToken accessToken = defineAccessToken();
@@ -197,18 +193,16 @@ public class AccessTokenHandlerTest {
         KeycloakDeployment deployment = defineKeycloakDeployment(atbashKeys);
         deployment.setNotBefore(100);  // token issuedAt has 0 as time, so it is older and trigger exception.
 
-        try {
-            AccessTokenHandler.extractUser(deployment, tokenResponse);
-        } finally {
-            assertThat(logger.getLoggingEvents()).hasSize(2);
+        Assertions.assertThrows(OIDCAuthenticationException.class, () -> AccessTokenHandler.extractUser(deployment, tokenResponse));
 
-            // 0 debug message validation of tokens went OK.
-            assertThat(logger.getLoggingEvents().get(0).getLevel()).isEqualTo(Level.DEBUG);
+        assertThat(logger.getLoggingEvents()).hasSize(2);
 
-            // 1 Error
-            assertThat(logger.getLoggingEvents().get(1).getLevel()).isEqualTo(Level.ERROR);
-            assertThat(logger.getLoggingEvents().get(1).getMessage()).isEqualTo("Stale token");
-        }
+        // 0 debug message validation of tokens went OK.
+        assertThat(logger.getLoggingEvents().get(0).getLevel()).isEqualTo(Level.DEBUG);
+
+        // 1 Error
+        assertThat(logger.getLoggingEvents().get(1).getLevel()).isEqualTo(Level.ERROR);
+        assertThat(logger.getLoggingEvents().get(1).getMessage()).isEqualTo("Stale token");
 
     }
 
@@ -229,13 +223,13 @@ public class AccessTokenHandlerTest {
         assertThat(user.getClientSession()).isNull();
     }
 
-    @Test(expected = OIDCAuthenticationException.class)
+    @Test
     public void extractUser_missingIdToken() {
 
         AccessToken accessToken = defineAccessToken();
 
         String token = "This is the original Keycloak token. Under normal situations it is a JWT";
-        AccessTokenHandler.extractUser(accessToken, null, token);
+        Assertions.assertThrows(OIDCAuthenticationException.class, () -> AccessTokenHandler.extractUser(accessToken, null, token));
 
     }
 

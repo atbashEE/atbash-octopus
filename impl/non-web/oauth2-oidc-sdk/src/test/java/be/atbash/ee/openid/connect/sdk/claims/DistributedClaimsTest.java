@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package be.atbash.ee.openid.connect.sdk.claims;
 
 import be.atbash.ee.oauth2.sdk.token.AccessToken;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -27,7 +28,6 @@ import java.net.URI;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class DistributedClaimsTest {
@@ -139,7 +139,7 @@ public class DistributedClaimsTest {
     }
 
     @Test
-    @Ignore // FIXME test fails, so check if required by Octopus and Fix
+    @Disabled // FIXME test fails, so check if required by Octopus and Fix
     public void testMergeTwoSources() {
 
         String sourceID1 = "src1";
@@ -190,55 +190,50 @@ public class DistributedClaimsTest {
     @Test
     public void testRejectNullSourceID() {
 
-        try {
-            new DistributedClaims(null, Collections.singleton("score"), URI.create("https://provider.com"), new BearerAccessToken());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DistributedClaims(null, Collections.singleton("score"), URI.create("https://provider.com"), new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
+
     }
 
     @Test
     public void testRejectEmptySourceID() {
 
-        try {
-            new DistributedClaims("", Collections.singleton("score"), URI.create("https://provider.com"), new BearerAccessToken());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DistributedClaims("", Collections.singleton("score"), URI.create("https://provider.com"), new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
+
     }
 
     @Test
     public void testRejectNullNames() {
 
-        try {
-            new DistributedClaims("src1", null, URI.create("https://provider.com"), new BearerAccessToken());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claim names must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DistributedClaims("src1", null, URI.create("https://provider.com"), new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claim names must not be null or empty");
+
     }
 
     @Test
     public void testRejectEmptyNames() {
 
-        try {
-            new DistributedClaims("src1", Collections.<String>emptySet(), URI.create("https://provider.com"), new BearerAccessToken());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claim names must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DistributedClaims("src1", Collections.emptySet(), URI.create("https://provider.com"), new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claim names must not be null or empty");
+
     }
 
     @Test
     public void testRejectNullEndpoint() {
 
-        try {
-            new DistributedClaims("src1", Collections.singleton("score"), null, new BearerAccessToken());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claims source URI must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DistributedClaims("src1", Collections.singleton("score"), null, new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claims source URI must not be null");
+
     }
 }

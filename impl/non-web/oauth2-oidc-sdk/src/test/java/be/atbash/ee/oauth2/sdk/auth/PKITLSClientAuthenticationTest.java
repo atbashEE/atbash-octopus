@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 package be.atbash.ee.oauth2.sdk.auth;
 
 
-
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.http.X509CertificateGenerator;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class PKITLSClientAuthenticationTest  {
@@ -142,64 +141,53 @@ public class PKITLSClientAuthenticationTest  {
 	@Test
 	public void testParse_missingPostEntityBody()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		
-		try {
-			PKITLSClientAuthentication.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing HTTP POST request entity body");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PKITLSClientAuthentication.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing HTTP POST request entity body");
+
+    }
 
 	@Test
 	public void testParse_missingClientID()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setQuery("a=b");
-		
-		try {
-			PKITLSClientAuthentication.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing client_id parameter");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setQuery("a=b");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PKITLSClientAuthentication.parse(httpRequest));
+        assertThat(exception.getMessage()).isEqualTo("Missing client_id parameter");
+
+    }
 
 	@Test
 	public void testParse_emptyClientID()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setQuery("client_id=");
-		
-		try {
-			PKITLSClientAuthentication.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing client_id parameter");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setQuery("client_id=");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PKITLSClientAuthentication.parse(httpRequest));
+        assertThat(exception.getMessage()).isEqualTo("Missing client_id parameter");
+
+    }
 
 	@Test
 	public void testParse_missingClientCertificate()
 		throws Exception {
-		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		httpRequest.setQuery("client_id=123");
-		
-		try {
-			PKITLSClientAuthentication.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing client X.509 certificate");
-		}
-	}
+
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        httpRequest.setQuery("client_id=123");
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PKITLSClientAuthentication.parse(httpRequest));
+        assertThat(exception.getMessage()).isEqualTo("Missing client X.509 certificate");
+
+    }
 
 	@Test
 	public void testParse_ok()

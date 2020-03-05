@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,14 @@ import be.atbash.util.exception.AtbashIllegalActionException;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionState;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
 import org.apache.deltaspike.security.api.authorization.SecurityViolation;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GenericRoleVoterTest {
     private BeanManagerFake beanManagerFake;
 
@@ -55,13 +56,13 @@ public class GenericRoleVoterTest {
     @Mock
     private SecurityViolationInfoProducer securityViolationInfoProducerMock;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
         beanManagerFake.registerBean(subjectMock, Subject.class);
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }
@@ -81,20 +82,20 @@ public class GenericRoleVoterTest {
         verify(subjectMock).checkPermission(any(Permission.class)); // We can assume it is the permission we used in the createInstance
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void checkPermission_createInstance_illegalSetNamedPermission() {
         beanManagerFake.endRegistration();
 
         ApplicationRole role = new ApplicationRole("JUnit");
         GenericRoleVoter voter = GenericRoleVoter.createInstance(role);
-        voter.setNamedRole(role);
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> voter.setNamedRole(role));
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void checkPermission_createInstance_nullPermission() {
         beanManagerFake.endRegistration();
 
-        GenericRoleVoter.createInstance((ApplicationRole) null);
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> GenericRoleVoter.createInstance((ApplicationRole) null));
     }
 
     @Test
@@ -132,14 +133,14 @@ public class GenericRoleVoterTest {
         verify(subjectMock).checkPermission(any(Permission.class)); // We can assume it is the permission we used in the createInstane
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void checkPermission_newInstance_missingSetNamedPermission() {
         beanManagerFake.endRegistration();
 
         GenericRoleVoter voter = new GenericRoleVoter();
 
         AccessDecisionVoterContext context = new GenericRoleVoterTest.TestContext();
-        voter.checkPermission(context);
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> voter.checkPermission(context));
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,12 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.oauth.OAuth20Service;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -39,7 +40,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GithubInfoProviderTest {
 
     @Mock
@@ -80,38 +81,36 @@ public class GithubInfoProviderTest {
 
     }
 
-    @Test(expected = UnauthenticatedException.class)
+    @Test
     public void retrieveUserInfo_unauthenticated() throws InterruptedException, ExecutionException, IOException {
         configureMocks();
         when(jsonProcessorMock.extractGithubUser(anyString())).thenThrow(UnauthenticatedException.class);
 
         OAuth2AccessToken token = new OAuth2AccessToken("access", "raw");
 
-        infoProvider.retrieveUserInfo(token, servletRequestMock);
+        Assertions.assertThrows(UnauthenticatedException.class, () -> infoProvider.retrieveUserInfo(token, servletRequestMock));
     }
 
-    @Test(expected = AtbashUnexpectedException.class)
+    @Test
     public void retrieveUserInfo_unexpected() throws InterruptedException, ExecutionException, IOException {
         configureMocks();
         when(jsonProcessorMock.extractGithubUser(anyString())).thenThrow(AtbashUnexpectedException.class);
 
         OAuth2AccessToken token = new OAuth2AccessToken("access", "raw");
 
-        infoProvider.retrieveUserInfo(token, servletRequestMock);
+        Assertions.assertThrows(AtbashUnexpectedException.class, () -> infoProvider.retrieveUserInfo(token, servletRequestMock));
     }
 
-    @Test(expected = AtbashUnexpectedException.class)
+    @Test
     public void retrieveUserInfo_IOException() throws InterruptedException, ExecutionException, IOException {
         when(serviceProducerMock.createOAuthService(servletRequestMock, null)).thenReturn(oauthServiceMock);
         when(oauthServiceMock.execute(any(OAuthRequest.class))).thenThrow(IOException.class);
 
         OAuth2AccessToken token = new OAuth2AccessToken("access", "raw");
 
-        try {
-            infoProvider.retrieveUserInfo(token, servletRequestMock);
-        } finally {
-            verify(jsonProcessorMock, never()).extractGithubUser(anyString());
-        }
+        Assertions.assertThrows(AtbashUnexpectedException.class, () -> infoProvider.retrieveUserInfo(token, servletRequestMock));
+        verify(jsonProcessorMock, never()).extractGithubUser(anyString());
+
     }
 
 

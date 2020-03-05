@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 package be.atbash.ee.security.octopus.subject;
 
 import be.atbash.ee.security.octopus.util.onlyduring.WrongExecutionContextException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 
 public class UserPrincipalTest {
 
@@ -31,18 +31,18 @@ public class UserPrincipalTest {
         principal.addUserInfo("key", "value");
     }
 
-    @Test(expected = WrongExecutionContextException.class)
+    @Test
     public void addUserInfo_wrong() {
         UserPrincipal principal = new UserPrincipal();
-        principal.addUserInfo("octopus.key", "value");
+        Assertions.assertThrows(WrongExecutionContextException.class, () -> principal.addUserInfo("octopus.key", "value"));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     // test immutable return of getInfo();
     public void getUserInfo() {
         UserPrincipal principal = new UserPrincipal();
 
         Map<String, Serializable> map = principal.getInfo();
-        map.put("key", "value");
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> map.put("key", "value"));
     }
 }

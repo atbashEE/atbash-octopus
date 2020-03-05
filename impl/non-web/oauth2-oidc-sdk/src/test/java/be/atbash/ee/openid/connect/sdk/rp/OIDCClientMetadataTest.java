@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.EncryptionMethod;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -39,7 +40,6 @@ import java.net.URL;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -489,14 +489,13 @@ public class OIDCClientMetadataTest {
         JsonObjectBuilder obuilder = Json.createObjectBuilder();
         obuilder.add("application_type", "xyz");
 
-        try {
-            OIDCClientMetadata.parse(obuilder.build());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected value of JSON object member with key \"application_type\"");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_CLIENT_METADATA.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid client metadata field: Unexpected value of JSON object member with key \"application_type\"");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                OIDCClientMetadata.parse(obuilder.build()));
+
+        assertThat(exception.getMessage()).isEqualTo("Unexpected value of JSON object member with key \"application_type\"");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_CLIENT_METADATA.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid client metadata field: Unexpected value of JSON object member with key \"application_type\"");
+
     }
 
     @Test
@@ -504,19 +503,17 @@ public class OIDCClientMetadataTest {
 
         OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
 
-        try {
-            clientMetadata.setSectorIDURI(URI.create("http://example.com/callbacks.json"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The URI must have a https scheme");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                clientMetadata.setSectorIDURI(URI.create("http://example.com/callbacks.json")));
 
-        try {
-            clientMetadata.setSectorIDURI(URI.create("https:///callbacks.json"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The URI must contain a host component");
-        }
+        assertThat(exception.getMessage()).isEqualTo("The URI must have a https scheme");
+
+
+        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                clientMetadata.setSectorIDURI(URI.create("https:///callbacks.json")));
+
+        assertThat(exception.getMessage()).isEqualTo("The URI must contain a host component");
+
     }
 
     @Test

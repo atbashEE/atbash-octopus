@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ import be.atbash.util.TestReflectionUtils;
 import net.jadler.Jadler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.SecureRandom;
 
@@ -39,7 +39,7 @@ import static net.jadler.Jadler.port;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TokenRequestorTest {
 
     @Mock
@@ -50,14 +50,14 @@ public class TokenRequestorTest {
 
     private TokenRequestor requestor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws NoSuchFieldException {
         Jadler.initJadler();
         // TokenRequestor is a singleton.
         TestReflectionUtils.resetOf(TokenRequestor.class, "INSTANCE");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.authz.AuthorizationInfo;
 import be.atbash.ee.security.octopus.authz.TokenBasedAuthorizationInfoProvider;
 import be.atbash.ee.security.octopus.token.AuthorizationToken;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.IDToken;
 
@@ -38,13 +38,13 @@ public class KeycloakUserTokenAuthorizationProviderTest {
 
     private KeycloakUserTokenAuthorizationProvider authorizationProvider = new KeycloakUserTokenAuthorizationProvider();
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         System.setProperty("atbash.utils.cdi.check", "false");
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         TestConfig.resetConfig();
     }

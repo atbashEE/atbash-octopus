@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,29 @@ package be.atbash.ee.oauth2.sdk.as;
 
 import be.atbash.ee.oauth2.sdk.GeneralException;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static net.jadler.Jadler.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class AuthorizationServerMetadataResolveTest {
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         initJadler();
     }
 
-
-    @After
+    @AfterEach
     public void tearDown() {
         closeJadler();
     }
-
 
     @Test
     public void testResolveOK()
@@ -114,8 +112,7 @@ public class AuthorizationServerMetadataResolveTest {
 
 
     @Test
-    public void testResolveInvalidMetadata()
-            throws Exception {
+    public void testResolveInvalidMetadata() {
 
         Issuer issuer = new Issuer("http://localhost:" + port());
 
@@ -127,12 +124,10 @@ public class AuthorizationServerMetadataResolveTest {
                 .withContentType("application/json")
                 .withBody("{}");
 
-        try {
-            AuthorizationServerMetadata.resolve(issuer);
-            fail();
-        } catch (GeneralException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JSON object member with key \"issuer\"");
-        }
+        GeneralException exception = Assertions.assertThrows(GeneralException.class, () -> AuthorizationServerMetadata.resolve(issuer));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing JSON object member with key \"issuer\"");
+
     }
 
 
@@ -150,12 +145,10 @@ public class AuthorizationServerMetadataResolveTest {
                 .withContentType("text/plain")
                 .withBody("Not Found");
 
-        try {
-            AuthorizationServerMetadata.resolve(issuer);
-            fail();
-        } catch (IOException e) {
-            assertThat(e.getMessage()).isEqualTo("Couldn't download OAuth 2.0 Authorization Server metadata from http://localhost:" + port() + "/.well-known/oauth-authorization-server: Status code 404");
-        }
+        IOException exception = Assertions.assertThrows(IOException.class, () -> AuthorizationServerMetadata.resolve(issuer));
+
+        assertThat(exception.getMessage()).isEqualTo("Couldn't download OAuth 2.0 Authorization Server metadata from http://localhost:" + port() + "/.well-known/oauth-authorization-server: Status code 404");
+
     }
 
 
@@ -176,11 +169,8 @@ public class AuthorizationServerMetadataResolveTest {
                 .withContentType("application/json")
                 .withBody(metadata.toJSONObject().build().toString());
 
-        try {
-            AuthorizationServerMetadata.resolve(issuer);
-            fail();
-        } catch (GeneralException e) {
-            assertThat(e.getMessage()).isEqualTo("The returned issuer doesn't match the expected: http://localhost/abcdef");
-        }
+        GeneralException exception = Assertions.assertThrows(GeneralException.class, () -> AuthorizationServerMetadata.resolve(issuer));
+        assertThat(exception.getMessage()).isEqualTo("The returned issuer doesn't match the expected: http://localhost/abcdef");
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,15 +27,14 @@ import be.atbash.ee.openid.connect.sdk.Prompt;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class AuthorizationRequestTest {
@@ -564,15 +563,13 @@ public class AuthorizationRequestTest {
                 "&state=xyz" +
                 "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
 
-        try {
-            AuthorizationRequest.parse(requestURI);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"client_id\" parameter");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(requestURI));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"client_id\" parameter");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -585,15 +582,13 @@ public class AuthorizationRequestTest {
                 "&state=xyz" +
                 "&redirect_uri=%3A");
 
-        try {
-            AuthorizationRequest.parse(requestURI);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage().startsWith("Invalid \"redirect_uri\" parameter")).isTrue();
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription().startsWith("Invalid request: Invalid \"redirect_uri\" parameter")).isTrue();
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(requestURI));
+
+        assertThat(exception.getMessage().startsWith("Invalid \"redirect_uri\" parameter")).isTrue();
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription().startsWith("Invalid request: Invalid \"redirect_uri\" parameter")).isTrue();
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
     @Test
@@ -606,15 +601,13 @@ public class AuthorizationRequestTest {
                 "&state=xyz" +
                 "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
 
-        try {
-            AuthorizationRequest.parse(requestURI);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"response_type\" parameter");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"response_type\" parameter");
-            assertThat(e.getErrorObject().getURI()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(requestURI));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"response_type\" parameter");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"response_type\" parameter");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
     }
 
 
@@ -711,40 +704,34 @@ public class AuthorizationRequestTest {
     @Test
     public void testBuilderWithResource_rejectNonAbsoluteURI() {
 
-        try {
-            new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
-                    .resources(URI.create("https:///api/v1"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Resource URI must be absolute and with no query or fragment: https:///api/v1");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
+                .resources(URI.create("https:///api/v1"))
+                .build());
+
+        assertThat(exception.getMessage()).isEqualTo("Resource URI must be absolute and with no query or fragment: https:///api/v1");
+
     }
 
     @Test
     public void testBuilderWithResource_rejectURIWithQuery() {
 
-        try {
-            new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
-                    .resources(URI.create("https://rs1.com/api/v1?query"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Resource URI must be absolute and with no query or fragment: https://rs1.com/api/v1?query");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
+                .resources(URI.create("https://rs1.com/api/v1?query"))
+                .build());
+
+        assertThat(exception.getMessage()).isEqualTo("Resource URI must be absolute and with no query or fragment: https://rs1.com/api/v1?query");
+
     }
 
     @Test
     public void testBuilderWithResource_rejectURIWithFragment() {
 
-        try {
-            new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
-                    .resources(URI.create("https://rs1.com/api/v1#fragment"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Resource URI must be absolute and with no query or fragment: https://rs1.com/api/v1#fragment");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
+                .resources(URI.create("https://rs1.com/api/v1#fragment"))
+                .build());
+
+        assertThat(exception.getMessage()).isEqualTo("Resource URI must be absolute and with no query or fragment: https://rs1.com/api/v1#fragment");
+
     }
 
     @Test
@@ -769,51 +756,43 @@ public class AuthorizationRequestTest {
     @Test
     public void testParse_rejectResourceURIWithHostNotAbsolute() {
 
-        try {
-            AuthorizationRequest.parse(URI.create("https://authorization-server.example.com" +
-                    "/as/authorization.oauth2?response_type=token" +
-                    "&client_id=s6BhdRkqt3&state=laeb" +
-                    "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb" +
-                    "&resource=https%3A%2F%2F%2F"));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https:///");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(URI.create("https://authorization-server.example.com" +
+                "/as/authorization.oauth2?response_type=token" +
+                "&client_id=s6BhdRkqt3&state=laeb" +
+                "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb" +
+                "&resource=https%3A%2F%2F%2F")));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https:///");
+
     }
 
     @Test
-    public void testParse_rejectResourceURIWithQuery()
-            throws UnsupportedEncodingException {
+    public void testParse_rejectResourceURIWithQuery() {
 
-        try {
-            AuthorizationRequest.parse(URI.create("https://authorization-server.example.com" +
-                    "/as/authorization.oauth2?response_type=token" +
-                    "&client_id=s6BhdRkqt3&state=laeb" +
-                    "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb" +
-                    "&resource=" + URLEncoder.encode("https://rs.example.com/?query", "utf-8")));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/?query");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(URI.create("https://authorization-server.example.com" +
+                "/as/authorization.oauth2?response_type=token" +
+                "&client_id=s6BhdRkqt3&state=laeb" +
+                "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb" +
+                "&resource=" + URLEncoder.encode("https://rs.example.com/?query", "utf-8"))));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/?query");
+
     }
 
     @Test
-    public void testParse_rejectResourceURIWithFragment()
-            throws UnsupportedEncodingException {
+    public void testParse_rejectResourceURIWithFragment() {
 
-        try {
-            AuthorizationRequest.parse(URI.create("https://authorization-server.example.com" +
-                    "/as/authorization.oauth2?response_type=token" +
-                    "&client_id=s6BhdRkqt3&state=laeb" +
-                    "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb" +
-                    "&resource=" + URLEncoder.encode("https://rs.example.com/#fragment", "utf-8")));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/#fragment");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(URI.create("https://authorization-server.example.com" +
+                "/as/authorization.oauth2?response_type=token" +
+                "&client_id=s6BhdRkqt3&state=laeb" +
+                "&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb" +
+                "&resource=" + URLEncoder.encode("https://rs.example.com/#fragment", "utf-8"))));
+
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_RESOURCE);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid \"resource\" parameter: Must be an absolute URI and with no query or fragment: https://rs.example.com/#fragment");
+
     }
 
     @Test
@@ -951,19 +930,12 @@ public class AuthorizationRequestTest {
         assertThat(ar.getResponseType()).isEqualTo(rt);
         assertThat(ar.getClientID()).isEqualTo(clientID);
 
-        try {
-            new AuthorizationRequest.Builder(requestURI).responseType(null);
-            fail("Core response_type when set not null");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The response type must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new AuthorizationRequest.Builder(requestURI).responseType(null));
+        assertThat(exception.getMessage()).isEqualTo("The response type must not be null");
 
-        try {
-            new AuthorizationRequest.Builder(requestURI).clientID(null);
-            fail("Core client_id when set not null");
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The client ID must not be null");
-        }
+        IllegalArgumentException exception1 = Assertions.assertThrows(IllegalArgumentException.class, () -> new AuthorizationRequest.Builder(requestURI).clientID(null));
+        assertThat(exception1.getMessage()).isEqualTo("The client ID must not be null");
+
     }
 
     @Test
@@ -1136,23 +1108,17 @@ public class AuthorizationRequestTest {
     @Test
     public void testBuilder_nullRequestObject() {
 
-        try {
-            new AuthorizationRequest.Builder((JWT) null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The request object must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new AuthorizationRequest.Builder((JWT) null));
+        assertThat(exception.getMessage()).isEqualTo("The request object must not be null");
+
     }
 
     @Test
     public void testBuilder_nullRequestURI() {
 
-        try {
-            new AuthorizationRequest.Builder((URI) null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The request URI must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new AuthorizationRequest.Builder((URI) null));
+        assertThat(exception.getMessage()).isEqualTo("The request URI must not be null");
+
     }
 
     @Test
@@ -1242,17 +1208,15 @@ public class AuthorizationRequestTest {
 
         JWT requestObject = new PlainJWT(jwtClaimsSet);
 
-        try {
-            new AuthorizationRequest.Builder(requestObject)
-                    .endpointURI(endpointURI)
-                    .requestURI(URI.create("urn:requests:uogo3ora"))
-                    .build();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Either a request object or a request URI must be specified, but not both");
-            assertThat(e.getCause()).isInstanceOf(IllegalArgumentException.class);
-            assertThat(e.getCause().getMessage()).isEqualTo("Either a request object or a request URI must be specified, but not both");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> new AuthorizationRequest.Builder(requestObject)
+                .endpointURI(endpointURI)
+                .requestURI(URI.create("urn:requests:uogo3ora"))
+                .build());
+
+        assertThat(exception.getMessage()).isEqualTo("Either a request object or a request URI must be specified, but not both");
+        assertThat(exception.getCause()).isInstanceOf(IllegalArgumentException.class);
+        assertThat(exception.getCause().getMessage()).isEqualTo("Either a request object or a request URI must be specified, but not both");
+
     }
 
     @Test
@@ -1273,12 +1237,9 @@ public class AuthorizationRequestTest {
                 .endpointURI(endpointURI)
                 .build();
 
-        try {
-            ar.toJWTClaimsSet();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Cannot create nested JWT secured authorization request");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> ar.toJWTClaimsSet());
+        assertThat(exception.getMessage()).isEqualTo("Cannot create nested JWT secured authorization request");
+
     }
 
     @Test
@@ -1291,36 +1252,29 @@ public class AuthorizationRequestTest {
                 .endpointURI(endpointURI)
                 .build();
 
-        try {
-            ar.toJWTClaimsSet();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Cannot create nested JWT secured authorization request");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> ar.toJWTClaimsSet());
+        assertThat(exception.getMessage()).isEqualTo("Cannot create nested JWT secured authorization request");
+
     }
 
     @Test
     public void testParseInvalidRequestURI() {
 
-        try {
-            AuthorizationRequest.parse(URI.create("https://c2id.com/login?request_uri=%3A"));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"request_uri\" parameter: Expected scheme name at index 0: :");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(URI.create("https://c2id.com/login?request_uri=%3A")));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"request_uri\" parameter: Expected scheme name at index 0: :");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+
     }
 
     @Test
     public void testParseInvalidRequestObject() {
 
-        try {
-            AuthorizationRequest.parse(URI.create("https://c2id.com/login?request=abc"));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"request_object\" parameter: Invalid JWT serialization: Missing dot delimiter(s)");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(URI.create("https://c2id.com/login?request=abc")));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"request_object\" parameter: Invalid JWT serialization: Missing dot delimiter(s)");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+
     }
 
     @Test
@@ -1338,17 +1292,15 @@ public class AuthorizationRequestTest {
                 .toParameters();
         params.put("request_uri", Collections.singletonList(":"));
 
-        try {
-            AuthorizationRequest.parse(params);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"request_uri\" parameter: Expected scheme name at index 0: :");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"request_uri\" parameter: Expected scheme name at index 0: :");
-            assertThat(e.getClientID()).isEqualTo(clientID);
-            assertThat(e.getRedirectionURI()).isEqualTo(redirectionURI);
-            assertThat(e.getState()).isEqualTo(state);
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"request_uri\" parameter: Expected scheme name at index 0: :");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"request_uri\" parameter: Expected scheme name at index 0: :");
+        assertThat(exception.getClientID()).isEqualTo(clientID);
+        assertThat(exception.getRedirectionURI()).isEqualTo(redirectionURI);
+        assertThat(exception.getState()).isEqualTo(state);
+
     }
 
     @Test
@@ -1366,17 +1318,15 @@ public class AuthorizationRequestTest {
                 .toParameters();
         params.put("request", Collections.singletonList("abc"));
 
-        try {
-            AuthorizationRequest.parse(params);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"request_object\" parameter: Invalid JWT serialization: Missing dot delimiter(s)");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"request_object\" parameter: Invalid JWT serialization: Missing dot delimiter(s)");
-            assertThat(e.getClientID()).isEqualTo(clientID);
-            assertThat(e.getRedirectionURI()).isEqualTo(redirectionURI);
-            assertThat(e.getState()).isEqualTo(state);
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"request_object\" parameter: Invalid JWT serialization: Missing dot delimiter(s)");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"request_object\" parameter: Invalid JWT serialization: Missing dot delimiter(s)");
+        assertThat(exception.getClientID()).isEqualTo(clientID);
+        assertThat(exception.getRedirectionURI()).isEqualTo(redirectionURI);
+        assertThat(exception.getState()).isEqualTo(state);
+
     }
 
     @Test
@@ -1394,18 +1344,16 @@ public class AuthorizationRequestTest {
                 .toParameters();
         params.remove("response_type");
 
-        try {
-            AuthorizationRequest.parse(params);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"response_type\" parameter");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"response_type\" parameter");
-            assertThat(e.getClientID()).isEqualTo(clientID);
-            assertThat(e.getRedirectionURI()).isEqualTo(redirectionURI);
-            assertThat(e.getResponseMode()).isEqualTo(ResponseMode.QUERY);
-            assertThat(e.getState()).isEqualTo(e.getState());
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"response_type\" parameter");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"response_type\" parameter");
+        assertThat(exception.getClientID()).isEqualTo(clientID);
+        assertThat(exception.getRedirectionURI()).isEqualTo(redirectionURI);
+        assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.QUERY);
+        assertThat(exception.getState()).isEqualTo(state);
+
     }
 
     @Test
@@ -1419,18 +1367,16 @@ public class AuthorizationRequestTest {
                 .toParameters();
         params.remove("client_id");
 
-        try {
-            AuthorizationRequest.parse(params);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"client_id\" parameter");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
-            assertThat(e.getClientID()).isNull();
-            assertThat(e.getRedirectionURI()).isNull();
-            assertThat(e.getResponseMode()).isNull();
-            assertThat(e.getState()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"client_id\" parameter");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
+        assertThat(exception.getClientID()).isNull();
+        assertThat(exception.getRedirectionURI()).isNull();
+        assertThat(exception.getResponseMode()).isNull();
+        assertThat(exception.getState()).isNull();
+
     }
 
     @Test
@@ -1448,17 +1394,15 @@ public class AuthorizationRequestTest {
                 .toParameters();
         params.remove("client_id");
 
-        try {
-            AuthorizationRequest.parse(params);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing \"client_id\" parameter");
-            assertThat(e.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
-            assertThat(e.getClientID()).isNull();
-            assertThat(e.getRedirectionURI()).isNull();
-            assertThat(e.getResponseMode()).isNull();
-            assertThat(e.getState()).isNull();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationRequest.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing \"client_id\" parameter");
+        assertThat(exception.getErrorObject()).isEqualTo(OAuth2Error.INVALID_REQUEST);
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"client_id\" parameter");
+        assertThat(exception.getClientID()).isNull();
+        assertThat(exception.getRedirectionURI()).isNull();
+        assertThat(exception.getResponseMode()).isNull();
+        assertThat(exception.getState()).isNull();
+
     }
 }

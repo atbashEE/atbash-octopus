@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.PlainJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -41,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -173,12 +173,9 @@ public class LogoutRequestTest {
 
         URI endpoint = new URI("https://c2id.com/logout");
 
-        try {
-            new LogoutRequest(endpoint, idToken, postLogoutRedirectURI, null).toQueryString();
-            fail();
-        } catch (SerializeException e) {
-            // ok
-        }
+        Assertions.assertThrows(SerializeException.class, () ->
+                new LogoutRequest(endpoint, idToken, postLogoutRedirectURI, null).toQueryString());
+
     }
 
     @Test
@@ -189,12 +186,11 @@ public class LogoutRequestTest {
 
         URI endpoint = new URI("https://c2id.com/logout");
 
-        try {
-            new LogoutRequest(endpoint, idToken, null, new State());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The state parameter required a post-logout redirection URI");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new LogoutRequest(endpoint, idToken, null, new State()));
+
+        assertThat(exception.getMessage()).isEqualTo("The state parameter required a post-logout redirection URI");
+
     }
 
 

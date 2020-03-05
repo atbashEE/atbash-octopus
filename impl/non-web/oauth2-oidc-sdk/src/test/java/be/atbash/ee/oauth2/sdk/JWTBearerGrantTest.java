@@ -18,7 +18,6 @@ package be.atbash.ee.oauth2.sdk;
 
 import be.atbash.ee.oauth2.sdk.auth.Secret;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.Payload;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.DirectDecrypter;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.DirectEncrypter;
@@ -34,7 +33,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEObject;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -145,72 +144,64 @@ public class JWTBearerGrantTest  {
 	@Test
 	public void testParseInvalidGrantType() {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-			.subject("alice")
-			.build();
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                .subject("alice")
+                .build();
 
-		SignedJWT assertion = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
-		assertion.sign(new MACSigner(new Secret().getValueBytes()));
+        SignedJWT assertion = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+        assertion.sign(new MACSigner(new Secret().getValueBytes()));
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("invalid-grant"));
-		params.put("assertion", Collections.singletonList(assertion.serialize()));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("invalid-grant"));
+        params.put("assertion", Collections.singletonList(assertion.serialize()));
 
-		try {
-			JWTBearerGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be urn:ietf:params:oauth:grant-type:jwt-bearer");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> JWTBearerGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be urn:ietf:params:oauth:grant-type:jwt-bearer");
+
+    }
 
 	@Test
 	public void testParseMissingAssertion() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList(GrantType.JWT_BEARER.getValue()));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList(GrantType.JWT_BEARER.getValue()));
 
-		try {
-			JWTBearerGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"assertion\" parameter");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> JWTBearerGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"assertion\" parameter");
+
+    }
 
 	@Test
 	public void testParseInvalidJWTAssertion() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList(GrantType.JWT_BEARER.getValue()));
-		params.put("assertion", Collections.singletonList("invalid-jwt"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList(GrantType.JWT_BEARER.getValue()));
+        params.put("assertion", Collections.singletonList("invalid-jwt"));
 
-		try {
-			JWTBearerGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: The \"assertion\" is not a JWT");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> JWTBearerGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: The \"assertion\" is not a JWT");
+
+    }
 
 	@Test
 	public void testParseRejectPlainJWT() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList(GrantType.JWT_BEARER.getValue()));
-		params.put("assertion", Collections.singletonList(new PlainJWT(new JWTClaimsSet.Builder().subject("alice").build()).serialize()));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList(GrantType.JWT_BEARER.getValue()));
+        params.put("assertion", Collections.singletonList(new PlainJWT(new JWTClaimsSet.Builder().subject("alice").build()).serialize()));
 
-		try {
-			JWTBearerGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: The JWT assertion must not be unsecured (plain)");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> JWTBearerGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: The JWT assertion must not be unsecured (plain)");
+
+    }
 
 	@Test
 	public void testEncryptedJWT()

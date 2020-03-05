@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -76,6 +76,8 @@
         <slf4j.version>1.7.25</slf4j.version>
 
         <assertj.version>3.12.0</assertj.version>
+        <junit-jupiter.version>5.4.2</junit-jupiter.version>
+        <mockito-jupiter.version>3.3.0</mockito-jupiter.version>
 
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
     </properties>
@@ -117,16 +119,16 @@
     <dependencies>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.13.0</version>
+            <version>3.3.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -154,6 +156,12 @@
 
     <build>
         <plugins>
+            <plugin>
+                <!-- For JUnit 5 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.openid.connect.sdk.Nonce;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -116,12 +116,10 @@ public class IDTokenClaimsVerifierTest {
                 .issueTime(iat)
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JWT issuer (iss) claim");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing JWT issuer (iss) claim");
+
     }
 
     @Test
@@ -147,12 +145,10 @@ public class IDTokenClaimsVerifierTest {
                 .issueTime(iat)
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JWT subject (sub) claim");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing JWT subject (sub) claim");
+
     }
 
     @Test
@@ -178,12 +174,9 @@ public class IDTokenClaimsVerifierTest {
                 .issueTime(iat)
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JWT audience (aud) claim");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Missing JWT audience (aud) claim");
+
     }
 
     @Test
@@ -208,12 +201,9 @@ public class IDTokenClaimsVerifierTest {
                 .issueTime(iat)
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JWT expiration (exp) claim");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Missing JWT expiration (exp) claim");
+
     }
 
     @Test
@@ -238,12 +228,9 @@ public class IDTokenClaimsVerifierTest {
                 .expirationTime(exp)
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JWT issue time (iat) claim");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Missing JWT issue time (iat) claim");
+
     }
 
     @Test
@@ -271,12 +258,9 @@ public class IDTokenClaimsVerifierTest {
                 .issueTime(iat)
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JWT nonce (nonce) claim");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Missing JWT nonce (nonce) claim");
+
     }
 
     @Test
@@ -305,12 +289,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", nonce.getValue())
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected JWT issuer: https://other-issuer.com");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Unexpected JWT issuer: https://other-issuer.com");
+
     }
 
     @Test
@@ -339,12 +320,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", nonce.getValue())
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected JWT audience: [789]");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Unexpected JWT audience: [789]");
+
     }
 
     @Test
@@ -373,12 +351,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", nonce.getValue())
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected JWT audience: [456, 789]");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Unexpected JWT audience: [456, 789]");
+
     }
 
     @Test
@@ -408,12 +383,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", nonce.getValue())
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected JWT authorized party (azp) claim: 456");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Unexpected JWT authorized party (azp) claim: 456");
+
     }
 
     @Test
@@ -442,12 +414,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", nonce.getValue())
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Expired JWT");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Expired JWT");
+
     }
 
     @Test
@@ -476,12 +445,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", nonce.getValue())
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("JWT issue time ahead of current time");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("JWT issue time ahead of current time");
+
     }
 
     @Test
@@ -510,12 +476,9 @@ public class IDTokenClaimsVerifierTest {
                 .claim("nonce", "xxx")
                 .build();
 
-        try {
-            verifier.verify(claimsSet);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected JWT nonce (nonce) claim: xxx");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () -> verifier.verify(claimsSet));
+        assertThat(exception.getMessage()).isEqualTo("Unexpected JWT nonce (nonce) claim: xxx");
+
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ package be.atbash.ee.security.octopus.filter;
 import be.atbash.ee.security.octopus.WebConstants;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PathMatchingFilterTest {
 
     @Mock
@@ -46,7 +47,7 @@ public class PathMatchingFilterTest {
 
     private TestPathMatchingFilter filter;
 
-    @Before
+    @BeforeEach
     public void setup() throws IllegalAccessException {
         filter = new TestPathMatchingFilter();
         TestReflectionUtils.injectDependencies(filter, pathMatcherMock);
@@ -162,22 +163,22 @@ public class PathMatchingFilterTest {
         assertThat(filter.appliedPaths.get("/test")).isNullOrEmpty();
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void processPathConfig_noConfigValue_required() {
         filter.setRequiresPathConfiguration(true);
-        filter.processPathConfig("/test", null);
+        Assertions.assertThrows(ConfigurationException.class, () -> filter.processPathConfig("/test", null));
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void processPathConfig_emptyConfigValue_required() {
         filter.setRequiresPathConfiguration(true);
-        filter.processPathConfig("/test", "");
+        Assertions.assertThrows(ConfigurationException.class, () -> filter.processPathConfig("/test", ""));
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void processPathConfig_spacesConfigValue_required() {
         filter.setRequiresPathConfiguration(true);
-        filter.processPathConfig("/test", "    ");
+        Assertions.assertThrows(ConfigurationException.class, () -> filter.processPathConfig("/test", "    "));
     }
 
     private static class TestPathMatchingFilter extends PathMatchingFilter {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import net.jadler.Jadler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static be.atbash.ee.security.octopus.OctopusConstants.UPSTREAM_TOKEN;
 
@@ -29,14 +29,14 @@ public class CasRemoteLogoutTest {
 
     private CasRemoteLogout logout;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         logout = new CasRemoteLogout();
         Jadler.initJadler();
     }
 
 
-    @After
+    @AfterEach
     public void teardown() {
         TestConfig.resetConfig();
         Jadler.closeJadler();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@ package be.atbash.ee.security.octopus.sso.client.config;
 
 import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
 import java.util.Random;
@@ -31,7 +32,7 @@ public class OctopusSSOServerClientConfigurationTest {
 
     private Random random = new Random();
 
-    @After
+    @AfterEach
     public void tearDown() {
         TestConfig.resetConfig();
     }
@@ -46,18 +47,18 @@ public class OctopusSSOServerClientConfigurationTest {
         assertThat(secret).isEqualTo(value);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSSOClientSecret_tooShort() {
         byte[] value = new byte[31];
         random.nextBytes(value);
         TestConfig.addConfigValue("SSO.clientSecret", Base64.getUrlEncoder().withoutPadding().encodeToString(value));
 
-        configuration.getSSOClientSecret();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getSSOClientSecret());
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSSOClientSecret_notDefined() {
-        configuration.getSSOClientSecret();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getSSOClientSecret());
     }
 
     @Test
@@ -85,19 +86,19 @@ public class OctopusSSOServerClientConfigurationTest {
         assertThat(secret).isEqualTo(value);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSSOIdTokenSecret_tooShort() {
         byte[] value = new byte[31];
         random.nextBytes(value);
         TestConfig.addConfigValue("SSO.idTokenSecret", Base64.getUrlEncoder().withoutPadding().encodeToString(value));
 
-        configuration.getSSOIdTokenSecret();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getSSOIdTokenSecret());
 
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSSOIdTokenSecret_notDefined() {
-        configuration.getSSOIdTokenSecret();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getSSOIdTokenSecret());
     }
 
     @Test
@@ -123,9 +124,9 @@ public class OctopusSSOServerClientConfigurationTest {
         assertThat(configuration.getOctopusSSOServer()).isEqualTo("http://sso.server.org/root");
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSSOServer_missing() {
 
-        configuration.getOctopusSSOServer();
+        Assertions.assertThrows(ConfigurationException.class, () -> configuration.getOctopusSSOServer());
     }
 }

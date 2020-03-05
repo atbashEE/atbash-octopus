@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,10 @@ package be.atbash.ee.oauth2.sdk.id;
 
 
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
-import be.atbash.ee.security.octopus.nimbus.util.Base64Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Tests random state value generation.
@@ -43,15 +42,8 @@ public class StateTest {
     @Test
     public void testEmptyValue() {
 
-        try {
-            new State("");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new State(""));
 
-            fail("Failed to raise exception");
-
-        } catch (IllegalArgumentException e) {
-
-            // ok
-        }
     }
 
     @Test

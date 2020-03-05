@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.EncryptionMethod;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class AuthorizationServerMetadataTest {
@@ -167,12 +167,10 @@ public class AuthorizationServerMetadataTest {
         JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "a b c");
 
-        try {
-            AuthorizationServerMetadata.parse(jsonObject.build().toString());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Illegal character in path at index 1: a b c");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationServerMetadata.parse(jsonObject.build().toString()));
+
+        assertThat(exception.getMessage()).isEqualTo("Illegal character in path at index 1: a b c");
+
     }
 
     @Test
@@ -181,12 +179,9 @@ public class AuthorizationServerMetadataTest {
         JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "https://c2id.com?a=b");
 
-        try {
-            AuthorizationServerMetadata.parse(jsonObject.build().toString());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The issuer URI must be without a query component");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationServerMetadata.parse(jsonObject.build().toString()));
+        assertThat(exception.getMessage()).isEqualTo("The issuer URI must be without a query component");
+
     }
 
     @Test
@@ -195,12 +190,9 @@ public class AuthorizationServerMetadataTest {
         JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "https://c2id.com#abc");
 
-        try {
-            AuthorizationServerMetadata.parse(jsonObject.build().toString());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The issuer URI must be without a fragment component");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationServerMetadata.parse(jsonObject.build().toString()));
+        assertThat(exception.getMessage()).isEqualTo("The issuer URI must be without a fragment component");
+
     }
 
     @Test
@@ -208,26 +200,18 @@ public class AuthorizationServerMetadataTest {
 
         AuthorizationServerMetadata as = new AuthorizationServerMetadata(new Issuer("https://c2id.com"));
 
-        try {
-            as.setTokenEndpointJWSAlgs(Collections.singletonList(new JWSAlgorithm("none")));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The \"none\" algorithm is not accepted");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> as.setTokenEndpointJWSAlgs(Collections.singletonList(new JWSAlgorithm("none"))));
+        assertThat(exception.getMessage()).isEqualTo("The \"none\" algorithm is not accepted");
 
-        try {
-            as.setIntrospectionEndpointJWSAlgs(Collections.singletonList(new JWSAlgorithm("none")));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The \"none\" algorithm is not accepted");
-        }
+        IllegalArgumentException exception1 = Assertions.assertThrows(IllegalArgumentException.class, () -> as.setIntrospectionEndpointJWSAlgs(Collections.singletonList(new JWSAlgorithm("none"))));
+        assertThat(exception1.getMessage()).isEqualTo("The \"none\" algorithm is not accepted");
 
-        try {
-            as.setRevocationEndpointJWSAlgs(Collections.singletonList(new JWSAlgorithm("none")));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The \"none\" algorithm is not accepted");
-        }
+
+        IllegalArgumentException exception2 = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                as.setRevocationEndpointJWSAlgs(Collections.singletonList(new JWSAlgorithm("none"))));
+
+        assertThat(exception2.getMessage()).isEqualTo("The \"none\" algorithm is not accepted");
+
     }
 
     @Test

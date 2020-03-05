@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package be.atbash.ee.oauth2.sdk.client;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.auth.Secret;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -27,7 +28,6 @@ import javax.json.JsonObjectBuilder;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -54,12 +54,7 @@ public class ClientCredentialsParserTest {
     @Test
     public void testNoIDParseException() {
 
-        try {
-            ClientCredentialsParser.parseID(Json.createObjectBuilder().build());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            // ok
-        }
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientCredentialsParser.parseID(Json.createObjectBuilder().build()));
     }
 
     @Test

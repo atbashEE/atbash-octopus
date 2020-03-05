@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package be.atbash.ee.openid.connect.sdk.op;
 import be.atbash.ee.oauth2.sdk.SerializeException;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class OIDCProviderConfigurationRequestTest {
 
@@ -50,11 +50,10 @@ public class OIDCProviderConfigurationRequestTest {
     @Test
     public void testConstructFromInvalidIssuer() {
 
-        try {
-            new OIDCProviderConfigurationRequest(new Issuer("c2id.com")).toHTTPRequest();
-            fail();
-        } catch (SerializeException e) {
-            assertThat(e.getMessage()).isEqualTo("URI is not absolute");
-        }
+        SerializeException exception = Assertions.assertThrows(SerializeException.class, () ->
+                new OIDCProviderConfigurationRequest(new Issuer("c2id.com")).toHTTPRequest());
+
+        assertThat(exception.getMessage()).isEqualTo("URI is not absolute");
+
     }
 }

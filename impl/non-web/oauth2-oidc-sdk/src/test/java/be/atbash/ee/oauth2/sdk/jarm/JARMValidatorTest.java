@@ -44,7 +44,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.proc.BadJWTException;
 import be.atbash.ee.security.octopus.nimbus.util.ByteUtils;
 import be.atbash.ee.security.octopus.util.HmacSecretUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.security.KeyPair;
@@ -54,7 +55,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class JARMValidatorTest {
     private static final RSAKey SERVER_RSA_JWK;
@@ -86,8 +86,7 @@ public class JARMValidatorTest {
 
 
     @Test
-    public void testRejectPlain()
-            throws Exception {
+    public void testRejectPlain() {
 
         Issuer iss = new Issuer("https://c2id.com");
         ClientID clientID = new ClientID("123");
@@ -102,12 +101,9 @@ public class JARMValidatorTest {
 
         PlainJWT jarm = new PlainJWT(claimsSet);
 
-        try {
-            jarmValidator.validate(jarm);
-            fail();
-        } catch (BadJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("The JWT must not be plain (unsecured)");
-        }
+        BadJWTException exception = Assertions.assertThrows(BadJWTException.class, () ->
+                jarmValidator.validate(jarm));
+        assertThat(exception.getMessage()).isEqualTo("The JWT must not be plain (unsecured)");
     }
 
     @Test
@@ -165,12 +161,8 @@ public class JARMValidatorTest {
         SignedJWT jarm = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
         jarm.sign(new RSASSASigner(invalidRSAJWK.toRSAPrivateKey()));
 
-        try {
-            jarmValidator.validate(jarm);
-            fail();
-        } catch (InvalidJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Signed JWT rejected: Invalid signature");
-        }
+        InvalidJWTException exception = Assertions.assertThrows(InvalidJWTException.class, () -> jarmValidator.validate(jarm));
+        assertThat(exception.getMessage()).isEqualTo("Signed JWT rejected: Invalid signature");
     }
 
     @Test
@@ -226,12 +218,9 @@ public class JARMValidatorTest {
         SignedJWT jarm = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
         jarm.sign(new MACSigner(new Secret(ByteUtils.byteLength(256)).getValueBytes()));
 
-        try {
-            jarmValidator.validate(jarm);
-            fail();
-        } catch (InvalidJWTException e) {
-            assertThat(e.getMessage()).isEqualTo("Signed JWT rejected: Invalid signature");
-        }
+        InvalidJWTException exception = Assertions.assertThrows(InvalidJWTException.class, () ->
+                jarmValidator.validate(jarm));
+        assertThat(exception.getMessage()).isEqualTo("Signed JWT rejected: Invalid signature");
     }
 
     @Test

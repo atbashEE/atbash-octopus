@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 package be.atbash.ee.oauth2.sdk.auth;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -60,22 +60,13 @@ public class ClientAuthenticationMethodTest {
     @Test
     public void testParseNull() {
 
-        try {
-            ClientAuthenticationMethod.parse(null);
-            fail();
-        } catch (NullPointerException e) {
-            //  ok
-        }
+        Assertions.assertThrows(NullPointerException.class, () -> ClientAuthenticationMethod.parse(null));
+
     }
 
     @Test
     public void testParseEmptyValue() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ClientAuthenticationMethod.parse(""));
 
-        try {
-            ClientAuthenticationMethod.parse("");
-            fail();
-        } catch (IllegalArgumentException e) {
-            // ok
-        }
     }
 }

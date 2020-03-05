@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ import be.atbash.ee.security.octopus.config.OctopusRestConfiguration;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.TestReflectionUtils;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.ws.rs.container.ResourceInfo;
@@ -45,7 +46,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OctopusAnnotationContainerRequestFilterTest {
 
     @Mock
@@ -67,7 +68,7 @@ public class OctopusAnnotationContainerRequestFilterTest {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup() throws NoSuchFieldException {
         filter = new OctopusAnnotationContainerRequestFilter();
 
@@ -83,7 +84,7 @@ public class OctopusAnnotationContainerRequestFilterTest {
         TestReflectionUtils.setFieldValue(filter, "resourceInfo", resourceInfoMock);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }
@@ -106,7 +107,7 @@ public class OctopusAnnotationContainerRequestFilterTest {
         verify(annotationAuthorizationCheckerMock).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void filter_method_notAllowed() throws IOException, NoSuchMethodException {
         Class methodCheckClass = MethodCheck.class;
         when(resourceInfoMock.getResourceClass()).thenReturn(methodCheckClass);
@@ -119,12 +120,9 @@ public class OctopusAnnotationContainerRequestFilterTest {
         DummyAnswerMethod answer = new DummyAnswerMethod(true, "testMethod");
         when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).then(answer);
 
-        try {
-            filter.filter(null);
-        } finally {
+        Assertions.assertThrows(UnauthorizedException.class, () -> filter.filter(null));
 
-            verify(annotationAuthorizationCheckerMock).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
-        }
+        verify(annotationAuthorizationCheckerMock).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
     }
 
     @Test
@@ -145,7 +143,7 @@ public class OctopusAnnotationContainerRequestFilterTest {
         verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void filter_class_notallowed() throws IOException, NoSuchMethodException {
         Class classCheckClass = ClassCheck.class;
         when(resourceInfoMock.getResourceClass()).thenReturn(classCheckClass);
@@ -158,12 +156,11 @@ public class OctopusAnnotationContainerRequestFilterTest {
         DummyAnswerClass answer = new DummyAnswerClass(true, "testMethod");
         when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).then(answer);
 
-        try {
-            filter.filter(null);
-        } finally {
 
-            verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
-        }
+        Assertions.assertThrows(UnauthorizedException.class, () -> filter.filter(null));
+
+        verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+
     }
 
     @Test
@@ -181,7 +178,7 @@ public class OctopusAnnotationContainerRequestFilterTest {
         verify(annotationAuthorizationCheckerMock, never()).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
     }
 
-    @Test(expected = SecurityAuthorizationViolationException.class)
+    @Test
     public void filter_noAnnotation() throws IOException, NoSuchMethodException {
         // The test class / method has correct annotation but with annotationAuthorizationCheckerMock.checkAccess always returns false
         // for this test as if there are no annotations
@@ -195,12 +192,10 @@ public class OctopusAnnotationContainerRequestFilterTest {
 
         when(annotationAuthorizationCheckerMock.checkAccess(anySet(), any(AccessDecisionVoterContext.class))).thenReturn(false);
 
-        try {
-            filter.filter(null);
-        } finally {
+        Assertions.assertThrows(SecurityAuthorizationViolationException.class, () -> filter.filter(null));
 
-            verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
-        }
+        verify(annotationAuthorizationCheckerMock, times(2)).checkAccess(anySet(), any(AccessDecisionVoterContext.class));
+
     }
 
     private static class DummyAnswerMethod implements Answer<Boolean> {

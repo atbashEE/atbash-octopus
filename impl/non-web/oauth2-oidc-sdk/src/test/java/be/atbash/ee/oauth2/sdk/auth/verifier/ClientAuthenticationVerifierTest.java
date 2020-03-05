@@ -21,14 +21,14 @@ import be.atbash.ee.oauth2.sdk.client.ClientMetadata;
 import be.atbash.ee.oauth2.sdk.http.X509CertificateGenerator;
 import be.atbash.ee.oauth2.sdk.id.*;
 import be.atbash.ee.oauth2.sdk.util.X509CertificateUtils;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.MACSigner;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.RSASSASigner;
 import be.atbash.ee.security.octopus.nimbus.jwk.RSAKey;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
@@ -41,7 +41,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -531,12 +530,10 @@ public class ClientAuthenticationVerifierTest {
                 clientCert
         );
 
-        try {
-            createBasicVerifier().verify(clientAuthentication, null, null);
-            fail();
-        } catch (InvalidClientException e) {
-            assertThat(e.getMessage()).isEqualTo("Couldn't validate client X.509 certificate signature: No matching registered client JWK found");
-        }
+        InvalidClientException exception = Assertions.assertThrows(InvalidClientException.class, () -> createBasicVerifier().verify(clientAuthentication, null, null));
+
+        assertThat(exception.getMessage()).isEqualTo("Couldn't validate client X.509 certificate signature: No matching registered client JWK found");
+
     }
 
     @Test
@@ -566,28 +563,23 @@ public class ClientAuthenticationVerifierTest {
                 clientCert
         );
 
-        try {
-            createBasicVerifier().verify(clientAuthentication, null, null);
-            fail();
-        } catch (InvalidClientException e) {
-            assertThat(e.getMessage()).isEqualTo("Couldn't validate client X.509 certificate signature: No matching registered client JWK found");
-        }
+        InvalidClientException exception = Assertions.assertThrows(InvalidClientException.class, () -> createBasicVerifier().verify(clientAuthentication, null, null));
+
+        assertThat(exception.getMessage()).isEqualTo("Couldn't validate client X.509 certificate signature: No matching registered client JWK found");
+
     }
 
     @Test
-    public void testPubKeyTLSClientAuth_missingCertificate()
-            throws Exception {
+    public void testPubKeyTLSClientAuth_missingCertificate() {
 
         ClientAuthentication clientAuthentication = new SelfSignedTLSClientAuthentication(
                 VALID_CLIENT_ID,
                 (SSLSocketFactory) null);
 
-        try {
-            createBasicVerifier().verify(clientAuthentication, null, null);
-            fail();
-        } catch (InvalidClientException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing client X.509 certificate");
-        }
+        InvalidClientException exception = Assertions.assertThrows(InvalidClientException.class, () -> createBasicVerifier().verify(clientAuthentication, null, null));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing client X.509 certificate");
+
     }
 
     @Test
@@ -611,11 +603,9 @@ public class ClientAuthenticationVerifierTest {
                 X509CertificateGenerator.generateSelfSignedNotSelfIssuedCertificate("issuer", "invalid-subject")
         );
 
-        try {
-            createVerifierWithPKIBoundCertSupport().verify(clientAuthentication, null, null);
-            fail();
-        } catch (InvalidClientException e) {
-            assertThat(e.getMessage()).isEqualTo("Bad subject DN");
-        }
+        InvalidClientException exception = Assertions.assertThrows(InvalidClientException.class, () -> createVerifierWithPKIBoundCertSupport().verify(clientAuthentication, null, null));
+
+        assertThat(exception.getMessage()).isEqualTo("Bad subject DN");
+
     }
 }

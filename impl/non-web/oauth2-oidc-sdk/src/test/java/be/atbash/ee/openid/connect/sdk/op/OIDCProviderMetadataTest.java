@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.EncryptionMethod;
 import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -41,7 +42,6 @@ import java.net.URI;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class OIDCProviderMetadataTest {
@@ -700,14 +700,8 @@ public class OIDCProviderMetadataTest {
         List<JWSAlgorithm> tokenEndpointJWTAlgs = new ArrayList<>();
         tokenEndpointJWTAlgs.add(new JWSAlgorithm("none"));
 
-        try {
-            meta.setTokenEndpointJWSAlgs(tokenEndpointJWTAlgs);
-
-            fail("Failed to raise IllegalArgumentException");
-
-        } catch (IllegalArgumentException e) {
-            // ok
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                meta.setTokenEndpointJWSAlgs(tokenEndpointJWTAlgs));
 
 
         // Simulate JSON object with none token endpoint JWT algs
@@ -719,14 +713,9 @@ public class OIDCProviderMetadataTest {
         jsonObjectBuilder.add("token_endpoint_auth_signing_alg_values_supported", JSONObjectUtils.asJsonArray(stringList));
 
 
-        try {
-            OIDCProviderMetadata.parse(jsonObjectBuilder.build().toString());
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                OIDCProviderMetadata.parse(jsonObjectBuilder.build().toString()));
 
-            fail("Failed to raise ParseException");
-
-        } catch (OAuth2JSONParseException e) {
-            // ok
-        }
     }
 
     @Test

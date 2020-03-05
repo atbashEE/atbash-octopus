@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package be.atbash.ee.security.octopus.crypto.hash;
 
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,10 +36,10 @@ public class SecretKeyHashTest {
 
     }
 
-    @Test(expected = AtbashUnexpectedException.class)
+    @Test
     public void hash_unknown() {
 
-        new SecretKeyHash("SHA-256", "password", "salt", 1024);
+        Assertions.assertThrows(AtbashUnexpectedException.class, () -> new SecretKeyHash("SHA-256", "password", "salt", 1024));
 
     }
 

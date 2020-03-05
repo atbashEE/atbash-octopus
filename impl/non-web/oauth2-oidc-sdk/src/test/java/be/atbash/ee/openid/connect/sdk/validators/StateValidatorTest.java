@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package be.atbash.ee.openid.connect.sdk.validators;
 import be.atbash.ee.oauth2.sdk.id.State;
 import be.atbash.ee.openid.connect.sdk.claims.StateHash;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Tests the state hash validator.
@@ -43,23 +43,21 @@ public class StateValidatorTest {
 
         State state = new State();
         StateHash sHash = StateHash.compute(state, JWSAlgorithm.HS256);
-        try {
-            StateValidator.validate(state, new JWSAlgorithm("none"), sHash);
-            fail();
-        } catch (InvalidHashException e) {
-            assertThat(e.getMessage()).isEqualTo("State hash (s_hash) mismatch");
-        }
+        InvalidHashException exception = Assertions.assertThrows(InvalidHashException.class, () ->
+                StateValidator.validate(state, new JWSAlgorithm("none"), sHash));
+
+        assertThat(exception.getMessage()).isEqualTo("State hash (s_hash) mismatch");
+
     }
 
     @Test
     public void testInvalidHash() {
 
         State state = new State();
-        try {
-            StateValidator.validate(state, JWSAlgorithm.HS256, new StateHash("xxx"));
-            fail();
-        } catch (InvalidHashException e) {
-            assertThat(e.getMessage()).isEqualTo("State hash (s_hash) mismatch");
-        }
+        InvalidHashException exception = Assertions.assertThrows(InvalidHashException.class, () ->
+                StateValidator.validate(state, JWSAlgorithm.HS256, new StateHash("xxx")));
+
+        assertThat(exception.getMessage()).isEqualTo("State hash (s_hash) mismatch");
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,15 @@ import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.ee.security.octopus.util.SavedRequest;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.OAuth20Service;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
@@ -52,7 +53,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OAuth2CallbackProcessorTest {
 
     @Mock
@@ -99,7 +100,7 @@ public class OAuth2CallbackProcessorTest {
 
     private TestLogger logger = TestLoggerFactory.getTestLogger(DummyOAuth2CallbackProcessor.class);
 
-    @After
+    @AfterEach
     public void clearLoggers() {
         TestLoggerFactory.clear();
     }
@@ -170,7 +171,7 @@ public class OAuth2CallbackProcessorTest {
         assertThat(logger.getLoggingEvents()).isEmpty();
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void doAuthenticate_ErrorAccessCode() throws IOException, ExecutionException, InterruptedException {
 
         when(sessionAttributesUtilMock.getOAuth2Service(requestMock)).thenReturn(oauth20ServiceMock);
@@ -179,25 +180,24 @@ public class OAuth2CallbackProcessorTest {
         when(oauth20ServiceMock.getAccessToken("authorizationCode")).thenThrow(new IOException());
 
 
-        try {
-            processor.doAuthenticate(requestMock, responseMock, infoProviderMock);
-        } finally {
+        Assertions.assertThrows(IOException.class, () -> processor.doAuthenticate(requestMock, responseMock, infoProviderMock));
 
-            // Before actually logging the user in, a new Http session must be started
-            verify(sessionUtilMock, never()).invalidateCurrentSession(requestMock);
 
-            // Removal of SavedRequest is important to end login redirection.
-            verify(sessionMock, never()).removeAttribute("octopusSavedRequest");
+        // Before actually logging the user in, a new Http session must be started
+        verify(sessionUtilMock, never()).invalidateCurrentSession(requestMock);
 
-            verify(responseMock, never()).sendRedirect(anyString());
+        // Removal of SavedRequest is important to end login redirection.
+        verify(sessionMock, never()).removeAttribute("octopusSavedRequest");
 
-            // Important for the authentication process of Octopus.
-            verify(webSubjectMock, never()).login(any(AuthenticationToken.class));
+        verify(responseMock, never()).sendRedirect(anyString());
 
-            assertThat(logger.getLoggingEvents()).isEmpty();
+        // Important for the authentication process of Octopus.
+        verify(webSubjectMock, never()).login(any(AuthenticationToken.class));
 
-            verify(infoProviderMock, never()).retrieveUserInfo(accessToken, requestMock);
-        }
+        assertThat(logger.getLoggingEvents()).isEmpty();
+
+        verify(infoProviderMock, never()).retrieveUserInfo(accessToken, requestMock);
+
     }
 
     @Test

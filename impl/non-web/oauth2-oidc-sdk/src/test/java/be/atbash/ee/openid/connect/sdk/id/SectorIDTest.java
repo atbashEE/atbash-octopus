@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 package be.atbash.ee.openid.connect.sdk.id;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class SectorIDTest {
@@ -43,22 +43,20 @@ public class SectorIDTest {
     @Test
     public void testURIConstructor_missingHost() {
 
-        try {
-            new SectorID(URI.create("https:///path/a/b/c"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The URI must contain a host component");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new SectorID(URI.create("https:///path/a/b/c")));
+
+        assertThat(exception.getMessage()).isEqualTo("The URI must contain a host component");
+
     }
 
     @Test
     public void testEnsureHTTPScheme() {
 
-        try {
-            SectorID.ensureHTTPScheme(URI.create("http://example.com/callbacks.json"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The URI must have a https scheme");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                SectorID.ensureHTTPScheme(URI.create("http://example.com/callbacks.json")));
+
+        assertThat(exception.getMessage()).isEqualTo("The URI must have a https scheme");
+
     }
 }

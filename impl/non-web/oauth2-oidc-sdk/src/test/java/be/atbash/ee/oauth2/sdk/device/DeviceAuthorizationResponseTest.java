@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ package be.atbash.ee.oauth2.sdk.device;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -28,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class DeviceAuthorizationResponseTest{
 
@@ -147,120 +147,108 @@ public class DeviceAuthorizationResponseTest{
 	@Test
 	public void testConstructParseExceptionMissingDeviceCode() throws Exception {
 
-		DeviceCode deviceCode = null;
-		UserCode userCode = new UserCode();
-		URI verificationUri = new URI("https://c2id.com/devauthz/");
-		long lifetime = 3600;
+        DeviceCode deviceCode = null;
+        UserCode userCode = new UserCode();
+        URI verificationUri = new URI("https://c2id.com/devauthz/");
+        long lifetime = 3600;
 
-		try {
-			new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The device_code must not be null");
-		}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime));
+        assertThat(exception.getMessage()).isEqualTo("The device_code must not be null");
 
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add( "user_code", userCode.getValue());
-		builder.add("verification_uri", verificationUri.toString());
-		builder.add("expires_in", lifetime);
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("user_code", userCode.getValue());
+        builder.add("verification_uri", verificationUri.toString());
+        builder.add("expires_in", lifetime);
 
-		HTTPResponse httpResponse = new HTTPResponse(200);
-		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
-		httpResponse.setCacheControl("no-store");
-		httpResponse.setPragma("no-cache");
-		httpResponse.setContent(builder.build(). toString());
+        HTTPResponse httpResponse = new HTTPResponse(200);
+        httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
+        httpResponse.setCacheControl("no-store");
+        httpResponse.setPragma("no-cache");
+        httpResponse.setContent(builder.build().toString());
 
-		try {
-			DeviceAuthorizationSuccessResponse.parse(httpResponse);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing JSON object member with key \"device_code\"");
-		}
-	}
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                DeviceAuthorizationSuccessResponse.parse(httpResponse));
+
+        assertThat(exception1.getMessage()).isEqualTo("Missing JSON object member with key \"device_code\"");
+
+    }
 
 	@Test
 	public void testConstructParseExceptionMissingUserCode() throws Exception {
 
-		DeviceCode deviceCode = new DeviceCode();
-		UserCode userCode = null;
-		URI verificationUri = new URI("https://c2id.com/devauthz/");
-		long lifetime = 3600;
+        DeviceCode deviceCode = new DeviceCode();
+        UserCode userCode = null;
+        URI verificationUri = new URI("https://c2id.com/devauthz/");
+        long lifetime = 3600;
 
-		try {
-			new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The user_code must not be null");
-		}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime));
 
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add("device_code", deviceCode.getValue());
-		builder.add("verification_uri", verificationUri.toString());
-		builder.add("expires_in", lifetime);
+        assertThat(exception.getMessage()).isEqualTo("The user_code must not be null");
 
-		HTTPResponse httpResponse = new HTTPResponse(200);
-		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
-		httpResponse.setCacheControl("no-store");
-		httpResponse.setPragma("no-cache");
-		httpResponse.setContent(builder.build(). toString());
 
-		try {
-			DeviceAuthorizationSuccessResponse.parse(httpResponse);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Missing JSON object member with key \"user_code\"");
-		}
-	}
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("device_code", deviceCode.getValue());
+        builder.add("verification_uri", verificationUri.toString());
+        builder.add("expires_in", lifetime);
 
-	@Test
-	public void testConstructParseExceptionMissingVerificationUri() throws Exception {
+        HTTPResponse httpResponse = new HTTPResponse(200);
+        httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
+        httpResponse.setCacheControl("no-store");
+        httpResponse.setPragma("no-cache");
+        httpResponse.setContent(builder.build().toString());
 
-		DeviceCode deviceCode = new DeviceCode();
-		UserCode userCode = new UserCode();
-		URI verificationUri = null;
-		long lifetime = 3600;
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () -> DeviceAuthorizationSuccessResponse.parse(httpResponse));
 
-		try {
-			new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The verification_uri must not be null");
-		}
+        assertThat(exception1.getMessage()).isEqualTo("Missing JSON object member with key \"user_code\"");
 
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add("device_code", deviceCode.getValue());
-		builder.add("user_code", userCode.getValue());
-		builder.add("expires_in", lifetime);
+    }
 
-		HTTPResponse httpResponse = new HTTPResponse(200);
-		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
-		httpResponse.setCacheControl("no-store");
-		httpResponse.setPragma("no-cache");
-		httpResponse.setContent(builder.build(). toString());
+    @Test
+    public void testConstructParseExceptionMissingVerificationUri() {
 
-		try {
-			DeviceAuthorizationSuccessResponse.parse(httpResponse);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The verification_uri must not be null");
-		}
-	}
+        DeviceCode deviceCode = new DeviceCode();
+        UserCode userCode = new UserCode();
+        URI verificationUri = null;
+        long lifetime = 3600;
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime));
+
+        assertThat(exception.getMessage()).isEqualTo("The verification_uri must not be null");
+
+
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("device_code", deviceCode.getValue());
+        builder.add("user_code", userCode.getValue());
+        builder.add("expires_in", lifetime);
+
+        HTTPResponse httpResponse = new HTTPResponse(200);
+        httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
+        httpResponse.setCacheControl("no-store");
+        httpResponse.setPragma("no-cache");
+        httpResponse.setContent(builder.build().toString());
+
+        IllegalArgumentException exception1 = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                DeviceAuthorizationSuccessResponse.parse(httpResponse));
+
+        assertThat(exception1.getMessage()).isEqualTo("The verification_uri must not be null");
+
+    }
 
 	@Test
 	public void testConstructExceptionLifetime0() throws Exception {
 
-		DeviceCode deviceCode = new DeviceCode();
-		UserCode userCode = new UserCode();
-		URI verificationUri = new URI("https://c2id.com/devauthz/");
-		long lifetime = 0;
+        DeviceCode deviceCode = new DeviceCode();
+        UserCode userCode = new UserCode();
+        URI verificationUri = new URI("https://c2id.com/devauthz/");
+        long lifetime = 0;
 
-		try {
-			new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime);
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The lifetime must be greater than 0");
-		}
-	}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DeviceAuthorizationSuccessResponse(deviceCode, userCode, verificationUri, lifetime));
+
+        assertThat(exception.getMessage()).isEqualTo("The lifetime must be greater than 0");
+    }
 
 	@Test
 	public void testToErrorResponse() throws Exception {

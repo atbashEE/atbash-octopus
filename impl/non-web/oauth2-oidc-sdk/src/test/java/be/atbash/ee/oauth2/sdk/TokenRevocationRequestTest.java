@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.oauth2.sdk.token.RefreshToken;
 import be.atbash.ee.oauth2.sdk.token.Token;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -38,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -224,41 +224,35 @@ public class TokenRevocationRequestTest {
 	@Test
 	public void testConstructorRequireClientAuthentication() {
 
-		try {
-			new TokenRevocationRequest(URI.create("https://c2id.com/token"), (ClientAuthentication)null, new BearerAccessToken());
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The client authentication must not be null");
-		}
-	}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRevocationRequest(URI.create("https://c2id.com/token"), (ClientAuthentication) null, new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The client authentication must not be null");
+
+    }
 
 	@Test
 	public void testConstructorRequireClientID() {
 
-		try {
-			new TokenRevocationRequest(URI.create("https://c2id.com/token"), (ClientID) null, new BearerAccessToken());
-			fail();
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage()).isEqualTo("The client ID must not be null");
-		}
-	}
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new TokenRevocationRequest(URI.create("https://c2id.com/token"), (ClientID) null, new BearerAccessToken()));
+
+        assertThat(exception.getMessage()).isEqualTo("The client ID must not be null");
+
+    }
 
 	@Test
 	public void testParseMissingClientIdentification()
 		throws MalformedURLException {
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token/revoke"));
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token/revoke"));
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		Map<String, List<String>> queryParams = new HashMap<>();
-		queryParams.put("token", Collections.singletonList("abc"));
-		httpRequest.setQuery(URLUtils.serializeParameters(queryParams));
+        Map<String, List<String>> queryParams = new HashMap<>();
+        queryParams.put("token", Collections.singletonList("abc"));
+        httpRequest.setQuery(URLUtils.serializeParameters(queryParams));
 
-		try {
-			TokenRevocationRequest.parse(httpRequest);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("Invalid token revocation request: No client authentication or client_id parameter found");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> TokenRevocationRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid token revocation request: No client authentication or client_id parameter found");
+
+    }
 }

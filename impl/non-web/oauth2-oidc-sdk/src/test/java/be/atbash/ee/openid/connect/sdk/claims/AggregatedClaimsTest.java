@@ -22,7 +22,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.SignedJWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -34,7 +35,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class AggregatedClaimsTest {
@@ -207,55 +207,47 @@ public class AggregatedClaimsTest {
     @Test
     public void testRejectNullSourceID() {
 
-        try {
-            new AggregatedClaims(null, Collections.singleton("score"), createClaimsJWT());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new AggregatedClaims(null, Collections.singleton("score"), createClaimsJWT()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
+
     }
 
     @Test
     public void testRejectEmptySourceID() {
 
-        try {
-            new AggregatedClaims("", Collections.singleton("score"), createClaimsJWT());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new AggregatedClaims("", Collections.singleton("score"), createClaimsJWT()));
+        assertThat(exception.getMessage()).isEqualTo("The claims source identifier must not be null or empty");
+
     }
 
     @Test
     public void testRejectNullClaimNames() {
 
-        try {
-            new AggregatedClaims("src1", null, createClaimsJWT());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claim names must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AggregatedClaims("src1", null, createClaimsJWT()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claim names must not be null or empty");
+
     }
 
     @Test
     public void testRejectEmptyClaimNames() {
 
-        try {
-            new AggregatedClaims("src1", Collections.<String>emptySet(), createClaimsJWT());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claim names must not be null or empty");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AggregatedClaims("src1", Collections.emptySet(), createClaimsJWT()));
+
+        assertThat(exception.getMessage()).isEqualTo("The claim names must not be null or empty");
+
     }
 
     @Test
     public void testRejectNullJWT() {
 
-        try {
-            new AggregatedClaims("src1", Collections.singleton("score"), null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The claims JWT must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new AggregatedClaims("src1", Collections.singleton("score"), null));
+
+        assertThat(exception.getMessage()).isEqualTo("The claims JWT must not be null");
+
     }
 }

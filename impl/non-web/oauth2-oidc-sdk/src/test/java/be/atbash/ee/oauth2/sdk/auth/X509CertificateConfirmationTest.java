@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.ByteUtils;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import be.atbash.ee.security.octopus.nimbus.util.X509CertUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 import java.security.cert.X509Certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class X509CertificateConfirmationTest {
@@ -109,34 +109,24 @@ public class X509CertificateConfirmationTest {
     @Test
     public void testRejectNullArg() {
 
-        try {
-            new X509CertificateConfirmation(null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The X.509 certificate thumbprint must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new X509CertificateConfirmation(null));
+
+        assertThat(exception.getMessage()).isEqualTo("The X.509 certificate thumbprint must not be null");
+
     }
 
     @Test
     public void testParse_nullJWTClaimsSet() {
 
-        try {
-            X509CertificateConfirmation.parse((JWTClaimsSet) null);
-            fail();
-        } catch (NullPointerException e) {
-            // ok
-        }
+        Assertions.assertThrows(NullPointerException.class, () -> X509CertificateConfirmation.parse((JWTClaimsSet) null));
+
     }
 
     @Test
     public void testParse_nullJSONObject() {
 
-        try {
-            X509CertificateConfirmation.parse((JsonObject) null);
-            fail();
-        } catch (NullPointerException e) {
-            // ok
-        }
+        Assertions.assertThrows(NullPointerException.class, () -> X509CertificateConfirmation.parse((JsonObject) null));
+
     }
 
     @Test

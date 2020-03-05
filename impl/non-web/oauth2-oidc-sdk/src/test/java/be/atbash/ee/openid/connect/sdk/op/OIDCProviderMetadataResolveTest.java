@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ package be.atbash.ee.openid.connect.sdk.op;
 import be.atbash.ee.oauth2.sdk.GeneralException;
 import be.atbash.ee.oauth2.sdk.id.Issuer;
 import be.atbash.ee.openid.connect.sdk.SubjectType;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -31,19 +32,18 @@ import java.util.Collections;
 
 import static net.jadler.Jadler.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class OIDCProviderMetadataResolveTest {
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         initJadler();
     }
 
 
-    @After
+    @AfterEach
     public void tearDown() {
         closeJadler();
     }
@@ -144,12 +144,11 @@ public class OIDCProviderMetadataResolveTest {
                 .withContentType("application/json")
                 .withBody(jsonObjectbuilder.build().toString());
 
-        try {
-            OIDCProviderMetadata.resolve(issuer);
-            fail();
-        } catch (GeneralException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing JSON object member with key \"subject_types_supported\"");
-        }
+        GeneralException exception = Assertions.assertThrows(GeneralException.class, () ->
+                OIDCProviderMetadata.resolve(issuer));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing JSON object member with key \"subject_types_supported\"");
+
     }
 
 
@@ -167,12 +166,11 @@ public class OIDCProviderMetadataResolveTest {
                 .withContentType("text/plain")
                 .withBody("Not Found");
 
-        try {
-            OIDCProviderMetadata.resolve(issuer);
-            fail();
-        } catch (IOException e) {
-            assertThat(e.getMessage()).isEqualTo("Couldn't download OpenID Provider metadata from http://localhost:" + port() + "/.well-known/openid-configuration: Status code 404");
-        }
+        IOException exception = Assertions.assertThrows(IOException.class, () ->
+                OIDCProviderMetadata.resolve(issuer));
+
+        assertThat(exception.getMessage()).isEqualTo("Couldn't download OpenID Provider metadata from http://localhost:" + port() + "/.well-known/openid-configuration: Status code 404");
+
     }
 
 
@@ -196,12 +194,11 @@ public class OIDCProviderMetadataResolveTest {
                 .withContentType("application/json")
                 .withBody(metadata.toJSONObject().build().toString());
 
-        try {
-            OIDCProviderMetadata.resolve(issuer);
-            fail("Didn't raise issuer mismatch exception");
-        } catch (GeneralException e) {
-            assertThat(e.getMessage()).isEqualTo("The returned issuer doesn't match the expected: http://localhost/abcdef");
-        }
+        GeneralException exception = Assertions.assertThrows(GeneralException.class, () ->
+                OIDCProviderMetadata.resolve(issuer));
+
+        assertThat(exception.getMessage()).isEqualTo("The returned issuer doesn't match the expected: http://localhost/abcdef");
+
     }
 }
 

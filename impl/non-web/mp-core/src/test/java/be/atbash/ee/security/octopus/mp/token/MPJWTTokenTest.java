@@ -16,7 +16,7 @@
 package be.atbash.ee.security.octopus.mp.token;
 
 import be.atbash.ee.security.octopus.jwt.decoder.JWTDecoder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.ee.security.octopus.crypto.MissingSaltException;
 import be.atbash.util.codec.ByteSource;
 import be.atbash.util.codec.CodecException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +32,7 @@ public class HashFactoryTest extends AbstractKeyNameTest {
 
     private HashFactory factory;
 
-    @Before
+    @BeforeEach
     public void setup() {
         factory = HashFactory.getInstance();
     }
@@ -50,9 +51,9 @@ public class HashFactoryTest extends AbstractKeyNameTest {
         assertThat(algorithmName).isEqualTo(expected);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void defineRealHashAlgorithmName_other() {
-        factory.defineRealHashAlgorithmName("other");
+        Assertions.assertThrows(ConfigurationException.class, () -> factory.defineRealHashAlgorithmName("other"));
     }
 
     @Test
@@ -73,10 +74,10 @@ public class HashFactoryTest extends AbstractKeyNameTest {
 
     }
 
-    @Test(expected = CodecException.class)
+    @Test
     public void defineHash_forHashName_wrongSaltType() {
         factory.defineRealHashAlgorithmName("SHA-256"); // required to correctly initialize factory
-        factory.defineHash("SHA-256", "password", 15L, 1);
+        Assertions.assertThrows(CodecException.class, () -> factory.defineHash("SHA-256", "password", 15L, 1));
 
     }
 
@@ -105,17 +106,18 @@ public class HashFactoryTest extends AbstractKeyNameTest {
         assertThat(hash.toHex()).isEqualToIgnoringCase("120fb6cffcf8b32c43e7225256c4f837a86548c92ccc35480805987cb70be17b");
     }
 
-    @Test(expected = MissingSaltException.class)
+    @Test
     public void defineHash_forKeyName_noSalt() {
         factory.defineRealHashAlgorithmName("PBKDF2"); // required to correctly initialize factory
-        factory.defineHash("PBKDF2", "password", null, 1);
+
+        Assertions.assertThrows(MissingSaltException.class, () -> factory.defineHash("PBKDF2", "password", null, 1));
 
     }
 
-    @Test(expected = MissingSaltException.class)
+    @Test
     public void defineHash_forKeyName_emptySalt() {
         factory.defineRealHashAlgorithmName("PBKDF2"); // required to correctly initialize factory
-        factory.defineHash("PBKDF2", "password", new byte[]{}, 1);
+        Assertions.assertThrows(MissingSaltException.class, () -> factory.defineHash("PBKDF2", "password", new byte[]{}, 1));
 
     }
 

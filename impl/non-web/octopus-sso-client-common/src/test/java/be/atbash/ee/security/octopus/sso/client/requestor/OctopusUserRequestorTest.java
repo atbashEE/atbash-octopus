@@ -35,16 +35,16 @@ import be.atbash.ee.security.octopus.util.SecretUtil;
 import be.atbash.util.TestReflectionUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import net.jadler.Jadler;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -58,7 +58,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OctopusUserRequestorTest {
 
     private static final String APPLICATION_JWT = "application/jwt";
@@ -78,7 +78,7 @@ public class OctopusUserRequestorTest {
     @InjectMocks
     private OctopusUserRequestor octopusUserRequestor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IllegalAccessException {
         Jadler.initJadler();
 
@@ -87,7 +87,7 @@ public class OctopusUserRequestorTest {
         octopusUserRequestor.setConfiguration(octopusCoreConfigurationMock, octopusSSOServerClientConfigurationMock);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
     }
@@ -138,7 +138,7 @@ public class OctopusUserRequestorTest {
         assertThat(ssoToken.getUserInfo()).hasSize(5);
     }
 
-    @Test(expected = OctopusRetrievalException.class)
+    @Test
     public void getOctopusSSOToken_expired() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
@@ -178,13 +178,11 @@ public class OctopusUserRequestorTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
 
-        OctopusSSOToken ssoToken = octopusUserRequestor.getOctopusSSOToken(clientData, accessToken);
+        Assertions.assertThrows(OctopusRetrievalException.class, () -> octopusUserRequestor.getOctopusSSOToken(clientData, accessToken));
 
-        assertThat(ssoToken.getAccessToken()).isEqualTo(accessToken.getValue());
-        assertThat(ssoToken.getUserInfo()).hasSize(5);
     }
 
-    @Test(expected = OctopusRetrievalException.class)
+    @Test
     public void getOctopusSSOToken_invalidSignature() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
@@ -225,13 +223,11 @@ public class OctopusUserRequestorTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
 
-        OctopusSSOToken ssoToken = octopusUserRequestor.getOctopusSSOToken(clientData, accessToken);
+        Assertions.assertThrows(OctopusRetrievalException.class, () -> octopusUserRequestor.getOctopusSSOToken(clientData, accessToken));
 
-        assertThat(ssoToken.getAccessToken()).isEqualTo(accessToken.getValue());
-        assertThat(ssoToken.getUserInfo()).hasSize(5);
     }
 
-    @Test(expected = OctopusRetrievalException.class)
+    @Test
     public void getOctopusSSOToken_missingNonce() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
@@ -270,7 +266,7 @@ public class OctopusUserRequestorTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
 
-        octopusUserRequestor.getOctopusSSOToken(clientData, accessToken);
+        Assertions.assertThrows(OctopusRetrievalException.class, () -> octopusUserRequestor.getOctopusSSOToken(clientData, accessToken));
 
     }
 
@@ -314,12 +310,11 @@ public class OctopusUserRequestorTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
 
-        try {
-            octopusUserRequestor.getOctopusSSOToken(clientData, accessToken);
-            Assert.fail("Exception expected");
-        } catch (OctopusRetrievalException e) {
-            assertThat(e.getMessage()).isEqualTo("JWT claim Validation failed : aud");
-        }
+        OctopusRetrievalException exception = Assertions.assertThrows(OctopusRetrievalException.class, () ->
+                octopusUserRequestor.getOctopusSSOToken(clientData, accessToken));
+
+        assertThat(exception.getMessage()).isEqualTo("JWT claim Validation failed : aud");
+
 
     }
 
@@ -372,16 +367,15 @@ public class OctopusUserRequestorTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
 
-        try {
-            octopusUserRequestor.getOctopusSSOToken(clientData, accessToken);
-            Assert.fail("Exception expected");
-        } catch (OctopusRetrievalException e) {
-            assertThat(e.getMessage()).isEqualTo("JWT claim Validation failed : JUnit");
-        }
+        OctopusRetrievalException exception = Assertions.assertThrows(OctopusRetrievalException.class, () ->
+                octopusUserRequestor.getOctopusSSOToken(clientData, accessToken));
+
+        assertThat(exception.getMessage()).isEqualTo("JWT claim Validation failed : JUnit");
+
 
     }
 
-    @Test(expected = OctopusRetrievalException.class)
+    @Test
     public void getOctopusSSOToken_ErrorReturn() throws ParseException, OctopusRetrievalException, OAuth2JSONParseException, URISyntaxException {
 
         OpenIdVariableClientData clientData = new OpenIdVariableClientData("someRoot");
@@ -400,7 +394,7 @@ public class OctopusUserRequestorTest {
 
         BearerAccessToken accessToken = new BearerAccessToken("TheAccessToken");
 
-        octopusUserRequestor.getOctopusSSOToken(clientData, accessToken);
+        Assertions.assertThrows(OctopusRetrievalException.class, () -> octopusUserRequestor.getOctopusSSOToken(clientData, accessToken));
 
 
     }

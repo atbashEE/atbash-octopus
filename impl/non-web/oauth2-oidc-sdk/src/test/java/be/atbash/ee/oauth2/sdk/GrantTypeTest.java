@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -123,36 +123,21 @@ public class GrantTypeTest  {
 	@Test
 	public void testParseNull() {
 
-		try {
-			GrantType.parse(null);
-			fail();
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> GrantType.parse(null));
 
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
-	}
+    }
 
 	@Test
 	public void testParseEmpty() {
 
-		try {
-			GrantType.parse("");
-			fail();
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> GrantType.parse(""));
 
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
-	}
+    }
 
 	@Test
 	public void testParseBlank() {
 
-		try {
-			GrantType.parse(" ");
-			fail();
+        Assertions.assertThrows(OAuth2JSONParseException.class, () -> GrantType.parse(" "));
 
-		} catch (OAuth2JSONParseException e) {
-			// ok
-		}
-	}
+    }
 }

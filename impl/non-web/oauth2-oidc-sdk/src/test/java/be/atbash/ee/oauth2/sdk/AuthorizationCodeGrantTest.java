@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 package be.atbash.ee.oauth2.sdk;
 
 
-
 import be.atbash.ee.oauth2.sdk.pkce.CodeVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,27 +28,26 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
  * Tests the authorisation code grant class.
  */
-public class AuthorizationCodeGrantTest  {
+public class AuthorizationCodeGrantTest {
 
-@Test
-	public void testConstructor()
-		throws Exception {
+    @Test
+    public void testConstructor()
+            throws Exception {
 
-		AuthorizationCode code = new AuthorizationCode("abc");
-		URI redirectURI = new URI("https://client.com/in");
+        AuthorizationCode code = new AuthorizationCode("abc");
+        URI redirectURI = new URI("https://client.com/in");
 
-		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(code, redirectURI);
+        AuthorizationCodeGrant grant = new AuthorizationCodeGrant(code, redirectURI);
 
-		assertThat(grant.getAuthorizationCode()).isEqualTo(code);
-		assertThat(grant.getRedirectionURI()).isEqualTo(redirectURI);
+        assertThat(grant.getAuthorizationCode()).isEqualTo(code);
+        assertThat(grant.getRedirectionURI()).isEqualTo(redirectURI);
 
-		assertThat(grant.getType()).isEqualTo(GrantType.AUTHORIZATION_CODE);
+        assertThat(grant.getType()).isEqualTo(GrantType.AUTHORIZATION_CODE);
 
 		Map<String, List<String>> params = grant.toParameters();
 		assertThat(params.get("code")).isEqualTo(Collections.singletonList("abc"));
@@ -134,96 +133,84 @@ public class AuthorizationCodeGrantTest  {
 		assertThat(grant.getRedirectionURI().toString()).isEqualTo("https://client.com/in");
 	}
 
-	@Test
-	public void testParse_codeVerifierTooShort()
-		throws Exception {
+    @Test
+    public void testParse_codeVerifierTooShort() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("authorization_code"));
-		params.put("code", Collections.singletonList("abc"));
-		params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
-		params.put("code_verifier", Collections.singletonList("abc"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("authorization_code"));
+        params.put("code", Collections.singletonList("abc"));
+        params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
+        params.put("code_verifier", Collections.singletonList("abc"));
 
-		try {
-			AuthorizationCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getMessage()).isEqualTo("The code verifier must be at least 43 characters");
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationCodeGrant.parse(params));
+        assertThat(exception.getMessage()).isEqualTo("The code verifier must be at least 43 characters");
+
+    }
 
 	@Test
 	public void testParseMissingGrantType() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", null);
-		params.put("code", Collections.singletonList("abc"));
-		params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", null);
+        params.put("code", Collections.singletonList("abc"));
+        params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
 
-		try {
-			AuthorizationCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"grant_type\" parameter");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationCodeGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing \"grant_type\" parameter");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
+    }
 
 	@Test
 	public void testParseUnsupportedGrant() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("no-such-grant"));
-		params.put("code", Collections.singletonList("abc"));
-		params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("no-such-grant"));
+        params.put("code", Collections.singletonList("abc"));
+        params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
 
-		try {
-			AuthorizationCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be \"authorization_code\"");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationCodeGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.UNSUPPORTED_GRANT_TYPE.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Unsupported grant type: The \"grant_type\" must be \"authorization_code\"");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
+    }
 
 	@Test
 	public void testParseMissingCode() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("authorization_code"));
-		params.put("code", Collections.singletonList(""));
-		params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("authorization_code"));
+        params.put("code", Collections.singletonList(""));
+        params.put("redirect_uri", Collections.singletonList("https://client.com/in"));
 
-		try {
-			AuthorizationCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"code\" parameter");
-			assertThat(e.getErrorObject().getURI()).isNull();
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationCodeGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Missing or empty \"code\" parameter");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+
+    }
 
 	@Test
 	public void testParseInvalidRedirectionURI() {
 
-		Map<String, List<String>> params = new HashMap<>();
-		params.put("grant_type", Collections.singletonList("authorization_code"));
-		params.put("code", Collections.singletonList("abc"));
-		params.put("redirect_uri", Collections.singletonList("invalid uri"));
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("grant_type", Collections.singletonList("authorization_code"));
+        params.put("code", Collections.singletonList("abc"));
+        params.put("redirect_uri", Collections.singletonList("invalid uri"));
 
-		try {
-			AuthorizationCodeGrant.parse(params);
-			fail();
-		} catch (OAuth2JSONParseException e) {
-			assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-			assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"redirect_uri\" parameter: Illegal character in path at index 7: invalid uri");
-			assertThat(e.getErrorObject().getURI()).isNull();
-			assertThat(e.getCause()).isInstanceOf(URISyntaxException.class);
-		}
-	}
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationCodeGrant.parse(params));
+
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"redirect_uri\" parameter: Illegal character in path at index 7: invalid uri");
+        assertThat(exception.getErrorObject().getURI()).isNull();
+        assertThat(exception.getCause()).isInstanceOf(URISyntaxException.class);
+
+    }
 
 	@Test
 	public void testEquality() {

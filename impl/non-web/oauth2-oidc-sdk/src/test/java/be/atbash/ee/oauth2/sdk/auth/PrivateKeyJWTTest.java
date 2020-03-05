@@ -21,7 +21,8 @@ import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.ECDSAVerifier;
 import be.atbash.ee.security.octopus.nimbus.jose.crypto.RSASSAVerifier;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.security.KeyPair;
@@ -33,7 +34,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -221,12 +221,9 @@ public class PrivateKeyJWTTest {
 
         params.put("client_id", Collections.singletonList("456")); // different client_id
 
-        try {
-            PrivateKeyJWT.parse(params);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid private key JWT authentication: The client identifier doesn't match the client assertion subject / issuer");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PrivateKeyJWT.parse(params));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid private key JWT authentication: The client identifier doesn't match the client assertion subject / issuer");
 
     }
 }

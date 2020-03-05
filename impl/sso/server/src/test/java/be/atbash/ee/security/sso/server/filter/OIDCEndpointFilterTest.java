@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.filter.SessionHijackingFilter;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
-import be.atbash.ee.security.octopus.nimbus.jose.JOSEException;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.session.Session;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
@@ -40,13 +39,13 @@ import be.atbash.ee.security.sso.server.client.ClientInfo;
 import be.atbash.ee.security.sso.server.client.ClientInfoRetriever;
 import be.atbash.ee.security.sso.server.cookie.SSOHelper;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,11 +61,10 @@ import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OIDCEndpointFilterTest {
 
     @Mock
@@ -119,7 +117,7 @@ public class OIDCEndpointFilterTest {
     @Captor
     private ArgumentCaptor<Object> attributeValueCapture;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         beanManagerFake = new BeanManagerFake();
@@ -137,7 +135,7 @@ public class OIDCEndpointFilterTest {
         //endpointFilter.setUserFilter(new OctopusUserFilter());
 
         // So that encodeRedirectURL just returns the URL (as no encoding required but want to parameter as return value.
-        when(httpServletResponseMock.encodeRedirectURL(anyString())).thenAnswer(new Answer<String>() {
+        lenient().when(httpServletResponseMock.encodeRedirectURL(anyString())).thenAnswer(new Answer<String>() {
             @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArgument(0);
@@ -145,7 +143,7 @@ public class OIDCEndpointFilterTest {
         });
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }
@@ -446,20 +444,18 @@ public class OIDCEndpointFilterTest {
         return Base64.getEncoder().withoutPadding().encodeToString(secret);
     }
 
-    private String generateJWT(String ssoClientId, String ssoClientSecret, URI tokenEndPoint) {
+    private String generateJWT(String ssoClientId, String ssoClientSecret, URI tokenEndPoint) throws MalformedURLException {
         HTTPRequest httpRequest = null;
-        try {
-            httpRequest = new HTTPRequest(HTTPRequest.Method.valueOf("POST"), new URL("http://some.server/oidc"));
-            ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(ssoClientId)
-                    , tokenEndPoint, JWSAlgorithm.HS256, new Secret(ssoClientSecret)); //ssoClientSecret is actually a Base64 encoded byte Array
-            // When we need to be completely correct, we should use the UTF-8 representation of the ByteArray itself to pass to new Secret()
 
-            httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-            clientAuth.applyTo(httpRequest);
+        httpRequest = new HTTPRequest(HTTPRequest.Method.valueOf("POST"), new URL("http://some.server/oidc"));
+        ClientAuthentication clientAuth = new ClientSecretJWT(new ClientID(ssoClientId)
+                , tokenEndPoint, JWSAlgorithm.HS256, new Secret(ssoClientSecret)); //ssoClientSecret is actually a Base64 encoded byte Array
+        // When we need to be completely correct, we should use the UTF-8 representation of the ByteArray itself to pass to new Secret()
 
-        } catch (JOSEException | MalformedURLException e) {
-            fail(e.getMessage());
-        }
+        httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+        clientAuth.applyTo(httpRequest);
+
+
         return httpRequest.getQuery();
     }
 

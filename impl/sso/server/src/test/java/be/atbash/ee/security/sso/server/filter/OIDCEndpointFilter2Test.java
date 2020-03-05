@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@ package be.atbash.ee.security.sso.server.filter;
 
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OIDCEndpointFilter2Test {
 
     @Mock
@@ -43,7 +43,7 @@ public class OIDCEndpointFilter2Test {
 
     private BeanManagerFake beanManagerFake;
 
-    @Before
+    @BeforeEach
     public void setup() {
         endpointFilter = new OIDCEndpointFilter();
         beanManagerFake = new BeanManagerFake();
@@ -54,11 +54,11 @@ public class OIDCEndpointFilter2Test {
     }
 
     private void configureFilter(AbstractUserFilter filter, String name) {
-        when(filter.getLoginUrl()).thenReturn("/" + name);
-        when(filter.getName()).thenReturn(name);
+        lenient().when(filter.getLoginUrl()).thenReturn("/" + name);
+        lenient().when(filter.getName()).thenReturn(name);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         beanManagerFake.deregistration();
     }

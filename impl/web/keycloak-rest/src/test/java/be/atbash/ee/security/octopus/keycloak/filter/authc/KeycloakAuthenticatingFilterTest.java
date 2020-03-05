@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.IDToken;
@@ -49,7 +50,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,7 +63,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class KeycloakAuthenticatingFilterTest {
 
     @Mock
@@ -106,7 +107,7 @@ public class KeycloakAuthenticatingFilterTest {
         assertThat(httpGetCaptor.getValue().getFirstHeader(OctopusConstants.AUTHORIZATION_HEADER).getValue()).isEqualTo("Bearer " + token);
     }
 
-    @Test(expected = CredentialsException.class)
+    @Test
     public void createToke_invalidAuthorization() throws IOException {
         when(keycloakDeploymentMock.getAccountUrl()).thenReturn("localhost:8080/auth/realms/demo/protocol/openid-connect/account");
         when(keycloakDeploymentMock.getClient()).thenReturn(httpClientMock);
@@ -120,27 +121,23 @@ public class KeycloakAuthenticatingFilterTest {
         httpResponse.setEntity(entity);
         when(httpClientMock.execute(any(HttpGet.class))).thenReturn(httpResponse);
 
-        try {
-            filter.createToken(null, "doesn't matter here in this test");
-        } finally {
+        Assertions.assertThrows(CredentialsException.class, () -> filter.createToken(null, "doesn't matter here in this test"));
 
-            verify(httpClientMock).execute(any(HttpGet.class));
-        }
+        verify(httpClientMock).execute(any(HttpGet.class));
+
     }
 
-    @Test(expected = CredentialsException.class)
+    @Test
     public void createToke_ioException() throws IOException {
         when(keycloakDeploymentMock.getAccountUrl()).thenReturn("localhost:8080/auth/realms/demo/protocol/openid-connect/account");
         when(keycloakDeploymentMock.getClient()).thenReturn(httpClientMock);
 
         when(httpClientMock.execute(any(HttpGet.class))).thenThrow(new IOException("Server not found"));
 
-        try {
-            filter.createToken(null, "doesn't matter here in this test");
-        } finally {
+        Assertions.assertThrows(CredentialsException.class, () ->
+                filter.createToken(null, "doesn't matter here in this test"));
+        verify(httpClientMock).execute(any(HttpGet.class));
 
-            verify(httpClientMock).execute(any(HttpGet.class));
-        }
     }
 
     private String createAccessToken() {

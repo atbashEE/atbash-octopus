@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package be.atbash.ee.security.octopus.oauth2.metadata;
 import be.atbash.util.BeanManagerFake;
 import be.atbash.util.exception.AtbashIllegalActionException;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class OAuth2ProviderMetaDataControlTest {
     private OAuth2ProviderMetaData providerMetaDataMock1 = Mockito.mock(OAuth2ProviderMetaData.class);
     private OAuth2ProviderMetaData providerMetaDataMock2 = Mockito.mock(OAuth2ProviderMetaData.class);
 
-    @After
+    @AfterEach
     public void teardown() {
         beanManagerFake.deregistration();
     }
@@ -83,7 +84,7 @@ public class OAuth2ProviderMetaDataControlTest {
         assertThat(metaData).isEqualTo(providerMetaDataMock2);
     }
 
-    @Test(expected = AtbashUnexpectedException.class)
+    @Test
     public void getProviderMetaData_UnknownProvider() {
         beanManagerFake.registerBean(providerMetaDataMock1, OAuth2ProviderMetaData.class);
         beanManagerFake.registerBean(providerMetaDataMock2, OAuth2ProviderMetaData.class);
@@ -93,7 +94,7 @@ public class OAuth2ProviderMetaDataControlTest {
         when(providerMetaDataMock1.getName()).thenReturn("dummy1");
         when(providerMetaDataMock2.getName()).thenReturn("dummy2");
 
-        metaDataControl.getProviderMetaData("dummy3");
+        Assertions.assertThrows(AtbashUnexpectedException.class, () -> metaDataControl.getProviderMetaData("dummy3"));
 
     }
 
@@ -107,14 +108,14 @@ public class OAuth2ProviderMetaDataControlTest {
         assertThat(metaData).isEqualTo(providerMetaDataMock1);
     }
 
-    @Test(expected = AtbashIllegalActionException.class)
+    @Test
     public void getSingleProviderMetaData_multipleProvider() {
         beanManagerFake.registerBean(providerMetaDataMock1, OAuth2ProviderMetaData.class);
         beanManagerFake.registerBean(providerMetaDataMock2, OAuth2ProviderMetaData.class);
         beanManagerFake.endRegistration();
         metaDataControl.init();
 
-        metaDataControl.getSingleProviderMetaData();
+        Assertions.assertThrows(AtbashIllegalActionException.class, () -> metaDataControl.getSingleProviderMetaData());
     }
 
 }

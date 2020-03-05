@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,9 @@ import be.atbash.ee.security.octopus.config.testclasses.NamedCheck;
 import be.atbash.ee.security.octopus.crypto.hash.HashEncoding;
 import be.atbash.util.TestReflectionUtils;
 import com.google.common.collect.ImmutableList;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jtest.LoggingEvent;
 import uk.org.lidalia.slf4jtest.TestLogger;
@@ -43,7 +44,7 @@ public class OctopusCoreConfigurationTest {
 
     private TestLogger logger = TestLoggerFactory.getTestLogger(OctopusCoreConfiguration.class);
 
-    @After
+    @AfterEach
     public void tearDown() throws NoSuchFieldException {
         TestConfig.resetConfig();
         TestReflectionUtils.resetOf(coreConfiguration, "debugValues");
@@ -121,10 +122,10 @@ public class OctopusCoreConfigurationTest {
         assertThat(encoding).isEqualTo(HashEncoding.BASE64);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getHashEncoding_wrongValue() {
         TestConfig.addConfigValue("hashEncoding", "TEST");
-        coreConfiguration.getHashEncoding();
+        Assertions.assertThrows(ConfigurationException.class, () -> coreConfiguration.getHashEncoding());
 
     }
 
@@ -141,16 +142,16 @@ public class OctopusCoreConfigurationTest {
         assertThat(saltLength).isEqualTo(0);
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSaltLength_WrongValue() {
         TestConfig.addConfigValue("saltLength", "15");
-        coreConfiguration.getSaltLength();
+        Assertions.assertThrows(ConfigurationException.class, () -> coreConfiguration.getSaltLength());
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getSaltLength_WrongValue_negative() {
         TestConfig.addConfigValue("saltLength", "-16");
-        coreConfiguration.getSaltLength();
+        Assertions.assertThrows(ConfigurationException.class, () -> coreConfiguration.getSaltLength());
     }
 
     @Test
@@ -182,19 +183,19 @@ public class OctopusCoreConfigurationTest {
         assertThat(iterations).isNull();
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getHashIterations_wrongValue() {
         TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
         TestConfig.addConfigValue("hashIterations", "0");
-        coreConfiguration.getHashIterations();
+        Assertions.assertThrows(ConfigurationException.class, () -> coreConfiguration.getHashIterations());
 
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void getHashIterations_NoNumber() {
         TestConfig.addConfigValue("hashAlgorithmName", "SHA-256");
         TestConfig.addConfigValue("hashIterations", "abc");
-        coreConfiguration.getHashIterations();
+        Assertions.assertThrows(ConfigurationException.class, () -> coreConfiguration.getHashIterations());
 
     }
 

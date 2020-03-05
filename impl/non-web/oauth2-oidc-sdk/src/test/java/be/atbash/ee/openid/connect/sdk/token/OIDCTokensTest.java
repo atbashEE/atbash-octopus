@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import be.atbash.ee.oauth2.sdk.Scope;
 import be.atbash.ee.oauth2.sdk.token.*;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Tests the OpenID Connect tokens class.
@@ -252,23 +252,21 @@ public class OIDCTokensTest {
     @Test
     public void testMissingIDToken() {
 
-        try {
-            new OIDCTokens((JWT) null, new BearerAccessToken(), null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The ID token must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new OIDCTokens((JWT) null, new BearerAccessToken(), null));
+
+        assertThat(exception.getMessage()).isEqualTo("The ID token must not be null");
+
     }
 
     @Test
     public void testMissingIDTokenString() {
 
-        try {
-            new OIDCTokens((String) null, new BearerAccessToken(), null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The ID token string must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new OIDCTokens((String) null, new BearerAccessToken(), null));
+
+        assertThat(exception.getMessage()).isEqualTo("The ID token string must not be null");
+
     }
 
     @Test
@@ -280,12 +278,11 @@ public class OIDCTokensTest {
         jsonObjectbuilder.add("access_token", "abc123");
         jsonObjectbuilder.add("expires_in", 60L);
 
-        try {
-            OIDCTokens.parse(jsonObjectbuilder.build());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage().startsWith("Couldn't parse ID token: Invalid unsecured/JWS/JWE header:")).isTrue();
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                OIDCTokens.parse(jsonObjectbuilder.build()));
+
+        assertThat(exception.getMessage().startsWith("Couldn't parse ID token: Invalid unsecured/JWS/JWE header:")).isTrue();
+
     }
 
     @Test

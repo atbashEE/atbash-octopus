@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,14 @@ import be.atbash.ee.security.octopus.filter.authc.UserFilter;
 import be.atbash.ee.security.octopus.filter.mgt.FilterChainManager;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.subject.WebSubject;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +44,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JSFAccessDeniedHandlerTest {
 
     @Mock
@@ -77,18 +78,18 @@ public class JSFAccessDeniedHandlerTest {
         accessDeniedHandler.init();
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void init_WrongDefaultFilter() {
         when(jsfConfigurationMock.getDefaultUserFilter()).thenReturn("basic");
         when(chainManagerMock.getFilter("basic")).thenReturn(new BasicHttpAuthenticationFilter());
-        accessDeniedHandler.init();
+        Assertions.assertThrows(ConfigurationException.class, () -> accessDeniedHandler.init());
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test
     public void init_UnknownDefaultFilter() {
         when(jsfConfigurationMock.getDefaultUserFilter()).thenReturn("xx");
         when(chainManagerMock.getFilter("xx")).thenReturn(null);
-        accessDeniedHandler.init();
+        Assertions.assertThrows(ConfigurationException.class, () -> accessDeniedHandler.init());
     }
 
     @Test

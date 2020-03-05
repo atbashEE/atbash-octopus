@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ import be.atbash.ee.security.octopus.authz.permission.PermissionResolver;
 import be.atbash.ee.security.octopus.authz.permission.WildcardPermission;
 import be.atbash.ee.security.octopus.context.ThreadContext;
 import be.atbash.ee.security.octopus.subject.WebSubject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import javax.servlet.ServletRequest;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
  *
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NamedPermissionFilterTest {
 
     @Mock
@@ -68,19 +68,19 @@ public class NamedPermissionFilterTest {
     @Captor
     private ArgumentCaptor<String> attributeNameCaptor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         ThreadContext.bind(subjectMock);
 
-        when(permissionResolverMock.resolvePermission("PERMISSION1")).thenReturn(new NamedDomainPermission("PERMISSION1", "permission:1:*"));
-        when(permissionResolverMock.resolvePermission("PERMISSION2")).thenReturn(new NamedDomainPermission("PERMISSION2", "permission:2:*"));
-        when(permissionResolverMock.resolvePermission("PERMISSION3")).thenReturn(new NamedDomainPermission("PERMISSION3", "permission:3:*"));
-        when(permissionResolverMock.resolvePermission("permission1")).thenReturn(new NamedDomainPermission("PERMISSION1", "spermission:1:*"));
-        when(permissionResolverMock.resolvePermission("permission2")).thenReturn(new NamedDomainPermission("PERMISSION2", "spermission:2:*"));
-        when(permissionResolverMock.resolvePermission("permission3")).thenReturn(new NamedDomainPermission("PERMISSION3", "spermission:3:*"));
-        when(permissionResolverMock.resolvePermission("junit")).thenReturn(new WildcardPermission("junit:*:*"));
-        when(permissionResolverMock.resolvePermission("junit:permission:1")).thenReturn(new WildcardPermission("junit:permission:1"));
+        lenient().when(permissionResolverMock.resolvePermission("PERMISSION1")).thenReturn(new NamedDomainPermission("PERMISSION1", "permission:1:*"));
+        lenient().when(permissionResolverMock.resolvePermission("PERMISSION2")).thenReturn(new NamedDomainPermission("PERMISSION2", "permission:2:*"));
+        lenient().when(permissionResolverMock.resolvePermission("PERMISSION3")).thenReturn(new NamedDomainPermission("PERMISSION3", "permission:3:*"));
+        lenient().when(permissionResolverMock.resolvePermission("permission1")).thenReturn(new NamedDomainPermission("PERMISSION1", "spermission:1:*"));
+        lenient().when(permissionResolverMock.resolvePermission("permission2")).thenReturn(new NamedDomainPermission("PERMISSION2", "spermission:2:*"));
+        lenient().when(permissionResolverMock.resolvePermission("permission3")).thenReturn(new NamedDomainPermission("PERMISSION3", "spermission:3:*"));
+        lenient().when(permissionResolverMock.resolvePermission("junit")).thenReturn(new WildcardPermission("junit:*:*"));
+        lenient().when(permissionResolverMock.resolvePermission("junit:permission:1")).thenReturn(new WildcardPermission("junit:permission:1"));
 
     }
 

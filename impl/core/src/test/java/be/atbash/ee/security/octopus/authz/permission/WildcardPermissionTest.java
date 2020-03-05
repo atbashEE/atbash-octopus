@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package be.atbash.ee.security.octopus.authz.permission;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,24 +25,24 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class WildcardPermissionTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void constructorNull() {
-        new WildcardPermission(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new WildcardPermission(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void constructorEmpty() {
-        new WildcardPermission("");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new WildcardPermission(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void constructorBlank() {
-        new WildcardPermission("   ");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new WildcardPermission("   "));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void onlyDelimiters() {
-        new WildcardPermission("::,,::,:");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new WildcardPermission("::,,::,:"));
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import be.atbash.ee.openid.connect.sdk.Nonce;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -30,7 +31,6 @@ import java.net.URI;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class LogoutTokenClaimsSetTest {
@@ -213,19 +213,16 @@ public class LogoutTokenClaimsSetTest {
         LogoutTokenClaimsSet claimsSet = new LogoutTokenClaimsSet(iss, sub, audList, iat, jti, sid);
         claimsSet.setClaim("nonce", new Nonce().getValue());
 
-        try {
-            claimsSet.toJSONObject();
-            fail();
-        } catch (IllegalStateException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is prohibited");
-        }
+        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () ->
+                claimsSet.toJSONObject());
 
-        try {
-            claimsSet.toJWTClaimsSet();
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is prohibited");
-        }
+        assertThat(exception.getMessage()).isEqualTo("Nonce is prohibited");
+
+        OAuth2JSONParseException exception1 = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                claimsSet.toJWTClaimsSet());
+
+        assertThat(exception1.getMessage()).isEqualTo("Nonce is prohibited");
+
     }
 
     @Test
@@ -244,41 +241,38 @@ public class LogoutTokenClaimsSetTest {
         JsonObjectBuilder jsonObject = claimsSet.toJSONObject();
         jsonObject.add("nonce", new Nonce().getValue());
 
-        try {
-            LogoutTokenClaimsSet.parse(jsonObject.build().toString());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is prohibited");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                LogoutTokenClaimsSet.parse(jsonObject.build().toString()));
 
-        JWTClaimsSet jwtClaimsSet = claimsSet.toJWTClaimsSet();
-        jwtClaimsSet = new JWTClaimsSet.Builder(jwtClaimsSet)
+        assertThat(exception.getMessage()).isEqualTo("Nonce is prohibited");
+
+
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder(claimsSet.toJWTClaimsSet())
                 .claim("nonce", new Nonce().getValue())
                 .build();
 
-        try {
-            new LogoutTokenClaimsSet(jwtClaimsSet);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Nonce is prohibited");
-        }
+        exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                new LogoutTokenClaimsSet(jwtClaimsSet));
+
+        assertThat(exception.getMessage()).isEqualTo("Nonce is prohibited");
+
     }
 
     @Test
     public void testConstructorSubAndSIDMissing() {
 
-        try {
-            new LogoutTokenClaimsSet(
-                    new Issuer("https://c2id.com"),
-                    null,
-                    new Audience("123").toSingleAudienceList(),
-                    new Date(),
-                    new JWTID(),
-                    null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("Either the subject or the session ID must be set, or both");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new LogoutTokenClaimsSet(
+                        new Issuer("https://c2id.com"),
+                        null,
+                        new Audience("123").toSingleAudienceList(),
+                        new Date(),
+                        new JWTID(),
+                        null));
+
+
+        assertThat(exception.getMessage()).isEqualTo("Either the subject or the session ID must be set, or both");
+
     }
 
     @Test
@@ -293,11 +287,10 @@ public class LogoutTokenClaimsSetTest {
                 "   \"sid\": \"08a5019c-17e1-4977-8f42-65a12843ea02\"\n" +
                 "  }";
 
-        try {
-            LogoutTokenClaimsSet.parse(json);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing or invalid \"events\" claim");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                LogoutTokenClaimsSet.parse(json));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing or invalid \"events\" claim");
+
     }
 }

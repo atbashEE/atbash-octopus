@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,14 @@ import be.atbash.ee.oauth2.sdk.token.RefreshToken;
 import be.atbash.ee.openid.connect.sdk.token.OIDCTokens;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWT;
 import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -186,31 +186,6 @@ public class OIDCTokenResponseTest {
     }
 
     @Test
-    public void testWithInvalidIDTokenString()
-            throws Exception {
-
-        String invalidIDTokenString = "ey...";
-        OIDCTokens tokens = new OIDCTokens(invalidIDTokenString, new BearerAccessToken("abc123"), new RefreshToken("def456"));
-        OIDCTokenResponse response = new OIDCTokenResponse(tokens);
-
-        assertThat(response.indicatesSuccess()).isTrue();
-        assertThat(response.getOIDCTokens().getAccessToken().getValue()).isEqualTo("abc123");
-        assertThat(response.getOIDCTokens().getRefreshToken().getValue()).isEqualTo("def456");
-        assertThat(response.getOIDCTokens().getIDToken()).isNull();
-        assertThat(response.getOIDCTokens().getIDTokenString()).isEqualTo(invalidIDTokenString);
-
-        JsonObject jsonObject = response.toJSONObject().build();
-
-        try {
-            OIDCTokenResponse.parse(jsonObject);
-            fail();
-
-        } catch (OAuth2JSONParseException e) {
-            // ok
-        }
-    }
-
-    @Test
     public void testWithoutIDToken()
             throws Exception {
 
@@ -234,5 +209,25 @@ public class OIDCTokenResponseTest {
         assertThat(parsedResponse.getOIDCTokens().getRefreshToken().getValue()).isEqualTo(tokens.getRefreshToken().getValue());
         assertThat(parsedResponse.getOIDCTokens().getIDToken()).isNull();
         assertThat(parsedResponse.getOIDCTokens().getIDTokenString()).isNull();
+    }
+
+    @Test
+    public void testWithInvalidIDTokenString() {
+
+        String invalidIDTokenString = "ey...";
+        OIDCTokens tokens = new OIDCTokens(invalidIDTokenString, new BearerAccessToken("abc123"), new RefreshToken("def456"));
+        OIDCTokenResponse response = new OIDCTokenResponse(tokens);
+
+        assertThat(response.indicatesSuccess()).isTrue();
+        assertThat(response.getOIDCTokens().getAccessToken().getValue()).isEqualTo("abc123");
+        assertThat(response.getOIDCTokens().getRefreshToken().getValue()).isEqualTo("def456");
+        assertThat(response.getOIDCTokens().getIDToken()).isNull();
+        assertThat(response.getOIDCTokens().getIDTokenString()).isEqualTo(invalidIDTokenString);
+
+        JsonObject jsonObject = response.toJSONObject().build();
+
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                OIDCTokenResponse.parse(jsonObject));
+
     }
 }

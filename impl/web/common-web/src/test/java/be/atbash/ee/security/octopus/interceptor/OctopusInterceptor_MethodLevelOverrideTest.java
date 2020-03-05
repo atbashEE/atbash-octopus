@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,47 +28,43 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import be.atbash.ee.security.octopus.token.AuthenticationToken;
 import be.atbash.util.TestReflectionUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.interceptor.InvocationContext;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
  *
  */
-@RunWith(Parameterized.class)
 public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusInterceptorTest {
 
-    public OctopusInterceptor_MethodLevelOverrideTest(boolean authenticated, String permission, boolean customAccess, String systemAccount, String role) {
-        super(authenticated, permission, customAccess, systemAccount, role);
+    private static Stream<Arguments> provideArguments() {
+        return Stream.of(
+                Arguments.of(new TestInterceptorParameters(NOT_AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(NOT_AUTHENTICATED, null, CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, PERMISSION1, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, OCTOPUS1, NO_CUSTOM_ACCESS, null, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null)),
+                Arguments.of(new TestInterceptorParameters(AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, ROLE1))
+        );
     }
 
-    @Parameterized.Parameters
-    public static List<Object[]> defineScenarios() {
-        return Arrays.asList(new Object[][]{
-                {NOT_AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null},            //0
-                {NOT_AUTHENTICATED, null, CUSTOM_ACCESS, null, null},               //1
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, null},                //2
-                {AUTHENTICATED, PERMISSION1, NO_CUSTOM_ACCESS, null, null},        //3
-                {AUTHENTICATED, null, CUSTOM_ACCESS, null, null},                   //4
-                {AUTHENTICATED, OCTOPUS1, NO_CUSTOM_ACCESS, null, null},            //5
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, ACCOUNT1, null},             //6
-                {AUTHENTICATED, null, NO_CUSTOM_ACCESS, null, ROLE1},             //7
-        });
-    }
-
-    @Test
-    public void testInterceptShiroSecurity_NoAnnotation() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_NoAnnotation(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("noAnnotation");
@@ -83,8 +79,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_NO_ANNOTATION);
     }
 
-    @Test
-    public void testInterceptShiroSecurity_RequiresUser() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_RequiresUser(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("requiresUser");
@@ -95,22 +93,24 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         try {
             octopusInterceptor.interceptForSecurity(context);
 
-            assertThat(authenticated).isTrue();
+            assertThat(parameters.isAuthenticated()).isTrue();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_REQUIRES_USER);
 
         } catch (SecurityAuthorizationViolationException e) {
-            if (systemAccount == null) {
-                assertThat(authenticated).isFalse();
+            if (parameters.getSystemAccount() == null) {
+                assertThat(parameters.isAuthenticated()).isFalse();
             }
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_InAuthentication() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_InAuthentication(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         // The in Authentication is so encapsulated that we can never set it outside the class (as we could manipulate then the security)
         // That is also the reason we have to simulate a larger part to test this.
@@ -146,14 +146,16 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_IN_AUTHENTICATION);
 
         } catch (SecurityAuthorizationViolationException e) {
-            assertThat(authenticated).isTrue();
+            assertThat(parameters.isAuthenticated()).isTrue();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_InAuthenticationDirect() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_InAuthenticationDirect(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("inAuthentication");
@@ -173,8 +175,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_InAuthorization() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_InAuthorization(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("inAuthorization");
@@ -206,8 +210,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_InAuthorizationDirect() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_InAuthorizationDirect(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("inAuthorization");
@@ -227,8 +233,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_CustomPermissionAnnotation() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_CustomPermissionAnnotation(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("permission1");
@@ -247,7 +255,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         try {
             octopusInterceptor.interceptForSecurity(context);
 
-            assertThat(permission).isEqualTo(PERMISSION1);
+            assertThat(parameters.getPermission()).isEqualTo(PERMISSION1);
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_PERMISSION1);
@@ -260,8 +268,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_CustomPermissionAnnotation2() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_CustomPermissionAnnotation2(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("permission2");
@@ -280,7 +290,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         try {
             octopusInterceptor.interceptForSecurity(context);
 
-            assertThat(permission).isEqualTo(PERMISSION2);
+            assertThat(parameters.getPermission()).isEqualTo(PERMISSION2);
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_PERMISSION2);
@@ -293,8 +303,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_CustomVoter() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_CustomVoter(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("customVoter");
@@ -305,22 +317,24 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         try {
             octopusInterceptor.interceptForSecurity(context);
 
-            assertThat(customAccess).isTrue();
+            assertThat(parameters.isCustomAccess()).isTrue();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_CUSTOM_VOTER);
 
         } catch (SecurityAuthorizationViolationException e) {
 
-            assertThat(customAccess).isFalse();
+            assertThat(parameters.isCustomAccess()).isFalse();
             List<String> feedback = CallFeedbackCollector.getCallFeedback();
             assertThat(feedback).isEmpty();
 
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_RequiresPermission1() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_RequiresPermission1(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("requiresPermission1");
@@ -335,7 +349,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_REQUIRES_PERMISSION1);
 
-            assertThat(permission).isEqualTo(OCTOPUS1);
+            assertThat(parameters.getPermission()).isEqualTo(OCTOPUS1);
 
         } catch (SecurityAuthorizationViolationException e) {
 
@@ -344,8 +358,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_RequiresPermission2() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_RequiresPermission2(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("requiresPermission2");
@@ -364,8 +380,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_SystemAccount1() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_SystemAccount1(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("systemAccountValue1");
@@ -380,7 +398,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevelOverride.METHOD_LEVEL_SYSTEM_ACCOUNT1);
 
-            assertThat(systemAccount).isEqualTo(ACCOUNT1);
+            assertThat(parameters.getSystemAccount()).isEqualTo(ACCOUNT1);
 
         } catch (SecurityAuthorizationViolationException e) {
 
@@ -389,8 +407,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_OctopusPermission1() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_OctopusPermission1(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("octopusPermission1");
@@ -412,7 +432,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_OCTOPUS_PERMISSION1);
 
-            assertThat(permission).isEqualTo(NAMED_OCTOPUS);
+            assertThat(parameters.getPermission()).isEqualTo(NAMED_OCTOPUS);
 
         } catch (SecurityAuthorizationViolationException e) {
 
@@ -421,8 +441,10 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
         }
     }
 
-    @Test
-    public void testInterceptShiroSecurity_OctopusRole() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideArguments")
+    public void testInterceptShiroSecurity_OctopusRole(TestInterceptorParameters parameters) throws Exception {
+        setup(parameters);
 
         Object target = new MethodLevelOverride();
         Method method = target.getClass().getMethod("octopusRole");
@@ -438,7 +460,7 @@ public class OctopusInterceptor_MethodLevelOverrideTest extends OctopusIntercept
             assertThat(feedback).hasSize(1);
             assertThat(feedback).contains(MethodLevel.METHOD_LEVEL_OCTOPUS_ROLE);
 
-            assertThat(role).isEqualTo(ROLE1);
+            assertThat(parameters.getRole()).isEqualTo(ROLE1);
 
         } catch (SecurityAuthorizationViolationException e) {
 

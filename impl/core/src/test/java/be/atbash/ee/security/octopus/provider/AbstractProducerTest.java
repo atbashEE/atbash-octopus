@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 package be.atbash.ee.security.octopus.provider;
 
 import org.apache.deltaspike.core.util.bean.ImmutableBean;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import javax.enterprise.inject.AmbiguousResolutionException;
@@ -29,6 +28,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.InjectionPoint;
 import java.lang.reflect.Member;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -37,48 +37,40 @@ import static org.mockito.Mockito.when;
 
 public class AbstractProducerTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Mock
     protected InjectionPoint injectionPointMock;
 
-    protected void checkAmbigousResolutionException() {
+    protected void testWithMultiple(Executable testMethod) {
         final Bean<?> bean = new ImmutableBean(String.class, "test", null, null, null, null, false, true, null, "test", null);
-        when(injectionPointMock.getBean()).thenAnswer(new Answer<Bean<?>>() {
-            @Override
-            public Bean<?> answer(InvocationOnMock invocation) throws Throwable {
-                return bean;
-            }
-        });
+        when(injectionPointMock.getBean()).thenAnswer((Answer<Bean<?>>) invocation -> bean);
 
         Member memberMock = Mockito.mock(Member.class);
         when(injectionPointMock.getMember()).thenReturn(memberMock);
 
         when(memberMock.getName()).thenReturn("theField");
 
-        thrown.expect(AmbiguousResolutionException.class);
-        thrown.expectMessage("java.lang.String");
-        thrown.expectMessage("theField");
+        AmbiguousResolutionException exception = Assertions.assertThrows(AmbiguousResolutionException.class, testMethod);
+        assertThat(exception.getMessage()).contains("java.lang.String");
+        assertThat(exception.getMessage()).contains("theField");
+
+        // FIXME What is the real test here?
     }
 
-    protected void checkUnsatisfiedResolutionException() {
+    protected void testWithMissing(Executable testMethod) {
         final Bean<?> bean = new ImmutableBean(Long.class, "test", null, null, null, null, false, true, null, "test", null);
-        when(injectionPointMock.getBean()).thenAnswer(new Answer<Bean<?>>() {
-            @Override
-            public Bean<?> answer(InvocationOnMock invocation) throws Throwable {
-                return bean;
-            }
-        });
+        when(injectionPointMock.getBean()).thenAnswer((Answer<Bean<?>>) invocation -> bean);
 
         Member memberMock = Mockito.mock(Member.class);
         when(injectionPointMock.getMember()).thenReturn(memberMock);
 
         when(memberMock.getName()).thenReturn("otherField");
 
-        thrown.expect(UnsatisfiedResolutionException.class);
-        thrown.expectMessage("java.lang.Long");
-        thrown.expectMessage("otherField");
+        UnsatisfiedResolutionException exception = Assertions.assertThrows(UnsatisfiedResolutionException.class, testMethod);
+
+        assertThat(exception.getMessage()).contains("java.lang.Long");
+        assertThat(exception.getMessage()).contains("otherField");
+
+        // FIXME What is the real test here?
     }
 
 

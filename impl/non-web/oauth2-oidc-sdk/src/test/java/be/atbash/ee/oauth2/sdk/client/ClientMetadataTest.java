@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jwe.JWEAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.util.Base64URLValue;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -40,7 +41,6 @@ import java.net.URI;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -731,14 +731,12 @@ public class ClientMetadataTest {
                 " \"example_extension_parameter\": \"example_value\"\n" +
                 "}";
 
-        try {
-            ClientMetadata.parse(JSONObjectUtils.parse(json));
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"redirect_uris\" parameter: Expected authority at index 8: https://");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_REDIRECT_URI.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid redirection URI(s): Expected authority at index 8: https://");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientMetadata.parse(JSONObjectUtils.parse(json)));
+
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"redirect_uris\" parameter: Expected authority at index 8: https://");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_REDIRECT_URI.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid redirection URI(s): Expected authority at index 8: https://");
+
     }
 
     @Test
@@ -849,33 +847,23 @@ public class ClientMetadataTest {
         ClientMetadata metadata = new ClientMetadata();
 
         // single setter
-        try {
-            metadata.setRedirectionURI(redirectURIWithFragment);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The redirect_uri must not contain fragment");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> metadata.setRedirectionURI(redirectURIWithFragment));
+        assertThat(exception.getMessage()).isEqualTo("The redirect_uri must not contain fragment");
 
         // collection setter
-        try {
-            metadata.setRedirectionURIs(Collections.singleton(redirectURIWithFragment));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The redirect_uri must not contain fragment");
-        }
+        IllegalArgumentException exception2 = Assertions.assertThrows(IllegalArgumentException.class, () -> metadata.setRedirectionURIs(Collections.singleton(redirectURIWithFragment)));
+        assertThat(exception2.getMessage()).isEqualTo("The redirect_uri must not contain fragment");
+
 
         // static parse method
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("redirect_uris", JSONObjectUtils.asJsonArray(Collections.singletonList(redirectURIWithFragment.toString())));
 
-        try {
-            ClientMetadata.parse(builder.build());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Invalid \"redirect_uris\" parameter: URI must not contain fragment");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_REDIRECT_URI.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid redirection URI(s): URI must not contain fragment");
-        }
+        OAuth2JSONParseException exception3 = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientMetadata.parse(builder.build()));
+        assertThat(exception3.getMessage()).isEqualTo("Invalid \"redirect_uris\" parameter: URI must not contain fragment");
+        assertThat(exception3.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_REDIRECT_URI.getCode());
+        assertThat(exception3.getErrorObject().getDescription()).isEqualTo("Invalid redirection URI(s): URI must not contain fragment");
+
     }
 
     @Test
@@ -884,14 +872,13 @@ public class ClientMetadataTest {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("response_types", 123);
 
-        try {
-            ClientMetadata.parse(builder.build());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Unexpected type of JSON object member with key \"response_types\"");
-            assertThat(e.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_CLIENT_METADATA.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid client metadata field: Unexpected type of JSON object member with key \"response_types\"");
-        }
+
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientMetadata.parse(builder.build()));
+
+        assertThat(exception.getMessage()).isEqualTo("Unexpected type of JSON object member with key \"response_types\"");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(RegistrationError.INVALID_CLIENT_METADATA.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid client metadata field: Unexpected type of JSON object member with key \"response_types\"");
+
     }
 
     @Test
@@ -1008,12 +995,10 @@ public class ClientMetadataTest {
 
         ClientMetadata clientMetadata = new ClientMetadata();
 
-        try {
-            clientMetadata.setAuthorizationJWSAlg(new JWSAlgorithm("none"));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The JWS algorithm must not be \"none\"");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> clientMetadata.setAuthorizationJWSAlg(new JWSAlgorithm("none")));
+
+        assertThat(exception.getMessage()).isEqualTo("The JWS algorithm must not be \"none\"");
+
     }
 
     @Test
@@ -1023,17 +1008,15 @@ public class ClientMetadataTest {
         clientMetadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.TLS_CLIENT_AUTH);
         clientMetadata.applyDefaults();
 
-        try {
-            ClientMetadata.parse(clientMetadata.toJSONObject().build());
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("A certificate field must be specified to indicate the subject in tls_client_auth: " +
-                    "tls_client_auth_subject_dn, tls_client_auth_san_dns, tls_client_auth_san_uri, tls_client_auth_san_ip or tls_client_auth_san_email");
-            assertThat(e.getErrorObject().getCode()).isEqualTo("invalid_client_metadata");
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid client metadata field: " +
-                    "A certificate field must be specified to indicate the subject in tls_client_auth: " +
-                    "tls_client_auth_subject_dn, tls_client_auth_san_dns, tls_client_auth_san_uri, tls_client_auth_san_ip or tls_client_auth_san_email");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> ClientMetadata.parse(clientMetadata.toJSONObject().build()));
+
+        assertThat(exception.getMessage()).isEqualTo("A certificate field must be specified to indicate the subject in tls_client_auth: " +
+                "tls_client_auth_subject_dn, tls_client_auth_san_dns, tls_client_auth_san_uri, tls_client_auth_san_ip or tls_client_auth_san_email");
+        assertThat(exception.getErrorObject().getCode()).isEqualTo("invalid_client_metadata");
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid client metadata field: " +
+                "A certificate field must be specified to indicate the subject in tls_client_auth: " +
+                "tls_client_auth_subject_dn, tls_client_auth_san_dns, tls_client_auth_san_uri, tls_client_auth_san_ip or tls_client_auth_san_email");
+
     }
 
     /* FIXME

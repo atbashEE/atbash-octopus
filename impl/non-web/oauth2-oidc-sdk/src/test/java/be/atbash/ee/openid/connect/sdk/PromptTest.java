@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@ package be.atbash.ee.openid.connect.sdk;
 
 
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -103,32 +103,19 @@ public class PromptTest {
     @Test
     public void testParseInvalidPrompt() {
 
-        try {
-            Prompt.parse("none login");
-            fail("Failed to raise exception on none login");
-        } catch (OAuth2JSONParseException ex) {
-            // ok
-        }
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                Prompt.parse("none login"));
 
-        try {
-            Prompt.parse("none consent");
-            fail("Failed to raise exception on none consent");
-        } catch (OAuth2JSONParseException ex) {
-            // ok
-        }
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                Prompt.parse("none consent"));
 
-        try {
-            Prompt.parse("none select_account");
-            fail("Failed to raise exception on none select_account");
-        } catch (OAuth2JSONParseException ex) {
-            // ok
-        }
 
-        try {
-            Prompt.parse("none login consent select_account");
-            fail("Failed to raise exception on none consent select_account");
-        } catch (OAuth2JSONParseException ex) {
-            // ok
-        }
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                Prompt.parse("none select_account"));
+
+
+        Assertions.assertThrows(OAuth2JSONParseException.class, () ->
+                Prompt.parse("none login consent select_account"));
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.ee.openid.connect.sdk.AuthenticationRequest;
 import be.atbash.ee.openid.connect.sdk.OIDCScopeValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class PushedAuthorizationRequestTest {
@@ -158,51 +158,43 @@ public class PushedAuthorizationRequestTest {
     @Test
     public void testConfidentialClientConstructor_requireClientAuthentication() {
 
-        try {
-            new PushedAuthorizationRequest(
-                    URI.create("https://c2id.com/par"),
-                    null,
-                    new AuthorizationRequest.Builder(new ResponseType(ResponseType.Value.CODE), new ClientID()).build());
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The client authentication must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationRequest(
+                URI.create("https://c2id.com/par"),
+                null,
+                new AuthorizationRequest.Builder(new ResponseType(ResponseType.Value.CODE), new ClientID()).build()));
+
+        assertThat(exception.getMessage()).isEqualTo("The client authentication must not be null");
+
     }
 
     @Test
     public void testRequireAuthzRequest() {
 
         // confidential client
-        try {
-            new PushedAuthorizationRequest(
-                    URI.create("https://c2id.com/par"),
-                    new ClientSecretBasic(new ClientID(), new Secret()),
-                    null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The authorization request must not be null");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationRequest(
+                URI.create("https://c2id.com/par"),
+                new ClientSecretBasic(new ClientID(), new Secret()),
+                null));
+
+        assertThat(exception.getMessage()).isEqualTo("The authorization request must not be null");
 
         // public client
-        try {
-            new PushedAuthorizationRequest(
-                    URI.create("https://c2id.com/par"),
-                    null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("The authorization request must not be null");
-        }
+        IllegalArgumentException exception1 = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationRequest(
+                URI.create("https://c2id.com/par"),
+                null));
+
+        assertThat(exception1.getMessage()).isEqualTo("The authorization request must not be null");
+
     }
 
     @Test
-    public void testParseHTTPRequest_requirePOST() {
+    public void testParseHTTPRequest_requirePOST() throws MalformedURLException {
 
-        try {
-            PushedAuthorizationRequest.parse(new HTTPRequest(HTTPRequest.Method.GET, new URL("https://c2id.com/par")));
-            fail();
-        } catch (OAuth2JSONParseException | MalformedURLException e) {
-            assertThat(e.getMessage()).isEqualTo("The HTTP request method must be POST");
-        }
+        URL url = new URL("https://c2id.com/par");
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationRequest.parse(new HTTPRequest(HTTPRequest.Method.GET, url)));
+
+        assertThat(exception.getMessage()).isEqualTo("The HTTP request method must be POST");
+
     }
 
     @Test
@@ -222,12 +214,10 @@ public class PushedAuthorizationRequestTest {
         // Remove encoding
         httpRequest.setContentType((String) null);
 
-        try {
-            PushedAuthorizationRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing HTTP Content-Type header");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing HTTP Content-Type header");
+
     }
 
     @Test
@@ -247,12 +237,10 @@ public class PushedAuthorizationRequestTest {
         // Remove encoding
         httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
 
-        try {
-            PushedAuthorizationRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("The HTTP Content-Type header must be application/x-www-form-urlencoded; charset=UTF-8");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("The HTTP Content-Type header must be application/x-www-form-urlencoded; charset=UTF-8");
+
     }
 
     // client_id param optional in request body when found in client auth (authZ header)
@@ -298,19 +286,12 @@ public class PushedAuthorizationRequestTest {
                 URI.create("https://example.com/eimeeph8"))
                 .build();
 
-        try {
-            new PushedAuthorizationRequest(endpoint, clientAuth, authzRequest);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("Authorization request_uri parameter not allowed");
-        }
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationRequest(endpoint, clientAuth, authzRequest));
+        assertThat(exception.getMessage()).isEqualTo("Authorization request_uri parameter not allowed");
 
-        try {
-            new PushedAuthorizationRequest(endpoint, authzRequest);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage()).isEqualTo("Authorization request_uri parameter not allowed");
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new PushedAuthorizationRequest(endpoint, authzRequest));
+        assertThat(exception.getMessage()).isEqualTo("Authorization request_uri parameter not allowed");
+
     }
 
     @Test
@@ -329,14 +310,12 @@ public class PushedAuthorizationRequestTest {
         clientAuth.applyTo(httpRequest);
         httpRequest.setQuery(authzRequest.toQueryString());
 
-        try {
-            PushedAuthorizationRequest.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Authorization request_uri parameter not allowed");
-            assertThat(e.getErrorObject().getHTTPStatusCode()).isEqualTo(400);
-            assertThat(e.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-            assertThat(e.getErrorObject().getDescription()).isEqualTo("Invalid request: Authorization request_uri parameter not allowed");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> PushedAuthorizationRequest.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Authorization request_uri parameter not allowed");
+        assertThat(exception.getErrorObject().getHTTPStatusCode()).isEqualTo(400);
+        assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Authorization request_uri parameter not allowed");
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,15 @@ import be.atbash.ee.security.octopus.context.internal.OctopusInvocationContext;
 import be.atbash.ee.security.octopus.interceptor.CustomAccessDecisionVoterContext;
 import be.atbash.util.BeanManagerFake;
 import org.apache.deltaspike.security.api.authorization.AccessDecisionVoterContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.enterprise.inject.UnsatisfiedResolutionException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CustomVoterFilterTest {
 
     private static final String URL = "/path/to/foo";
@@ -58,7 +59,7 @@ public class CustomVoterFilterTest {
     @Captor
     private ArgumentCaptor<AccessDecisionVoterContext> decisionVoterContextArgumentCaptor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         beanManagerFake = new BeanManagerFake();
 
@@ -72,7 +73,7 @@ public class CustomVoterFilterTest {
 
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         beanManagerFake.deregistration();
     }
@@ -122,18 +123,17 @@ public class CustomVoterFilterTest {
 
     }
 
-    @Test(expected = UnsatisfiedResolutionException.class)
-    public void isAccessAllowed_nonExistent() throws Exception {
+    @Test
+    public void isAccessAllowed_nonExistent() {
 
-        try {
-            when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom3"});
 
-            filter.isAccessAllowed(servletRequestMock, null);
-        } finally {
-            verify(genericVoter1Mock, never()).verify(any(AccessDecisionVoterContext.class));
-            verify(genericVoter2Mock, never()).verify(any(AccessDecisionVoterContext.class));
+        when(servletRequestMock.getAttribute("octopus.pathConfig")).thenReturn(new String[]{"custom3"});
 
-        }
+        Assertions.assertThrows(UnsatisfiedResolutionException.class, () -> filter.isAccessAllowed(servletRequestMock, null));
+
+        verify(genericVoter1Mock, never()).verify(any(AccessDecisionVoterContext.class));
+        verify(genericVoter2Mock, never()).verify(any(AccessDecisionVoterContext.class));
+
     }
 
     @Test

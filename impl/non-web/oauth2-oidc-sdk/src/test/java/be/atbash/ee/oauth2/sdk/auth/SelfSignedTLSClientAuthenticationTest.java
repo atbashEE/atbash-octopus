@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import be.atbash.ee.oauth2.sdk.http.CommonContentTypes;
 import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.http.X509CertificateGenerator;
 import be.atbash.ee.oauth2.sdk.id.ClientID;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 public class SelfSignedTLSClientAuthenticationTest {
@@ -121,12 +121,10 @@ public class SelfSignedTLSClientAuthenticationTest {
 
         HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://c2id.com/token"));
 
-        try {
-            SelfSignedTLSClientAuthentication.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing HTTP POST request entity body");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> SelfSignedTLSClientAuthentication.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing HTTP POST request entity body");
+
     }
 
     @Test
@@ -137,12 +135,10 @@ public class SelfSignedTLSClientAuthenticationTest {
         httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
         httpRequest.setQuery("a=b");
 
-        try {
-            SelfSignedTLSClientAuthentication.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing client_id parameter");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> SelfSignedTLSClientAuthentication.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing client_id parameter");
+
     }
 
     @Test
@@ -153,12 +149,10 @@ public class SelfSignedTLSClientAuthenticationTest {
         httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
         httpRequest.setQuery("client_id=");
 
-        try {
-            SelfSignedTLSClientAuthentication.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing client_id parameter");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> SelfSignedTLSClientAuthentication.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing client_id parameter");
+
     }
 
     @Test
@@ -169,12 +163,10 @@ public class SelfSignedTLSClientAuthenticationTest {
         httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
         httpRequest.setQuery("client_id=123");
 
-        try {
-            SelfSignedTLSClientAuthentication.parse(httpRequest);
-            fail();
-        } catch (OAuth2JSONParseException e) {
-            assertThat(e.getMessage()).isEqualTo("Missing client X.509 certificate");
-        }
+        OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> SelfSignedTLSClientAuthentication.parse(httpRequest));
+
+        assertThat(exception.getMessage()).isEqualTo("Missing client X.509 certificate");
+
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import be.atbash.ee.oauth2.sdk.token.AccessToken;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.openid.connect.sdk.claims.AccessTokenHash;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Tests the access token hash validator.
@@ -44,23 +44,20 @@ public class AccessTokenValidatorTest {
 
         AccessToken token = new BearerAccessToken(32);
         AccessTokenHash atHash = AccessTokenHash.compute(token, JWSAlgorithm.HS256);
-        try {
-            AccessTokenValidator.validate(token, new JWSAlgorithm("none"), atHash);
-            fail();
-        } catch (InvalidHashException e) {
-            assertThat(e.getMessage()).isEqualTo("Access token hash (at_hash) mismatch");
-        }
+
+        InvalidHashException exception = Assertions.assertThrows(InvalidHashException.class, () -> AccessTokenValidator.validate(token, new JWSAlgorithm("none"), atHash));
+        assertThat(exception.getMessage()).isEqualTo("Access token hash (at_hash) mismatch");
+
     }
 
     @Test
     public void testInvalidHash() {
 
         AccessToken token = new BearerAccessToken(32);
-        try {
-            AccessTokenValidator.validate(token, JWSAlgorithm.HS256, new AccessTokenHash("xxx"));
-            fail();
-        } catch (InvalidHashException e) {
-            assertThat(e.getMessage()).isEqualTo("Access token hash (at_hash) mismatch");
-        }
+
+        InvalidHashException exception = Assertions.assertThrows(InvalidHashException.class, () -> AccessTokenValidator.validate(token, JWSAlgorithm.HS256, new AccessTokenHash("xxx")));
+
+        assertThat(exception.getMessage()).isEqualTo("Access token hash (at_hash) mismatch");
+
     }
 }

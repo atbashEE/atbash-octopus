@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ import be.atbash.config.test.TestConfig;
 import be.atbash.ee.security.octopus.cas.exception.CasAuthenticationException;
 import be.atbash.ee.security.octopus.token.UsernamePasswordToken;
 import net.jadler.Jadler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +32,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TicketRequestorTest {
     private TicketRequestor requestor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         requestor = new TicketRequestor();
         Jadler.initJadler();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Jadler.closeJadler();
         TestConfig.resetConfig();
@@ -60,7 +61,7 @@ public class TicketRequestorTest {
     }
 
 
-    @Test(expected = CasAuthenticationException.class)
+    @Test
     public void getGrantingTicket_wrongCredentials() {
         configureParameters();
         Jadler.onRequest()
@@ -71,7 +72,7 @@ public class TicketRequestorTest {
 
 
         UsernamePasswordToken token = new UsernamePasswordToken("ictextern4", "1mhe&1mka");
-        requestor.getGrantingTicket(token);
+        Assertions.assertThrows(CasAuthenticationException.class, () -> requestor.getGrantingTicket(token));
     }
 
     private void configureParameters() {
@@ -82,7 +83,7 @@ public class TicketRequestorTest {
 
     }
 
-    @Test(expected = CasAuthenticationException.class)
+    @Test
     public void getGrantingTicket_WrongCredentials() {
         configureParameters();
 
@@ -92,7 +93,7 @@ public class TicketRequestorTest {
                 .withStatus(401);
 
         UsernamePasswordToken token = new UsernamePasswordToken("ictextern4", "1mhe1mka");
-        requestor.getGrantingTicket(token);
+        Assertions.assertThrows(CasAuthenticationException.class, () -> requestor.getGrantingTicket(token));
     }
 
     @Test

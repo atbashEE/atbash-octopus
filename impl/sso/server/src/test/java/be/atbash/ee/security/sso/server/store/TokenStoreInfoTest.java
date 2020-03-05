@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.token.BearerAccessToken;
 import be.atbash.ee.security.octopus.util.TimeUtil;
 import be.atbash.util.BeanManagerFake;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class TokenStoreInfoTest {
 
     private BeanManagerFake beanManagerFake = new BeanManagerFake();
 
-    @Before
+    @BeforeEach
     public void setup() {
         storeInfo = new TokenStoreInfo(null, null, null, null);
 
@@ -46,7 +46,7 @@ public class TokenStoreInfoTest {
         beanManagerFake.endRegistration();
     }
 
-    @After
+    @AfterEach
     public void destroy() {
         beanManagerFake.deregistration();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@ package be.atbash.ee.security.octopus.sso.client;
 
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 
@@ -51,10 +52,10 @@ public class JWSAlgorithmFactoryTest {
         assertThat(algorithm).isEqualTo(JWSAlgorithm.HS512);
     }
 
-    @Test(expected = AtbashUnexpectedException.class)
+    @Test
     public void determineOptimalAlgorithm_TooShort() {
 
-        factory.determineOptimalAlgorithm(defineSecret(184 / 8 + 1));
+        Assertions.assertThrows(AtbashUnexpectedException.class, () -> factory.determineOptimalAlgorithm(defineSecret(184 / 8 + 1)));
 
     }
 
