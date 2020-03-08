@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,16 @@
 package be.atbash.ee.security.octopus.mp.token;
 
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import be.atbash.ee.security.octopus.nimbus.jwt.util.DateUtils;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Represent the MP Auth token (can be used in a
- //*/
-//@MappedBy(beanEncoder = MPJWTTokenMapper.class)
-public class MPJWTToken implements /*JSONAware,*/ Cloneable {
+ * //
+ */
+public class MPJWTToken implements Cloneable {
 
     private String iss; // issuer
     private String aud; // audience
@@ -81,16 +78,44 @@ public class MPJWTToken implements /*JSONAware,*/ Cloneable {
         return exp;
     }
 
+    /**
+     * Sets the exp token value directly in seconds.
+     *
+     * @param exp This is the seconds value to set it directly. Do not use Date.getTime().
+     */
     public void setExp(Long exp) {
         this.exp = exp;
+    }
+
+    /**
+     * Sets the exp token value based on the Date instance.
+     *
+     * @param exp expiration indicated as date.
+     */
+    public void setExp(Date exp) {
+        this.exp = DateUtils.toSecondsSinceEpoch(exp);
+    }
+
+    /**
+     * Sets the exp token value based on the LocalDateTime instance.
+     *
+     * @param exp expiration indicated as LocalDateTime.
+     */
+    public void setExp(LocalDateTime exp) {
+        this.exp = DateUtils.toSecondsSinceEpoch(exp);
     }
 
     public Long getIat() {
         return iat;
     }
 
+
     public void setIat(Long iat) {
         this.iat = iat;
+    }
+
+    public void setIat(Date iat) {
+        this.iat = DateUtils.toSecondsSinceEpoch(iat);
     }
 
     public String getSub() {
@@ -146,53 +171,6 @@ public class MPJWTToken implements /*JSONAware,*/ Cloneable {
             additionalClaims = new HashMap<>();
         }
         additionalClaims.put(key, value);
-    }
-
-    //@Override
-    public String toJSONString() {
-        // FIXME Should we create a JsonSerializer??
-        JsonObjectBuilder result = Json.createObjectBuilder();
-
-        if (iss != null) {
-            result.add("iss", iss);
-        }
-        if (aud != null) {
-            result.add("aud", aud);
-        }
-        if (jti != null) {
-            result.add("jti", jti);
-        }
-        if (exp != null) {
-            result.add("exp", exp / 1000);
-        }
-        if (iat != null) {
-            result.add("iat", iat / 1000);
-        }
-        if (sub != null) {
-            result.add("sub", sub);
-        }
-        if (upn != null) {
-            result.add("upn", upn);
-        }
-        if (preferredUsername != null) {
-            result.add("preferred_username", preferredUsername);
-        }
-        // FIXME The other properties
-
-        if (additionalClaims != null) {
-            for (Map.Entry<String, String> entry : additionalClaims.entrySet()) {
-                result.add(entry.getKey(), entry.getValue());
-            }
-        }
-
-            JsonArrayBuilder groupsArr = Json.createArrayBuilder();
-
-        for (String group : groups) {
-            groupsArr.add(group);
-        }
-            result.add("groups", groupsArr);
-
-            return result.build().toString();
     }
 
     // FIXME Is this a real clone or just a duplicate?

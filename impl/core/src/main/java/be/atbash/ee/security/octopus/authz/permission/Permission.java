@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,9 +57,8 @@ import be.atbash.ee.security.octopus.ShiroEquivalent;
  * <p/>
  */
 @ShiroEquivalent(shiroClassNames = {"org.apache.shiro.authz.Permission"})
-//@MappedBy(encoder = PermissionEncoder.class)  // Reading from JSON
-//@JsonbTypeDeserializer
-public interface Permission /*extends JSONAware*/ {
+// FIXME Review if we need to serialize permissions to JSON and thus we need new PermissionEncoder?
+public interface Permission  {
 
     /**
      * Returns {@code true} if this current instance <em>implies</em> all the functionality and/or resource access

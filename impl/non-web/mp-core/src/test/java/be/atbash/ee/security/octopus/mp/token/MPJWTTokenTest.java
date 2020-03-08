@@ -16,6 +16,7 @@
 package be.atbash.ee.security.octopus.mp.token;
 
 import be.atbash.ee.security.octopus.jwt.decoder.JWTDecoder;
+import be.atbash.ee.security.octopus.util.JsonbUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -39,7 +40,7 @@ public class MPJWTTokenTest {
         claims.put("framework", "Octopus");
         token.setAdditionalClaims(claims);
 
-        String json = token.toJSONString();
+        String json = JsonbUtil.getJsonb().toJson(token);
 
         assertThat(json).contains("\"framework\":\"Octopus\"");
         assertThat(json).contains("\"extra\":\"JUnit\"");
