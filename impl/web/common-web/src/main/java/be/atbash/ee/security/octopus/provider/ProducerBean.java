@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,6 @@ public class ProducerBean {
             }
         }
         if (result == null) {
-            // FIXME This will result probably in some nullPointer in the hashCode() which uses id.
             result = new UserPrincipal();
         }
         return result;

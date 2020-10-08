@@ -33,7 +33,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jerry.version>0.9.0.3</jerry.version>
+        <jerry.version>1.0.0-SNAPSHOT</jerry.version>
     </properties>
     <dependencies>
         <!-- EE API's-->
@@ -90,12 +90,6 @@
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-jsf</artifactId>
             <version>${atbash-utils.version}</version>
-        </dependency>
-
-        <!-- To overwrite version from jerry-->
-        <dependency>
-            <groupId>be.atbash.config</groupId>
-            <artifactId>atbash-config</artifactId>
         </dependency>
 
         <dependency>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import java.util.Map;
 // @PublicAPI
 public class UserPrincipal implements Principal, Serializable {
 
+    public static final String ANONYMOUS = "userAnonymous";
+
     private Serializable id;
     private String userName;
     private String name;
@@ -44,8 +46,9 @@ public class UserPrincipal implements Principal, Serializable {
     private Map<String, Serializable> userInfo = new HashMap<>();
 
     // Weld needs this to make a proxy
-    // TODO Try to remove it, because it doesn't set the id and it is used for example within hashCode
+    // FIXME Review in current Java EE / Jakarta EE 8 implementations
     public UserPrincipal() {
+        this(ANONYMOUS, ANONYMOUS, ANONYMOUS);
     }
 
     /**

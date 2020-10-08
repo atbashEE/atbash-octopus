@@ -17,10 +17,9 @@
 
 -->
 <web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xmlns="http://java.sun.com/xml/ns/javaee"
-              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
-              id="WebFragment_ID" version="3.0">
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xsi:schemaLocation="http:///xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd"
+              id="WebFragment_ID" version="4.0">
 
     <name>Octopus_Security_JSF</name>
     <listener>
