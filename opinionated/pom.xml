@@ -39,7 +39,7 @@
 
     <properties>
         <deltaspike.opinionated.version>1.8.1</deltaspike.opinionated.version>
-        <primefaces.opinionated.version>7.0</primefaces.opinionated.version>
+        <primefaces.opinionated.version>8.0</primefaces.opinionated.version>
         <octopus.version>1.0.0-SNAPSHOT</octopus.version>
     </properties>
 </project>
