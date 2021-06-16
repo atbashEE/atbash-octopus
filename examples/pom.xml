@@ -62,7 +62,7 @@
 
     <properties>
         <deltaspike.example.version>1.8.1</deltaspike.example.version>
-        <primefaces.example.version>6.1</primefaces.example.version>
+        <primefaces.example.version>8.0</primefaces.example.version>
     </properties>
     <build>
         <plugins>
