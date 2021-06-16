@@ -61,7 +61,7 @@
     </modules>
 
     <properties>
-        <deltaspike.example.version>1.8.1</deltaspike.example.version>
+        <deltaspike.example.version>1.9.3</deltaspike.example.version>
         <primefaces.example.version>6.1</primefaces.example.version>
     </properties>
     <build>
