@@ -1,0 +1,3 @@
+be.atbash.ee.security.octopus.keycloak.adapter.json.AccessTokenSerializer
+be.atbash.ee.security.octopus.keycloak.adapter.json.IdTokenSerializer
+be.atbash.ee.security.octopus.keycloak.adapter.json.OIDCConfigurationRepresentationSerializer

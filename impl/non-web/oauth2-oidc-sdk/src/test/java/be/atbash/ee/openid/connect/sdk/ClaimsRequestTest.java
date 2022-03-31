@@ -24,8 +24,8 @@ import be.atbash.ee.openid.connect.sdk.claims.ClaimRequirement;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import java.net.URI;
 import java.util.*;
 

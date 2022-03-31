@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package be.atbash.ee.security.octopus.async;
 import be.atbash.ee.security.octopus.context.OctopusSecurityContext;
 import be.atbash.ee.security.octopus.systemaccount.SystemAccount;
 
-import javax.annotation.security.PermitAll;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.annotation.security.PermitAll;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;

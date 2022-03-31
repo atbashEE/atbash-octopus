@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.nimbus.util.X509CertUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 import java.security.cert.X509Certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;

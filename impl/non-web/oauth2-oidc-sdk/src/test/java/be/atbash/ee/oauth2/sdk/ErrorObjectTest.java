@@ -22,8 +22,8 @@ import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;

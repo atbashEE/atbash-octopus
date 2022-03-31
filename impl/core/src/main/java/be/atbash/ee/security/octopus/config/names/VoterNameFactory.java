@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import be.atbash.ee.security.octopus.authz.permission.typesafe.RoleLookup;
 import be.atbash.ee.security.octopus.config.OctopusCoreConfiguration;
 import be.atbash.util.CDIUtils;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * This factory is responsible for creating CDI beanNames for permissions, roles and custom voters.

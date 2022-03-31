@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.subject.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import javax.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

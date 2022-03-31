@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import be.atbash.ee.security.octopus.web.servlet.ProxiedFilterChain;
 import be.atbash.util.Reviewed;
 import be.atbash.util.StringUtils;
 
-import javax.servlet.FilterChain;
+import jakarta.servlet.FilterChain;
 import java.util.*;
 
 /**

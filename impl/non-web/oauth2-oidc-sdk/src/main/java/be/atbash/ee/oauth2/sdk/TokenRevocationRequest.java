@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 import be.atbash.util.StringUtils;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;

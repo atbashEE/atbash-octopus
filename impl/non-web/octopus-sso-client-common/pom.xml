@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-non-web</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -37,34 +37,49 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-se-standalone</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-sso-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>${javax.json.version}</version>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>${jakarta.json.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1</version>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.0.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- used by jakarta.ws.rs.client.ClientResponseContext, and no longer available on JDK 11-->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>3.0.1</version>
+            <!-- FIXME should this be optional? -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>3.0.1</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- test -->
@@ -84,7 +99,7 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.config</groupId>
+            <groupId>be.atbash.jakarta.config</groupId>
             <artifactId>atbash-config-test</artifactId>
             <version>${atbash-config.version}</version>
             <scope>test</scope>
@@ -113,35 +128,42 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>2.5</version>
+            <version>3.0.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>3.0.4</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.5</version>
+            <version>3.0.4</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
-            <version>1.0</version>
+            <version>${yasson.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1</version>
+            <artifactId>jakarta.json</artifactId>
+            <version>${glassfish-json.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

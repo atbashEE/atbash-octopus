@@ -1,6 +1,6 @@
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -32,21 +32,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-se-standalone</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-mp-rest-client</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1</version> <!-- since Apache CXF cxf-rt-rs-mp-client needs this -->
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>
@@ -55,12 +55,12 @@
             <version>${microprofile-rest-client.version}</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.geronimo.config</groupId>
             <artifactId>geronimo-config-impl</artifactId>
-            <version>1.2.2</version> <!-- latest released, supports also Config 1.1 -->
+            <version>1.2.2</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency-->
 
         <!-- need a JAX-RS client -->
         <dependency>
@@ -71,9 +71,9 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3</version>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${annotation-api.version}</version>
         </dependency>
 
         <dependency>
@@ -85,13 +85,13 @@
         <!-- Deltaspike -->
 
         <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
             <version>${deltaspike.example.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
             <artifactId>deltaspike-partial-bean-module-impl</artifactId>
             <version>${deltaspike.example.version}</version>
         </dependency>

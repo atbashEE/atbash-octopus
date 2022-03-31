@@ -23,16 +23,9 @@ import org.junit.jupiter.api.Disabled;
 @Disabled
 public abstract class AbstractKeyNameTest {
     protected String defineExpectedName() {
-        String expected;
+        // Currently (JDK 11+) not dependent on the Java Version.
 
-        String version = Runtime.class.getPackage().getSpecificationVersion();
-        if ("1.7".equals(version)) {
-            expected = "PBKDF2WithHmacSHA1";
-        } else {
-            expected = "PBKDF2WithHmacSHA256";
-
-        }
-        return expected;
+        return "PBKDF2WithHmacSHA256";
     }
 
 }

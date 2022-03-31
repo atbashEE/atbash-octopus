@@ -22,28 +22,17 @@ import java.util.Map;
 /**
  * Generates mapping between the 'simple' name (like PBKDF2) and the actual name used by the JDK like PBKDF2WithHmacSHA1
  * which is Java Version specific.
+ * Since we only support JDK 11+, the value is always PBKDF2WithHmacSHA256.
  * For all names which are not supported (no mapping defined), the name is returned as is.
  */
 class KeyFactoryNameFactory {
 
-    private static String JAVA_VERSION = Runtime.class.getPackage().getSpecificationVersion();
+    public static final String PBKDF2_FULL = "PBKDF2WithHmacSHA256";
+    public static final String PBKDF2 = "PBKDF2";
+
     private static KeyFactoryNameFactory INSTANCE;
 
-    private Map<String, Map<String, String>> defaultKeyFactoryNames;
-
     private KeyFactoryNameFactory() {
-        defaultKeyFactoryNames = new HashMap<>();
-        definePBKDF2Names();
-    }
-
-    private void definePBKDF2Names() {
-        Map<String, String> mapping = new HashMap<>();
-
-        mapping.put("1.7", "PBKDF2WithHmacSHA1");
-        mapping.put("1.8", "PBKDF2WithHmacSHA256");
-        // FIXME Support for Java 9+ (probably will only support 11)
-
-        defaultKeyFactoryNames.put("PBKDF2", mapping);
     }
 
     /**
@@ -57,8 +46,8 @@ class KeyFactoryNameFactory {
         String nameUpperCase = name.toUpperCase(Locale.ENGLISH);
         String result;
 
-        if (defaultKeyFactoryNames.containsKey(nameUpperCase)) {
-            result = defaultKeyFactoryNames.get(nameUpperCase).get(JAVA_VERSION);
+        if (PBKDF2.equals(nameUpperCase)) {
+            result = PBKDF2_FULL;
         } else {
             result = name;
         }

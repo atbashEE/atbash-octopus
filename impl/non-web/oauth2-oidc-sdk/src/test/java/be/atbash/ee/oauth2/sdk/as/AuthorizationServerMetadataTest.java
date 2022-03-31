@@ -26,8 +26,8 @@ import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -154,7 +154,7 @@ public class AuthorizationServerMetadataTest {
     @Test
     public void testParseMinimal() throws OAuth2JSONParseException {
 
-        JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
+        JsonObjectBuilder jsonObject = jakarta.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "https://c2id.com");
 
         AuthorizationServerMetadata as = AuthorizationServerMetadata.parse(jsonObject.build().toString());
@@ -164,7 +164,7 @@ public class AuthorizationServerMetadataTest {
     @Test
     public void testParse_issuerNotURI() {
 
-        JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
+        JsonObjectBuilder jsonObject = jakarta.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "a b c");
 
         OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationServerMetadata.parse(jsonObject.build().toString()));
@@ -176,7 +176,7 @@ public class AuthorizationServerMetadataTest {
     @Test
     public void testParse_issuerWithQuery() {
 
-        JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
+        JsonObjectBuilder jsonObject = jakarta.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "https://c2id.com?a=b");
 
         OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationServerMetadata.parse(jsonObject.build().toString()));
@@ -187,7 +187,7 @@ public class AuthorizationServerMetadataTest {
     @Test
     public void testParse_issuerWithFragment() {
 
-        JsonObjectBuilder jsonObject = javax.json.Json.createObjectBuilder();
+        JsonObjectBuilder jsonObject = jakarta.json.Json.createObjectBuilder();
         jsonObject.add("issuer", "https://c2id.com#abc");
 
         OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () -> AuthorizationServerMetadata.parse(jsonObject.build().toString()));

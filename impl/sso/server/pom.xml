@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-sso</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -34,60 +34,60 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3</version>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${annotation-api.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1</version>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
 
 
         <dependency>
-            <groupId>javax.json.bind</groupId>
-            <artifactId>javax.json.bind-api</artifactId>
-            <version>${javax.json.bind.version}</version>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <version>${jakarta.json.bind.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>${javax.json.version}</version>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>${jakarta.json.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>javax.mail-api</artifactId>
-            <version>1.6.0</version>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>2.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <!-- Octopus -->
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-jsf8</artifactId>
+            <groupId>be.atbash.jakarta.security</groupId>
+            <artifactId>octopus-jsf9</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-sso-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -109,15 +109,15 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.utils</groupId>
+            <groupId>be.atbash.jakarta.utils</groupId>
             <artifactId>utils-cdi</artifactId>
-            <version>${atbash-utils.version}</version>
+            <version>${atbash-utils.jakarta.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.config</groupId>
+            <groupId>be.atbash.jakarta.config</groupId>
             <artifactId>atbash-config-test</artifactId>
             <version>${atbash-config.version}</version>
             <scope>test</scope>
@@ -126,21 +126,21 @@
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
-            <version>1.0</version>
+            <version>${yasson.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1</version>
+            <artifactId>jakarta.json</artifactId>
+            <version>${glassfish-json.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -155,14 +155,14 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.22.2</version>
+            <version>3.0.0-RC2</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>1.7.8</version> <!-- version 2.x not usuable as it incorrects indicates some errors -->
+            <version>3.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

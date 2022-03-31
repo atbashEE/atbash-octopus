@@ -19,7 +19,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-web</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -36,19 +36,19 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
 
         <!-- OAuth 2 -->
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-oauth2-common-jsf</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-oauth2-github-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

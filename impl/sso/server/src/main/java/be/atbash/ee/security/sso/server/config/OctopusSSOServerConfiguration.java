@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.sso.core.config.JARMLevel;
 import be.atbash.ee.security.octopus.util.PeriodUtil;
 import be.atbash.util.StringUtils;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @ModuleConfigName("Octopus SSO Server Configuration")

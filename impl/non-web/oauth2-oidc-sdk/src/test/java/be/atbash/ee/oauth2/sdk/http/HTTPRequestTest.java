@@ -23,9 +23,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.mail.internet.ContentType;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.mail.internet.ContentType;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;

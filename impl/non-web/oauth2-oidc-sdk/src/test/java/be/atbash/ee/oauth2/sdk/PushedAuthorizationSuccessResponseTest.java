@@ -21,9 +21,9 @@ import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;

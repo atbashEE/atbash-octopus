@@ -24,6 +24,8 @@ public class OctopusSSOTokenTest {
     public void testEqualsAndHashCode() {
         EqualsVerifier.forClass(OctopusSSOToken.class)
                 .suppress(Warning.NONFINAL_FIELDS)
+                .withIgnoredFields("localId", "bearerAccessToken", "cookieToken", "lastName", "firstName", "email",
+                        "logoutHandlerNeeded", "fullName", "userInfo")
                 // Strict_Inheritance because equals/hashcode can't be final due to CDI
                 .verify();
     }

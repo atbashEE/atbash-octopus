@@ -25,9 +25,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.security.enterprise.credential.Credential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.IdentityStoreHandler;
+import jakarta.security.enterprise.credential.Credential;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import java.util.HashSet;
 import java.util.Set;
 

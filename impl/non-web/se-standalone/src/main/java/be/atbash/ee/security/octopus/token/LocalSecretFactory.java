@@ -42,10 +42,11 @@ public final class LocalSecretFactory {
      */
     public static byte[] generateSecret(String passPhrase) {
         SystemInfo info = new SystemInfo();
-        String salt = info.getHardware().getProcessor().getProcessorID() + info.getOperatingSystem().getFileSystem().getFileStores()[0].getUUID();
+        String salt = info.getHardware().getProcessor().getProcessorIdentifier().getProcessorID() + info.getOperatingSystem().getFileSystem().getFileStores().get(0).getUUID();
 
         byte[] secret;
         try {
+            // should this be SHA256?
             secret = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1").generateSecret(
                     new PBEKeySpec(passPhrase.toCharArray(), salt.getBytes(), 1024, 256)).getEncoded();
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {

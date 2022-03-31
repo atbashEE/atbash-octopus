@@ -34,7 +34,7 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import org.junit.jupiter.api.Test;
 
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.internet.InternetAddress;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;

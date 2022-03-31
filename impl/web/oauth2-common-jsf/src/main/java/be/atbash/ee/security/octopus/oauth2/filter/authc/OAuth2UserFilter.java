@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package be.atbash.ee.security.octopus.oauth2.filter.authc;
 import be.atbash.ee.security.octopus.filter.authc.AbstractUserFilter;
 import be.atbash.ee.security.octopus.oauth2.servlet.OAuth2ServletInfo;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * Filter that allows access to resources if the accessor is a known user, which is defined as

@@ -24,9 +24,9 @@ import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

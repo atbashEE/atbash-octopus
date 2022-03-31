@@ -42,7 +42,8 @@ public final class AccessTokenHandler {
         AccessToken accessToken;
         IDToken idToken = null;
         try {
-            accessToken = RSATokenVerifier.verifyToken(accessTokenResponse.getToken(), deployment.getRealmKey(), deployment.getRealmInfoUrl());
+            String kid = "TODO";  // FIXME
+            accessToken = RSATokenVerifier.verifyToken(accessTokenResponse.getToken(), deployment.getPublicKeyLocator().getPublicKey(kid, deployment), deployment.getRealmInfoUrl());
             if (idTokenString != null) {
                 try {
                     JWSInput input = new JWSInput(idTokenString);

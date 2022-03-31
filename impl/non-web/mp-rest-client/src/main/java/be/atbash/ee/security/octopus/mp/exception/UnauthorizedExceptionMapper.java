@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package be.atbash.ee.security.octopus.mp.exception;
 import be.atbash.ee.security.octopus.authz.UnauthorizedException;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 /**
  * FIXME, this needs to be in some general artifact. Can also be used for KeyCloak rest client for ex.

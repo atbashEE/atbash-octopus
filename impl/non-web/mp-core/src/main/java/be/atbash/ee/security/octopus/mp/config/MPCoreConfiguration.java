@@ -22,9 +22,9 @@ import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.config.logging.StartupLogging;
 import be.atbash.ee.security.octopus.util.PeriodUtil;
 import be.atbash.util.StringUtils;
-import be.atbash.util.reflection.CDICheck;
+import be.atbash.util.CDICheck;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  *

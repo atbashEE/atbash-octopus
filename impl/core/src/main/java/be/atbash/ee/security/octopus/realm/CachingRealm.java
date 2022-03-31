@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ import be.atbash.ee.security.octopus.subject.PrincipalCollection;
 import be.atbash.ee.security.octopus.util.Nameable;
 import be.atbash.ee.security.octopus.util.OctopusCollectionUtils;
 import be.atbash.util.CDIUtils;
-import be.atbash.util.reflection.CDICheck;
+import be.atbash.util.CDICheck;
 import be.atbash.util.reflection.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * A very basic abstract extension point for the {@link Realm} interface that provides caching support for subclasses.

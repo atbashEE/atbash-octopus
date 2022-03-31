@@ -28,9 +28,9 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import java.util.Date;
 import java.util.List;
 
@@ -57,6 +57,7 @@ public class OIDCStoreDataTest {
         EqualsVerifier.forClass(OIDCStoreData.class)
                 .withPrefabValues(JsonObject.class, red.build(), black.build())
                 .suppress(Warning.NONFINAL_FIELDS)
+                .withIgnoredFields("scope", "authorizationCode", "accessToken", "idTokenClaimsSet", "expiresOn")
                 .verify();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import be.atbash.config.logging.StartupLogging;
 import be.atbash.ee.security.octopus.config.exception.ConfigurationException;
 import be.atbash.util.StringUtils;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import be.atbash.util.reflection.CDICheck;
+import be.atbash.util.CDICheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import javax.net.ssl.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

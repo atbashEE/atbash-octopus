@@ -18,7 +18,7 @@ package be.atbash.ee.oauth2.sdk.util;
 
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonArray;
+import jakarta.json.JsonArray;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

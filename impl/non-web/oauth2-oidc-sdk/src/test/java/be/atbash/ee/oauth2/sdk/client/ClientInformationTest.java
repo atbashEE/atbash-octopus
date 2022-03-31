@@ -24,7 +24,7 @@ import be.atbash.ee.security.octopus.nimbus.jwk.JWKSet;
 import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 import java.net.URI;
 import java.util.Date;
 import java.util.Set;

@@ -30,8 +30,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.enterprise.inject.UnsatisfiedResolutionException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.inject.UnsatisfiedResolutionException;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;

@@ -19,10 +19,10 @@ import be.atbash.ee.security.octopus.SecurityUtils;
 import be.atbash.ee.security.octopus.subject.Subject;
 import be.atbash.ee.security.octopus.subject.UserPrincipal;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 
 // FIXME Move to octopus-core? Can be used in Java SE CDI way of working
 // Don't think it is a problem when using in classic JAVA SE (without CDI)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import be.atbash.ee.oauth2.sdk.id.ClientID;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.ee.oauth2.sdk.util.URLUtils;
 
-import javax.mail.internet.ContentType;
+import jakarta.mail.internet.ContentType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

@@ -40,8 +40,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
+import org.keycloak.protocol.oidc.representations.OIDCConfigurationRepresentation;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.adapters.config.AdapterConfig;
 
@@ -48,11 +49,22 @@ public class KeycloakAuthenticatorTest {
 
     @Test
     public void authenticate() {
+        JWTEncoder encoder = new JWTEncoder();
+
+        // configure .well-known/openid-configuration so that it doesn't fail prematurely.
+        OIDCConfigurationRepresentation wellKnownResponse = new OIDCConfigurationRepresentation();
+        wellKnownResponse.setAuthorizationEndpoint("http://localhost:" + Jadler.port());
+        wellKnownResponse.setLogoutEndpoint("http://localhost:" + Jadler.port() + "/logout");
+        wellKnownResponse.setIssuer("http://localhost:" + Jadler.port() + "/demo");
+        wellKnownResponse.setJwksUri("http://localhost:" + Jadler.port() + "/jwks");
+        String answer = encoder.encode(wellKnownResponse, new JWTParametersNone());
+        Jadler.onRequest().havingMethodEqualTo("GET")
+                .respond().withBody(answer);
+
 
         AccessTokenResponse response = new AccessTokenResponse();
         response.setToken("accessToken");
 
-        JWTEncoder encoder = new JWTEncoder();
         Jadler.onRequest().havingMethodEqualTo("POST")
                 .respond().withBody(encoder.encode(response, new JWTParametersNone()));
         AdapterConfig adapterConfig = new AdapterConfig();

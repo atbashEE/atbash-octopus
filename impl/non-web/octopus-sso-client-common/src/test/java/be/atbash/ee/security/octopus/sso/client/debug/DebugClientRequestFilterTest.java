@@ -26,7 +26,7 @@ import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
-import javax.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestContext;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

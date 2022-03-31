@@ -28,7 +28,7 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSObject;
 import org.junit.jupiter.api.Test;
 
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.internet.InternetAddress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

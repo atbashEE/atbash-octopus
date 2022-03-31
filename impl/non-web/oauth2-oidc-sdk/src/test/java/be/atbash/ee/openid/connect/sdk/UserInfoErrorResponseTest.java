@@ -21,7 +21,7 @@ import be.atbash.ee.oauth2.sdk.http.HTTPResponse;
 import be.atbash.ee.oauth2.sdk.token.BearerTokenError;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -31,7 +31,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.json.JsonValue;
+import jakarta.json.JsonValue;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.*;

@@ -21,14 +21,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.atbash.ee.security</groupId>
+    <groupId>be.atbash.jakarta.security</groupId>
     <artifactId>octopus-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Atbash Octopus Parent</name>
+    <name>Atbash Jakarta Octopus Parent</name>
     <inceptionYear>2014</inceptionYear>
-    <description>Atbash Octopus Parent</description>
+    <description>Atbash Jakarta Octopus Parent</description>
     <url>https://github.com/atbashEE/atbash-octopus</url>
 
     <scm>
@@ -58,20 +58,26 @@
 
     <properties>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <atbash-utils.version>1.0.0-SNAPSHOT</atbash-utils.version>
+        <atbash-utils.version>1.1.0</atbash-utils.version>
+        <atbash-utils.jakarta.version>1.1.0-SNAPSHOT</atbash-utils.jakarta.version>
         <atbash-config.version>1.0.0-SNAPSHOT</atbash-config.version>
+        <atbash-runtime.version>0.3-SNAPSHOT</atbash-runtime.version>
         <jwt-support.version>1.0.0-SNAPSHOT</jwt-support.version>
-        <cdi.version>2.0</cdi.version>
-        <javax.json.bind.version>1.0</javax.json.bind.version>
-        <javax.json.version>1.1</javax.json.version>
+        <cdi.version>3.0.0</cdi.version>
+        <jakarta.json.bind.version>2.0.0</jakarta.json.bind.version>
+        <jakarta.json.version>2.0.1</jakarta.json.version>
+        <annotation-api.version>2.0.0</annotation-api.version>
 
-        <microprofile-config.version>1.1</microprofile-config.version>
-        <microprofile-rest-client.version>1.1</microprofile-rest-client.version>
+        <yasson.version>2.0.4</yasson.version>
+        <glassfish-json.version>2.0.0</glassfish-json.version>
+
+        <microprofile-config.version>3.0.1</microprofile-config.version>
+        <microprofile-rest-client.version>3.0</microprofile-rest-client.version>
 
         <slf4j.version>1.7.25</slf4j.version>
 
@@ -90,27 +96,27 @@
                 <version>${atbash-utils.version}</version>
             </dependency>
             <dependency>
-                <groupId>be.atbash.utils</groupId>
+                <groupId>be.atbash.jakarta.utils</groupId>
                 <artifactId>utils-cdi</artifactId>
-                <version>${atbash-utils.version}</version>
+                <version>${atbash-utils.jakarta.version}</version>
             </dependency>
             <dependency>
-                <groupId>be.atbash.config</groupId>
+                <groupId>be.atbash.jakarta.config</groupId>
                 <artifactId>atbash-config</artifactId>
-                <version>${atbash-config.version}</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
                 <version>${cdi.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>4.0.0</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>5.0.0</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
@@ -161,27 +167,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>1.16</version>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <signature>
-                                <groupId>org.codehaus.mojo.signature</groupId>
-                                <artifactId>java18</artifactId>
-                                <version>1.0</version>
-                            </signature>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

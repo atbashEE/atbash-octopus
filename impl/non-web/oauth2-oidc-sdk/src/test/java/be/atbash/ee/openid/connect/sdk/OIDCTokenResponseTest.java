@@ -26,7 +26,7 @@ import be.atbash.ee.security.octopus.nimbus.jwt.JWTParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 

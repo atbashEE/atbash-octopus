@@ -25,7 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

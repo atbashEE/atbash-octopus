@@ -1030,9 +1030,9 @@ public class AuthenticationRequestTest {
         OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
                 AuthenticationRequest.parse(query));
 
-        assertThat(exception.getMessage()).isEqualTo("Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
+        assertThat(exception.getMessage()).isEqualTo("Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Invalid JSON: Internal error: Invalid token=EOF at (line no=1, column no=3, offset=2). Expected tokens are: [STRING, CURLYCLOSE]");
         assertThat(exception.getErrorObject().getCode()).isEqualTo(OAuth2Error.INVALID_REQUEST.getCode());
-        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
+        assertThat(exception.getErrorObject().getDescription()).isEqualTo("Invalid request: Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Invalid JSON: Internal error: Invalid token=EOF at (line no=1, column no=3, offset=2). Expected tokens are: [STRING, CURLYCLOSE]");
         assertThat(exception.getResponseMode()).isEqualTo(ResponseMode.QUERY);
         assertThat(exception.getErrorObject().getURI()).isNull();
 

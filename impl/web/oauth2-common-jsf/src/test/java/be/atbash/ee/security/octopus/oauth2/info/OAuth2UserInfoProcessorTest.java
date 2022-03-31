@@ -18,9 +18,9 @@ package be.atbash.ee.security.octopus.oauth2.info;
 import be.atbash.ee.security.octopus.oauth2.OAuth2UserToken;
 import org.junit.jupiter.api.Test;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

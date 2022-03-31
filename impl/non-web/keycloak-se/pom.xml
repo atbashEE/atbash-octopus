@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-non-web</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -33,12 +33,12 @@
     <packaging>jar</packaging>
 
     <properties>
-        <keycloak.version>2.0.0.Final</keycloak.version>
+        <keycloak.version>13.0.0</keycloak.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-common-se</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -51,27 +51,27 @@
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.json</groupId>
+            <groupId>be.atbash.jakarta.json</groupId>
             <artifactId>octopus-jwt-support</artifactId>
             <version>${jwt-support.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
 
         <!-- JSONP/JSONB -->
         <dependency>
-            <groupId>javax.json.bind</groupId>
-            <artifactId>javax.json.bind-api</artifactId>
-            <version>${javax.json.bind.version}</version>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <version>${jakarta.json.bind.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>${javax.json.version}</version>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>${jakarta.json.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -115,7 +115,7 @@
         <!-- testing -->
 
         <dependency>
-            <groupId>be.atbash.config</groupId>
+            <groupId>be.atbash.jakarta.config</groupId>
             <artifactId>atbash-config-test</artifactId>
             <version>${atbash-config.version}</version>
             <scope>test</scope>
@@ -124,14 +124,14 @@
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
-            <version>1.0</version>
+            <version>${yasson.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1</version>
+            <artifactId>jakarta.json</artifactId>
+            <version>${glassfish-json.version}</version>
             <scope>test</scope>
         </dependency>
 

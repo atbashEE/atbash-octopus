@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,7 +68,7 @@ public class GithubJSONProcessorTest {
     }
 
     @Test
-    public void extractGoogleUser_minimal() {
+    public void extractGithubUser_minimal() {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("id", "1234567");
         builder.add("email", "info@atbash.be");
@@ -83,7 +83,7 @@ public class GithubJSONProcessorTest {
     }
 
     @Test
-    public void extractGoogleUser_error() {
+    public void extractGithubUser_error() {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("error", "invalid authentication");
 

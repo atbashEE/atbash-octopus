@@ -21,7 +21,7 @@ import be.atbash.ee.security.octopus.util.onlyduring.TemporaryAuthorizationConte
 import be.atbash.ee.security.octopus.util.onlyduring.WrongExecutionContextException;
 import be.atbash.util.exception.AtbashIllegalActionException;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collections;

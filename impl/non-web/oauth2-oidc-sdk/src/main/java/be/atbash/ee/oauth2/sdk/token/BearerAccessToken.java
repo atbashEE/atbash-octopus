@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import be.atbash.ee.oauth2.sdk.http.HTTPRequest;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 import be.atbash.util.StringUtils;
 
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import java.util.List;
 import java.util.Map;
 

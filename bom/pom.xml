@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>be.atbash.ee.security.octopus</groupId>
+    <groupId>be.atbash.jakarta.security.octopus</groupId>
     <artifactId>bom</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -36,9 +36,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>8.0</version>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
+                <version>9.0.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -46,37 +46,38 @@
                 <groupId>org.primefaces</groupId>
                 <artifactId>primefaces</artifactId>
                 <version>${primefaces.opinionated.version}</version>
+                <classifier>jakarta</classifier>
             </dependency>
 
             <dependency>
-                <groupId>be.atbash.ee.security</groupId>
-                <artifactId>octopus-jsf8</artifactId>
+                <groupId>be.atbash.jakarta.security</groupId>
+                <artifactId>octopus-jsf9</artifactId>
                 <version>${octopus.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.core</groupId>
-                <artifactId>deltaspike-core-impl</artifactId>
+                <groupId>be.atbash.jakarta.deltaspike.core</groupId>
+                <artifactId>deltaspike-jakarta-core-impl</artifactId>
                 <version>${deltaspike.opinionated.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.core</groupId>
+                <groupId>be.atbash.jakarta.deltaspike.core</groupId>
                 <artifactId>deltaspike-core-api</artifactId>
                 <version>${deltaspike.opinionated.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.modules</groupId>
+                <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
                 <artifactId>deltaspike-security-module-impl</artifactId>
-                <version>${deltaspike.opinionated.version}</version>
+                <version>${deltaspike.example.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.deltaspike.modules</groupId>
+                <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
                 <artifactId>deltaspike-security-module-api</artifactId>
                 <version>${deltaspike.opinionated.version}</version>
                 <scope>compile</scope>
@@ -84,8 +85,8 @@
         </dependencies>
     </dependencyManagement>
     <properties>
-        <deltaspike.opinionated.version>1.8.1</deltaspike.opinionated.version>
-        <primefaces.opinionated.version>7.0</primefaces.opinionated.version>
+        <deltaspike.opinionated.version>1.9.5</deltaspike.opinionated.version>
+        <primefaces.opinionated.version>9.0-SNAPSHOT</primefaces.opinionated.version>
         <octopus.version>1.0.0-SNAPSHOT</octopus.version>
     </properties>
 </project>

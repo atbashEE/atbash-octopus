@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>be.atbash.ee.security.examples</groupId>
+        <groupId>be.atbash.jakarta.security.examples</groupId>
         <artifactId>rest</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -33,21 +33,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1</version>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
 
 
         <!-- octopus-->
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-oauth2-linkedin-rest</artifactId>
             <version>${project.parent.version}</version>
 
@@ -55,13 +55,13 @@
 
         <!-- deltaspike -->
         <dependency>
-            <groupId>org.apache.deltaspike.core</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <version>${deltaspike.example.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
             <version>${deltaspike.example.version}</version>
         </dependency>

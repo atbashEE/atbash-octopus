@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import be.atbash.ee.security.octopus.mp.token.MPToken;
 import be.atbash.ee.security.octopus.subject.PrincipalManager;
 import be.atbash.util.CDIUtils;
 import be.atbash.util.StringUtils;
-import be.atbash.util.reflection.CDICheck;
+import be.atbash.util.CDICheck;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
 import java.io.IOException;
 
 /**

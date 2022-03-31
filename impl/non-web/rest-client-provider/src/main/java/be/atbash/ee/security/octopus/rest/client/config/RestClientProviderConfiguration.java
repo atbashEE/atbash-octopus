@@ -19,7 +19,7 @@ import be.atbash.config.AbstractConfiguration;
 import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import be.atbash.config.logging.StartupLogging;
-import be.atbash.util.reflection.CDICheck;
+import be.atbash.util.CDICheck;
 
 /**
  *

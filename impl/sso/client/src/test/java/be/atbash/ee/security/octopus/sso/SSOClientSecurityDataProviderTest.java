@@ -33,8 +33,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.util.ContentTypeUtils;
 import be.atbash.ee.oauth2.sdk.util.MultivaluedMapUtils;
 
-import javax.mail.internet.ContentType;
+import jakarta.mail.internet.ContentType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +62,7 @@ abstract class HTTPMessage {
         try {
             return new ContentType(value);
 
-        } catch (javax.mail.internet.ParseException e) {
+        } catch (jakarta.mail.internet.ParseException e) {
             return null;
         }
     }
@@ -94,7 +94,7 @@ abstract class HTTPMessage {
         try {
             setHeader("Content-Type", ct != null ? new ContentType(ct).toString() : null);
 
-        } catch (javax.mail.internet.ParseException e) {
+        } catch (jakarta.mail.internet.ParseException e) {
 
             throw new OAuth2JSONParseException("Invalid Content-Type value: " + e.getMessage());
         }

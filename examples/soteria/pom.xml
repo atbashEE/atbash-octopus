@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -33,9 +33,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>8.0</version>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>9.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -43,16 +43,17 @@
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>${primefaces.example.version}</version>
+            <classifier>jakarta</classifier>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
-            <artifactId>octopus-jsf8</artifactId>
+            <groupId>be.atbash.jakarta.security</groupId>
+            <artifactId>octopus-jsf9</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-security-api-adapter</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -70,7 +71,7 @@
 
         <dependency>
             <!-- core-api is defined as provided at top level, so we have to overrule it here -->
-            <groupId>org.apache.deltaspike.core</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
             <version>${deltaspike.example.version}</version>
             <scope>compile</scope>
@@ -78,14 +79,14 @@
 
         <dependency>
             <!-- security-api is defined as provided at top level, so we have to overrule it here -->
-            <groupId>org.apache.deltaspike.modules</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-api</artifactId>
             <version>${deltaspike.example.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.deltaspike.modules</groupId>
+            <groupId>be.atbash.jakarta.deltaspike.modules</groupId>
             <artifactId>deltaspike-security-module-impl</artifactId>
             <version>${deltaspike.example.version}</version>
             <scope>runtime</scope>

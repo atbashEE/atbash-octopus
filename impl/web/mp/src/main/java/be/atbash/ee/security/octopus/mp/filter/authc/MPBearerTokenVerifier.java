@@ -23,9 +23,9 @@ import be.atbash.ee.security.octopus.nimbus.jwt.JWTClaimsSet;
 import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSHeader;
 import be.atbash.util.StringUtils;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Date;
 
 /**

@@ -1,6 +1,6 @@
 <!--
 
-    Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>be.atbash.ee.security</groupId>
+        <groupId>be.atbash.jakarta.security</groupId>
         <artifactId>octopus-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -36,18 +36,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.atbash.ee.security</groupId>
+            <groupId>be.atbash.jakarta.security</groupId>
             <artifactId>octopus-javafx</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- We can't put this into octopus-javafx as we force then everyone to use this MP config implementation -->
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.geronimo.config</groupId>
             <artifactId>geronimo-config-impl</artifactId>
             <version>1.2.2</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -69,15 +69,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <configuration>
-                    <!-- as there seems an issue with java18 signature of animal sniffer -->
-                    <skip>true</skip>
                 </configuration>
             </plugin>
 

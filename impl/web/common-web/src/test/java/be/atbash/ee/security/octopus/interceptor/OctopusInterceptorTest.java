@@ -53,7 +53,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.InvocationContext;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;

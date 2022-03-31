@@ -18,8 +18,8 @@ package be.atbash.ee.openid.connect.sdk;
 
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

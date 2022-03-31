@@ -22,8 +22,8 @@ import be.atbash.ee.security.octopus.nimbus.jwt.jws.JWSAlgorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;

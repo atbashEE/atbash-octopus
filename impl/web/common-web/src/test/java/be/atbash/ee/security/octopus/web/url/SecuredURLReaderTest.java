@@ -27,7 +27,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;

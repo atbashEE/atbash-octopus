@@ -179,7 +179,7 @@ public class BackChannelLogoutRequestTest {
         OAuth2JSONParseException exception = Assertions.assertThrows(OAuth2JSONParseException.class, () ->
                 BackChannelLogoutRequest.parse(httpRequest));
 
-        assertThat(exception.getMessage()).isEqualTo("Invalid logout token: Invalid unsecured/JWS/JWE header: Unexpected exception: Invalid token=EOF at (line no=1, column no=2, offset=1). Expected tokens are: [STRING, CURLYCLOSE]");
+        assertThat(exception.getMessage()).isEqualTo("Invalid logout token: Invalid unsecured/JWS/JWE header: Invalid JSON: Internal error: Invalid token=EOF at (line no=1, column no=3, offset=2). Expected tokens are: [STRING, CURLYCLOSE]");
 
     }
 

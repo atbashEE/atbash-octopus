@@ -32,7 +32,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 import java.util.List;
 
 import static be.atbash.ee.security.octopus.authz.permission.testclasses.TestPermission.*;

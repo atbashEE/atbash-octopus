@@ -35,8 +35,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.faces.context.ExternalContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.context.ExternalContext;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

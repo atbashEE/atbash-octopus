@@ -30,7 +30,7 @@ import be.atbash.ee.security.octopus.nimbus.util.JSONObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 import java.net.URL;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

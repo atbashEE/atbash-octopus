@@ -17,9 +17,9 @@ package be.atbash.ee.security.octopus.mp.token.json;
 
 import be.atbash.ee.security.octopus.mp.token.MPJWTToken;
 
-import javax.json.bind.serializer.JsonbSerializer;
-import javax.json.bind.serializer.SerializationContext;
-import javax.json.stream.JsonGenerator;
+import jakarta.json.bind.serializer.JsonbSerializer;
+import jakarta.json.bind.serializer.SerializationContext;
+import jakarta.json.stream.JsonGenerator;
 import java.util.Map;
 
 public class MPJWTTokenSerializer implements JsonbSerializer<MPJWTToken> {

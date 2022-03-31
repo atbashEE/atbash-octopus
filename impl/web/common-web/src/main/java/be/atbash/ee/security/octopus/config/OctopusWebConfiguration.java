@@ -20,8 +20,8 @@ import be.atbash.config.logging.ModuleConfig;
 import be.atbash.config.logging.ModuleConfigName;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * FIXME Remove the Name Web later on? when this has moved to his own artifact.

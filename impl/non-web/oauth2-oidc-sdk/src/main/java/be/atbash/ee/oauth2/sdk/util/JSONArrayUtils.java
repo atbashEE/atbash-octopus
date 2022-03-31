@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package be.atbash.ee.oauth2.sdk.util;
 import be.atbash.ee.oauth2.sdk.OAuth2JSONParseException;
 import be.atbash.ee.oauth2.sdk.id.Identifier;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonReader;
-import javax.json.stream.JsonParsingException;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonReader;
+import jakarta.json.stream.JsonParsingException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.Collection;

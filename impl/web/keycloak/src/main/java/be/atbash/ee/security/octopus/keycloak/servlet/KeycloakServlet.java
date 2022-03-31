@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2014-2020 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,13 +39,13 @@ import org.keycloak.enums.TokenStore;
 import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -129,9 +129,12 @@ public class KeycloakServlet extends HttpServlet {
         } else if (requestUri.endsWith(AdapterConstants.K_PUSH_NOT_BEFORE)) {
             oidcActions.handlePushNotBefore();
             return true;
+            /*
         } else if (requestUri.endsWith(AdapterConstants.K_VERSION)) {
             oidcActions.handleVersion();
             return true;
+            // FIXME Version no longer supported?
+             */
         } else if (requestUri.endsWith(AdapterConstants.K_TEST_AVAILABLE)) {
             oidcActions.handleTestAvailable();
             return true;

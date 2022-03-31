@@ -32,7 +32,7 @@ public class LocalSecret {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException {
         // TODO This code is demo as the passphrase is hardcoded.
         SystemInfo info = new SystemInfo();
-        String salt = info.getHardware().getProcessor().getProcessorID() + info.getOperatingSystem().getFileSystem().getFileStores()[0].getUUID();
+        String salt = info.getHardware().getProcessor().getProcessorIdentifier().getProcessorID() + info.getOperatingSystem().getFileSystem().getFileStores().get(0).getUUID();
 
         String passPhrase = "Rudy";
 
